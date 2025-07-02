@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -28,16 +28,29 @@ const AddReviewForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   
-  const { register, handleSubmit, formState: { errors } } = useForm<ReviewFormData>({
+  // Get address from URL query parameter
+  const queryParams = new URLSearchParams(location.search);
+  const addressFromUrl = queryParams.get('address') || '';
+  
+  const { register, handleSubmit, formState: { errors }, setValue } = useForm<ReviewFormData>({
     resolver: zodResolver(reviewSchema),
     defaultValues: {
       caseroRating: 3,
       houseRating: 3,
       neighborhoodRating: 3,
       neighborsRating: 3,
+      address: addressFromUrl,
     }
   });
+  
+  // Set address from URL when component mounts
+  useEffect(() => {
+    if (addressFromUrl) {
+      setValue('address', addressFromUrl);
+    }
+  }, [addressFromUrl, setValue]);
 
   const onSubmit = async (data: ReviewFormData) => {
     setIsLoading(true);

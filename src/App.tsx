@@ -22,7 +22,6 @@ function App() {
         <Route path="/add-review" element={<AddReviewForm />} />
         <Route path="/" element={
           <>
-            {/* Main content with our three sections */}
             <InputSection />
             <ChromeStoreSection />
             <PictureSection />

@@ -1,33 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const InputSection: React.FC = () => {
   const navigate = useNavigate();
+  const [address, setAddress] = useState('');
 
-  const handleAddReview = () => {
-    navigate('/add-review');
+  const handleStart = () => {
+    if (address.trim()) {
+      navigate(`/add-review?address=${encodeURIComponent(address)}`);
+    }
   };
 
   return (
-    <section className="py-16" style={{ backgroundColor: '#e1f56e' }}>
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-2xl font-bold text-center mb-6">Comparte tu experiencia con tu casero</h2>
-        <div className="flex flex-col items-center gap-4">
-          <p className="text-center text-gray-700 max-w-2xl">
-            Ayuda a otros inquilinos compartiendo tu experiencia con tu casero, el estado de la vivienda, 
-            el vecindario y más. Todas las opiniones son anónimas.
-          </p>
+    <section className="relative h-[calc(100vh-180px)] flex flex-col justify-center items-center" style={{ backgroundColor: '#e1f56e' }}>
+      <div className="w-full max-w-3xl mx-auto px-4">
+        <div className="flex flex-col md:flex-row gap-3 justify-center items-center">
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Dirección de la vivienda"
+            className="flex-grow w-full md:w-auto p-3 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
           <button
-            onClick={handleAddReview}
-            className="bg-blue-600 text-white py-3 px-8 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium mt-4"
+            onClick={handleStart}
+            className="bg-blue-600 text-white py-3 px-8 rounded-r-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium whitespace-nowrap"
           >
-            Añadir mi opinión
+            Empezar
           </button>
         </div>
-        <p className="text-center mt-8 text-gray-700">
-          Tus opiniones ayudan a crear un mercado de alquiler más transparente
-        </p>
       </div>
+        
+      {/* Text at top left with arrow */}
+      <div className="absolute top-[30%] left-[20%] max-w-[200px]">
+        <div className="bg-white p-3 rounded-lg shadow-md relative">
+          <p className="text-gray-700 font-medium text-lg ">Todas las reviews son <span className="font-bold">Anónimas</span></p>
+
+        <div className="absolute -bottom-2 right-1/2 w-4 h-4 bg-white transform rotate-45"/>
+        </div>
+      </div>
+      
+      {/* Text at top right with arrow */}
+      <div className="absolute top-[25%] right-[15%] max-w-[250px]">
+        <div className="bg-white p-3 rounded-lg shadow-md relative">
+          <p className="text-gray-700 text-lg">Tus opiniones ayudan a crear un mercado de alquiler más<span className="font-bold"> transparente</span></p>
+          <div className="absolute -bottom-2 left-1/2 w-4 h-4 bg-white transform rotate-45 "/>
+        </div>
+        
+      </div>
+     
     </section>
   );
 };
