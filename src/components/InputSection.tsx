@@ -1,9 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const InputSection: React.FC = () => {
   const navigate = useNavigate();
   const [address, setAddress] = useState('');
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
+  const [nextMessageIndex, setNextMessageIndex] = useState(1);
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  const messages = [
+    "Todas las reviews son Anónimas",
+    "Tus opiniones ayudan a crear un mercado de alquiler más transparente",
+    "Comparte tu experiencia con otros inquilinos",
+    "Ayuda a mejorar el mercado inmobiliario"
+  ];
+
+  // Check if the device is mobile
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768); // 768px is the md breakpoint in Tailwind
+    };
+    
+    checkIfMobile();
+    window.addEventListener('resize', checkIfMobile);
+    
+    return () => {
+      window.removeEventListener('resize', checkIfMobile);
+    };
+  }, []);
+  
+  // Rotate through messages on mobile
+  useEffect(() => {
+    if (!isMobile) return;
+    
+    const rotateMessages = () => {
+      // Start animation
+      setIsAnimating(true);
+      
+      // After animation completes, update the displayed message
+      setTimeout(() => {
+        setCurrentMessageIndex(nextMessageIndex);
+        setNextMessageIndex((nextMessageIndex + 1) % messages.length);
+        setIsAnimating(false);
+      }, 1000);
+    };
+    
+    const interval = setInterval(rotateMessages, 4000);
+    return () => clearInterval(interval);
+  }, [isMobile, nextMessageIndex, messages.length]);
 
   const handleStart = () => {
     if (address.trim()) {
@@ -11,46 +56,125 @@ const InputSection: React.FC = () => {
     }
   };
 
-  return (
-    <section className="relative h-[calc(100vh-180px)] flex flex-col justify-center items-center" style={{ backgroundColor: '#e1f56e' }}>
-      <div className="w-full max-w-3xl mx-auto px-4">
-        <div className="flex flex-col md:flex-row gap-3 justify-center items-center">
+  // Render message with last word bold
+  const renderMessage = (message: string) => {
+    return message.split(' ').map((word, i, arr) => 
+      i === arr.length - 1 ? 
+        <span key={i} className="font-bold"> {word}</span> : 
+        <span key={i}>{word} </span>
+    );
+  };
+
+  // Mobile component
+
+  if(isMobile){
+    return (
+    <section className="relative h-[calc(100vh-240px)] flex flex-col pt-24 items-center" style={{ backgroundColor: '#e1f56e' }}>
+      <div className="container mx-auto px-0 max-w-5xl relative">
+        {/* Mobile message carousel - sliding horizontally every 4 seconds */}
+        <div className="mb-8 mt-8 overflow-hidden">
+          <div className="relative h-[120px] w-full">
+            {/* Current message */}
+            <div 
+              key={`message-${currentMessageIndex}`}
+              className="bg-white p-4 rounded-lg shadow-md absolute transition-all duration-1000 left-1/2"
+              style={{ 
+                width: '280px',
+                maxWidth: '80%',
+                top: '50%',
+                transform: `translate(-50%, -50%) translateX(${isAnimating ? '-200%' : '0'})`,
+                zIndex: isAnimating ? 0 : 1
+              }}
+            >
+              <p className="text-gray-700 font-medium text-center break-words">
+                {renderMessage(messages[currentMessageIndex])}
+              </p>
+            </div>
+            
+            {/* Next message */}
+            <div 
+              key={`message-next-${nextMessageIndex}`}
+              className="bg-white p-4 rounded-lg shadow-md absolute transition-all duration-1000 left-1/2"
+              style={{ 
+                width: '280px',
+                maxWidth: '80%',
+                top: '50%',
+                transform: `translate(-50%, -50%) translateX(${isAnimating ? '0' : '200%'})`,
+                zIndex: isAnimating ? 1 : 0
+              }}
+            >
+              <p className="text-gray-700 font-medium text-center break-words">
+                {renderMessage(messages[nextMessageIndex])}
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        {/* Input and button */}
+        <div className="flex flex-row justify-center items-center max-w-3xl px-4">
           <input
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="Dirección de la vivienda"
-            className="flex-grow w-full md:w-auto p-3 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Dirección del inmueble"
+            className="w-full p-4 rounded-l-lg border-0 text-gray-700 h-12"
+
           />
+          
+          {/* Mobile button with icon */}
           <button
             onClick={handleStart}
-            className="bg-blue-600 text-white py-3 px-8 rounded-r-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium whitespace-nowrap"
+            className="bg-[#F97316] text-white p-3 rounded-r-md  flex-shrink-0"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+return (
+    <section className="relative h-[calc(100vh-180px)] flex flex-col justify-center items-center" style={{ backgroundColor: '#e1f56e' }}>
+      <div className="container mx-auto px-4 max-w-5xl relative">
+        <div>
+          <div className="absolute top-[-100px] left-[10%] md:left-[9%] lg:left-[10%] max-w-[200px]">
+            <div className="bg-white p-3 rounded-lg shadow-md relative">
+              <p className="text-gray-700 font-medium text-lg">Todas las reviews son <span className="font-bold">Anónimas</span></p>
+              <div className="absolute -bottom-2 right-1/2 w-4 h-4 bg-white transform rotate-45"/>
+            </div>
+          </div>
+          
+          <div className="absolute top-[-130px] right-[10%] md:right-[6%] lg:right-[12%] max-w-[250px]">
+            <div className="bg-white p-3 rounded-lg shadow-md relative">
+              <p className="text-gray-700 text-lg">Tus opiniones ayudan a crear un mercado de alquiler más<span className="font-bold"> transparente</span></p>
+              <div className="absolute -bottom-2 left-1/2 w-4 h-4 bg-white transform rotate-45"/>
+            </div>
+          </div>
+        </div>
+        
+        <div className="flex flex-row justify-center items-center mx-auto max-w-3xl">
+          <input
+            type="text"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+            placeholder="Dirección del inmueble"
+            className="w-full p-4 rounded-l-lg border-0 focus:outline-none focus:ring-2 focus:ring-[#F97316] text-gray-700"
+          />
+          
+          <button
+            onClick={handleStart}
+            className="bg-[#F97316] text-white px-8 py-4 rounded-r-lg hover:bg-[#EA580C] focus:outline-none focus:ring-2 focus:ring-[#F97316] font-medium"
           >
             Empezar
           </button>
         </div>
       </div>
-        
-      {/* Text at top left with arrow */}
-      <div className="absolute top-[30%] left-[20%] max-w-[200px]">
-        <div className="bg-white p-3 rounded-lg shadow-md relative">
-          <p className="text-gray-700 font-medium text-lg ">Todas las reviews son <span className="font-bold">Anónimas</span></p>
-
-        <div className="absolute -bottom-2 right-1/2 w-4 h-4 bg-white transform rotate-45"/>
-        </div>
-      </div>
-      
-      {/* Text at top right with arrow */}
-      <div className="absolute top-[25%] right-[15%] max-w-[250px]">
-        <div className="bg-white p-3 rounded-lg shadow-md relative">
-          <p className="text-gray-700 text-lg">Tus opiniones ayudan a crear un mercado de alquiler más<span className="font-bold"> transparente</span></p>
-          <div className="absolute -bottom-2 left-1/2 w-4 h-4 bg-white transform rotate-45 "/>
-        </div>
-        
-      </div>
-     
     </section>
-  );
+  ); 
+
 };
 
 export default InputSection;
