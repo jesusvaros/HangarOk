@@ -46,7 +46,7 @@ const InputSection: React.FC = () => {
       }, 1000);
     };
     
-    const interval = setInterval(rotateMessages, 4000);
+    const interval = setInterval(rotateMessages, 3500);
     return () => clearInterval(interval);
   }, [isMobile, nextMessageIndex, messages.length]);
 
@@ -116,9 +116,8 @@ const InputSection: React.FC = () => {
             type="text"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
-            placeholder="Dirección del inmueble"
-            className="w-full p-4 rounded-l-lg border-0 text-gray-700 h-12"
-
+            placeholder="Ciudad o barrio"
+            className="w-full p-4 rounded-l-lg border-0 text-gray-700 h-12 focus:outline-none "
           />
           
           {/* Mobile button with icon */}
@@ -161,12 +160,12 @@ return (
             value={address}
             onChange={(e) => setAddress(e.target.value)}
             placeholder="Dirección del inmueble"
-            className="w-full p-4 rounded-l-lg border-0 focus:outline-none focus:ring-2 focus:ring-[#F97316] text-gray-700"
+            className="w-full p-4 rounded-l-lg border-0 focus:outline-none  text-gray-700"
           />
           
           <button
             onClick={handleStart}
-            className="bg-[#F97316] text-white px-8 py-4 rounded-r-lg hover:bg-[#EA580C] focus:outline-none focus:ring-2 focus:ring-[#F97316] font-medium"
+            className="bg-[#F97316] text-white px-8 py-4 rounded-r-lg hover:bg-[#EA580C] focus:outline-none font-medium"
           >
             Empezar
           </button>
