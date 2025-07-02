@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 
 // Import our components
+import Header from './components/Header';
 import InputSection from './components/InputSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
@@ -10,12 +11,7 @@ import AddReviewForm from './components/AddReviewForm';
 function App() {
   return (
     <div className="min-h-screen bg-white">
-      <header className="bg-white py-6 border-b">
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-3xl font-bold text-center text-blue-800">Casero Verificado</h1>
-          <p className="text-center text-gray-600">Consulta y comparte opiniones anónimas sobre caseros</p>
-        </div>
-      </header>
+      <Header />
 
       <Routes>
         <Route path="/map" element={<MapView />} />
