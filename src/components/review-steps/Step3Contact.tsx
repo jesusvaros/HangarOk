@@ -23,7 +23,7 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
           type="text"
           value={formData.ownerName || ''}
           onChange={(e) => updateFormData({ ownerName: e.target.value })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
           placeholder="Nombre completo"
         />
       </div>
@@ -38,7 +38,7 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
           type="tel"
           value={formData.ownerPhone || ''}
           onChange={(e) => updateFormData({ ownerPhone: e.target.value })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
           placeholder="Ej: 600123456"
         />
       </div>
@@ -47,14 +47,14 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
         <button 
           type="button" 
           onClick={onPrev}
-          className="text-blue-600 hover:text-blue-800"
+          className="text-orange-500 hover:text-orange-600"
         >
           Anterior
         </button>
         <button 
           type="button" 
           onClick={onNext}
-          className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700"
+          className="bg-orange-500 text-white py-2 px-6 rounded hover:bg-orange-600"
         >
           Confirmar
         </button>

@@ -76,7 +76,7 @@ const AddReviewForm: React.FC = () => {
           {[1, 2, 3, 4].map((step) => (
             <div 
               key={step} 
-              className={`text-xs font-medium ${step <= currentProgress ? 'text-blue-600' : 'text-gray-400'}`}
+              className={`text-xs font-medium ${step <= currentProgress ? 'text-orange-500' : 'text-gray-400'}`}
             >
               {step === 1 && 'Datos Objetivos'}
               {step === 2 && 'Opiniones'}
@@ -87,7 +87,7 @@ const AddReviewForm: React.FC = () => {
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2.5">
           <div 
-            className="bg-blue-600 h-2.5 rounded-full transition-all duration-300" 
+            className="bg-orange-500 h-2.5 rounded-full transition-all duration-300" 
             style={{ width: `${percentage}%` }}
           ></div>
         </div>
@@ -122,7 +122,7 @@ const AddReviewForm: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="max-w-2xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <div className="max-w-2xl mx-auto p-6">
         <h1 className="text-2xl font-bold mb-6 text-center">Añadir Opinión</h1>
         
         <ProgressBar />
@@ -135,26 +135,6 @@ const AddReviewForm: React.FC = () => {
         
         <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="space-y-4">
           {renderCurrentStep()}
-          
-          <div className="flex justify-between items-center pt-6 border-t mt-6">
-            <button
-              type="button"
-              onClick={prevStep}
-              className="text-blue-600 hover:text-blue-800"
-            >
-              {currentStep === 1 ? 'Cancelar' : 'Anterior'}
-            </button>
-            
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-            >
-              {isLoading ? 'Enviando...' : 
-               showEmailConfirm ? 'Enviar opinión' : 
-               currentStep === 3 ? 'Continuar' : 'Siguiente'}
-            </button>
-          </div>
         </form>
       </div>
     </div>

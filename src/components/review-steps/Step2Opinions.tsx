@@ -42,7 +42,7 @@ const Step2Opinions: React.FC<Step2Props> = ({ onNext, onPrev }) => {
           value={formData.comments || ''}
           onChange={(e) => updateFormData({ comments: e.target.value })}
           rows={4}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
           placeholder="Comparte tu experiencia con este propietario/agencia..."
         ></textarea>
       </div>
@@ -70,14 +70,14 @@ const Step2Opinions: React.FC<Step2Props> = ({ onNext, onPrev }) => {
         <button 
           type="button" 
           onClick={onPrev}
-          className="text-blue-600 hover:text-blue-800"
+          className="text-orange-500 hover:text-orange-600"
         >
           Anterior
         </button>
         <button 
           type="button" 
           onClick={onNext}
-          className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700"
+          className="bg-orange-500 text-white py-2 px-6 rounded hover:bg-orange-600"
         >
           Siguiente
         </button>
