@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useFormContext } from '../store/useFormContext';
 
 const InputSection: React.FC = () => {
   const navigate = useNavigate();
-  const [address, setAddress] = useState('');
+  const { address, setAddress } = useFormContext();
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const [nextMessageIndex, setNextMessageIndex] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -52,7 +53,7 @@ const InputSection: React.FC = () => {
 
   const handleStart = () => {
     if (address.trim()) {
-      navigate(`/add-review?address=${encodeURIComponent(address)}`);
+      navigate('/add-review');
     }
   };
 

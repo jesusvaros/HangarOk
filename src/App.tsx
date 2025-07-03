@@ -8,27 +8,32 @@ import PictureSection from './components/PictureSection';
 import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
 
+// Import FormProvider
+import { FormProvider } from './store/FormContext';
+
 function App() {
   return (
-    <div className="min-h-screen bg-white">
-      <Header />
+    <FormProvider>
+      <div className="min-h-screen bg-white">
+        <Header />
 
-      <Routes>
-        <Route path="/map" element={<MapView />} />
-        <Route path="/add-review" element={<AddReviewForm />} />
-        <Route path="/" element={
-          <>
-            <InputSection />
-            <ChromeStoreSection />
-            <PictureSection />
-          </>
-        } />
-      </Routes>
+        <Routes>
+          <Route path="/map" element={<MapView />} />
+          <Route path="/add-review" element={<AddReviewForm />} />
+          <Route path="/" element={
+            <>
+              <InputSection />
+              <ChromeStoreSection />
+              <PictureSection />
+            </>
+          } />
+        </Routes>
 
-      <footer className="max-w-6xl mx-auto mt-8 text-center text-gray-500 text-sm py-6">
-        <p>© {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas</p>
-      </footer>
-    </div>
+        <footer className="max-w-6xl mx-auto mt-8 text-center text-gray-500 text-sm py-6">
+          <p>© {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas</p>
+        </footer>
+      </div>
+    </FormProvider>
   );
 }
 
