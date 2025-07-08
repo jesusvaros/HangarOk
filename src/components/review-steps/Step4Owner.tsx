@@ -13,7 +13,7 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
   return (
     <div>
       {/* Sección: Tipo de propietario */}
-      <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+      <div className="mb-8">
         <h3 className="text-lg font-medium mb-4 text-orange-500">Tipo de propietario</h3>
         
         <div className="mb-4">
@@ -45,7 +45,7 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
       </div>
       
       {/* Sección: Datos del propietario/agencia */}
-      <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+      <div className="mb-8">
         <h3 className="text-lg font-medium mb-4 text-orange-500">Datos del {formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}</h3>
         
         <CustomInput
@@ -58,7 +58,7 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
       </div>
       
       {/* Sección: Información de contacto */}
-      <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+      <div className="mb-8">
         <h3 className="text-lg font-medium mb-4 text-orange-500">Información de contacto</h3>
         
         <CustomInput

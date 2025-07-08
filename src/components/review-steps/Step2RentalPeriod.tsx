@@ -13,48 +13,43 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
   
   return (
     <div>
-      
-      <div className="">
-        <div>
-          <div className="mb-8 p-4 border border-gray-200 rounded-lg">
-            <h3 className="text-lg font-medium mb-4 text-orange-500">Período de alquiler</h3>
-            
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Año de inicio
-              </label>
-              <select
-                value={formData.startYear || new Date().getFullYear()}
-                onChange={(e) => updateFormData({ startYear: parseInt(e.target.value) })}
-                className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-            
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Año de fin (o actual si sigues viviendo)
-              </label>
-              <select
-                value={formData.endYear || new Date().getFullYear()}
-                onChange={(e) => updateFormData({ endYear: parseInt(e.target.value) })}
-                className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-              >
-                <option value={new Date().getFullYear()}>Actualmente</option>
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                  <option key={year} value={year}>{year}</option>
-                ))}
-              </select>
-            </div>
-          </div>
+      <div className="mb-8">
+        <h3 className="text-lg font-medium mb-4 text-orange-500">Período de alquiler</h3>
+        
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Año de inicio
+          </label>
+          <select
+            value={formData.startYear || new Date().getFullYear()}
+            onChange={(e) => updateFormData({ startYear: parseInt(e.target.value) })}
+            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+          >
+            {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
         </div>
         
-        <div>
-          {/* Sección: Precio del alquiler */}
-      <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Año de fin (o actual si sigues viviendo)
+          </label>
+          <select
+            value={formData.endYear || new Date().getFullYear()}
+            onChange={(e) => updateFormData({ endYear: parseInt(e.target.value) })}
+            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+          >
+            <option value={new Date().getFullYear()}>Actualmente</option>
+            {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+              <option key={year} value={year}>{year}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      
+      {/* Sección: Precio del alquiler */}
+      <div className="mb-8">
         <h3 className="text-lg font-medium mb-4 text-orange-500">Precio del alquiler</h3>
         <CustomInput
           id="price"
@@ -65,7 +60,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
           placeholder="Ej: 800"
         />
         
-        <div className="mt-4">
+        <div className="mt-6">
           <SelectableTagGroup
             label="Incluye:"
             options={['Luz', 'Agua', 'Comunidad', 'Gas', 'Garaje']}
@@ -73,8 +68,6 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
             onChange={(selected) => updateFormData({ includedServices: selected })}
             multiSelect={true}
           />
-        </div>
-      </div>
         </div>
       </div>
       

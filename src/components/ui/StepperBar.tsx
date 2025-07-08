@@ -8,7 +8,7 @@ interface StepperBarProps {
 
 const StepperBar: React.FC<StepperBarProps> = ({ currentStep, steps, onStepClick }) => {
   return (
-    <div className="mb-8">
+    <div className="mb-0">
       <div className="relative flex justify-between items-center">
         {/* Línea de conexión */}
         <div className="absolute left-0 right-0 top-3 h-0.5 bg-gray-300 -translate-y-1/2" />

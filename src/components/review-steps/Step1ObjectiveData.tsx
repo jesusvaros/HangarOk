@@ -21,7 +21,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   return (
     <div>
       {/* Sección: Dirección */}
-      <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+      <div className="mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-4">
           <h3 className="text-xl font-medium mb-4 md:mb-0 text-orange-500">Dirección</h3>
         </div>
@@ -34,7 +34,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
           placeholder="Ej: Calle Mayor 25"
         />
         
-        <div className="flex flex-wrap -mx-2">
+        <div className="flex flex-wrap -mx-2 mt-4">
           <div className="w-full md:w-1/3 px-2">
             <CustomInput
               id="floor"

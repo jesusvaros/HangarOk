@@ -98,27 +98,37 @@ const AddReviewForm: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 pt-16">
-      <div className="max-w-2xl mx-auto p-6">
-        {isSubmitted ? (
-          <EmailConfirmation 
-            email={formData.contactEmail || ''} 
-            setEmail={() => {}} 
-            onSubmit={() => {}} 
-            onBack={() => {}}
-          />
-        ) : (
-          <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-            {renderProgressBar()}
-            {renderStep()}
-            {isModalOpen && (
-              <ContactModal 
-                onClose={handleCloseModal} 
-                onSubmit={handleContactSubmit}
-              />
-            )}
-          </div>
-        )}
+    <div className="bg-gray-100 min-h-screen">
+      <div className="container mx-auto px-4 py-8 pt-16">
+        <div className="max-w-2xl mx-auto">
+          {isSubmitted ? (
+            <EmailConfirmation 
+              email={formData.contactEmail || ''} 
+              setEmail={() => {}} 
+              onSubmit={() => {}} 
+              onBack={() => {}}
+            />
+          ) : (
+            <div>
+              {/* Stepper Bar with transparent background */}
+              <div className="mb-6">
+                {renderProgressBar()}
+              </div>
+              
+              {/* Single white box wrapping all form content */}
+              <div className="bg-white p-6 rounded-lg shadow-sm">
+                {renderStep()}
+              </div>
+              
+              {isModalOpen && (
+                <ContactModal 
+                  onClose={handleCloseModal} 
+                  onSubmit={handleContactSubmit}
+                />
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
