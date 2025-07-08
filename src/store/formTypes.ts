@@ -11,6 +11,12 @@ export interface FormContextType {
 export interface FormDataType {
   // Step 1: Objective data
   address: string;
+  addressDetails?: {
+    streetAddress?: string;
+    staircase?: string;
+    floor?: string;
+    door?: string;
+  };
   rentalPrice: number;
   ownerType: 'owner' | 'agency' | '';
   rentalPeriod: {

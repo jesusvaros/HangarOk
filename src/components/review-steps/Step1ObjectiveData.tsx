@@ -1,51 +1,82 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
+import CustomInput from '../ui/CustomInput';
 
 interface Step1Props {
   onNext: () => void;
 }
 
 const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
-  const { address, formData, updateFormData } = useFormContext();
+  const { formData, updateFormData } = useFormContext();
+  
+  const handleAddressChange = (field: string, value: string) => {
+    updateFormData({
+      addressDetails: {
+        ...formData.addressDetails || {},
+        [field]: value
+      }
+    });
+  };
   
   return (
-    <div>
-      <h2 className="text-xl font-semibold mb-6 text-center">Datos Objetivos</h2>
+    <div className="">
       
       {/* Sección: Dirección */}
       <div className="mb-8 p-4 border border-gray-200 rounded-lg">
-        <h3 className="text-lg font-medium mb-4 text-orange-500">Dirección</h3>
-        <div className="mb-4">
-          <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-            Dirección completa
-          </label>
-          <input
-            id="address"
-            type="text"
-            value={formData.address || address}
-            onChange={(e) => updateFormData({ address: e.target.value })}
-            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Calle, número, ciudad"
-          />
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-4">
+          <h3 className="text-xl font-medium mb-4 md:mb-0 text-orange-500">Dirección</h3>
+        </div>
+        
+        <CustomInput
+          id="streetAddress"
+          label="Calle y número"
+          value={formData.addressDetails?.streetAddress || ''}
+          onChange={(e) => handleAddressChange('streetAddress', e.target.value)}
+          placeholder="Ej: Calle Mayor 25"
+        />
+        
+        <div className="flex flex-wrap -mx-2">
+          <div className="w-full md:w-1/3 px-2">
+            <CustomInput
+              id="staircase"
+              label="Escalera"
+              value={formData.addressDetails?.staircase || ''}
+              onChange={(e) => handleAddressChange('staircase', e.target.value)}
+              placeholder="Escalera"
+            />
+          </div>
+          <div className="w-full md:w-1/3 px-2">
+            <CustomInput
+              id="floor"
+              label="Piso"
+              value={formData.addressDetails?.floor || ''}
+              onChange={(e) => handleAddressChange('floor', e.target.value)}
+              placeholder="Piso"
+            />
+          </div>
+          <div className="w-full md:w-1/3 px-2">
+            <CustomInput
+              id="door"
+              label="Puerta"
+              value={formData.addressDetails?.door || ''}
+              onChange={(e) => handleAddressChange('door', e.target.value)}
+              placeholder="Puerta"
+            />
+          </div>
         </div>
       </div>
       
       {/* Sección: Precio del alquiler */}
       <div className="mb-8 p-4 border border-gray-200 rounded-lg">
         <h3 className="text-lg font-medium mb-4 text-orange-500">Precio del alquiler</h3>
-        <div className="mb-4">
-          <label htmlFor="rentalPrice" className="block text-sm font-medium text-gray-700 mb-2">
-            Precio mensual (€)
-          </label>
-          <input
-            id="rentalPrice"
-            type="number"
-            value={formData.rentalPrice || ''}
-            onChange={(e) => updateFormData({ rentalPrice: parseFloat(e.target.value) || 0 })}
-            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-            placeholder="Ej: 800"
-          />
-        </div>
+        <CustomInput
+          id="rentalPrice"
+          label="Precio mensual (€)"
+          type="number"
+          value={formData.rentalPrice || ''}
+          onChange={(e) => updateFormData({ rentalPrice: parseFloat(e.target.value) || 0 })}
+          placeholder="Ej: 800"
+        />
         
         <div className="mb-4 mt-6">
           <label className="block text-sm font-medium text-gray-700 mb-2">

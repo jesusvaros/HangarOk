@@ -64,32 +64,77 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
-  // Progress bar component
+  // Progress indicator component with clickable steps
   const ProgressBar = () => {
-    const totalSteps = showEmailConfirm ? 4 : 3;
-    const currentProgress = showEmailConfirm ? 4 : currentStep;
-    const percentage = (currentProgress / totalSteps) * 100;
+    // Handle step navigation when clicking on a step indicator
+    const handleStepClick = (step: number) => {
+      // Only allow navigation to steps that have been visited or the next step
+      if (step <= Math.max(currentStep, 1) || step === currentStep + 1) {
+        if (step === 4) {
+          // Step 4 is email confirmation
+          setShowEmailConfirm(true);
+        } else {
+          setCurrentStep(step);
+          setShowEmailConfirm(false);
+        }
+      }
+    };
     
     return (
       <div className="mb-8">
-        <div className="flex justify-between mb-1">
-          {[1, 2, 3, 4].map((step) => (
-            <div 
-              key={step} 
-              className={`text-xs font-medium ${step <= currentProgress ? 'text-orange-500' : 'text-gray-400'}`}
-            >
-              {step === 1 && 'Datos Objetivos'}
-              {step === 2 && 'Opiniones'}
-              {step === 3 && 'Contacto'}
-              {step === 4 && 'Confirmación'}
-            </div>
-          ))}
-        </div>
-        <div className="w-full bg-gray-200 rounded-full h-2.5">
-          <div 
-            className="bg-orange-500 h-2.5 rounded-full transition-all duration-300" 
-            style={{ width: `${percentage}%` }}
-          ></div>
+        <div className="flex justify-between items-center">
+          {[1, 2, 3, 4].map((step) => {
+            // Determine if this step is the current step
+            const isCurrentStep = (showEmailConfirm && step === 4) || (!showEmailConfirm && step === currentStep);
+            // Determine if this step is completed
+            const isCompleted = (!showEmailConfirm && step < currentStep) || (showEmailConfirm && step < 4);
+            // Determine if this step is accessible (already visited or next step)
+            const isAccessible = step <= Math.max(currentStep, 1) || step === currentStep + 1;
+            
+            return (
+              <div 
+                key={step} 
+                className="flex flex-col items-center cursor-pointer"
+                onClick={() => isAccessible ? handleStepClick(step) : null}
+              >
+                {/* Circle with number or checkmark */}
+                <div 
+                  className={`
+                    flex items-center justify-center 
+                    w-9 h-9 rounded-full mb-2 
+                    ${isCurrentStep ? 'bg-orange-500 text-white font-bold' : 
+                      isCompleted ? 'bg-gray-300 text-white' :
+                      isAccessible ? 'bg-gray-200 text-gray-700' : 'bg-gray-100 text-gray-400'} 
+                    ${isAccessible && !isCompleted ? 'hover:bg-orange-100 hover:border-orange-500 border border-transparent' : ''} 
+                    transition-all duration-200
+                  `}
+                >
+                  {isCompleted ? (
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  ) : (
+                    step
+                  )}
+                </div>
+                
+                {/* Step name */}
+                <span 
+                  className={`
+                    text-center text-sm 
+                    ${isCurrentStep ? 'font-bold text-orange-500' : 
+                      isCompleted ? 'font-medium text-gray-600' :
+                      isAccessible ? 'text-gray-700' : 'text-gray-400'}
+                  `}
+                >
+                  {step === 1 && 'Datos de la vivienda'}
+                  {step === 2 && 'Experiencia'}
+                  {step === 3 && 'Información sensible'}
+                  {step === 4 && 'Confirmación'}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
     );
@@ -121,10 +166,8 @@ const AddReviewForm: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 pt-16">
       <div className="max-w-2xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-6 text-center">Añadir Opinión</h1>
-        
         <ProgressBar />
         
         {error && (

@@ -11,36 +11,46 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
   
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Información de Contacto</h2>
+      <h2 className="text-xl font-semibold mb-6 text-center">Información sensible</h2>
       
-      <div className="mb-4">
-        <label htmlFor="ownerName" className="block text-sm font-medium text-gray-700 mb-1">
-          Nombre del {formData.ownerType === 'owner' ? 'propietario' : 'agencia'}
-        </label>
-        <input
-          id="ownerName"
-          name="ownerName"
-          type="text"
-          value={formData.ownerName || ''}
-          onChange={(e) => updateFormData({ ownerName: e.target.value })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-          placeholder="Nombre completo"
-        />
+      {/* Sección: Datos del propietario/agencia */}
+      <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+        <h3 className="text-lg font-medium mb-4 text-orange-500">Datos del {formData.ownerType === 'owner' ? 'propietario' : 'agencia'}</h3>
+        
+        <div className="mb-4">
+          <label htmlFor="ownerName" className="block text-sm font-medium text-gray-700 mb-2">
+            Nombre completo
+          </label>
+          <input
+            id="ownerName"
+            name="ownerName"
+            type="text"
+            value={formData.ownerName || ''}
+            onChange={(e) => updateFormData({ ownerName: e.target.value })}
+            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+            placeholder="Nombre del {formData.ownerType === 'owner' ? 'propietario' : 'agencia'}"
+          />
+        </div>
       </div>
       
-      <div className="mb-4">
-        <label htmlFor="ownerPhone" className="block text-sm font-medium text-gray-700 mb-1">
-          Teléfono de contacto
-        </label>
-        <input
-          id="ownerPhone"
-          name="ownerPhone"
-          type="tel"
-          value={formData.ownerPhone || ''}
-          onChange={(e) => updateFormData({ ownerPhone: e.target.value })}
-          className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-          placeholder="Ej: 600123456"
-        />
+      {/* Sección: Información de contacto */}
+      <div className="mb-8 p-4 border border-gray-200 rounded-lg">
+        <h3 className="text-lg font-medium mb-4 text-orange-500">Información de contacto</h3>
+        
+        <div className="mb-4">
+          <label htmlFor="ownerPhone" className="block text-sm font-medium text-gray-700 mb-2">
+            Teléfono de contacto
+          </label>
+          <input
+            id="ownerPhone"
+            name="ownerPhone"
+            type="tel"
+            value={formData.ownerPhone || ''}
+            onChange={(e) => updateFormData({ ownerPhone: e.target.value })}
+            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
+            placeholder="Ej: 600123456"
+          />
+        </div>
       </div>
       
       <div className="flex justify-between mt-4">
