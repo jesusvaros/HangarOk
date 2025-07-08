@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormContext } from '../store/useFormContext';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
@@ -17,6 +17,23 @@ const AddReviewForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Handle responsive layout
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // Check on initial load
+    checkIfMobile();
+    
+    // Add event listener for window resize
+    window.addEventListener('resize', checkIfMobile);
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
 
   // Go to next step
   const handleNext = () => {
@@ -77,9 +94,7 @@ const AddReviewForm: React.FC = () => {
     }
   };
   
-  const renderProgressBar = () => {
-    return <StepperBar currentStep={currentStep} steps={steps} onStepClick={handleStepClick} />;
-  };
+  // Stepper orientation is determined by screen size
 
   // Render the appropriate step component based on currentStep
   const renderStep = () => {
@@ -98,38 +113,46 @@ const AddReviewForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-100 min-h-screen">
-      <div className="container mx-auto px-4 py-8 pt-16">
-        <div className="max-w-2xl mx-auto">
-          {isSubmitted ? (
+    <div className="container mx-auto px-4 py-8 pt-24">
+        {isSubmitted ? (
+          <div className="max-w-2xl mx-auto">
             <EmailConfirmation 
               email={formData.contactEmail || ''} 
               setEmail={() => {}} 
               onSubmit={() => {}} 
               onBack={() => {}}
             />
-          ) : (
-            <div>
-              {/* Stepper Bar with transparent background */}
-              <div className="mb-6">
-                {renderProgressBar()}
+          </div>
+        ) : (
+          <div className="md:flex md:gap-8 mt-8">
+            {/* Stepper Bar - Vertical on desktop, horizontal on mobile */}
+            <div className="md:sticky md:top-16 md:self-start md:h-auto md:max-h-[500px] md:flex-shrink-0 md:w-48 mb-6 md:mb-0">
+              <div className="md:h-full">
+                <StepperBar 
+                  currentStep={currentStep} 
+                  steps={steps} 
+                  onStepClick={handleStepClick} 
+                  orientation={isMobile ? 'horizontal' : 'vertical'}
+                />
               </div>
-              
+            </div>
+            
+            {/* Form content */}
+            <div className="md:flex-grow max-w-2xl mx-auto md:mx-0">
               {/* Single white box wrapping all form content */}
               <div className="bg-white p-6 rounded-lg shadow-sm">
                 {renderStep()}
               </div>
-              
-              {isModalOpen && (
-                <ContactModal 
-                  onClose={handleCloseModal} 
-                  onSubmit={handleContactSubmit}
-                />
-              )}
             </div>
-          )}
-        </div>
-      </div>
+            
+            {isModalOpen && (
+              <ContactModal 
+                onClose={handleCloseModal} 
+                onSubmit={handleContactSubmit}
+              />
+            )}
+          </div>
+        )}
     </div>
   );
 };

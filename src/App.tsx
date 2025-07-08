@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 
 // Import our components
 import Header from './components/Header';
@@ -12,9 +12,12 @@ import AddReviewForm from './components/AddReviewForm';
 import { FormProvider } from './store/FormContext';
 
 function App() {
+  const location = useLocation();
+  const isAddReviewPage = location.pathname === '/add-review';
+  
   return (
     <FormProvider>
-      <div className="min-h-screen bg-white">
+      <div className={`min-h-screen ${isAddReviewPage ? 'bg-gray-100' : 'bg-white'}`}>
         <Header />
 
         <Routes>
@@ -29,9 +32,11 @@ function App() {
           } />
         </Routes>
 
-        <footer className="max-w-6xl mx-auto mt-8 text-center text-gray-500 text-sm py-6">
-          <p>© {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas</p>
-        </footer>
+        {!isAddReviewPage && (
+          <footer className="max-w-6xl mx-auto mt-8 text-center text-gray-500 text-sm py-6">
+            <p>© {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas</p>
+          </footer>
+        )}
       </div>
     </FormProvider>
   );
