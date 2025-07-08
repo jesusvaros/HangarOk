@@ -2,18 +2,16 @@ import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 
-interface Step3Props {
+interface Step4Props {
   onNext: () => void;
-  onPrev: () => void;
+  onPrevious: () => void;
 }
 
-const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
+const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
   
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-6 text-center">Información sensible</h2>
-      
       {/* Sección: Tipo de propietario */}
       <div className="mb-8 p-4 border border-gray-200 rounded-lg">
         <h3 className="text-lg font-medium mb-4 text-orange-500">Tipo de propietario</h3>
@@ -24,9 +22,9 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
               <input
                 type="radio"
                 name="ownerType"
-                value="owner"
-                checked={formData.ownerType === 'owner'}
-                onChange={() => updateFormData({ ownerType: 'owner' })}
+                value="Particular"
+                checked={formData.ownerType === 'Particular'}
+                onChange={() => updateFormData({ ownerType: 'Particular' })}
                 className="h-5 w-5 text-orange-500"
               />
               <span className="ml-2 text-base">Propietario</span>
@@ -35,9 +33,9 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
               <input
                 type="radio"
                 name="ownerType"
-                value="agency"
-                checked={formData.ownerType === 'agency'}
-                onChange={() => updateFormData({ ownerType: 'agency' })}
+                value="Agencia"
+                checked={formData.ownerType === 'Agencia'}
+                onChange={() => updateFormData({ ownerType: 'Agencia' })}
                 className="h-5 w-5 text-orange-500"
               />
               <span className="ml-2 text-base">Agencia</span>
@@ -48,14 +46,14 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
       
       {/* Sección: Datos del propietario/agencia */}
       <div className="mb-8 p-4 border border-gray-200 rounded-lg">
-        <h3 className="text-lg font-medium mb-4 text-orange-500">Datos del {formData.ownerType === 'owner' ? 'propietario' : 'agencia'}</h3>
+        <h3 className="text-lg font-medium mb-4 text-orange-500">Datos del {formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}</h3>
         
         <CustomInput
           id="ownerName"
           label="Nombre completo"
           value={formData.ownerName || ''}
           onChange={(e) => updateFormData({ ownerName: e.target.value })}
-          placeholder={`Nombre del ${formData.ownerType === 'owner' ? 'propietario' : 'agencia'}`}
+          placeholder={`Nombre del ${formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}`}
         />
       </div>
       
@@ -71,12 +69,36 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
           onChange={(e) => updateFormData({ ownerPhone: e.target.value })}
           placeholder="Ej: 600123456"
         />
+        
+        <div className="mt-4">
+          <CustomInput
+            id="ownerEmail"
+            label="Correo electrónico"
+            type="email"
+            value={formData.ownerEmail || ''}
+            onChange={(e) => updateFormData({ ownerEmail: e.target.value })}
+            placeholder="correo@ejemplo.com"
+          />
+        </div>
+        
+        <div className="mt-6 flex items-center">
+          <input
+            type="checkbox"
+            id="showOwnerContact"
+            checked={formData.showOwnerContact || false}
+            onChange={(e) => updateFormData({ showOwnerContact: e.target.checked })}
+            className="h-5 w-5 text-orange-500 rounded"
+          />
+          <label htmlFor="showOwnerContact" className="ml-2 text-sm text-gray-700">
+            Mostrar información de contacto públicamente
+          </label>
+        </div>
       </div>
       
       <div className="flex justify-between mt-4">
         <button 
           type="button" 
-          onClick={onPrev}
+          onClick={onPrevious}
           className="text-orange-500 hover:text-orange-600"
         >
           Anterior
@@ -86,11 +108,11 @@ const Step3Contact: React.FC<Step3Props> = ({ onNext, onPrev }) => {
           onClick={onNext}
           className="bg-orange-500 text-white py-2 px-6 rounded hover:bg-orange-600"
         >
-          Confirmar
+          Finalizar
         </button>
       </div>
     </div>
   );
 };
 
-export default Step3Contact;
+export default Step4Owner;

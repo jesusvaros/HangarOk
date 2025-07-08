@@ -8,55 +8,71 @@ export interface FormContextType {
   resetForm: () => void;
 }
 
-export interface FormDataType {
-  // Step 1: Objective data
-  address: string;
+export type FormDataType = {
+  // Step 1: Housing
   addressDetails?: {
-    streetAddress?: string;
-    staircase?: string;
+    street?: string;
+    number?: string;
     floor?: string;
     door?: string;
+    city?: string;
+    postalCode?: string;
   };
-  rentalPrice: number;
-  includedUtilities?: string[];
-  ownerType: 'owner' | 'agency' | '';
-  rentalPeriod: {
-    startYear: number;
-    endYear: number;
-  };
+  price?: number;
+  includedServices?: string[];
   
-  // Step 2: Opinions
-  ownerRating: number;
-  propertyConditionRating: number;
-  comments: string;
+  // Step 2: Rental Period
+  startYear?: number;
+  endYear?: number;
   
-  // Step 3: Contact info
-  ownerName: string;
-  ownerPhone: string;
+  // Step 3: Property Condition
+  summerTemperature?: 'Bien aislado' | 'Correcto' | 'Caluroso';
+  winterTemperature?: 'Bien aislado' | 'Correcto' | 'Frío';
+  noiseLevel?: 'Silencioso' | 'Tolerable' | 'Bastante' | 'Se oye todo';
+  lightLevel?: 'Nada de luz' | 'Poca luz' | 'Luminoso' | 'Muy luminoso';
+  maintenanceStatus?: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Poco' | 'Malo';
+  amenities?: string[];
+  comments?: string;
   
-  // Final step
-  email: string;
+  // Step 4: Owner
+  ownerType?: 'Particular' | 'Agencia';
+  ownerRating?: number;
+  showOwnerContact?: boolean;
+  ownerName?: string;
+  ownerPhone?: string;
+  ownerEmail?: string;
+  
+  // Contact Information (Modal)
+  contactName?: string;
+  contactEmail?: string;
 }
 
 export const initialFormData: FormDataType = {
-  // Step 1
-  address: '',
-  rentalPrice: 0,
-  ownerType: '',
-  rentalPeriod: {
-    startYear: new Date().getFullYear() - 1,
-    endYear: new Date().getFullYear()
+  addressDetails: {
+    street: '',
+    number: '',
+    floor: '',
+    door: '',
+    city: '',
+    postalCode: ''
   },
-  
-  // Step 2
-  ownerRating: 0,
-  propertyConditionRating: 0,
+  price: undefined,
+  includedServices: [],
+  startYear: undefined,
+  endYear: undefined,
+  summerTemperature: undefined,
+  winterTemperature: undefined,
+  noiseLevel: undefined,
+  lightLevel: undefined,
+  maintenanceStatus: undefined,
+  amenities: [],
   comments: '',
-  
-  // Step 3
+  ownerType: 'Particular',
+  ownerRating: 0,
   ownerName: '',
   ownerPhone: '',
-  
-  // Final step
-  email: ''
+  ownerEmail: '',
+  showOwnerContact: false,
+  contactName: '',
+  contactEmail: ''
 };
