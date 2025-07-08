@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
+import SelectableTagGroup from '../ui/SelectableTagGroup';
 
 interface Step1Props {
   onNext: () => void;
@@ -78,34 +79,14 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
           placeholder="Ej: 800"
         />
         
-        <div className="mb-4 mt-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Tipo de propietario
-          </label>
-          <div className="flex gap-6">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="ownerType"
-                value="owner"
-                checked={formData.ownerType === 'owner'}
-                onChange={() => updateFormData({ ownerType: 'owner' })}
-                className="h-5 w-5 text-orange-500"
-              />
-              <span className="ml-2 text-base">Propietario</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="ownerType"
-                value="agency"
-                checked={formData.ownerType === 'agency'}
-                onChange={() => updateFormData({ ownerType: 'agency' })}
-                className="h-5 w-5 text-orange-500"
-              />
-              <span className="ml-2 text-base">Agencia</span>
-            </label>
-          </div>
+        <div className="mt-4">
+          <SelectableTagGroup
+            label="Incluye:"
+            options={['Luz', 'Agua', 'Comunidad', 'Gas', 'Garaje']}
+            selectedOptions={formData.includedUtilities || []}
+            onChange={(selected) => updateFormData({ includedUtilities: selected })}
+            multiSelect={true}
+          />
         </div>
       </div>
       

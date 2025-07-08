@@ -18,6 +18,7 @@ export interface FormDataType {
     door?: string;
   };
   rentalPrice: number;
+  includedUtilities?: string[];
   ownerType: 'owner' | 'agency' | '';
   rentalPeriod: {
     startYear: number;
