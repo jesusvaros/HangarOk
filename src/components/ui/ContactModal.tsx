@@ -19,11 +19,26 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, onSubmit }) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-semibold mb-4 text-center">Tus datos de contacto</h2>
-        <p className="text-gray-600 mb-4 text-center">
-          Para finalizar tu reseña, por favor proporciona tus datos de contacto.
-        </p>
+      <div className="bg-white rounded-lg p-6 w-full max-w-md relative">
+        <button
+          type="button"
+          onClick={onClose}
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+          aria-label="Cerrar"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <h2 className="text-xl font-semibold mb-4">Tus datos de contacto</h2>
+        <div className="text-gray-600 mb-4">
+          <p className="mb-2">Recuerda:</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li>Solo será usada para validar la review</li>
+            <li>Siempre será anónima</li>
+            <li>Te permitirá editarla si fuera necesario</li>
+          </ul>
+        </div>
         
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -35,7 +50,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, onSubmit }) => {
               id="name"
               value={formData.contactName || ''}
               onChange={(e) => updateFormData({ contactName: e.target.value })}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               placeholder="Tu nombre"
               required
             />
@@ -50,23 +65,16 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, onSubmit }) => {
               id="email"
               value={formData.contactEmail || ''}
               onChange={(e) => updateFormData({ contactEmail: e.target.value })}
-              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               placeholder="tu@email.com"
               required
             />
           </div>
           
-          <div className="flex justify-end space-x-3">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-100"
-            >
-              Cancelar
-            </button>
+          <div className="flex justify-end">
             <button
               type="submit"
-              className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
+              className="px-4 py-2 bg-[rgb(74,94,50)] text-white rounded-lg hover:bg-[rgb(60,76,40)]"
             >
               Enviar reseña
             </button>

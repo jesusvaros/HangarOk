@@ -3,6 +3,7 @@ import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 import CustomTextarea from '../ui/CustomTextarea';
 import MessageBox from '../ui/MessageBox';
+import SelectableTagGroup from '../ui/SelectableTagGroup';
 
 interface Step5OwnerProps {
   onNext: () => void;
@@ -27,32 +28,16 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
       <div className="mb-8">
         <h3 className="text-lg font-medium mb-4 text-black">Tipo de propietario</h3>
         
-        <div className="mb-4">
-          <div className="flex gap-6">
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="ownerType"
-                value="Particular"
-                checked={formData.ownerType === 'Particular'}
-                onChange={() => updateFormData({ ownerType: 'Particular' })}
-                className="h-5 w-5 text-black"
-              />
-              <span className="ml-2 text-base">Propietario</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input
-                type="radio"
-                name="ownerType"
-                value="Agencia"
-                checked={formData.ownerType === 'Agencia'}
-                onChange={() => updateFormData({ ownerType: 'Agencia' })}
-                className="h-5 w-5 text-black"
-              />
-              <span className="ml-2 text-base">Agencia</span>
-            </label>
-          </div>
-        </div>
+        <SelectableTagGroup
+          options={['Propietario', 'Agencia']}
+          selectedOptions={[formData.ownerType === 'Particular' ? 'Propietario' : 'Agencia']}
+          onChange={(selected) => {
+            if (selected.length > 0) {
+              updateFormData({ ownerType: selected[0] === 'Propietario' ? 'Particular' : 'Agencia' });
+            }
+          }}
+          multiSelect={false}
+        />
       </div>
       
       {/* Sección: Datos del propietario/agencia */}
