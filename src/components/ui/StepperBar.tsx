@@ -68,7 +68,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
               
               {/* Etiqueta */}
               <span 
-                className={`${isVertical ? 'ml-3' : 'mt-2'} text-sm ${isVertical ? 'text-left' : 'text-center'} px-1 py-2 rounded-md block whitespace-nowrap`}
+                className={`${isVertical ? 'ml-3' : 'mt-2'} text-sm ${isVertical ? 'text-left' : 'text-center'} px-3 py-2 rounded-md block whitespace-nowrap`}
                 style={{
                   backgroundColor: isActive ? lightGreenColor : 'transparent',
                   fontWeight: isActive ? 'bold' : 'normal',
