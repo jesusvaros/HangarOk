@@ -90,7 +90,7 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
 
       {/* Opinión sobre el piso */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3 text-black">Tu opinión sobre el piso</h3>
+        <h3 className="text-lg font-medium mb-3 text-black">¿Quieres añadir algo más sobre el piso?</h3>
         <CustomTextarea
           id="propertyOpinion"
           value={formData.propertyOpinion || ''}

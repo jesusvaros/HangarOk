@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 import CustomTextarea from '../ui/CustomTextarea';
+import MessageBox from '../ui/MessageBox';
 
 interface Step5OwnerProps {
   onNext: () => void;
@@ -13,6 +14,16 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
   
   return (
     <div>
+      {/* Message box at the top */}
+      <div className="relative">
+        <MessageBox 
+          message="Guardamos esta información para poder matchearla con la de idealista" 
+          position="top" 
+          type="info" 
+          className="lg:absolute lg:right-[-24px] lg:translate-x-full lg:top-0 lg:w-48"
+        />
+      </div>
+
       {/* Sección: Tipo de propietario */}
       <div className="mb-8">
         <h3 className="text-lg font-medium mb-4 text-black">Tipo de propietario</h3>
@@ -56,12 +67,13 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
           onChange={(e) => updateFormData({ ownerName: e.target.value })}
           placeholder={`Nombre del ${formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}`}
         />
+
       </div>
       
       {/* Sección: Información de contacto */}
-      <div className="mb-8">
+      <div className="mb-8 relative">
         <h3 className="text-lg font-medium mb-4 text-black">Información de contacto</h3>
-        
+
         <CustomInput
           id="ownerPhone"
           label="Teléfono de contacto"
@@ -72,25 +84,33 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
         />
         
         <div className="mt-4">
-          <CustomInput
-            id="ownerEmail"
-            label="Correo electrónico"
-            type="email"
-            value={formData.ownerEmail || ''}
-            onChange={(e) => updateFormData({ ownerEmail: e.target.value })}
-            placeholder="correo@ejemplo.com"
-          />
+          <div className="relative">
+            <CustomInput
+              id="ownerEmail"
+              label="Correo electrónico"
+              type="email"
+              value={formData.ownerEmail || ''}
+              onChange={(e) => updateFormData({ ownerEmail: e.target.value })}
+              placeholder="correo@ejemplo.com"
+            />
+            <MessageBox 
+              message="Nunca enseñaremos esta información a nadie ni la guardamos en la base de datos" 
+              position="bottom" 
+              type="warning"
+              className="lg:absolute lg:right-[-24px] lg:translate-x-full lg:bottom-0 lg:w-48"
+            />
+          </div>
         </div>
       </div>
 
       {/* Opinión sobre el propietario/agencia */}
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4 text-black">Tu opinión sobre el {formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}</h3>
+        <h3 className="text-lg font-medium mb-4 text-black">Tu opinión sobre {formData.ownerType === 'Particular' ? 'el propietario' : 'la agencia'}</h3>
         <CustomTextarea
           id="ownerOpinion"
           value={formData.ownerOpinion || ''}
           onChange={(e) => updateFormData({ ownerOpinion: e.target.value })}
-          placeholder={`Comparte tu experiencia con el ${formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}...`}
+          placeholder={`Comparte tu experiencia con ${formData.ownerType === 'Particular' ? 'el propietario' : 'la agencia'}...`}
           rows={5}
         />
       </div>

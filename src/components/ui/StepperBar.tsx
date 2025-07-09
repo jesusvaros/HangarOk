@@ -15,18 +15,19 @@ const StepperBar: React.FC<StepperBarProps> = ({
 }) => {
   const isVertical = orientation === 'vertical';
   const greenColor = 'rgb(74 94 50)'; // Green color for active and completed steps
+  const lightGreenColor = 'rgba(74, 94, 50, 0.2)'; // Lighter green color for background
   
   return (
-    <div className={`${isVertical ? 'h-full' : 'mb-0'}`}>
+    <div className={`${isVertical ? 'h-full' : 'mb-0 overflow-x-auto'}`}>
       <div className={`relative ${isVertical 
-        ? 'flex flex-col justify-between items-start h-full' 
-        : 'flex justify-between items-center'}`}
+        ? 'flex flex-col justify-between items-start h-full mt-8' 
+        : 'flex items-center justify-start min-w-max mt-0 gap-0'}`}
       >
         {/* Línea de conexión */}
         <div 
           className={`absolute ${isVertical 
-            ? 'left-3 top-0 bottom-0 w-0.5 bg-gray-300 -translate-x-1/2' 
-            : 'left-0 right-0 top-3 h-0.5 bg-gray-300 -translate-y-1/2'}`} 
+            ? 'left-4 top-1 bottom-1 w-0.5 bg-gray-300 -translate-x-1/2' 
+            : 'left-[56px] right-[56px] top-4 h-0.5 bg-gray-300'}`} 
         />
         
         {/* Pasos */}
@@ -37,14 +38,14 @@ const StepperBar: React.FC<StepperBarProps> = ({
           return (
             <div 
               key={index} 
-              className={`relative z-10 ${isVertical 
-                ? 'flex items-center mb-8 last:mb-0' 
-                : 'flex flex-col items-center'}`}
+              className={`relative z-10 cursor-pointer ${isVertical 
+                ? 'flex items-center mb-10 last:mb-0' 
+                : 'flex flex-col items-center w-[100px]'} `}
+              onClick={() => onStepClick(index + 1)}
             >
               {/* Círculo */}
-              <button 
-                onClick={() => onStepClick(index + 1)}
-                className={`w-6 h-6 rounded-full flex items-center justify-center cursor-pointer ${
+              <div 
+                className={`w-8 h-8 rounded-full flex items-center justify-center ${
                   isActive 
                     ? 'text-white' 
                     : isCompleted 
@@ -61,12 +62,19 @@ const StepperBar: React.FC<StepperBarProps> = ({
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 ) : (
-                  <span className="text-xs">{index + 1}</span>
+                  <span className="text-sm font-medium">{index + 1}</span>
                 )}
-              </button>
+              </div>
               
               {/* Etiqueta */}
-              <span className={`${isVertical ? 'ml-3' : 'mt-2'} text-xs ${isVertical ? 'text-left' : 'text-center'}`}>
+              <span 
+                className={`${isVertical ? 'ml-3' : 'mt-2'} text-sm ${isVertical ? 'text-left' : 'text-center'} px-3 py-2 rounded-md min-w-[100px] block whitespace-nowrap`}
+                style={{
+                  backgroundColor: isActive ? lightGreenColor : 'transparent',
+                  fontWeight: isActive ? 'bold' : 'normal',
+                  height: '36px'
+                }}
+              >
                 {step}
               </span>
             </div>
