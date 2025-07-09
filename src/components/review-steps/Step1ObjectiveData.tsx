@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
+import MessageBox from '../ui/MessageBox';
 
 interface Step1Props {
   onNext: () => void;
@@ -20,8 +21,17 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   
   return (
     <div>
+      {/* Message box about anonymous opinions */}
+      <div className="relative">
+        <MessageBox 
+          title="Opinión Anónima"
+          message="Tu opinión es anónima. La información que compartas no se mostrará de forma exacta."
+          height="20px"
+        />
+      </div>
+
       {/* Sección: Dirección */}
-      <div className="mb-8">
+      <div className="">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-4">
           <h3 className="text-xl font-medium mb-4 md:mb-0 text-black">Dirección</h3>
         </div>
@@ -34,8 +44,8 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
           placeholder="Ej: Calle Mayor 25"
         />
         
-        <div className="flex flex-wrap -mx-2 mt-4">
-          <div className="w-full md:w-1/3 px-2">
+        <div className="flex -mx-2 mt-4">
+          <div className="w-1/2 px-2">
             <CustomInput
               id="floor"
               label="Piso"
@@ -44,7 +54,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
               placeholder="Piso"
             />
           </div>
-          <div className="w-full md:w-1/3 px-2">
+          <div className="w-1/2 px-2">
             <CustomInput
               id="door"
               label="Puerta"

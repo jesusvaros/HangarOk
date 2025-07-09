@@ -118,7 +118,7 @@ const AddReviewForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full py-8 pt-24 pb-36">
+    <div className="w-full py-8 pt-24">
       {isSubmitted ? (
         <div className="max-w-2xl mx-auto px-4">
           <EmailConfirmation

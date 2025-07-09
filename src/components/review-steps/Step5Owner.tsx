@@ -17,10 +17,9 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
       {/* Message box at the top */}
       <div className="relative">
         <MessageBox 
+          title="Información"
           message="Guardamos esta información para poder matchearla con la de idealista" 
-          position="top" 
-          type="info" 
-          className="lg:absolute lg:right-[-24px] lg:translate-x-full lg:top-0 lg:w-48"
+          height="0"
         />
       </div>
 
@@ -73,6 +72,11 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
       {/* Sección: Información de contacto */}
       <div className="mb-8 relative">
         <h3 className="text-lg font-medium mb-4 text-black">Información de contacto</h3>
+        <MessageBox 
+              title="Aviso"
+              message="Nunca enseñaremos esta información a nadie ni la guardamos en la base de datos" 
+              height="50px"
+            />
 
         <CustomInput
           id="ownerPhone"
@@ -84,7 +88,6 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
         />
         
         <div className="mt-4">
-          <div className="relative">
             <CustomInput
               id="ownerEmail"
               label="Correo electrónico"
@@ -93,13 +96,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
               onChange={(e) => updateFormData({ ownerEmail: e.target.value })}
               placeholder="correo@ejemplo.com"
             />
-            <MessageBox 
-              message="Nunca enseñaremos esta información a nadie ni la guardamos en la base de datos" 
-              position="bottom" 
-              type="warning"
-              className="lg:absolute lg:right-[-24px] lg:translate-x-full lg:bottom-0 lg:w-48"
-            />
-          </div>
+            
         </div>
       </div>
 

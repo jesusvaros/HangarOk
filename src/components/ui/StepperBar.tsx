@@ -18,16 +18,16 @@ const StepperBar: React.FC<StepperBarProps> = ({
   const lightGreenColor = 'rgba(74, 94, 50, 0.2)'; // Lighter green color for background
   
   return (
-    <div className={`${isVertical ? 'h-full' : 'mb-0 overflow-x-auto'}`}>
+    <div className={`${isVertical ? 'h-full' : 'mb-0 overflow-x-auto w-full'}`}>
       <div className={`relative ${isVertical 
         ? 'flex flex-col justify-between items-start h-full mt-8' 
-        : 'flex items-center justify-start min-w-max mt-0 gap-0'}`}
+        : 'flex items-center justify-between w-full mt-0'}`}
       >
         {/* Línea de conexión */}
         <div 
           className={`absolute ${isVertical 
             ? 'left-4 top-1 bottom-1 w-0.5 bg-gray-300 -translate-x-1/2' 
-            : 'left-[56px] right-[56px] top-4 h-0.5 bg-gray-300'}`} 
+            : 'left-[30px] right-[30px] top-4 h-0.5 bg-gray-300'}`} 
         />
         
         {/* Pasos */}
@@ -40,7 +40,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
               key={index} 
               className={`relative z-10 cursor-pointer ${isVertical 
                 ? 'flex items-center mb-10 last:mb-0' 
-                : 'flex flex-col items-center w-[100px]'} `}
+                : 'flex flex-col items-center min-w-[80px]'} `}
               onClick={() => onStepClick(index + 1)}
             >
               {/* Círculo */}
@@ -68,11 +68,12 @@ const StepperBar: React.FC<StepperBarProps> = ({
               
               {/* Etiqueta */}
               <span 
-                className={`${isVertical ? 'ml-3' : 'mt-2'} text-sm ${isVertical ? 'text-left' : 'text-center'} px-3 py-2 rounded-md min-w-[100px] block whitespace-nowrap`}
+                className={`${isVertical ? 'ml-3' : 'mt-2'} text-sm ${isVertical ? 'text-left' : 'text-center'} px-1 py-2 rounded-md block whitespace-nowrap`}
                 style={{
                   backgroundColor: isActive ? lightGreenColor : 'transparent',
                   fontWeight: isActive ? 'bold' : 'normal',
-                  height: '36px'
+                  height: '36px',
+                  width: isVertical ? 'auto' : '100%'
                 }}
               >
                 {step}
