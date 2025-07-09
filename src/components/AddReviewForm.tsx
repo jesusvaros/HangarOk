@@ -3,13 +3,14 @@ import { useFormContext } from '../store/useFormContext';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
 import Step3PropertyCondition from './review-steps/Step3PropertyCondition';
-import Step4Owner from './review-steps/Step4Owner.tsx';
+import Step4Community from './review-steps/Step4Community';
+import Step5Owner from './review-steps/Step5Owner';
 import EmailConfirmation from './review-steps/EmailConfirmation';
 import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 
 /**
- * AddReviewForm - Main wrapper component for the 4-step form
+ * AddReviewForm - Main wrapper component for the 5-step form
  * This component manages the step navigation and form submission
  */
 const AddReviewForm: React.FC = () => {
@@ -37,7 +38,7 @@ const AddReviewForm: React.FC = () => {
 
   // Go to next step
   const handleNext = () => {
-    if (currentStep < 4) {
+    if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
     }
@@ -83,7 +84,7 @@ const AddReviewForm: React.FC = () => {
   };
 
   // Stepper bar with steps
-  const steps = ['Dirección', 'Estancia', 'Valoración', 'Gestión'];
+  const steps = ['Dirección', 'Estancia', 'Valoración del piso', 'Comunidad y Barrio', 'Gestión'];
   
   // Manejar el clic en un paso del stepper
   const handleStepClick = (step: number) => {
@@ -106,7 +107,9 @@ const AddReviewForm: React.FC = () => {
       case 3:
         return <Step3PropertyCondition onNext={handleNext} onPrevious={handlePrevious} />;
       case 4:
-        return <Step4Owner onNext={handleOpenModal} onPrevious={handlePrevious} />;
+        return <Step4Community onNext={handleNext} onPrevious={handlePrevious} />;
+      case 5:
+        return <Step5Owner onNext={handleOpenModal} onPrevious={handlePrevious} />;
       default:
         return <Step1ObjectiveData onNext={handleNext} />;
     }

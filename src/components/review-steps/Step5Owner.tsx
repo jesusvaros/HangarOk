@@ -1,20 +1,21 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
+import CustomTextarea from '../ui/CustomTextarea';
 
-interface Step4Props {
+interface Step5OwnerProps {
   onNext: () => void;
   onPrevious: () => void;
 }
 
-const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
+const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
   
   return (
     <div>
       {/* Sección: Tipo de propietario */}
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4 text-orange-500">Tipo de propietario</h3>
+        <h3 className="text-lg font-medium mb-4 text-black">Tipo de propietario</h3>
         
         <div className="mb-4">
           <div className="flex gap-6">
@@ -25,7 +26,7 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
                 value="Particular"
                 checked={formData.ownerType === 'Particular'}
                 onChange={() => updateFormData({ ownerType: 'Particular' })}
-                className="h-5 w-5 text-orange-500"
+                className="h-5 w-5 text-black"
               />
               <span className="ml-2 text-base">Propietario</span>
             </label>
@@ -36,7 +37,7 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
                 value="Agencia"
                 checked={formData.ownerType === 'Agencia'}
                 onChange={() => updateFormData({ ownerType: 'Agencia' })}
-                className="h-5 w-5 text-orange-500"
+                className="h-5 w-5 text-black"
               />
               <span className="ml-2 text-base">Agencia</span>
             </label>
@@ -46,7 +47,7 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
       
       {/* Sección: Datos del propietario/agencia */}
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4 text-orange-500">Datos del {formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}</h3>
+        <h3 className="text-lg font-medium mb-4 text-black">Datos del {formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}</h3>
         
         <CustomInput
           id="ownerName"
@@ -59,7 +60,7 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
       
       {/* Sección: Información de contacto */}
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4 text-orange-500">Información de contacto</h3>
+        <h3 className="text-lg font-medium mb-4 text-black">Información de contacto</h3>
         
         <CustomInput
           id="ownerPhone"
@@ -80,33 +81,32 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
             placeholder="correo@ejemplo.com"
           />
         </div>
-        
-        <div className="mt-6 flex items-center">
-          <input
-            type="checkbox"
-            id="showOwnerContact"
-            checked={formData.showOwnerContact || false}
-            onChange={(e) => updateFormData({ showOwnerContact: e.target.checked })}
-            className="h-5 w-5 text-orange-500 rounded"
-          />
-          <label htmlFor="showOwnerContact" className="ml-2 text-sm text-gray-700">
-            Mostrar información de contacto públicamente
-          </label>
-        </div>
+      </div>
+
+      {/* Opinión sobre el propietario/agencia */}
+      <div className="mb-8">
+        <h3 className="text-lg font-medium mb-4 text-black">Tu opinión sobre el {formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}</h3>
+        <CustomTextarea
+          id="ownerOpinion"
+          value={formData.ownerOpinion || ''}
+          onChange={(e) => updateFormData({ ownerOpinion: e.target.value })}
+          placeholder={`Comparte tu experiencia con el ${formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}...`}
+          rows={5}
+        />
       </div>
       
       <div className="flex justify-between mt-4">
         <button 
           type="button" 
           onClick={onPrevious}
-          className="text-orange-500 hover:text-orange-600"
+          className="text-black hover:text-gray-800"
         >
           Anterior
         </button>
         <button 
           type="button" 
           onClick={onNext}
-          className="bg-orange-500 text-white py-2 px-6 rounded hover:bg-orange-600"
+          className="bg-[rgb(74,94,50)] text-white py-2 px-6 rounded hover:bg-[rgb(60,76,40)]"
         >
           Finalizar
         </button>
@@ -115,4 +115,4 @@ const Step4Owner: React.FC<Step4Props> = ({ onNext, onPrevious }) => {
   );
 };
 
-export default Step4Owner;
+export default Step5Owner;

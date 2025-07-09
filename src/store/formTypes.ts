@@ -32,15 +32,28 @@ export type FormDataType = {
   lightLevel?: 'Nada de luz' | 'Poca luz' | 'Luminoso' | 'Muy luminoso';
   maintenanceStatus?: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Poco' | 'Malo';
   amenities?: string[];
-  comments?: string;
+  propertyOpinion?: string;
   
-  // Step 4: Owner
+  // Step 4: Community
+  neighborTypes?: string[];
+  touristApartments?: 'Sí, tolerable' | 'Sí, molestos' | 'No hay';
+  neighborRelationship?: 'Muy buena' | 'Cordial' | 'Mala' | 'Sin relación';
+  buildingCondition?: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Malo';
+  buildingCleanliness?: 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza';
+  communityEnvironment?: string[];
+  tourists?: 'Muchos' | 'Bastantes' | 'Pocos' | 'No hay';
+  communityNoise?: 'Silenciosa' | 'Tolerable' | 'Ruidosa';
+  communitySecurity?: 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura';
+  communityOpinion?: string;
+  
+  // Step 5: Owner
   ownerType?: 'Particular' | 'Agencia';
   ownerRating?: number;
   showOwnerContact?: boolean;
   ownerName?: string;
   ownerPhone?: string;
   ownerEmail?: string;
+  ownerOpinion?: string;
   
   // Contact Information (Modal)
   contactName?: string;
@@ -66,13 +79,27 @@ export const initialFormData: FormDataType = {
   lightLevel: undefined,
   maintenanceStatus: undefined,
   amenities: [],
-  comments: '',
+  propertyOpinion: '',
+  
+  // Community step fields
+  neighborTypes: [],
+  touristApartments: undefined,
+  neighborRelationship: undefined,
+  buildingCondition: undefined,
+  buildingCleanliness: undefined,
+  communityEnvironment: [],
+  tourists: undefined,
+  communityNoise: undefined,
+  communitySecurity: undefined,
+  communityOpinion: '',
+  
   ownerType: 'Particular',
   ownerRating: 0,
   ownerName: '',
   ownerPhone: '',
   ownerEmail: '',
   showOwnerContact: false,
+  ownerOpinion: '',
   contactName: '',
   contactEmail: ''
 };

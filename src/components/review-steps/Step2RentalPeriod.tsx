@@ -14,43 +14,47 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
   return (
     <div>
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4 text-orange-500">Período de alquiler</h3>
+        <h3 className="text-lg font-medium mb-4 text-black">Período de alquiler</h3>
         
         <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Año de inicio
-          </label>
-          <select
-            value={formData.startYear || new Date().getFullYear()}
-            onChange={(e) => updateFormData({ startYear: parseInt(e.target.value) })}
-            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-          >
-            {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
-        </div>
-        
-        <div className="mb-6">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
-            Año de fin (o actual si sigues viviendo)
-          </label>
-          <select
-            value={formData.endYear || new Date().getFullYear()}
-            onChange={(e) => updateFormData({ endYear: parseInt(e.target.value) })}
-            className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-orange-500"
-          >
-            <option value={new Date().getFullYear()}>Actualmente</option>
-            {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-              <option key={year} value={year}>{year}</option>
-            ))}
-          </select>
+          <div className="flex flex-col md:flex-row md:gap-4">
+            <div className="md:w-1/2 mb-4 md:mb-0">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Año de inicio
+              </label>
+              <select
+                value={formData.startYear || new Date().getFullYear()}
+                onChange={(e) => updateFormData({ startYear: parseInt(e.target.value) })}
+                className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
+              >
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="md:w-1/2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Año de fin (o actual si sigues viviendo)
+              </label>
+              <select
+                value={formData.endYear || new Date().getFullYear()}
+                onChange={(e) => updateFormData({ endYear: parseInt(e.target.value) })}
+                className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
+              >
+                <option value={new Date().getFullYear()}>Actualmente</option>
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                  <option key={year} value={year}>{year}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
       </div>
       
       {/* Sección: Precio del alquiler */}
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4 text-orange-500">Precio del alquiler</h3>
+        <h3 className="text-lg font-medium mb-4 text-black">Precio del alquiler</h3>
         <CustomInput
           id="price"
           label="Precio mensual (€)"
@@ -75,14 +79,14 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
         <button 
           type="button" 
           onClick={onPrevious}
-          className="text-orange-500 hover:text-orange-600"
+          className="text-black hover:text-gray-800"
         >
           Anterior
         </button>
         <button 
           type="button" 
           onClick={onNext}
-          className="bg-orange-500 text-white py-2 px-6 rounded hover:bg-orange-600"
+          className="bg-[rgb(74,94,50)] text-white py-2 px-6 rounded hover:bg-[rgb(60,76,40)]"
         >
           Siguiente
         </button>

@@ -14,7 +14,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
   orientation = 'horizontal' 
 }) => {
   const isVertical = orientation === 'vertical';
-  const greenColor = 'rgb(74 94 50)';
+  const greenColor = 'rgb(74 94 50)'; // Green color for active and completed steps
   
   return (
     <div className={`${isVertical ? 'h-full' : 'mb-0'}`}>

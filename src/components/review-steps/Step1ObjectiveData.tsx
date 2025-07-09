@@ -23,7 +23,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
       {/* Sección: Dirección */}
       <div className="mb-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-4">
-          <h3 className="text-xl font-medium mb-4 md:mb-0 text-orange-500">Dirección</h3>
+          <h3 className="text-xl font-medium mb-4 md:mb-0 text-black">Dirección</h3>
         </div>
         
         <CustomInput
@@ -60,7 +60,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
         <button 
           type="button" 
           onClick={onNext}
-          className="bg-orange-500 text-white py-2 px-6 rounded hover:bg-orange-600"
+          className="bg-[rgb(74,94,50)] text-white py-2 px-6 rounded hover:bg-[rgb(60,76,40)]"
         >
           Siguiente
         </button>
