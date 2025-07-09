@@ -3,6 +3,8 @@ import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
 
+
+
 interface Step2Props {
   onNext: () => void;
   onPrevious: () => void;
@@ -10,6 +12,9 @@ interface Step2Props {
 
 const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
+  
+  // Handle the currently living situation
+  const isCurrentlyLiving = formData.endYear === null || formData.endYear === undefined;
   
   return (
     <div>
@@ -38,11 +43,19 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
                 Año de fin (o actual si sigues viviendo)
               </label>
               <select
-                value={formData.endYear || new Date().getFullYear()}
-                onChange={(e) => updateFormData({ endYear: parseInt(e.target.value) })}
+                value={isCurrentlyLiving ? "current" : (formData.endYear || new Date().getFullYear())}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (value === "current") {
+                    // Use undefined instead of null to avoid type issues
+                    updateFormData({ endYear: undefined });
+                  } else {
+                    updateFormData({ endYear: parseInt(value) });
+                  }
+                }}
                 className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               >
-                <option value={new Date().getFullYear()}>Actualmente</option>
+                <option value="current">Actualmente</option>
                 {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
                   <option key={year} value={year}>{year}</option>
                 ))}
