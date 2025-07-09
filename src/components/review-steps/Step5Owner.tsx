@@ -16,14 +16,13 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
   return (
     <div>
       {/* Message box at the top */}
-      <div className="relative">
-        <MessageBox 
-          title="Información"
-          message="Guardamos esta información para poder matchearla con la de idealista" 
-          height="0"
+      <div className="relative">      <MessageBox 
+          title="Privacidad"
+          message="Los datos personales se procesan mediante hashing irreversible solo para asociar opiniones con propietarios. Nunca se almacenan en texto claro ni se comparten con terceros." 
+          height="20px"
         />
+       
       </div>
-
       {/* Sección: Tipo de propietario */}
       <div className="mb-8">
         <h3 className="text-lg font-medium mb-4 text-black">Tipo de propietario</h3>
@@ -41,9 +40,8 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
       </div>
       
       {/* Sección: Datos del propietario/agencia */}
-      <div className="mb-8">
+      <div className="mb-8 ">
         <h3 className="text-lg font-medium mb-4 text-black">Datos del {formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}</h3>
-        
         <CustomInput
           id="ownerName"
           label="Nombre completo"
@@ -57,11 +55,6 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
       {/* Sección: Información de contacto */}
       <div className="mb-8 relative">
         <h3 className="text-lg font-medium mb-4 text-black">Información de contacto</h3>
-        <MessageBox 
-              title="Aviso"
-              message="Nunca enseñaremos esta información a nadie ni la guardamos en la base de datos" 
-              height="50px"
-            />
 
         <CustomInput
           id="ownerPhone"
@@ -86,13 +79,19 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
       </div>
 
       {/* Opinión sobre el propietario/agencia */}
-      <div className="mb-8">
+      <div className="mb-8 relative">
         <h3 className="text-lg font-medium mb-4 text-black">Tu opinión sobre {formData.ownerType === 'Particular' ? 'el propietario' : 'la agencia'}</h3>
+        <MessageBox 
+          title="Sugerencias"
+          message={`¿Fue fácil comunicarte? ¿Respondió rápido a tus consultas? ¿Fue profesional y respetuoso? Evita incluir datos personales, insultos o amenazas.`}
+          height="20px"
+        />
         <CustomTextarea
           id="ownerOpinion"
           value={formData.ownerOpinion || ''}
           onChange={(e) => updateFormData({ ownerOpinion: e.target.value })}
-          placeholder={`Comparte tu experiencia con ${formData.ownerType === 'Particular' ? 'el propietario' : 'la agencia'}...`}
+          placeholder={`Describe tu experiencia de manera honesta, respetuosa y basada en hechos reales. Evita incluir datos personales, insultos o amenazas.
+`}
           rows={5}
         />
       </div>
