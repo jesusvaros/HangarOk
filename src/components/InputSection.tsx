@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormContext } from '../store/useFormContext';
+import AddressAutocomplete from './ui/AddressAutocomplete';
 
 const InputSection: React.FC = () => {
   const navigate = useNavigate();
@@ -9,6 +10,7 @@ const InputSection: React.FC = () => {
   const [nextMessageIndex, setNextMessageIndex] = useState(1);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState('');
   
   const messages = [
     "Todas las reviews son Anónimas",
@@ -52,9 +54,22 @@ const InputSection: React.FC = () => {
   }, [isMobile, nextMessageIndex, messages.length]);
 
   const handleStart = () => {
-    if (address.trim()) {
+    if (selectedAddress || address.trim()) {
       navigate('/add-review');
     }
+  };
+  
+  const handleAddressSelect = (result: {
+    formatted: string;
+    geometry: {
+      lat: number;
+      lng: number;
+    };
+    components: Record<string, string | undefined>;
+  }) => {
+    const fullAddress = result.formatted;
+    setAddress(fullAddress);
+    setSelectedAddress(fullAddress);
   };
 
   // Render message with last word bold
@@ -113,18 +128,19 @@ const InputSection: React.FC = () => {
         
         {/* Input and button */}
         <div className="flex flex-row justify-center items-center max-w-3xl px-4">
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Ciudad o barrio"
-            className="w-full p-4 rounded-l-lg border-0 text-gray-700 h-12 focus:outline-none "
-          />
+          <div className="w-full">
+            <AddressAutocomplete
+              onSelect={handleAddressSelect}
+              initialValue={address}
+              placeholder="Dirección del inmueble"
+              className="rounded-l-lg"
+            />
+          </div>
           
           {/* Mobile button with icon */}
           <button
             onClick={handleStart}
-            className="bg-[#F97316] text-white p-3 rounded-r-md  flex-shrink-0"
+            className="bg-[#F97316] text-white p-3 rounded-r-md flex-shrink-0 h-12 mt-[1px]"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -156,17 +172,18 @@ return (
         </div>
         
         <div className="flex flex-row justify-center items-center mx-auto max-w-3xl">
-          <input
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Dirección del inmueble"
-            className="w-full p-4 rounded-l-lg border-0 focus:outline-none  text-gray-700"
-          />
+          <div className="w-full">
+            <AddressAutocomplete
+              onSelect={handleAddressSelect}
+              initialValue={address}
+              placeholder="Dirección del inmueble"
+              className="rounded-l-lg"
+            />
+          </div>
           
           <button
             onClick={handleStart}
-            className="bg-[#F97316] text-white px-8 py-4 rounded-r-lg hover:bg-[#EA580C] focus:outline-none font-medium"
+            className="bg-[#F97316] text-white px-8 py-4 rounded-r-lg hover:bg-[#EA580C] focus:outline-none font-medium h-[52px] mt-[1px]"
           >
             Empezar
           </button>

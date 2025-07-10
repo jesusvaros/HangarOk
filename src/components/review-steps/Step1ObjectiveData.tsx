@@ -2,6 +2,32 @@ import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 import MessageBox from '../ui/MessageBox';
+import AddressAutocomplete from '../ui/AddressAutocomplete';
+
+// Define extended address details type
+interface AddressDetails {
+  street?: string;
+  floor?: string;
+  door?: string;
+  city?: string;
+  postalCode?: string;
+  state?: string;
+  fullAddress?: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  components?: {
+    road?: string;
+    house_number?: string;
+    city?: string;
+    town?: string;
+    village?: string;
+    postcode?: string;
+    state?: string;
+    [key: string]: string | undefined;
+  };
+}
 
 interface Step1Props {
   onNext: () => void;
@@ -10,12 +36,57 @@ interface Step1Props {
 const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   const { formData, updateFormData } = useFormContext();
   
+  // Cast addressDetails to our extended type
+  const addressDetails = formData.addressDetails as AddressDetails || {};
+  
   const handleAddressChange = (field: string, value: string) => {
     updateFormData({
       addressDetails: {
-        ...formData.addressDetails || {},
+        ...addressDetails,
         [field]: value
       }
+    });
+  };
+  
+  const handleAddressSelect = (result: {
+    components: {
+      road?: string;
+      house_number?: string;
+      city?: string;
+      town?: string;
+      village?: string;
+      postcode?: string;
+      state?: string;
+      [key: string]: string | undefined;
+    };
+    geometry: {
+      lat: number;
+      lng: number;
+    };
+    formatted: string;
+  }) => {
+    // Extract address components
+    const { components, geometry } = result;
+    
+    // Create a new address details object with all the properties
+    const newAddressDetails: AddressDetails = {
+      ...addressDetails,
+      // Guardamos la calle con el formato "Calle, Código Postal Ciudad"
+      street: `${components.road || ''}, ${components.postcode || ''} ${components.city || components.town || components.village || ''}`,
+      city: components.city || components.town || components.village || '',
+      postalCode: components.postcode || '',
+      state: components.state || '',
+      fullAddress: result.formatted,
+      // Guardamos los componentes originales para acceder al número de calle por separado
+      components: components,
+      coordinates: {
+        lat: geometry.lat,
+        lng: geometry.lng
+      }
+    };
+    
+    updateFormData({
+      addressDetails: newAddressDetails
     });
   };
   
@@ -36,12 +107,16 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
           <h3 className="text-xl font-medium mb-4 md:mb-0 text-black">Dirección</h3>
         </div>
         
-        <CustomInput
+        <AddressAutocomplete
           id="street"
-          label="Calle y número"
-          value={formData.addressDetails?.street || ''}
-          onChange={(e) => handleAddressChange('street', e.target.value)}
-          placeholder="Ej: Calle Mayor 25"
+          label="Dirección"
+          initialValue={addressDetails.street || ''}
+          initialStreetNumber={addressDetails.components?.house_number || ''}
+          onSelect={handleAddressSelect}
+          placeholder="Ej: Calle Mayor"
+          required
+          showNumberField={true}
+          validateNumber={true}
         />
         
         <div className="flex -mx-2 mt-4">

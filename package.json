@@ -12,7 +12,9 @@
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
     "@supabase/supabase-js": "^2.50.2",
+    "@types/lodash.debounce": "^4.0.9",
     "leaflet": "^1.9.4",
+    "lodash.debounce": "^4.0.8",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.59.0",
