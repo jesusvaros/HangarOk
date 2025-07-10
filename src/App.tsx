@@ -8,8 +8,9 @@ import PictureSection from './components/PictureSection';
 import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
 
-// Import FormProvider
+// Import Providers
 import { FormProvider } from './store/FormContext';
+import { FormMessagesProvider } from './store/FormMessagesProvider';
 
 function App() {
   const location = useLocation();
@@ -17,27 +18,29 @@ function App() {
   
   return (
     <FormProvider>
-      <div className={`min-h-screen ${isAddReviewPage ? 'bg-gray-100' : 'bg-white'}`}>
-        <Header />
+      <FormMessagesProvider>
+        <div className={`min-h-screen ${isAddReviewPage ? 'bg-gray-100' : 'bg-white'}`}>
+          <Header />
 
-        <Routes>
-          <Route path="/map" element={<MapView />} />
-          <Route path="/add-review" element={<AddReviewForm />} />
-          <Route path="/" element={
-            <>
-              <InputSection />
-              <ChromeStoreSection />
-              <PictureSection />
-            </>
-          } />
-        </Routes>
+          <Routes>
+            <Route path="/map" element={<MapView />} />
+            <Route path="/add-review" element={<AddReviewForm />} />
+            <Route path="/" element={
+              <>
+                <InputSection />
+                <ChromeStoreSection />
+                <PictureSection />
+              </>
+            } />
+          </Routes>
 
-        {!isAddReviewPage && (
-          <footer className="max-w-6xl mx-auto mt-8 text-center text-gray-500 text-sm py-6">
-            <p>© {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas</p>
-          </footer>
-        )}
-      </div>
+          {!isAddReviewPage && (
+            <footer className="max-w-6xl mx-auto mt-8 text-center text-gray-500 text-sm py-6">
+              <p>© {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas</p>
+            </footer>
+          )}
+        </div>
+      </FormMessagesProvider>
     </FormProvider>
   );
 }

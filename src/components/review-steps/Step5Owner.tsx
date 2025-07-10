@@ -2,7 +2,6 @@ import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 import CustomTextarea from '../ui/CustomTextarea';
-import MessageBox from '../ui/MessageBox';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
 
 interface Step5OwnerProps {
@@ -13,16 +12,11 @@ interface Step5OwnerProps {
 const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
   
+  // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
+  
   return (
     <div>
-      {/* Message box at the top */}
-      <div className="relative">      <MessageBox 
-          title="Privacidad"
-          message="Los datos personales se procesan mediante hashing irreversible solo para asociar opiniones con propietarios. Nunca se almacenan en texto claro ni se comparten con terceros." 
-          height="20px"
-        />
-       
-      </div>
+      {/* Los mensajes ahora se gestionan a través del sistema de mensajes */}
       {/* Sección: Tipo de propietario */}
       <div className="mb-8">
         <h3 className="text-lg font-medium mb-4 text-black">Tipo de propietario</h3>
@@ -81,11 +75,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
       {/* Opinión sobre el propietario/agencia */}
       <div className="mb-8 relative">
         <h3 className="text-lg font-medium mb-4 text-black">Tu opinión sobre {formData.ownerType === 'Particular' ? 'el propietario' : 'la agencia'}</h3>
-        <MessageBox 
-          title="Sugerencias"
-          message={`¿Fue fácil comunicarte? ¿Respondió rápido a tus consultas? ¿Fue profesional y respetuoso? Evita incluir datos personales, insultos o amenazas.`}
-          height="20px"
-        />
+        {/* El mensaje de sugerencias ahora se gestiona a través del sistema de mensajes */}
         <CustomTextarea
           id="ownerOpinion"
           value={formData.ownerOpinion || ''}

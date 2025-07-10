@@ -11,6 +11,8 @@ interface Step3Props {
 const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
   
+  // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
+  
   return (
     <div>
       {/* Temperatura en verano */}

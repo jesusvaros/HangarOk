@@ -8,6 +8,7 @@ import Step5Owner from './review-steps/Step5Owner';
 import EmailConfirmation from './review-steps/EmailConfirmation';
 import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
+import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -118,8 +119,8 @@ const AddReviewForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full py-8 pt-24">
-      {isSubmitted ? (
+      <div className="w-full py-8 pt-24">
+        {isSubmitted ? (
         <div className="max-w-2xl mx-auto px-4">
           <EmailConfirmation
             email={formData.contactEmail || ''}
@@ -138,31 +139,42 @@ const AddReviewForm: React.FC = () => {
               onStepClick={handleStepClick} 
               orientation="horizontal"
             />
+            
+            {/* Container for form messages on mobile and tablet */}
+            <div className="mt-4 mb-4">
+              <StaticFormMessagesContainer step={currentStep} isMobile={true} />
+            </div>
+            
+            {/* Form content for mobile */}
+            <div className="bg-white rounded-lg p-6 shadow-md">
+              {renderStep()}
+            </div>
           </div>
 
-          <div className="flex justify-center px-4 lg:px-0 max-w-[1100px] mx-auto">
-            {/* Stepper Bar - Left column - Only visible on larger screens (950px+) */}
-            <div className="hidden lg:block w-[18%] max-w-[200px] flex-shrink-0">
+          {/* Desktop layout - Three columns: Stepper | Form | Messages */}
+          <div className="hidden lg:flex justify-center space-x-6 px-4 max-w-[1100px] mx-auto">
+            {/* Stepper - Left column */}
+            <div className="flex-shrink-0" style={{ width: '150px' }}>
               <div className="sticky top-16">
-                <StepperBar
-                  currentStep={currentStep}
-                  steps={steps}
-                  onStepClick={handleStepClick}
+                <StepperBar 
+                  currentStep={currentStep} 
+                  steps={steps} 
+                  onStepClick={handleStepClick} 
                   orientation="vertical"
                 />
               </div>
             </div>
             
-            {/* Form content - Center column */}
-            <div className="w-full lg:w-[600px] flex-shrink-0">
-              <div className="bg-white p-6 rounded-lg shadow-sm mb-16 relative">
-                {renderStep()}
-              </div>
+            {/* Form content - Center column - Fixed width */}
+            <div className="lg:w-[650px] md:w-[500px] bg-white rounded-lg p-6 shadow-md flex-shrink-0">
+              {renderStep()}
             </div>
             
-            {/* Space for message boxes - Right column */}
-            <div className="hidden lg:block w-[18%] max-w-[200px] flex-shrink-0 ml-6">
-              {/* Message boxes will be positioned absolutely from the form elements */}
+            {/* Space for message boxes - Right column - 24px gap */}
+            <div className="hidden lg:block flex-shrink-0" style={{ width: '200px' }}>
+              <div className="sticky top-16">
+                <StaticFormMessagesContainer step={currentStep} isMobile={false} />
+              </div>
             </div>
           </div>
 
@@ -174,7 +186,7 @@ const AddReviewForm: React.FC = () => {
           )}
         </>
       )}
-    </div>
+      </div>
   );
 };
 

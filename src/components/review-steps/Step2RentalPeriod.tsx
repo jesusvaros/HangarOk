@@ -16,6 +16,8 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
   // Handle the currently living situation
   const isCurrentlyLiving = formData.endYear === null || formData.endYear === undefined;
   
+  // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
+  
   return (
     <div>
       <div className="mb-8">

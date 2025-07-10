@@ -17,6 +17,22 @@ export type FormDataType = {
     door?: string;
     city?: string;
     postalCode?: string;
+    state?: string;
+    fullAddress?: string;
+    coordinates?: {
+      lat: number;
+      lng: number;
+    };
+    components?: {
+      road?: string;
+      house_number?: string;
+      city?: string;
+      town?: string;
+      village?: string;
+      postcode?: string;
+      state?: string;
+      [key: string]: string | undefined;
+    };
   };
   price?: number;
   includedServices?: string[];

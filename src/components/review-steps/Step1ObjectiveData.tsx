@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
-import MessageBox from '../ui/MessageBox';
 import AddressAutocomplete from '../ui/AddressAutocomplete';
 
 // Define extended address details type
 interface AddressDetails {
   street?: string;
+  number?: string;
   floor?: string;
   door?: string;
   city?: string;
@@ -35,10 +35,17 @@ interface Step1Props {
 
 const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   const { formData, updateFormData } = useFormContext();
+  const [addressDetails, setAddressDetails] = useState(formData.addressDetails || {});
+
+  useEffect(() => {
+    // Actualizar el estado local cuando cambia formData
+    if (formData.addressDetails) {
+      setAddressDetails(formData.addressDetails);
+    }
+  }, [formData.addressDetails]);
   
-  // Cast addressDetails to our extended type
-  const addressDetails = formData.addressDetails as AddressDetails || {};
-  
+  // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
+
   const handleAddressChange = (field: string, value: string) => {
     updateFormData({
       addressDetails: {
@@ -47,7 +54,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
       }
     });
   };
-  
+
   const handleAddressSelect = (result: {
     components: {
       road?: string;
@@ -92,14 +99,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   
   return (
     <div>
-      {/* Message box about anonymous opinions */}
-      <div className="relative">
-        <MessageBox 
-          title="Opinión Anónima"
-          message="Tu opinión es anónima. La información que compartas no se mostrará de forma exacta."
-          height="20px"
-        />
-      </div>
+      {/* El mensaje de opinión anónima ahora se gestiona a través del sistema de mensajes */}
 
       {/* Sección: Dirección */}
       <div className="">

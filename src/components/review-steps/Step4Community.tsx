@@ -10,6 +10,8 @@ interface Step4CommunityProps {
 
 const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
+  
+  // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
 
   // Helper function to handle multi-select options
   const handleMultiSelectToggle = (field: 'neighborTypes' | 'communityEnvironment', value: string) => {
