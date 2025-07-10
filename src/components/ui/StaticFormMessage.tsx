@@ -21,7 +21,7 @@ const StaticFormMessage: React.FC<StaticFormMessageProps> = ({
 }) => {
   return (
     <div 
-      className={`p-4 mb-4 rounded-lg ${className} border border-[#4A5E32] w-full`} 
+      className={`p-4 mb-4 rounded-lg ${className} w-full`} 
       style={{ 
         backgroundColor, 
         color: textColor

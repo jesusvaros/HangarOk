@@ -99,7 +99,6 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   
   return (
     <div>
-      {/* El mensaje de opinión anónima ahora se gestiona a través del sistema de mensajes */}
 
       {/* Sección: Dirección */}
       <div className="">

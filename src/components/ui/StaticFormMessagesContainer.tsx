@@ -21,8 +21,8 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
         return [
           {
             id: 'step1-anonymous',
-            title: "Opinión Anónima",
-            message: "Tu opinión es anónima. La información que compartas no se mostrará de forma exacta.",
+            title: "Tu opinión es anónima",
+            message: "La información que compartas no se mostrará de forma exacta.",
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#4A5E32'
           }
