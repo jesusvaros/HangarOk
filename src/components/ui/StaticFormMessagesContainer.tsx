@@ -6,10 +6,6 @@ interface StaticFormMessagesContainerProps {
   isMobile?: boolean;
 }
 
-/**
- * Contenedor para mostrar mensajes estáticos según el paso del formulario
- * No utiliza useEffect ni contexto para evitar problemas de renderizado
- */
 const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = ({ 
   step, 
   isMobile = false 
@@ -86,7 +82,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
   }
 
   return (
-    <div className={`${isMobile ? 'space-y-3 w-full' : ''}`}>
+    <div className={`${isMobile ? 'space-y-3 w-full' : 'pt'}`}>
       {messages.map((msg) => (
         <StaticFormMessage
           key={msg.id}

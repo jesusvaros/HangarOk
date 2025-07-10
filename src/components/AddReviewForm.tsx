@@ -141,7 +141,7 @@ const AddReviewForm: React.FC = () => {
             />
             
             {/* Container for form messages on mobile and tablet */}
-            <div className="mt-4 mb-4">
+            <div className="mt-50 mb-4">
               <StaticFormMessagesContainer step={currentStep} isMobile={true} />
             </div>
             
@@ -155,7 +155,7 @@ const AddReviewForm: React.FC = () => {
           <div className="hidden lg:flex justify-center space-x-6 px-4 max-w-[1100px] mx-auto">
             {/* Stepper - Left column */}
             <div className="flex-shrink-0" style={{ width: '150px' }}>
-              <div className="sticky top-16">
+              <div className="sticky" style={{ top: '6rem' }}>
                 <StepperBar 
                   currentStep={currentStep} 
                   steps={steps} 
@@ -172,7 +172,7 @@ const AddReviewForm: React.FC = () => {
             
             {/* Space for message boxes - Right column - 24px gap */}
             <div className="hidden lg:block flex-shrink-0" style={{ width: '200px' }}>
-              <div className="sticky top-16">
+              <div className="sticky" style={{ top: '6rem' }}>
                 <StaticFormMessagesContainer step={currentStep} isMobile={false} />
               </div>
             </div>
