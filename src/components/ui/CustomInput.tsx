@@ -28,7 +28,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   return (
     <div className={`mb-4 ${className}`}>
       {label && (
-        <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor={id} className="mb-2 block text-sm font-medium text-gray-700">
           {label}
         </label>
       )}
@@ -37,7 +37,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
         type={type}
         value={value}
         onChange={onChange}
-        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-[1px] focus:ring-inline-[rgb(74,94,50)] ${className}`}
+        className={`focus:ring-inline-[rgb(74,94,50)] w-full rounded-lg border p-3 focus:outline-none focus:ring-[1px] ${className}`}
         placeholder={placeholder}
         disabled={disabled}
         onBlur={onBlur}

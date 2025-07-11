@@ -11,12 +11,12 @@ const InputSection: React.FC = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState('');
-  
+
   const messages = [
-    "Todas las reviews son Anónimas",
-    "Tus opiniones ayudan a crear un mercado de alquiler más transparente",
-    "Comparte tu experiencia con otros inquilinos",
-    "Ayuda a mejorar el mercado inmobiliario"
+    'Todas las reviews son Anónimas',
+    'Tus opiniones ayudan a crear un mercado de alquiler más transparente',
+    'Comparte tu experiencia con otros inquilinos',
+    'Ayuda a mejorar el mercado inmobiliario',
   ];
 
   // Check if the device is mobile
@@ -24,23 +24,23 @@ const InputSection: React.FC = () => {
     const checkIfMobile = () => {
       setIsMobile(window.innerWidth < 768); // 768px is the md breakpoint in Tailwind
     };
-    
+
     checkIfMobile();
     window.addEventListener('resize', checkIfMobile);
-    
+
     return () => {
       window.removeEventListener('resize', checkIfMobile);
     };
   }, []);
-  
+
   // Rotate through messages on mobile
   useEffect(() => {
     if (!isMobile) return;
-    
+
     const rotateMessages = () => {
       // Start animation
       setIsAnimating(true);
-      
+
       // After animation completes, update the displayed message
       setTimeout(() => {
         setCurrentMessageIndex(nextMessageIndex);
@@ -48,7 +48,7 @@ const InputSection: React.FC = () => {
         setIsAnimating(false);
       }, 1000);
     };
-    
+
     const interval = setInterval(rotateMessages, 3500);
     return () => clearInterval(interval);
   }, [isMobile, nextMessageIndex, messages.length]);
@@ -58,7 +58,7 @@ const InputSection: React.FC = () => {
       navigate('/add-review');
     }
   };
-  
+
   const handleAddressSelect = (result: {
     formatted: string;
     geometry: {
@@ -74,104 +74,131 @@ const InputSection: React.FC = () => {
 
   // Render message with last word bold
   const renderMessage = (message: string) => {
-    return message.split(' ').map((word, i, arr) => 
-      i === arr.length - 1 ? 
-        <span key={i} className="font-bold"> {word}</span> : 
+    return message.split(' ').map((word, i, arr) =>
+      i === arr.length - 1 ? (
+        <span key={i} className="font-bold">
+          {' '}
+          {word}
+        </span>
+      ) : (
         <span key={i}>{word} </span>
+      ),
     );
   };
 
   // Mobile component
 
-  if(isMobile){
+  if (isMobile) {
     return (
-    <section className="relative h-[calc(100vh-240px)] flex flex-col pt-24 items-center" style={{ backgroundColor: '#e1f56e' }}>
-      <div className="container mx-auto px-0 max-w-5xl relative">
-        {/* Mobile message carousel - sliding horizontally every 4 seconds */}
-        <div className="mb-8 mt-8 overflow-hidden">
-          <div className="relative h-[120px] w-full">
-            {/* Current message */}
-            <div 
-              key={`message-${currentMessageIndex}`}
-              className="bg-white p-4 rounded-lg shadow-md absolute transition-all duration-1000 left-1/2"
-              style={{ 
-                width: '280px',
-                maxWidth: '80%',
-                top: '50%',
-                transform: `translate(-50%, -50%) translateX(${isAnimating ? '-200%' : '0'})`,
-                zIndex: isAnimating ? 0 : 1
-              }}
-            >
-              <p className="text-gray-700 font-medium text-center break-words">
-                {renderMessage(messages[currentMessageIndex])}
-              </p>
-            </div>
-            
-            {/* Next message */}
-            <div 
-              key={`message-next-${nextMessageIndex}`}
-              className="bg-white p-4 rounded-lg shadow-md absolute transition-all duration-1000 left-1/2"
-              style={{ 
-                width: '280px',
-                maxWidth: '80%',
-                top: '50%',
-                transform: `translate(-50%, -50%) translateX(${isAnimating ? '0' : '200%'})`,
-                zIndex: isAnimating ? 1 : 0
-              }}
-            >
-              <p className="text-gray-700 font-medium text-center break-words">
-                {renderMessage(messages[nextMessageIndex])}
-              </p>
-            </div>
-          </div>
-        </div>
-        
-        {/* Input and button */}
-        <div className="flex flex-row justify-center items-start max-w-3xl px-4">
-          <div className="w-full">
-            <AddressAutocomplete
-              onSelect={handleAddressSelect}
-              initialValue={address}
-              placeholder="Dirección del inmueble"
-              hideLabel
-            />
-          </div>
-          
-          {/* Mobile button with icon */}
-          <button
-            onClick={handleStart}
-            className="bg-[#F97316] text-white p-3 rounded-r-md flex-shrink-0 h-12 mt-[1px]"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </section>
-  );
-}
+      <section
+        className="relative flex h-[calc(100vh-240px)] flex-col items-center pt-24"
+        style={{ backgroundColor: '#e1f56e' }}
+      >
+        <div className="container relative mx-auto max-w-5xl px-0">
+          {/* Mobile message carousel - sliding horizontally every 4 seconds */}
+          <div className="mb-8 mt-8 overflow-hidden">
+            <div className="relative h-[120px] w-full">
+              {/* Current message */}
+              <div
+                key={`message-${currentMessageIndex}`}
+                className="absolute left-1/2 rounded-lg bg-white p-4 shadow-md transition-all duration-1000"
+                style={{
+                  width: '280px',
+                  maxWidth: '80%',
+                  top: '50%',
+                  transform: `translate(-50%, -50%) translateX(${isAnimating ? '-200%' : '0'})`,
+                  zIndex: isAnimating ? 0 : 1,
+                }}
+              >
+                <p className="break-words text-center font-medium text-gray-700">
+                  {renderMessage(messages[currentMessageIndex])}
+                </p>
+              </div>
 
-return (
-    <section className="relative h-[calc(100vh-180px)] flex flex-col justify-center items-center" style={{ backgroundColor: '#e1f56e' }}>
-      <div className="container mx-auto px-4 max-w-5xl relative">
-        <div>
-          <div className="absolute top-[-100px] left-[10%] md:left-[9%] lg:left-[10%] max-w-[200px]">
-            <div className="bg-white p-3 rounded-lg shadow-md relative">
-              <p className="text-gray-700 font-medium text-lg">Todas las reviews son <span className="font-bold">Anónimas</span></p>
-              <div className="absolute -bottom-2 right-1/2 w-4 h-4 bg-white transform rotate-45"/>
+              {/* Next message */}
+              <div
+                key={`message-next-${nextMessageIndex}`}
+                className="absolute left-1/2 rounded-lg bg-white p-4 shadow-md transition-all duration-1000"
+                style={{
+                  width: '280px',
+                  maxWidth: '80%',
+                  top: '50%',
+                  transform: `translate(-50%, -50%) translateX(${isAnimating ? '0' : '200%'})`,
+                  zIndex: isAnimating ? 1 : 0,
+                }}
+              >
+                <p className="break-words text-center font-medium text-gray-700">
+                  {renderMessage(messages[nextMessageIndex])}
+                </p>
+              </div>
             </div>
           </div>
-          
-          <div className="absolute top-[-130px] right-[10%] md:right-[6%] lg:right-[12%] max-w-[250px]">
-            <div className="bg-white p-3 rounded-lg shadow-md relative">
-              <p className="text-gray-700 text-lg">Tus opiniones ayudan a crear un mercado de alquiler más<span className="font-bold"> transparente</span></p>
-              <div className="absolute -bottom-2 left-1/2 w-4 h-4 bg-white transform rotate-45"/>
+
+          {/* Input and button */}
+          <div className="flex max-w-3xl flex-row items-start justify-center px-4">
+            <div className="w-full">
+              <AddressAutocomplete
+                onSelect={handleAddressSelect}
+                initialValue={address}
+                placeholder="Dirección del inmueble"
+                hideLabel
+              />
+            </div>
+
+            {/* Mobile button with icon */}
+            <button
+              onClick={handleStart}
+              className="mt-[1px] h-12 flex-shrink-0 rounded-r-md bg-[#F97316] p-3 text-white"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      className="relative flex h-[calc(100vh-180px)] flex-col items-center justify-center"
+      style={{ backgroundColor: '#e1f56e' }}
+    >
+      <div className="container relative mx-auto max-w-5xl px-4">
+        <div>
+          <div className="absolute left-[10%] top-[-100px] max-w-[200px] md:left-[9%] lg:left-[10%]">
+            <div className="relative rounded-lg bg-white p-3 shadow-md">
+              <p className="text-lg font-medium text-gray-700">
+                Todas las reviews son <span className="font-bold">Anónimas</span>
+              </p>
+              <div className="absolute -bottom-2 right-1/2 h-4 w-4 rotate-45 transform bg-white" />
+            </div>
+          </div>
+
+          <div className="absolute right-[10%] top-[-130px] max-w-[250px] md:right-[6%] lg:right-[12%]">
+            <div className="relative rounded-lg bg-white p-3 shadow-md">
+              <p className="text-lg text-gray-700">
+                Tus opiniones ayudan a crear un mercado de alquiler más
+                <span className="font-bold"> transparente</span>
+              </p>
+              <div className="absolute -bottom-2 left-1/2 h-4 w-4 rotate-45 transform bg-white" />
             </div>
           </div>
         </div>
-        
-        <div className="flex flex-row justify-center items-start mx-auto max-w-3xl">
+
+        <div className="mx-auto flex max-w-3xl flex-row items-start justify-center">
           <div className="w-full">
             <AddressAutocomplete
               onSelect={handleAddressSelect}
@@ -180,18 +207,17 @@ return (
               hideLabel
             />
           </div>
-          
+
           <button
             onClick={handleStart}
-            className="bg-[#F97316] text-white px-8 py-4 rounded-r-lg hover:bg-[#EA580C] focus:outline-none font-medium h-[48px] justify-center items-center flex mt-[1px]"
+            className="mt-[1px] flex h-[48px] items-center justify-center rounded-r-lg bg-[#F97316] px-8 py-4 font-medium text-white hover:bg-[#EA580C] focus:outline-none"
           >
             Empezar
           </button>
         </div>
       </div>
     </section>
-  ); 
-
+  );
 };
 
 export default InputSection;

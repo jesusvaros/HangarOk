@@ -19,7 +19,7 @@ const FormMessagesContainer: React.FC<FormMessagesContainerProps> = ({ isMobile 
   }
 
   return (
-    <div className={`${isMobile ? 'space-y-3 w-full' : 'pl-6'}`}>
+    <div className={`${isMobile ? 'w-full space-y-3' : 'pl-6'}`}>
       {messages.map((msg: FormMessageType) => (
         <FormMessage
           key={msg.id}

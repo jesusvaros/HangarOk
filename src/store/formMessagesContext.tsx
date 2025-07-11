@@ -15,12 +15,12 @@ export const FormMessagesProvider: React.FC<FormMessagesProviderProps> = ({ chil
   const addMessage = (message: Omit<FormMessage, 'id'>) => {
     const id = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const newMessage = { ...message, id };
-    setMessages(prev => [...prev, newMessage]);
+    setMessages((prev) => [...prev, newMessage]);
     return id;
   };
 
   const removeMessage = (id: string) => {
-    setMessages(prev => prev.filter(msg => msg.id !== id));
+    setMessages((prev) => prev.filter((msg) => msg.id !== id));
   };
 
   const clearMessages = () => {

@@ -43,15 +43,15 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
       setAddressDetails(formData.addressDetails);
     }
   }, [formData.addressDetails]);
-  
+
   // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
 
   const handleAddressChange = (field: string, value: string) => {
     updateFormData({
       addressDetails: {
         ...addressDetails,
-        [field]: value
-      }
+        [field]: value,
+      },
     });
   };
 
@@ -74,7 +74,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   }) => {
     // Extract address components
     const { components, geometry } = result;
-    
+
     // Create a new address details object with all the properties
     const newAddressDetails: AddressDetails = {
       ...addressDetails,
@@ -88,24 +88,23 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
       components: components,
       coordinates: {
         lat: geometry.lat,
-        lng: geometry.lng
-      }
+        lng: geometry.lng,
+      },
     };
-    
+
     updateFormData({
-      addressDetails: newAddressDetails
+      addressDetails: newAddressDetails,
     });
   };
-  
+
   return (
     <div>
-
       {/* Sección: Dirección */}
       <div className="">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between pb-4">
-          <h3 className="text-xl font-medium mb-4 md:mb-0 text-black">Dirección</h3>
+        <div className="flex flex-col pb-4 md:flex-row md:items-center md:justify-between">
+          <h3 className="mb-4 text-xl font-medium text-black md:mb-0">Dirección</h3>
         </div>
-        
+
         <AddressAutocomplete
           id="street"
           label="Dirección"
@@ -117,8 +116,8 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
           showNumberField={true}
           validateNumber={true}
         />
-        
-        <div className="flex -mx-2 mt-4">
+
+        <div className="-mx-2 mt-4 flex">
           <div className="w-1/2 px-2">
             <CustomInput
               id="floor"
@@ -139,12 +138,12 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
           </div>
         </div>
       </div>
-      
-      <div className="flex justify-end mt-4">
-        <button 
-          type="button" 
+
+      <div className="mt-4 flex justify-end">
+        <button
+          type="button"
           onClick={onNext}
-          className="bg-[rgb(74,94,50)] text-white py-2 px-6 rounded hover:bg-[rgb(60,76,40)]"
+          className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
         >
           Siguiente
         </button>

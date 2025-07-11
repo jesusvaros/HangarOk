@@ -20,14 +20,14 @@ const FormMessage: React.FC<FormMessageProps> = ({
   className = '',
 }) => {
   return (
-    <div 
-      className={`w-full p-4 mb-4 rounded-lg ${className} border border-[#4A5E32] hidden lg:block`} 
-      style={{ 
-        backgroundColor, 
-        color: textColor 
+    <div
+      className={`mb-4 w-full rounded-lg p-4 ${className} hidden border border-[#4A5E32] lg:block`}
+      style={{
+        backgroundColor,
+        color: textColor,
       }}
     >
-      {title && <h4 className="font-bold text-base mb-1">{title}</h4>}
+      {title && <h4 className="mb-1 text-base font-bold">{title}</h4>}
       <p className="text-sm">{message}</p>
     </div>
   );

@@ -14,26 +14,26 @@ export type Opinion = {
 // Mock data for when Supabase is unavailable
 const mockOpinions: Record<string, Opinion[]> = {
   // Some example hashed casero IDs with mock opinions
-  'a1b2c3d4': [
+  a1b2c3d4: [
     {
       id: 1,
       casero_hash: 'a1b2c3d4',
       texto: 'Buen casero, responde rápido a los problemas.',
       rating: 4,
       lat: 40.416775,
-      lng: -3.703790,
-      created_at: new Date().toISOString()
+      lng: -3.70379,
+      created_at: new Date().toISOString(),
     },
     {
       id: 2,
       casero_hash: 'a1b2c3d4',
       texto: 'Tardó en devolver la fianza.',
       rating: 2,
-      lat: 40.420000,
-      lng: -3.708000,
-      created_at: new Date().toISOString()
-    }
-  ]
+      lat: 40.42,
+      lng: -3.708,
+      created_at: new Date().toISOString(),
+    },
+  ],
 };
 
 // Flag to track if we're using mock data
@@ -42,13 +42,13 @@ let usingMockData = false;
 // Create a wrapper for Supabase client that falls back to mock data
 class SupabaseWrapper {
   private client: SupabaseClient | null = null;
-  
+
   constructor() {
     try {
       // Get environment variables with fallbacks
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-      
+
       // Only create client if both URL and key are valid
       if (supabaseUrl && supabaseAnonKey && this.isValidUrl(supabaseUrl)) {
         this.client = createClient(supabaseUrl, supabaseAnonKey);
@@ -97,7 +97,7 @@ export async function getOpinionsByCaseroHash(caseroHash: string): Promise<Opini
     if (supabaseWrapper.isUsingMockData()) {
       console.log('Using mock data for getOpinionsByCaseroHash');
       // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500));
+      await new Promise((resolve) => setTimeout(resolve, 500));
       return mockOpinions[caseroHash] || [];
     }
 
@@ -129,18 +129,18 @@ export async function addOpinion(opinion: Opinion): Promise<boolean> {
     if (supabaseWrapper.isUsingMockData()) {
       console.log('Using mock data for addOpinion');
       // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 500));
-      
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
       // Add to mock database
       const hash = opinion.casero_hash;
       if (!mockOpinions[hash]) mockOpinions[hash] = [];
-      
+
       mockOpinions[hash].push({
         ...opinion,
         id: Date.now(), // Use timestamp as ID
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       });
-      
+
       return true;
     }
 
@@ -148,9 +148,7 @@ export async function addOpinion(opinion: Opinion): Promise<boolean> {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
 
-    const { error } = await client
-      .from('opiniones')
-      .insert([opinion]);
+    const { error } = await client.from('opiniones').insert([opinion]);
 
     if (error) throw error;
     return true;

@@ -20,13 +20,15 @@ const SelectableTag: React.FC<SelectableTagProps> = ({
     <div
       onClick={onClick}
       style={{
-        backgroundColor: selected ? lightGreenColor : 'white'
+        backgroundColor: selected ? lightGreenColor : 'white',
       }}
       className={`
-        px-4 py-2 rounded-lg border cursor-pointer transition-all
-        ${selected 
-          ? 'text-black border-[rgb(74,94,50)]' 
-          : 'text-gray-700 border-gray-300 hover:border-[rgb(74,94,50)]'}
+        cursor-pointer rounded-lg border px-4 py-2 transition-all
+        ${
+          selected
+            ? 'border-[rgb(74,94,50)] text-black'
+            : 'border-gray-300 text-gray-700 hover:border-[rgb(74,94,50)]'
+        }
         ${className}
       `}
     >

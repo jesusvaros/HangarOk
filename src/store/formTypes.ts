@@ -36,11 +36,11 @@ export type FormDataType = {
   };
   price?: number;
   includedServices?: string[];
-  
+
   // Step 2: Rental Period
   startYear?: number;
   endYear?: number;
-  
+
   // Step 3: Property Condition
   summerTemperature?: 'Bien aislado' | 'Correcto' | 'Caluroso';
   winterTemperature?: 'Bien aislado' | 'Correcto' | 'Frío';
@@ -49,7 +49,7 @@ export type FormDataType = {
   maintenanceStatus?: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Poco' | 'Malo';
   amenities?: string[];
   propertyOpinion?: string;
-  
+
   // Step 4: Community
   neighborTypes?: string[];
   touristApartments?: 'Sí, tolerable' | 'Sí, molestos' | 'No hay';
@@ -61,7 +61,7 @@ export type FormDataType = {
   communityNoise?: 'Silenciosa' | 'Tolerable' | 'Ruidosa';
   communitySecurity?: 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura';
   communityOpinion?: string;
-  
+
   // Step 5: Owner
   ownerType?: 'Particular' | 'Agencia';
   ownerRating?: number;
@@ -70,11 +70,11 @@ export type FormDataType = {
   ownerPhone?: string;
   ownerEmail?: string;
   ownerOpinion?: string;
-  
+
   // Contact Information (Modal)
   contactName?: string;
   contactEmail?: string;
-}
+};
 
 export const initialFormData: FormDataType = {
   addressDetails: {
@@ -83,7 +83,7 @@ export const initialFormData: FormDataType = {
     floor: '',
     door: '',
     city: '',
-    postalCode: ''
+    postalCode: '',
   },
   price: undefined,
   includedServices: [],
@@ -96,7 +96,7 @@ export const initialFormData: FormDataType = {
   maintenanceStatus: undefined,
   amenities: [],
   propertyOpinion: '',
-  
+
   // Community step fields
   neighborTypes: [],
   touristApartments: undefined,
@@ -108,7 +108,7 @@ export const initialFormData: FormDataType = {
   communityNoise: undefined,
   communitySecurity: undefined,
   communityOpinion: '',
-  
+
   ownerType: 'Particular',
   ownerRating: 0,
   ownerName: '',
@@ -117,5 +117,5 @@ export const initialFormData: FormDataType = {
   showOwnerContact: false,
   ownerOpinion: '',
   contactName: '',
-  contactEmail: ''
+  contactEmail: '',
 };

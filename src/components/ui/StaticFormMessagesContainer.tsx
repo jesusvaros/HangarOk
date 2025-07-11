@@ -6,9 +6,9 @@ interface StaticFormMessagesContainerProps {
   isMobile?: boolean;
 }
 
-const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = ({ 
-  step, 
-  isMobile = false 
+const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = ({
+  step,
+  isMobile = false,
 }) => {
   // Definir los mensajes para cada paso
   const getMessagesForStep = () => {
@@ -17,58 +17,55 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
         return [
           {
             id: 'step1-anonymous',
-            title: "Tu opinión es anónima",
-            message: "La información que compartas no se mostrará de forma exacta.",
+            title: 'Tu opinión es anónima',
+            message: 'La información que compartas no se mostrará de forma exacta.',
             backgroundColor: 'rgb(225, 245, 110)',
-            textColor: '#4A5E32'
-          }
+            textColor: '#4A5E32',
+          },
         ];
       case 2:
         return [
           {
             id: 'step2-rental',
-            title: "Período de Alquiler",
-            message: "Indica el período en el que has vivido o estás viviendo en la propiedad para contextualizar tu opinión.",
+            title: 'Período de Alquiler',
+            message:
+              'Indica el período en el que has vivido o estás viviendo en la propiedad para contextualizar tu opinión.',
             backgroundColor: 'rgb(225, 245, 110)',
-            textColor: '#4A5E32'
-          }
+            textColor: '#4A5E32',
+          },
         ];
       case 3:
         return [
           {
             id: 'step3-condition',
-            title: "Estado del Piso",
-            message: "Evalúa las condiciones del piso para ayudar a futuros inquilinos a tomar decisiones informadas.",
+            title: 'Estado del Piso',
+            message:
+              'Evalúa las condiciones del piso para ayudar a futuros inquilinos a tomar decisiones informadas.',
             backgroundColor: 'rgb(225, 245, 110)',
-            textColor: '#4A5E32'
-          }
+            textColor: '#4A5E32',
+          },
         ];
       case 4:
         return [
           {
             id: 'step4-community',
-            title: "Comunidad y Barrio",
-            message: "La información sobre la comunidad de vecinos y el barrio es muy valiosa para futuros inquilinos.",
+            title: 'Comunidad y Barrio',
+            message:
+              'La información sobre la comunidad de vecinos y el barrio es muy valiosa para futuros inquilinos.',
             backgroundColor: 'rgb(225, 245, 110)',
-            textColor: '#4A5E32'
-          }
+            textColor: '#4A5E32',
+          },
         ];
       case 5:
         return [
           {
             id: 'step5-privacy',
-            title: "Privacidad",
-            message: "Los datos personales se procesan mediante hashing irreversible solo para asociar opiniones con propietarios. Nunca se almacenan en texto claro ni se comparten con terceros.",
+            title: 'Privacidad',
+            message:
+              'Los datos personales se procesan mediante hashing irreversible solo para asociar opiniones con propietarios. Nunca se almacenan en texto claro ni se comparten con terceros.',
             backgroundColor: 'rgb(225, 245, 110)',
-            textColor: '#4A5E32'
+            textColor: '#4A5E32',
           },
-          {
-            id: 'step5-suggestions',
-            title: "Sugerencias",
-            message: "¿Fue fácil comunicarte? ¿Respondió rápido a tus consultas? ¿Fue profesional y respetuoso? Evita incluir datos personales, insultos o amenazas.",
-            backgroundColor: 'rgb(225, 245, 110)',
-            textColor: '#4A5E32'
-          }
         ];
       default:
         return [];
@@ -82,7 +79,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
   }
 
   return (
-    <div className={`${isMobile ? 'space-y-3 w-full' : 'pt'}`}>
+    <div className={`${isMobile ? 'mt-4 w-full space-y-6' : ''}`}>
       {messages.map((msg) => (
         <StaticFormMessage
           key={msg.id}
@@ -90,7 +87,6 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
           message={msg.message}
           backgroundColor={msg.backgroundColor}
           textColor={msg.textColor}
-          className={`${isMobile ? 'mb-3' : ''}`}
         />
       ))}
     </div>

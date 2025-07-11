@@ -15,7 +15,7 @@ import { FormMessagesProvider } from './store/FormMessagesProvider';
 function App() {
   const location = useLocation();
   const isAddReviewPage = location.pathname === '/add-review';
-  
+
   return (
     <FormProvider>
       <div className={`min-h-screen ${isAddReviewPage ? 'bg-gray-100' : 'bg-white'}`}>
@@ -23,23 +23,31 @@ function App() {
 
         <Routes>
           <Route path="/map" element={<MapView />} />
-          <Route path="/add-review" element={
-            <FormMessagesProvider>
-              <AddReviewForm />
-            </FormMessagesProvider>
-          } />
-          <Route path="/" element={
-            <>
-              <InputSection />
-              <ChromeStoreSection />
-              <PictureSection />
-            </>
-          } />
+          <Route
+            path="/add-review"
+            element={
+              <FormMessagesProvider>
+                <AddReviewForm />
+              </FormMessagesProvider>
+            }
+          />
+          <Route
+            path="/"
+            element={
+              <>
+                <InputSection />
+                <ChromeStoreSection />
+                <PictureSection />
+              </>
+            }
+          />
         </Routes>
 
         {!isAddReviewPage && (
-          <footer className="max-w-6xl mx-auto mt-8 text-center text-gray-500 text-sm py-6">
-            <p>© {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas</p>
+          <footer className="mx-auto mt-8 max-w-6xl py-6 text-center text-sm text-gray-500">
+            <p>
+              © {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas
+            </p>
           </footer>
         )}
       </div>

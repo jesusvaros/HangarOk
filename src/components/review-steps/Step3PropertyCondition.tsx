@@ -10,21 +10,25 @@ interface Step3Props {
 
 const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
-  
+
   // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
-  
+
   return (
     <div>
       {/* Temperatura en verano */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3 text-black">Temperatura en verano</h3>
+        <h3 className="mb-3 text-lg font-medium text-black">Temperatura en verano</h3>
         <div className="flex flex-wrap gap-3">
           {['Bien aislado', 'Correcto', 'Caluroso'].map((option) => (
             <SelectableTag
               key={option}
               label={option}
               selected={formData.summerTemperature === option}
-              onClick={() => updateFormData({ summerTemperature: option as 'Bien aislado' | 'Correcto' | 'Caluroso' })}
+              onClick={() =>
+                updateFormData({
+                  summerTemperature: option as 'Bien aislado' | 'Correcto' | 'Caluroso',
+                })
+              }
             />
           ))}
         </div>
@@ -32,14 +36,18 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
 
       {/* Temperatura en invierno */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3 text-black">Temperatura en invierno</h3>
+        <h3 className="mb-3 text-lg font-medium text-black">Temperatura en invierno</h3>
         <div className="flex flex-wrap gap-3">
           {['Bien aislado', 'Correcto', 'Frío'].map((option) => (
             <SelectableTag
               key={option}
               label={option}
               selected={formData.winterTemperature === option}
-              onClick={() => updateFormData({ winterTemperature: option as 'Bien aislado' | 'Correcto' | 'Frío' })}
+              onClick={() =>
+                updateFormData({
+                  winterTemperature: option as 'Bien aislado' | 'Correcto' | 'Frío',
+                })
+              }
             />
           ))}
         </div>
@@ -47,14 +55,18 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
 
       {/* Nivel de ruido */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3 text-black">Nivel de ruido</h3>
+        <h3 className="mb-3 text-lg font-medium text-black">Nivel de ruido</h3>
         <div className="flex flex-wrap gap-3">
           {['Silencioso', 'Tolerable', 'Bastante', 'Se oye todo'].map((option) => (
             <SelectableTag
               key={option}
               label={option}
               selected={formData.noiseLevel === option}
-              onClick={() => updateFormData({ noiseLevel: option as 'Silencioso' | 'Tolerable' | 'Bastante' | 'Se oye todo' })}
+              onClick={() =>
+                updateFormData({
+                  noiseLevel: option as 'Silencioso' | 'Tolerable' | 'Bastante' | 'Se oye todo',
+                })
+              }
             />
           ))}
         </div>
@@ -62,14 +74,18 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
 
       {/* Nivel de luz */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3 text-black">Nivel de luz</h3>
+        <h3 className="mb-3 text-lg font-medium text-black">Nivel de luz</h3>
         <div className="flex flex-wrap gap-3">
           {['Nada de luz', 'Poca luz', 'Luminoso', 'Muy luminoso'].map((option) => (
             <SelectableTag
               key={option}
               label={option}
               selected={formData.lightLevel === option}
-              onClick={() => updateFormData({ lightLevel: option as 'Nada de luz' | 'Poca luz' | 'Luminoso' | 'Muy luminoso' })}
+              onClick={() =>
+                updateFormData({
+                  lightLevel: option as 'Nada de luz' | 'Poca luz' | 'Luminoso' | 'Muy luminoso',
+                })
+              }
             />
           ))}
         </div>
@@ -77,14 +93,23 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
 
       {/* Estado de mantenimiento */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3 text-black">Estado de mantenimiento</h3>
+        <h3 className="mb-3 text-lg font-medium text-black">Estado de mantenimiento</h3>
         <div className="flex flex-wrap gap-3">
           {['Como nuevo', 'Bueno', 'Aceptable', 'Poco', 'Malo'].map((option) => (
             <SelectableTag
               key={option}
               label={option}
               selected={formData.maintenanceStatus === option}
-              onClick={() => updateFormData({ maintenanceStatus: option as 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Poco' | 'Malo' })}
+              onClick={() =>
+                updateFormData({
+                  maintenanceStatus: option as
+                    | 'Como nuevo'
+                    | 'Bueno'
+                    | 'Aceptable'
+                    | 'Poco'
+                    | 'Malo',
+                })
+              }
             />
           ))}
         </div>
@@ -92,7 +117,9 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
 
       {/* Opinión sobre el piso */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3 text-black">¿Quieres añadir algo más sobre el piso?</h3>
+        <h3 className="mb-3 text-lg font-medium text-black">
+          ¿Quieres añadir algo más sobre el piso?
+        </h3>
         <CustomTextarea
           id="propertyOpinion"
           value={formData.propertyOpinion || ''}
@@ -101,19 +128,15 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
           rows={5}
         />
       </div>
-      
-      <div className="flex justify-between mt-4">
-        <button 
-          type="button" 
-          onClick={onPrevious}
-          className="text-black hover:text-gray-800"
-        >
+
+      <div className="mt-4 flex justify-between">
+        <button type="button" onClick={onPrevious} className="text-black hover:text-gray-800">
           Anterior
         </button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={onNext}
-          className="bg-[rgb(74,94,50)] text-white py-2 px-6 rounded hover:bg-[rgb(60,76,40)]"
+          className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
         >
           Siguiente
         </button>

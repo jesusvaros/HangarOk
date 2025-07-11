@@ -6,7 +6,7 @@ const Header: React.FC = () => {
   const [address, setAddress] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   // Handle scroll event to change header appearance
   useEffect(() => {
     const handleScroll = () => {
@@ -33,43 +33,46 @@ const Header: React.FC = () => {
   const isHomePage = location.pathname === '/';
 
   return (
-    <header 
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-400 ${scrolled && !isAddReviewPage ? 'py-2' : 'py-3'}`}
-      style={{ backgroundColor: (scrolled && !isAddReviewPage) || !isHomePage ? 'rgb(225, 245, 110)' : 'transparent' }}
+    <header
+      className={`duration-400 fixed left-0 right-0 top-0 z-50 transition-all ${scrolled && !isAddReviewPage ? 'py-2' : 'py-3'}`}
+      style={{
+        backgroundColor:
+          (scrolled && !isAddReviewPage) || !isHomePage ? 'rgb(225, 245, 110)' : 'transparent',
+      }}
     >
-      <div className="max-w-6xl mx-auto px-4 flex items-center justify-between">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
         <Link to="/" className="flex items-center">
-          <div className="w-10 h-10 bg-[#4A5E32] rounded-full flex items-center justify-center text-white font-bold">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] font-bold text-white">
             CV
           </div>
         </Link>
 
         {/* Input field on desktop, 'Add a review' button on mobile */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex flex-1 justify-center">
           {(scrolled || !isHomePage) && !isAddReviewPage && (
             <>
               {/* Desktop input and button */}
-              <div className="hidden md:flex w-full max-w-xl">
+              <div className="hidden w-full max-w-xl md:flex">
                 <input
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="Dirección de la vivienda"
-                  className="flex-grow p-3 rounded-l-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-grow rounded-l-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   onClick={handleStart}
-                  className="bg-[#F97316] text-white py-3 px-8 rounded-r-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg font-medium whitespace-nowrap"
+                  className="whitespace-nowrap rounded-r-lg bg-[#F97316] px-8 py-3 text-lg font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   Empezar
                 </button>
               </div>
-              
+
               {/* Mobile 'Add a review' button */}
               <div className="md:hidden">
-                <Link 
-                  to="/add-review" 
-                  className="bg-[#F97316] text-white py-2 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-700 text-base font-medium mx-2 flex items-center justify-center min-w-[160px]"
+                <Link
+                  to="/add-review"
+                  className="mx-2 flex min-w-[160px] items-center justify-center rounded-lg bg-[#F97316] px-6 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-gray-700"
                 >
                   Add a review
                 </Link>
@@ -77,12 +80,23 @@ const Header: React.FC = () => {
             </>
           )}
         </div>
-        
+
         {/* Map icon on the right */}
-        <Link to="/map" className="flex items-center ml-4">
-          <div className="w-10 h-10 bg-[#4A5E32] hover:bg-[#4A5E32] rounded-full flex items-center justify-center text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        <Link to="/map" className="ml-4 flex items-center">
+          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#4A5E32]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+              />
             </svg>
           </div>
         </Link>

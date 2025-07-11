@@ -7,31 +7,25 @@ interface MessageBoxProps {
   className?: string;
 }
 
-const MessageBox: React.FC<MessageBoxProps> = ({
-  message,
-  title,
-  height,
-  className = ''
-}) => {
+const MessageBox: React.FC<MessageBoxProps> = ({ message, title, height, className = '' }) => {
   return (
-    <div 
-      className={`${className || 'absolute right-0 transform translate-x-[calc(100%+24px)] hidden lg:block'}`}
-      style={{ 
+    <div
+      className={`${className || 'absolute right-0 hidden translate-x-[calc(100%+24px)] transform lg:block'}`}
+      style={{
         maxWidth: '250px',
         top: `calc(${height || '0'} - 44px)`,
-        right: '-20px'
+        right: '-20px',
       }}
     >
-      <div 
-        className="relative px-4 py-3 rounded-lg text-base"
+      <div
+        className="relative rounded-lg px-4 py-3 text-base"
         style={{
           backgroundColor: 'rgb(209 247 128)',
           color: 'rgb(18, 74, 54)',
         }}
       >
-        {title && <h4 className="font-bold mb-1">{title}</h4>}
+        {title && <h4 className="mb-1 font-bold">{title}</h4>}
         {message}
-       
       </div>
     </div>
   );

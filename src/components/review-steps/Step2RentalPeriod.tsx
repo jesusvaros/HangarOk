@@ -3,8 +3,6 @@ import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
 
-
-
 interface Step2Props {
   onNext: () => void;
   onPrevious: () => void;
@@ -12,64 +10,66 @@ interface Step2Props {
 
 const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
-  
+
   // Handle the currently living situation
   const isCurrentlyLiving = formData.endYear === null || formData.endYear === undefined;
-  
+
   // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
-  
+
   return (
     <div>
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4 text-black">Período de alquiler</h3>
-        
+        <h3 className="mb-4 text-lg font-medium text-black">Período de alquiler</h3>
+
         <div className="mb-6">
           <div className="flex flex-col md:flex-row md:gap-4">
-            <div className="md:w-1/2 mb-4 md:mb-0">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Año de inicio
-              </label>
+            <div className="mb-4 md:mb-0 md:w-1/2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">Año de inicio</label>
               <select
                 value={formData.startYear || new Date().getFullYear()}
                 onChange={(e) => updateFormData({ startYear: parseInt(e.target.value) })}
-                className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
+                className="w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               >
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                  <option key={year} value={year}>{year}</option>
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
                 ))}
               </select>
             </div>
-            
+
             <div className="md:w-1/2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700">
                 Año de fin (o actual si sigues viviendo)
               </label>
               <select
-                value={isCurrentlyLiving ? "current" : (formData.endYear || new Date().getFullYear())}
+                value={isCurrentlyLiving ? 'current' : formData.endYear || new Date().getFullYear()}
                 onChange={(e) => {
                   const value = e.target.value;
-                  if (value === "current") {
+                  if (value === 'current') {
                     // Use undefined instead of null to avoid type issues
                     updateFormData({ endYear: undefined });
                   } else {
                     updateFormData({ endYear: parseInt(value) });
                   }
                 }}
-                className="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
+                className="w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               >
                 <option value="current">Actualmente</option>
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                  <option key={year} value={year}>{year}</option>
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
                 ))}
               </select>
             </div>
           </div>
         </div>
       </div>
-      
+
       {/* Sección: Precio del alquiler */}
       <div className="mb-8">
-        <h3 className="text-lg font-medium mb-4 text-black">Precio del alquiler</h3>
+        <h3 className="mb-4 text-lg font-medium text-black">Precio del alquiler</h3>
         <CustomInput
           id="price"
           label="Precio mensual (€)"
@@ -78,7 +78,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
           onChange={(e) => updateFormData({ price: parseFloat(e.target.value) || 0 })}
           placeholder="Ej: 800"
         />
-        
+
         <div className="mt-6">
           <SelectableTagGroup
             label="Incluye:"
@@ -89,19 +89,15 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
           />
         </div>
       </div>
-      
-      <div className="flex justify-between mt-4">
-        <button 
-          type="button" 
-          onClick={onPrevious}
-          className="text-black hover:text-gray-800"
-        >
+
+      <div className="mt-4 flex justify-between">
+        <button type="button" onClick={onPrevious} className="text-black hover:text-gray-800">
           Anterior
         </button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={onNext}
-          className="bg-[rgb(74,94,50)] text-white py-2 px-6 rounded hover:bg-[rgb(60,76,40)]"
+          className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
         >
           Siguiente
         </button>

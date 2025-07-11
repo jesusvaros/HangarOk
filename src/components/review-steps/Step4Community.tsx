@@ -10,16 +10,19 @@ interface Step4CommunityProps {
 
 const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) => {
   const { formData, updateFormData } = useFormContext();
-  
+
   // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
 
   // Helper function to handle multi-select options
-  const handleMultiSelectToggle = (field: 'neighborTypes' | 'communityEnvironment', value: string) => {
+  const handleMultiSelectToggle = (
+    field: 'neighborTypes' | 'communityEnvironment',
+    value: string,
+  ) => {
     const currentValues = formData[field] || [];
     const newValues = currentValues.includes(value)
-      ? currentValues.filter(item => item !== value)
+      ? currentValues.filter((item) => item !== value)
       : [...currentValues, value];
-    
+
     updateFormData({ [field]: newValues });
   };
 
@@ -32,12 +35,20 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
     <div>
       {/* Tipos de vecinos */}
       <div className="mb-6">
-        <div className="flex items-center mb-3">
-          <h3 className="text-lg font-medium text-black">¿Cómo definirías la escalera de vecinos?</h3>
-          <span className="text-xs text-gray-500 ml-2">Elige tantas como quieras</span>
+        <div className="mb-3 flex items-center">
+          <h3 className="text-lg font-medium text-black">
+            ¿Cómo definirías la escalera de vecinos?
+          </h3>
+          <span className="ml-2 text-xs text-gray-500">Elige tantas como quieras</span>
         </div>
         <div className="flex flex-wrap gap-3">
-          {['Familiar', 'Parejas jóvenes', 'Pisos de estudiantes', 'Pisos compartidos', 'Mayores +75 años'].map((option) => (
+          {[
+            'Familiar',
+            'Parejas jóvenes',
+            'Pisos de estudiantes',
+            'Pisos compartidos',
+            'Mayores +75 años',
+          ].map((option) => (
             <SelectableTag
               key={option}
               label={option}
@@ -50,9 +61,9 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
 
       {/* Pisos turísticos */}
       <div className="mb-6">
-        <div className="flex items-center mb-3">
+        <div className="mb-3 flex items-center">
           <h3 className="text-lg font-medium text-black">Pisos turísticos en el edificio</h3>
-          <span className="text-xs text-gray-500 ml-2">Opcional</span>
+          <span className="ml-2 text-xs text-gray-500">Opcional</span>
         </div>
         <div className="flex flex-wrap gap-3">
           {['Sí, tolerable', 'Sí, molestos', 'No hay'].map((option) => (
@@ -60,7 +71,11 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
               key={option}
               label={option}
               selected={formData.touristApartments === option}
-              onClick={() => updateFormData({ touristApartments: option as 'Sí, tolerable' | 'Sí, molestos' | 'No hay' })}
+              onClick={() =>
+                updateFormData({
+                  touristApartments: option as 'Sí, tolerable' | 'Sí, molestos' | 'No hay',
+                })
+              }
             />
           ))}
         </div>
@@ -68,9 +83,9 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
 
       {/* Limpieza del edificio */}
       <div className="mb-6">
-        <div className="flex items-center mb-3">
+        <div className="mb-3 flex items-center">
           <h3 className="text-lg font-medium text-black">Limpieza del edificio</h3>
-          <span className="text-xs text-gray-500 ml-2">Opcional</span>
+          <span className="ml-2 text-xs text-gray-500">Opcional</span>
         </div>
         <div className="flex flex-wrap gap-3">
           {['Muy limpio', 'Buena', 'Poca', 'Sin limpieza'].map((option) => (
@@ -78,7 +93,11 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
               key={option}
               label={option}
               selected={formData.buildingCleanliness === option}
-              onClick={() => updateFormData({ buildingCleanliness: option as 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza' })}
+              onClick={() =>
+                updateFormData({
+                  buildingCleanliness: option as 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza',
+                })
+              }
             />
           ))}
         </div>
@@ -86,9 +105,9 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
 
       {/* Ambiente del barrio */}
       <div className="mb-6">
-        <div className="flex items-center mb-3">
+        <div className="mb-3 flex items-center">
           <h3 className="text-lg font-medium text-black">Ambiente del barrio</h3>
-          <span className="text-xs text-gray-500 ml-2">Elige al menos una opción</span>
+          <span className="ml-2 text-xs text-gray-500">Elige al menos una opción</span>
         </div>
         <div className="flex flex-wrap gap-3">
           {['Tranquilo', 'Lúdico/Festivo', 'Familiar', 'Estudiantil', 'Nocturno'].map((option) => (
@@ -104,9 +123,9 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
 
       {/* Seguridad del barrio */}
       <div className="mb-6">
-        <div className="flex items-center mb-3">
+        <div className="mb-3 flex items-center">
           <h3 className="text-lg font-medium text-black">Seguridad del barrio</h3>
-          <span className="text-xs text-gray-500 ml-2">Opcional</span>
+          <span className="ml-2 text-xs text-gray-500">Opcional</span>
         </div>
         <div className="flex flex-wrap gap-3">
           {['Muy segura', 'Sin problemas', 'Mejorable', 'Poco segura'].map((option) => (
@@ -114,7 +133,15 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
               key={option}
               label={option}
               selected={formData.communitySecurity === option}
-              onClick={() => updateFormData({ communitySecurity: option as 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura' })}
+              onClick={() =>
+                updateFormData({
+                  communitySecurity: option as
+                    | 'Muy segura'
+                    | 'Sin problemas'
+                    | 'Mejorable'
+                    | 'Poco segura',
+                })
+              }
             />
           ))}
         </div>
@@ -122,7 +149,9 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
 
       {/* Opinión sobre la comunidad y el barrio */}
       <div className="mb-6">
-        <h3 className="text-lg font-medium mb-3 text-black">Tu opinión sobre la comunidad y el barrio</h3>
+        <h3 className="mb-3 text-lg font-medium text-black">
+          Tu opinión sobre la comunidad y el barrio
+        </h3>
         <CustomTextarea
           id="communityOpinion"
           value={formData.communityOpinion || ''}
@@ -133,18 +162,14 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
       </div>
 
       {/* Navigation buttons */}
-      <div className="flex justify-between mt-4">
-        <button 
-          type="button" 
-          onClick={onPrevious}
-          className="text-black hover:text-gray-800"
-        >
+      <div className="mt-4 flex justify-between">
+        <button type="button" onClick={onPrevious} className="text-black hover:text-gray-800">
           Anterior
         </button>
-        <button 
-          type="button" 
+        <button
+          type="button"
           onClick={onNext}
-          className="bg-[rgb(74,94,50)] text-white py-2 px-6 rounded hover:bg-[rgb(60,76,40)]"
+          className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
         >
           Siguiente
         </button>

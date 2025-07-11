@@ -81,7 +81,7 @@ const AddReviewForm: React.FC = () => {
     // Update form data with contact information
     updateFormData({
       contactName: contactData.contactName,
-      contactEmail: contactData.contactEmail
+      contactEmail: contactData.contactEmail,
     });
 
     // Submit the form
@@ -119,9 +119,9 @@ const AddReviewForm: React.FC = () => {
   };
 
   return (
-      <div className="w-full py-8 pt-24">
-        {isSubmitted ? (
-        <div className="max-w-2xl mx-auto px-4">
+    <div className="w-full py-8 pt-24">
+      {isSubmitted ? (
+        <div className="mx-auto max-w-2xl px-4">
           <EmailConfirmation
             email={formData.contactEmail || ''}
             setEmail={() => {}}
@@ -132,46 +132,44 @@ const AddReviewForm: React.FC = () => {
       ) : (
         <>
           {/* Mobile Stepper - Only visible on smaller screens (up to 950px) */}
-          <div className="w-full mb-6 lg:hidden px-4">
-            <StepperBar 
-              currentStep={currentStep} 
-              steps={steps} 
-              onStepClick={handleStepClick} 
+          <div className="mb-6 w-full px-4 lg:hidden">
+            <StepperBar
+              currentStep={currentStep}
+              steps={steps}
+              onStepClick={handleStepClick}
               orientation="horizontal"
             />
-            
+
             {/* Container for form messages on mobile and tablet */}
             <div className="mt-50 mb-4">
               <StaticFormMessagesContainer step={currentStep} isMobile={true} />
             </div>
-            
+
             {/* Form content for mobile */}
-            <div className="bg-white rounded-lg p-6 shadow-md">
-              {renderStep()}
-            </div>
+            <div className="rounded-lg bg-white p-6 shadow-md">{renderStep()}</div>
           </div>
 
           {/* Desktop layout - Three columns: Stepper | Form | Messages */}
-          <div className="hidden lg:flex justify-center space-x-6 px-4 max-w-[1100px] mx-auto">
+          <div className="mx-auto hidden max-w-[1100px] justify-center space-x-6 px-4 lg:flex">
             {/* Stepper - Left column */}
             <div className="flex-shrink-0" style={{ width: '150px' }}>
               <div className="sticky" style={{ top: '6rem' }}>
-                <StepperBar 
-                  currentStep={currentStep} 
-                  steps={steps} 
-                  onStepClick={handleStepClick} 
+                <StepperBar
+                  currentStep={currentStep}
+                  steps={steps}
+                  onStepClick={handleStepClick}
                   orientation="vertical"
                 />
               </div>
             </div>
-            
+
             {/* Form content - Center column - Fixed width */}
-            <div className="lg:w-[650px] md:w-[500px] bg-white rounded-lg p-6 shadow-md flex-shrink-0">
+            <div className="flex-shrink-0 rounded-lg bg-white p-6 shadow-md md:w-[500px] lg:w-[650px]">
               {renderStep()}
             </div>
-            
+
             {/* Space for message boxes - Right column - 24px gap */}
-            <div className="hidden lg:block flex-shrink-0" style={{ width: '200px' }}>
+            <div className="hidden flex-shrink-0 lg:block" style={{ width: '200px' }}>
               <div className="sticky" style={{ top: '6rem' }}>
                 <StaticFormMessagesContainer step={currentStep} isMobile={false} />
               </div>
@@ -179,14 +177,11 @@ const AddReviewForm: React.FC = () => {
           </div>
 
           {isModalOpen && (
-            <ContactModal
-              onClose={handleCloseModal}
-              onSubmit={handleContactSubmit}
-            />
+            <ContactModal onClose={handleCloseModal} onSubmit={handleContactSubmit} />
           )}
         </>
       )}
-      </div>
+    </div>
   );
 };
 
