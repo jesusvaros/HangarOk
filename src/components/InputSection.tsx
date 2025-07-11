@@ -127,13 +127,13 @@ const InputSection: React.FC = () => {
         </div>
         
         {/* Input and button */}
-        <div className="flex flex-row justify-center items-center max-w-3xl px-4">
+        <div className="flex flex-row justify-center items-start max-w-3xl px-4">
           <div className="w-full">
             <AddressAutocomplete
               onSelect={handleAddressSelect}
               initialValue={address}
               placeholder="Dirección del inmueble"
-              className="rounded-l-lg"
+              hideLabel
             />
           </div>
           
@@ -171,20 +171,19 @@ return (
           </div>
         </div>
         
-        <div className="flex flex-row justify-center items-center mx-auto max-w-3xl">
+        <div className="flex flex-row justify-center items-start mx-auto max-w-3xl">
           <div className="w-full">
             <AddressAutocomplete
               onSelect={handleAddressSelect}
               initialValue={address}
               placeholder="Dirección del inmueble"
-              className="rounded-l-lg"
               hideLabel
             />
           </div>
           
           <button
             onClick={handleStart}
-            className="bg-[#F97316] text-white px-8 py-4 rounded-r-lg hover:bg-[#EA580C] focus:outline-none font-medium h-[52px] mt-[1px]"
+            className="bg-[#F97316] text-white px-8 py-4 rounded-r-lg hover:bg-[#EA580C] focus:outline-none font-medium h-[48px] justify-center items-center flex mt-[1px]"
           >
             Empezar
           </button>

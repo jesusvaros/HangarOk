@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import debounce from "lodash.debounce";
+import CustomInput from "./CustomInput";
 
 interface AddressResult {
   formatted: string;
@@ -87,7 +88,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
           // Use specific parameters to improve street number detection
           const url = `https://api.opencagedata.com/geocode/v1/json?q=${encodeURIComponent(
             searchText
-          )}&key=${apiKey || "YOUR_API_KEY_HERE"}&language=es&limit=5&countrycode=es&addressdetails=1&no_annotations=0&abbrv=1`;
+          )}&key=${apiKey}&language=es&limit=10&countrycode=es&addressdetails=1&no_annotations=0&abbrv=1`;
           
           const response = await fetch(url);
           const data = await response.json();
@@ -178,7 +179,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
               Dirección {required && <span className="text-red-500">*</span>}
             </label>
           )}
-          <input
+          <CustomInput
             type="text"
             id={id}
             placeholder={placeholder}
@@ -188,34 +189,38 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             onBlur={() => {
               // Delay hiding the dropdown to allow for clicks on the options
               setTimeout(() => setIsFocused(false), 200);
-            }}
-            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)] border-gray-300"
+              }}
+            className={`${hideLabel ? 'rounded-l-lg rounded-r-none' : 'rounded-lg'}`}
           />
           {loading && (
-            <div className="absolute right-3 top-2.5">
+            <div className={hideLabel ? "absolute right-3 top-2.5" : "absolute right-3 top-11"}>
               <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[rgb(74,94,50)]"></div>
             </div>
           )}
           {/* Dropdown results */}
           {results.length > 0 && isFocused && (
-            <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded mt-1 shadow-lg max-h-60 overflow-y-auto z-50">
+            <ul className={`absolute  left-0 right-0 bg-white rounded-b-lg mt-1 shadow-lg max-h-60 overflow-y-auto z-50 ${hideLabel ? 'top-[48px]' : 'top-[80px]'}`}>
               {results.map((result) => {
-                // Create a more user-friendly display format that emphasizes street numbers
-                const street = result.components.road || '';
-                const number = result.components.house_number || '';
+                const road = result.components.road;
+                const park = result.components.park;
+                const parking = result.components.parking;
                 const city = result.components.city || result.components.town || result.components.village || '';
                 const postcode = result.components.postcode || '';
+                console.log("Result:", city);
+
+                if (!(road || park || parking) || !city) {
+                  return null;
+                }
+                
                 
                 // Format with street number highlighted if available
-                const displayAddress = number ? 
-                  <span><strong>{street}</strong> ({number}), {postcode} {city}</span> : 
-                  <span>{street}, {postcode} {city}</span>;
+                const displayAddress = <span><strong>{road || park || parking}</strong>, {city} {postcode}</span>;
                   
                 return (
                   <li
                     key={result.annotations.geohash}
                     onClick={() => handleSelectAddress(result)}
-                    className="p-3 hover:bg-gray-100 cursor-pointer border-b border-gray-200 last:border-b-0"
+                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer "
                   >
                     {displayAddress}
                   </li>
@@ -231,7 +236,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             <label htmlFor={`${id}-number`} className="block text-sm font-medium text-gray-700 mb-2">
               Número
             </label>
-            <input
+            <CustomInput
               id={`${id}-number`}
               type="text"
               placeholder="Número"
@@ -296,7 +301,6 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                         setNumberError(false);
                       });
                   } else {
-                    // Si no hay calle, no podemos validar
                     setNumberError(false);
                   }
                 } else {
@@ -321,7 +325,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
                   onSelect(updatedResult);
                 }
               }}
-              className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)] ${numberError ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
+              className={`${numberError ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
             />
             {numberError && (
               <p className="mt-1 text-xs text-red-500">Número no coincide</p>

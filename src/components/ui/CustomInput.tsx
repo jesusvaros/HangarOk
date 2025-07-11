@@ -8,6 +8,9 @@ interface CustomInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder?: string;
   className?: string;
+  disabled?: boolean;
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -18,6 +21,9 @@ const CustomInput: React.FC<CustomInputProps> = ({
   onChange,
   placeholder,
   className = '',
+  disabled = false,
+  onBlur,
+  onFocus,
 }) => {
   return (
     <div className={`mb-4 ${className}`}>
@@ -31,8 +37,11 @@ const CustomInput: React.FC<CustomInputProps> = ({
         type={type}
         value={value}
         onChange={onChange}
-        className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+        className={`w-full p-3 border rounded-lg focus:outline-none focus:ring-[1px] focus:ring-inline-[rgb(74,94,50)] ${className}`}
         placeholder={placeholder}
+        disabled={disabled}
+        onBlur={onBlur}
+        onFocus={onFocus}
       />
     </div>
   );
