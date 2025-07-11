@@ -16,7 +16,7 @@ const StaticFormMessage: React.FC<StaticFormMessageProps> = ({
   title,
   message,
   backgroundColor = 'rgb(225, 245, 110)', // Amarillo verde por defecto (como en el header)
-  textColor = '#4A5E32', // Verde oscuro por defecto
+  textColor = 'black', // Verde oscuro por defecto
   className = '',
 }) => {
   return (

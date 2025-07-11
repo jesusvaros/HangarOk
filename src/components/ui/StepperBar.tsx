@@ -18,12 +18,12 @@ const StepperBar: React.FC<StepperBarProps> = ({
   const lightGreenColor = 'rgba(74, 94, 50, 0.2)'; // Lighter green color for background
 
   return (
-    <div className={`${isVertical ? 'h-full' : 'mb-0 w-full overflow-x-auto'}`}>
+    <div className={`${isVertical ? 'h-full' : 'mb-0 w-full overflow-x-auto pb-4'} hide-scrollbar `}>
       <div
         className={`relative ${
           isVertical
             ? 'mt-8 flex h-full flex-col items-start justify-between'
-            : 'mt-0 flex w-full items-center'
+            : 'mt-0 flex w-full justify-between flex'
         }`}
       >
         {/* Build circles and connector segments */}
@@ -36,7 +36,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
             <div key={`circle-${index}`} className="relative">
               <div
                 className={`relative z-10 cursor-pointer ${
-                  isVertical ? 'mb-10 flex items-center last:mb-0' : 'flex flex-col items-center'
+                  isVertical ? 'mb-10 flex items-center last:mb-0' : 'flex flex-col items-center w-[100px]'
                 } `}
                 onClick={() => onStepClick(index + 1)}
               >
@@ -89,7 +89,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
               {index < steps.length - 1 ? (
                 <div
                   key={`connector-${index}`}
-                  className={` absolute ${isVertical ? `  top-[30px]  ml-4 h-[50px] w-0.5` : ' left-[45px] top-[15px] -ml-4 h-0.5 w-[100%] self-center  bg-gray-300'}`}
+                  className={` absolute ${isVertical ? `  top-[30px]  ml-4 h-[50px] w-0.5` : 'left-[50px] top-[15px] ml-0 h-0.5 w-[100%] md:left-[60px] md:w-[190%]'}`}
                   style={{ backgroundColor: isCompleted ? greenColor : '#d1d5db' }}
                 />
               ) : null}
