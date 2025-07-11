@@ -178,6 +178,7 @@ return (
               initialValue={address}
               placeholder="Dirección del inmueble"
               className="rounded-l-lg"
+              hideLabel
             />
           </div>
           

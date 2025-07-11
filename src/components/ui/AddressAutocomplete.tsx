@@ -35,6 +35,7 @@ interface AddressAutocompleteProps {
   required?: boolean;
   showNumberField?: boolean;
   validateNumber?: boolean;
+  hideLabel?: boolean;
 }
 
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
@@ -47,6 +48,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   required = false,
   showNumberField = false,
   validateNumber = false,
+  hideLabel = false,
 }) => {
   const [query, setQuery] = useState(initialValue);
   const [streetNumber, setStreetNumber] = useState(initialStreetNumber);
@@ -171,9 +173,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
       <div className="flex space-x-2">
         {/* Street input with label */}
         <div className={`relative ${showNumberField ? 'w-3/4' : 'w-full'}`}>
-          <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
-            Dirección {required && <span className="text-red-500">*</span>}
-          </label>
+          {!hideLabel && (
+            <label htmlFor={id} className="block text-sm font-medium text-gray-700 mb-2">
+              Dirección {required && <span className="text-red-500">*</span>}
+            </label>
+          )}
           <input
             type="text"
             id={id}
