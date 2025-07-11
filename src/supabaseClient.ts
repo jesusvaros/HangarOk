@@ -36,6 +36,9 @@ const mockOpinions: Record<string, Opinion[]> = {
   ],
 };
 
+// Additional mock storage for review sessions
+const mockSessions: string[] = [];
+
 // Flag to track if we're using mock data
 let usingMockData = false;
 
@@ -158,4 +161,50 @@ export async function addOpinion(opinion: Opinion): Promise<boolean> {
   }
 }
 
-// No need to export mock mode status
+/**
+ * Create a new review session
+ * @param sessionId UUID identifying the session
+ * @returns Success status
+ */
+export interface ReviewSessionPayload {
+  full_address?: string;
+  lat?: number;
+  lng?: number;
+  city?: string;
+  street?: string;
+}
+
+export async function createReviewSession(payload: ReviewSessionPayload = {}): Promise<string | null> {
+  try {
+    // If using mock data, generate and store an id
+    if (supabaseWrapper.isUsingMockData()) {
+      console.log('Using mock data for createReviewSession');
+      await new Promise((resolve) => setTimeout(resolve, 200));
+
+      let idToUse: string | undefined = undefined;
+      if (!idToUse) {
+        idToUse = crypto.randomUUID();
+      }
+      if (!mockSessions.includes(idToUse)) {
+        mockSessions.push(idToUse);
+      }
+      return idToUse;
+    }
+
+    const client = supabaseWrapper.getClient();
+    if (!client) throw new Error('Supabase client not available');
+    const insertPayload = { ...payload };
+
+    const { data, error } = await client
+      .from('review_sessions')
+      .insert([insertPayload])
+      .select('id')
+      .single();
+
+    if (error) throw error;
+    return data?.id || null;
+  } catch (error) {
+    console.error('Error creating review session:', error);
+    return null;
+  }
+}

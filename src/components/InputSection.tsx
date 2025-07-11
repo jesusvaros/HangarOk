@@ -1,16 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { createReviewSession } from '../supabaseClient';
+import type { ReviewSessionPayload } from '../supabaseClient';
 import { useFormContext } from '../store/useFormContext';
 import AddressAutocomplete from './ui/AddressAutocomplete';
 
 const InputSection: React.FC = () => {
   const navigate = useNavigate();
   const { address, setAddress } = useFormContext();
-  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const [nextMessageIndex, setNextMessageIndex] = useState(1);
-  const [isAnimating, setIsAnimating] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState('');
+  const [state, setState] = useState({
+    currentMessageIndex: 0,
+    nextMessageIndex: 1,
+    isAnimating: false,
+    isMobile: false,
+    selectedAddress: '',
+    coords: null as { lat: number; lng: number } | null,
+    city: '',
+    street: '',
+  });
+
+  const {
+    currentMessageIndex,
+    nextMessageIndex,
+    isAnimating,
+    isMobile,
+    selectedAddress,
+    coords,
+    city,
+    street,
+  } = state;
 
   const messages = [
     'Todas las reviews son Anónimas',
@@ -22,7 +40,7 @@ const InputSection: React.FC = () => {
   // Check if the device is mobile
   useEffect(() => {
     const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768); // 768px is the md breakpoint in Tailwind
+      setState((prev) => ({ ...prev, isMobile: window.innerWidth < 768 })); // 768px md breakpoint
     };
 
     checkIfMobile();
@@ -39,13 +57,16 @@ const InputSection: React.FC = () => {
 
     const rotateMessages = () => {
       // Start animation
-      setIsAnimating(true);
+      setState((prev) => ({ ...prev, isAnimating: true }));
 
       // After animation completes, update the displayed message
       setTimeout(() => {
-        setCurrentMessageIndex(nextMessageIndex);
-        setNextMessageIndex((nextMessageIndex + 1) % messages.length);
-        setIsAnimating(false);
+        setState((prev) => ({
+          ...prev,
+          currentMessageIndex: prev.nextMessageIndex,
+          nextMessageIndex: (prev.nextMessageIndex + 1) % messages.length,
+          isAnimating: false,
+        }));
       }, 1000);
     };
 
@@ -53,10 +74,33 @@ const InputSection: React.FC = () => {
     return () => clearInterval(interval);
   }, [isMobile, nextMessageIndex, messages.length]);
 
-  const handleStart = () => {
-    if (selectedAddress || address.trim()) {
-      navigate('/add-review');
+  const handleStart = async () => {
+    const fullAddress = selectedAddress || address.trim();
+    if (!fullAddress) return;
+    if (!coords) {
+      // Require selecting an autocomplete option to ensure we have coordinates
+      alert('Por favor selecciona una dirección de la lista para continuar');
+      return;
     }
+
+    const storedId = localStorage.getItem('reviewSessionId');
+    if (!storedId) {
+      // set PENDING to avoid race conditions
+      localStorage.setItem('reviewSessionId', 'PENDING');
+      const payload: ReviewSessionPayload = { full_address: fullAddress };
+      if (coords) {
+        payload.lat = coords.lat;
+        payload.lng = coords.lng;
+      }
+      if (city) payload.city = city;
+      if (street) payload.street = street;
+      const generatedId = await createReviewSession(payload);
+      if (generatedId) {
+        localStorage.setItem('reviewSessionId', generatedId);
+      }
+    }
+
+    navigate('/add-review');
   };
 
   const handleAddressSelect = (result: {
@@ -69,7 +113,30 @@ const InputSection: React.FC = () => {
   }) => {
     const fullAddress = result.formatted;
     setAddress(fullAddress);
-    setSelectedAddress(fullAddress);
+    setState((prev) => ({
+      ...prev,
+      selectedAddress: fullAddress,
+      coords: { lat: result.geometry.lat, lng: result.geometry.lng },
+    }));
+  // Extract city and street from components
+  const comp = result.components;
+  const cityName =
+    comp.city ||
+    comp.town ||
+    comp.village ||
+    comp.municipality ||
+    comp.county ||
+    comp.state ||
+    '';
+  const streetName =
+    comp.road ||
+    comp.street ||
+    comp.residential ||
+    comp.footway ||
+    comp.neighbourhood ||
+    comp.suburb ||
+    '';
+  setState((prev) => ({ ...prev, city: cityName, street: streetName }));
   };
 
   // Render message with last word bold

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useFormContext } from '../store/useFormContext';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
@@ -9,6 +9,7 @@ import EmailConfirmation from './review-steps/EmailConfirmation';
 import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
+import { createReviewSession } from '../supabaseClient';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -17,8 +18,36 @@ import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
 const AddReviewForm: React.FC = () => {
   const { formData, updateFormData } = useFormContext();
   const [currentStep, setCurrentStep] = useState(1);
+  // _sessionId will be used once the form payload is persisted
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_sessionId, setSessionId] = useState<string | null>(null);
+  // Prevent double session creation in React 18 StrictMode (dev)
+  const sessionInitRef = useRef(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Initialize or retrieve review session ID
+  useEffect(() => {
+    if (sessionInitRef.current) return; // Prevent double run in React 18 StrictMode dev
+    sessionInitRef.current = true;
+
+    const initSession = async () => {
+      const storedId = localStorage.getItem('reviewSessionId');
+      if (storedId && storedId !== 'PENDING') {
+        setSessionId(storedId);
+      } else {
+        // Mark localStorage to avoid other tabs/instances creating another session
+          localStorage.setItem('reviewSessionId', 'PENDING');
+          const generatedId = await createReviewSession();
+        if (generatedId) {
+          localStorage.setItem('reviewSessionId', generatedId);
+          setSessionId(generatedId);
+        }
+      }
+    };
+
+    initSession();
+  }, []);
 
   // Handle responsive layout
   useEffect(() => {
