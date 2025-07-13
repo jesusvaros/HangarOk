@@ -4,19 +4,57 @@ import { createReviewSession } from '../supabaseClient';
 import type { ReviewSessionPayload } from '../supabaseClient';
 import { useFormContext } from '../store/useFormContext';
 import AddressAutocomplete from './ui/AddressAutocomplete';
+import type { AddressResult } from './ui/AddressAutocomplete';
 
 const InputSection: React.FC = () => {
   const navigate = useNavigate();
-  const { address, setAddress } = useFormContext();
+  const { address, setAddress, updateFormData, formData } = useFormContext();
+  const initialAddressData = (() => {
+    if (formData.addressAutocompleteResult) {
+      const r = formData.addressAutocompleteResult as unknown as {
+        formatted: string;
+        geometry: { lat: number; lng: number };
+        components: Record<string, string | undefined>;
+      };
+      const comp = r.components;
+      const cityName =
+        comp.city ||
+        comp.town ||
+        comp.village ||
+        comp.municipality ||
+        comp.county ||
+        comp.state ||
+        '';
+      const coords = { lat: r.geometry.lat, lng: r.geometry.lng };
+      const streetName =
+        comp.road ||
+        comp.street ||
+        comp.residential ||
+        comp.footway ||
+        comp.neighbourhood ||
+        comp.suburb ||
+        '';
+      return {
+        selectedAddress: r.formatted,
+        coords,
+        city: cityName,
+        street: streetName,
+      };
+    }
+    return {
+      selectedAddress: '',
+      coords: null as { lat: number; lng: number } | null,
+      city: '',
+      street: '',
+    };
+  })();
+
   const [state, setState] = useState({
     currentMessageIndex: 0,
     nextMessageIndex: 1,
     isAnimating: false,
     isMobile: false,
-    selectedAddress: '',
-    coords: null as { lat: number; lng: number } | null,
-    city: '',
-    street: '',
+    ...initialAddressData
   });
 
   const {
@@ -49,7 +87,43 @@ const InputSection: React.FC = () => {
     return () => {
       window.removeEventListener('resize', checkIfMobile);
     };
-  }, []);
+    }, []);
+
+  // Restore previously selected address if coming back from other pages
+  useEffect(() => {
+    if (formData.addressAutocompleteResult && !coords) {
+      const r = formData.addressAutocompleteResult as unknown as {
+        formatted: string;
+        geometry: { lat: number; lng: number };
+        components: Record<string, string | undefined>;
+      };
+      const coordinates = { lat: r.geometry.lat, lng: r.geometry.lng };
+      const comp = r.components;
+      const cityName =
+        comp.city ||
+        comp.town ||
+        comp.village ||
+        comp.municipality ||
+        comp.county ||
+        comp.state ||
+        '';
+      const streetName =
+        comp.road ||
+        comp.street ||
+        comp.residential ||
+        comp.footway ||
+        comp.neighbourhood ||
+        comp.suburb ||
+        '';
+      setState((prev) => ({
+        ...prev,
+        selectedAddress: r.formatted,
+        coords: coordinates,
+        city: cityName,
+        street: streetName,
+      }));
+    }
+  }, [formData.addressAutocompleteResult, coords]);
 
   // Rotate through messages on mobile
   useEffect(() => {
@@ -103,21 +177,17 @@ const InputSection: React.FC = () => {
     navigate('/add-review');
   };
 
-  const handleAddressSelect = (result: {
-    formatted: string;
-    geometry: {
-      lat: number;
-      lng: number;
-    };
-    components: Record<string, string | undefined>;
-  }) => {
+  const handleAddressSelect = (result: AddressResult) => {
     const fullAddress = result.formatted;
     setAddress(fullAddress);
+    const coordinates = { lat: result.geometry.lat, lng: result.geometry.lng };
     setState((prev) => ({
       ...prev,
       selectedAddress: fullAddress,
-      coords: { lat: result.geometry.lat, lng: result.geometry.lng },
+      coords: coordinates,
     }));
+    // Persist full result for later steps
+    updateFormData({ addressAutocompleteResult: result });
   // Extract city and street from components
   const comp = result.components;
   const cityName =
@@ -137,6 +207,17 @@ const InputSection: React.FC = () => {
     comp.suburb ||
     '';
   setState((prev) => ({ ...prev, city: cityName, street: streetName }));
+  // Persist full address details in form context so Step1 loads it
+  updateFormData({
+    addressAutocompleteResult: result,
+    addressDetails: {
+      street: fullAddress,
+      city: cityName,
+      fullAddress: fullAddress,
+      coordinates,
+      components: result.components,
+    },
+  });
   };
 
   // Render message with last word bold
@@ -207,6 +288,7 @@ const InputSection: React.FC = () => {
               <AddressAutocomplete
                 onSelect={handleAddressSelect}
                 initialValue={address}
+                initialResult={formData.addressAutocompleteResult}
                 placeholder="Dirección del inmueble"
                 hideLabel
               />
@@ -270,6 +352,7 @@ const InputSection: React.FC = () => {
             <AddressAutocomplete
               onSelect={handleAddressSelect}
               initialValue={address}
+              initialResult={formData.addressAutocompleteResult}
               placeholder="Dirección del inmueble"
               hideLabel
             />

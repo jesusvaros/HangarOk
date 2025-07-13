@@ -110,6 +110,7 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
           label="Dirección"
           initialValue={addressDetails.street || ''}
           initialStreetNumber={addressDetails.components?.house_number || ''}
+          initialResult={formData.addressAutocompleteResult}
           onSelect={handleAddressSelect}
           placeholder="Ej: Calle Mayor"
           required

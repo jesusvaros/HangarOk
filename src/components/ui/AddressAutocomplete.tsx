@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import debounce from 'lodash.debounce';
 import CustomInput from './CustomInput';
 
-interface AddressResult {
+export interface AddressResult {
   formatted: string;
   geometry: {
     lat: number;
@@ -37,6 +37,7 @@ interface AddressAutocompleteProps {
   showNumberField?: boolean;
   validateNumber?: boolean;
   hideLabel?: boolean;
+  initialResult?: AddressResult;
 }
 
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
@@ -50,13 +51,16 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   showNumberField = false,
   validateNumber = false,
   hideLabel = false,
+  initialResult = undefined,
 }) => {
-  const [query, setQuery] = useState(initialValue);
-  const [streetNumber, setStreetNumber] = useState(initialStreetNumber);
+  const [query, setQuery] = useState(initialResult ? initialResult.formatted : initialValue);
+  const [streetNumber, setStreetNumber] = useState(initialResult?.components.house_number || initialStreetNumber);
   const [results, setResults] = useState<AddressResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState<AddressResult | null>(null);
+  const [selectedAddress, setSelectedAddress] = useState<AddressResult | null>(initialResult || null);
+  // Ref to track the first render when an initialResult is supplied so we can avoid an unnecessary API call
+  const firstLoadRef = React.useRef(true);
   const [numberError, setNumberError] = useState(false);
 
   // Para depuración
@@ -131,8 +135,18 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   );
 
   useEffect(() => {
+    // Avoid triggering a search on the very first render if the component already
+    // received a valid pre-selected address (initialResult). This prevents redundant
+    // OpenCage requests when the user navigates between pages.
+    if (initialResult && query === initialResult.formatted) {
+      // We already have this address; no need to query again
+      return;
+    }
+    if (firstLoadRef.current) {
+      firstLoadRef.current = false;
+    }
     fetchAddresses(query);
-  }, [query, fetchAddresses]);
+  }, [query, fetchAddresses, initialResult]);
 
   const handleSelectAddress = (result: AddressResult) => {
     console.log('Selected result:', result);

@@ -74,6 +74,7 @@ export type FormDataType = {
   // Contact Information (Modal)
   contactName?: string;
   contactEmail?: string;
+  addressAutocompleteResult?: import('../components/ui/AddressAutocomplete').AddressResult;
 };
 
 export const initialFormData: FormDataType = {
