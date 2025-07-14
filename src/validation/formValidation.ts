@@ -5,7 +5,7 @@
 
 import type { AddressResult } from '../components/ui/AddressAutocomplete';
 import { showErrorToast } from '../components/ui/toast/toastUtils';
-import { submitAddressStep1, type AddressStep1Payload } from '../services/supabase';
+import { submitAddressStep1 } from '../services/supabase';
 
 /**
  * Address details interface used in Step 1
@@ -64,47 +64,50 @@ export interface FormContext {
  */
 export const validateStep1 = (context: FormContext): ValidationResult => {
   const { addressDetails } = context;
-  const result: ValidationResult = {
-    isValid: true,
-    message: null,
-    fieldErrors: {
-      street: false,
-      number: false
-    }
-  };
-
-  // Check if address details exist
+  const fieldErrors = { street: false, number: false };
+  
+  // Check if we have address details
   if (!addressDetails) {
-    result.isValid = false;
-    result.message = 'No se ha proporcionado información de dirección';
-    return result;
+    return {
+      isValid: false,
+      message: 'No se ha proporcionado información de dirección',
+      fieldErrors
+    };
   }
-
+  
   // Validate required street field
   if (!addressDetails.street || !addressDetails.street.trim()) {
-    result.isValid = false;
-    result.message = 'La dirección es obligatoria';
-    if (result.fieldErrors) result.fieldErrors.street = true;
-    return result;
+    return {
+      isValid: false,
+      message: 'La dirección es obligatoria',
+      fieldErrors: { ...fieldErrors, street: true }
+    };
   }
-
-  // Validate required number field
+  
+  // Validate required number field - check both direct number and components
   if (!addressDetails.number && (!addressDetails.components?.house_number || addressDetails.components.house_number === '')) {
-    result.isValid = false;
-    result.message = 'El número de la dirección es obligatorio';
-    if (result.fieldErrors) result.fieldErrors.number = true;
-    return result;
+    return {
+      isValid: false,
+      message: 'El número de la dirección es obligatorio',
+      fieldErrors: { ...fieldErrors, number: true }
+    };
   }
-
+  
   // Validate coordinates
   if (!addressDetails.coordinates || !addressDetails.coordinates.lat || !addressDetails.coordinates.lng) {
-    result.isValid = false;
-    result.message = 'No se han podido obtener las coordenadas de la dirección';
-    if (result.fieldErrors) result.fieldErrors.street = true;
-    return result;
+    return {
+      isValid: false,
+      message: 'No se han podido obtener las coordenadas de la dirección',
+      fieldErrors: { ...fieldErrors, street: true }
+    };
   }
-
-  return result;
+  
+  // All checks passed
+  return {
+    isValid: true,
+    message: null,
+    fieldErrors
+  };
 };
 
 /**
@@ -117,7 +120,8 @@ export const submitStep1 = async (context: FormContext): Promise<{ success: bool
   try {
     const { addressDetails, addressResult } = context;
     
-    if (!addressDetails || !addressResult) {
+    // Basic check - validation should have already happened
+    if (!addressDetails?.coordinates) {
       return { success: false, message: 'Datos de dirección incompletos' };
     }
 
@@ -127,24 +131,22 @@ export const submitStep1 = async (context: FormContext): Promise<{ success: bool
       return { success: false, message: 'No se ha encontrado el token de autenticación' };
     }
     
-    // Prepare data for submission
-    const addressData: AddressStep1Payload = {
-      address: addressResult,
-      addressDetails: addressDetails,
+    // Submit data using our Supabase client function with simplified payload
+    const success = await submitAddressStep1({
+      address: addressResult || null,
+      addressDetails
+    }, token);
+    
+    return { 
+      success, 
+      message: success ? null : 'Error al guardar los datos en la base de datos' 
     };
-    
-    // Submit data using our Supabase client function
-    const success = await submitAddressStep1(addressData, token);
-    
-    if (!success) {
-      return { success: false, message: 'Error al guardar los datos en la base de datos' };
-    }
-    
-    return { success: true, message: null };
   } catch (error) {
     console.error('Error submitting address data:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Error al guardar los datos';
-    return { success: false, message: errorMessage };
+    return { 
+      success: false, 
+      message: error instanceof Error ? error.message : 'Error al guardar los datos'
+    };
   }
 };
 
@@ -189,35 +191,34 @@ export const validateAndSubmitStep = async (
 }> => {
   const { showToast = true, isSubmitting } = options;
   
-  // Set submitting state to true if provided
+  // Set submitting state if provided
   if (isSubmitting) isSubmitting(true);
   
   try {
-    // Validate the step first
+    // 1. Validate the step
     const validationResult = validateStep(step, context);
-    
-    // If validation fails, show toast and return result
     if (!validationResult.isValid) {
+      // Show toast on validation failure if enabled
       if (showToast && validationResult.message) {
         showErrorToast(validationResult.message);
       }
-      return { 
-        ...validationResult, 
-        isSubmitted: false 
-      };
+      return { ...validationResult, isSubmitted: false };
     }
     
-    // If validation passes, submit the step data
-    let submissionResult = { success: true, message: null as string | null };
+    // 2. Submit data if validation passes
+    let submissionResult;
     
+    // Choose submission handler based on step
     switch (step) {
       case 1:
         submissionResult = await submitStep1(context);
         break;
-      // Add more cases as more steps are implemented
+      // Add more cases as needed
+      default:
+        submissionResult = { success: true, message: null };
     }
     
-    // If submission fails, show toast and return result
+    // 3. Handle submission result
     if (!submissionResult.success) {
       if (showToast && submissionResult.message) {
         showErrorToast(submissionResult.message);
@@ -230,19 +231,14 @@ export const validateAndSubmitStep = async (
       };
     }
     
-    // If all succeeds, return success result
-    return { 
-      isValid: true, 
-      isSubmitted: true, 
-      message: null 
-    };
+    // 4. Return success result
+    return { isValid: true, isSubmitted: true, message: null };
   } catch (error) {
-    console.error(`Error validating and submitting step ${step}:`, error);
+    // 5. Handle any exceptions
+    console.error(`Error in step ${step}:`, error);
     const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
     
-    if (showToast) {
-      showErrorToast(errorMessage);
-    }
+    if (showToast) showErrorToast(errorMessage);
     
     return { 
       isValid: false, 
@@ -251,7 +247,7 @@ export const validateAndSubmitStep = async (
       fieldErrors: {} 
     };
   } finally {
-    // Reset submitting state if provided
+    // 6. Always reset submitting state
     if (isSubmitting) isSubmitting(false);
   }
 };

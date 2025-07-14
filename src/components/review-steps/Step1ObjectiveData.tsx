@@ -86,38 +86,80 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext, fieldErro
     });
   };
 
+  // Handle changes to the address street input
+  const handleAddressStreetChange = useCallback((value: string) => {
+    const newAddressDetails = {
+      ...addressDetails,
+      street: value
+    };
+    
+    setAddressDetails(newAddressDetails);
+    
+    // Update form context
+    updateFormData({
+      addressDetails: newAddressDetails
+    });
+  }, [addressDetails, updateFormData]);
+  
+  // Handle changes to the address number input
+  const handleAddressNumberChange = useCallback((value: string) => {
+    const newAddressDetails = {
+      ...addressDetails,
+      number: value
+    };
+    
+    setAddressDetails(newAddressDetails);
+    
+    // Update form context
+    updateFormData({
+      addressDetails: newAddressDetails
+    });
+  }, [addressDetails, updateFormData]);
+
   const handleAddressSelect = useCallback((result: AddressResult) => {
     // Extract address components
     const { components, geometry } = result;
 
-    // Create a new address details object with all the properties
+    // Ensure components is defined, use empty object as fallback
+    const addressComponents = components || {};
+
+    // Format street address properly
+    const street = addressComponents.road || '';
+    const city = addressComponents.city || addressComponents.town || addressComponents.village || '';
+    const postalCode = addressComponents.postcode || '';
+    // Format as "Street Name" without the postal code and city for cleaner display
+    const streetFormatted = street || '';
+    
+    // Create a new address details object
     const newAddressDetails: AddressDetails = {
-      ...addressDetails,
-      // Guardamos la calle con el formato "Calle, Código Postal Ciudad"
-      street: `${components.road || ''}, ${components.postcode || ''} ${components.city || components.town || components.village || ''}`,
-      number: components.house_number || '',
-      city: components.city || components.town || components.village || '',
-      postalCode: components.postcode || '',
-      state: components.state || '',
+      street: streetFormatted, // Just the street name
+      number: addressComponents.house_number || '',
+      city: city,
+      postalCode: postalCode,
+      state: addressComponents.state || '',
       fullAddress: result.formatted,
-      // Guardamos los componentes originales para acceder al número de calle por separado
-      components: components,
+      components: addressComponents,
       coordinates: {
         lat: geometry.lat,
         lng: geometry.lng,
       },
     };
-
-    // Update local state
-    setAddressDetails(newAddressDetails);
-    setAddressResult(result);
-
-    // Update form context
+    
+    // Important: Update form context FIRST
     updateFormData({
       addressDetails: newAddressDetails,
       addressAutocompleteResult: result,
     });
-  }, [addressDetails, updateFormData]);
+    
+    // Then update local state to match form context
+    setAddressDetails(newAddressDetails);
+    setAddressResult(result);
+    
+    console.log('Address updated from selection:', {
+      street: streetFormatted,
+      number: addressComponents.house_number || ''
+    });
+  }, [updateFormData]); // Remove addressDetails dependency as we're not using it
 
   // Use the map location handler hook
   const handleLocationSelect = useMapLocationHandler(handleAddressSelect);
@@ -149,9 +191,14 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext, fieldErro
           label="Dirección"
           initialValue={addressDetails.street || ''}
           initialStreetNumber={addressDetails.number || ''}
+          value={addressDetails.street || ''}
+          streetNumberValue={addressDetails.number || ''}
+          selectedResult={addressResult}
           placeholder="Buscar dirección..."
           required={true}
           onSelect={handleAddressSelect}
+          onChange={handleAddressStreetChange}
+          onNumberChange={handleAddressNumberChange}
           showNumberField={true}
           hasError={errors.street}
           numberHasError={errors.number}

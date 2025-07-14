@@ -41,6 +41,7 @@ const AddReviewForm: React.FC = () => {
   useEffect(() => {
     if (sessionInitRef.current) return; // Prevent double run in React 18 StrictMode dev
     sessionInitRef.current = true;
+    console.log('sessionInitRef.current', sessionInitRef.current)
 
     const initSession = async () => {
       const storedId = localStorage.getItem('reviewSessionId');
@@ -70,13 +71,10 @@ const AddReviewForm: React.FC = () => {
         document.body.style.padding = '0px';
       }
     };
-
     // Check on initial load
     checkIfMobile();
-
     // Add event listener for window resize
     window.addEventListener('resize', checkIfMobile);
-
     // Cleanup
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);

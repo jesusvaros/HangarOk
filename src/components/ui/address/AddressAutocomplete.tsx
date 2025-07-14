@@ -7,6 +7,8 @@ import { StreetNumberInput } from './StreetNumberInput';
 
 interface AddressAutocompleteProps {
   onSelect?: (result: AddressResult) => void;
+  onChange?: (value: string) => void;
+  onNumberChange?: (value: string) => void;
   placeholder?: string;
   initialValue?: string;
   initialStreetNumber?: string;
@@ -27,6 +29,8 @@ interface AddressAutocompleteProps {
 
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   onSelect,
+  onChange,
+  onNumberChange,
   placeholder = 'Buscar dirección...',
   initialValue = '',
   initialStreetNumber = '',
@@ -161,6 +165,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   // Handle street number changes
   const handleStreetNumberChange = (value: string) => {
     setStreetNumber(value);
+    
+    // Call the onNumberChange callback if provided
+    if (onNumberChange) {
+      onNumberChange(value);
+    }
   };
 
   // Handle street number blur - update coordinates if needed
@@ -192,6 +201,11 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   // Handle query changes
   const handleQueryChange = (value: string) => {
     setQuery(value);
+    
+    // Call the onChange callback if provided
+    if (onChange) {
+      onChange(value);
+    }
   };
 
   return (

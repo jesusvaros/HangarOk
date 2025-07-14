@@ -20,7 +20,7 @@ export interface ReviewSessionPayload {
 }
 
 export interface AddressStep1Payload {
-  address: AddressResult;
+  address: AddressResult | null; // Allow null for manual address entry
   addressDetails: {
     street?: string;
     number?: string;
