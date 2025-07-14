@@ -22,6 +22,7 @@ interface AddressAutocompleteProps {
   selectedResult?: AddressResult;
   label?: string;
   hasError?: boolean;
+  numberHasError?: boolean;
 }
 
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
@@ -39,6 +40,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   streetNumberValue,
   selectedResult,
   hasError = false,
+  numberHasError = false,
 }) => {
   // State management
   const [query, setQuery] = useState(initialResult ? initialResult.formatted : initialValue);
@@ -219,7 +221,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             onChange={handleStreetNumberChange}
             onBlur={handleStreetNumberBlur}
             disabled={!selectedAddress}
-            hasError={numberError}
+            hasError={numberHasError || numberError}
           />
         )}
       </div>

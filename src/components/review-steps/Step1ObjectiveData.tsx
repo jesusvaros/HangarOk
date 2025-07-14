@@ -5,6 +5,7 @@ import type { AddressResult } from '../ui/AddressAutocomplete';
 import CustomInput from '../ui/CustomInput';
 import LocationMap from '../ui/LocationMap';
 import { validateAndSubmitStep1 } from './validation/Step1ValidationAndSubmit';
+import { useMapLocationHandler } from './location/mapLocationHandler';
 
 // Define extended address details type
 interface AddressDetails {
@@ -53,10 +54,26 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext }, ref) =>
   const [addressDetails, setAddressDetails] = useState(formData.addressDetails || {});
   const [addressResult, setAddressResult] = useState<AddressResult | undefined>(formData.addressAutocompleteResult);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  // Validation state - utilizados por validateAndSubmitStep1
-  const [, setValidationError] = useState<string | null>(null);
-  const [streetError, setStreetError] = useState(false);
-  const [numberError, setNumberError] = useState(false);
+  
+  // Consolidated error state object
+  const [errors, setErrors] = useState({
+    validation: null as string | null,
+    street: false,
+    number: false
+  });
+  
+  // Create separate setter functions for compatibility with existing code
+  const setValidationError = (error: string | null) => {
+    setErrors(prev => ({ ...prev, validation: error }));
+  };
+  
+  const setStreetError = (hasError: boolean) => {
+    setErrors(prev => ({ ...prev, street: hasError }));
+  };
+  
+  const setNumberError = (hasError: boolean) => {
+    setErrors(prev => ({ ...prev, number: hasError }));
+  };
 
   useEffect(() => {
     // Actualizar el estado local cuando cambia formData
@@ -109,47 +126,8 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext }, ref) =>
     });
   }, [addressDetails, updateFormData]);
 
-  // Function to handle location selection from the map
-  const handleLocationSelect = useCallback(async (lat: number, lng: number) => {
-    try {
-      const apiKey = import.meta.env.VITE_HERE_API_KEY;
-      // Perform reverse geocoding with HERE API
-      const url = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${lng}&lang=es-ES&apiKey=${apiKey}`;
-      
-      const response = await fetch(url);
-      const data = await response.json();
-      
-      if (data.items && data.items.length > 0) {
-        const location = data.items[0];
-        const address = location.address;
-        
-        // Create an address result in the format expected by handleAddressSelect
-        const addressResult: AddressResult = {
-          formatted: address.label || `${address.street || ''} ${address.houseNumber || ''}, ${address.city || ''}`,
-          geometry: {
-            lat: lat,
-            lng: lng,
-          },
-          components: {
-            road: address.street || '',
-            house_number: address.houseNumber || '',
-            postcode: address.postalCode || '',
-            city: address.city || '',
-            state: address.state || '',
-            country: address.countryName || '',
-          },
-          annotations: {
-            geohash: '', // We don't have a geohash from HERE API, but we need to include it for type compatibility
-          },
-        };
-        
-        // Update form with the new address
-        handleAddressSelect(addressResult);
-      }
-    } catch (error) {
-      console.error('Error in reverse geocoding:', error);
-    }
-  }, [handleAddressSelect]);
+  // Use the map location handler hook
+  const handleLocationSelect = useMapLocationHandler(handleAddressSelect);
 
   // Function to validate address details and submit data
   const validateAndSubmit = async () => {
@@ -194,7 +172,8 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext }, ref) =>
           required={true}
           onSelect={handleAddressSelect}
           showNumberField={true}
-          hasError={streetError}
+          hasError={errors.street}
+          numberHasError={errors.number}
         />
 
         {/* Always show the map */}
