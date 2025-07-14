@@ -1,6 +1,6 @@
 import { submitAddressStep1, type AddressStep1Payload } from '../../../services/supabase';
 import type { AddressResult } from '../../ui/AddressAutocomplete';
-import toast from 'react-hot-toast';
+import { showErrorToast } from '../../ui/toast/toastUtils';
 
 /**
  * Interface for address details used in Step 1
@@ -59,21 +59,21 @@ export const validateAndSubmitStep1 = async ({
   if (!addressDetails.street || !addressDetails.street.trim()) {
     setValidationError('La dirección es obligatoria');
     setStreetError(true);
-    toast.error('La dirección es obligatoria');
+    showErrorToast('La dirección es obligatoria');
     return;
   }
   
   if (!addressDetails.number && (!addressDetails.components?.house_number || addressDetails.components.house_number === '')) {
     setValidationError('El número de la dirección es obligatorio');
     setNumberError(true);
-    toast.error('El número de la dirección es obligatorio');
+    showErrorToast('El número de la dirección es obligatorio');
     return;
   }
   
   if (!addressDetails.coordinates || !addressDetails.coordinates.lat || !addressDetails.coordinates.lng) {
     setValidationError('No se han podido obtener las coordenadas de la dirección');
     setStreetError(true);
-    toast.error('No se han podido obtener las coordenadas de la dirección');
+    showErrorToast('No se han podido obtener las coordenadas de la dirección');
     return;
   }
   

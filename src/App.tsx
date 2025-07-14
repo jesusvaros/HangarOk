@@ -22,24 +22,13 @@ function App() {
       <div className={`min-h-screen ${isAddReviewPage ? 'bg-gray-100' : 'bg-white'}`}>
         <Toaster 
           position="bottom-left" 
-          reverseOrder={false}
           gutter={8}
-          containerClassName=""
-          containerStyle={{}}
           toastOptions={{
-            duration: 4000,
+            duration: 5000,
             style: {
-              background: '#363636',
-              color: '#fff',
+              background: '#fff',
+              color: '#363636',
             },
-            error: {
-              style: {
-                background: '#E53E3E',
-                color: '#fff',
-              },
-            },
-            // Asegurar que los toasts muestran el botón de cerrar
-            className: ''
           }}
         />
         <Header />
