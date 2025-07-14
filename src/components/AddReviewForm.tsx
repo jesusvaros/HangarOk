@@ -11,7 +11,8 @@ import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
 import { createReviewSession } from '../supabaseClient';
-import { validateStep } from './review-steps/validation/stepsValidation';
+import { validateAndSubmitStep, type FormContext } from '../validation/formValidation';
+import { showErrorToast } from './ui/toast/toastUtils';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -27,6 +28,11 @@ const AddReviewForm: React.FC = () => {
   const sessionInitRef = useRef(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // States for centralized validation
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [errors, setErrors] = useState<Record<number, { fields: Record<string, boolean> }>>({ 
+    1: { fields: { street: false, number: false } }
+  });
   
   // Referencias a los componentes de los pasos para acceder a sus métodos de validación
   const step1Ref = useRef<Step1Ref>(null);
@@ -76,7 +82,15 @@ const AddReviewForm: React.FC = () => {
   }, []);
 
   // Go to next step
-  const handleNext = () => {
+  const handleNext = async () => {
+    // For step 1, use the validation logic before proceeding
+    if (currentStep === 1) {
+      // Use handleStepClick to validate and navigate
+      handleStepClick(2);
+      return;
+    }
+    
+    // For other steps (to be implemented with validation later)
     if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
@@ -133,15 +147,49 @@ const AddReviewForm: React.FC = () => {
       switch (currentStep) {
         case 1:
           if (step1Ref.current) {
-            const validationContext = step1Ref.current.getValidationContext();
-            const isValid = await validateStep(1, { step1: validationContext }, () => {
-              // Solo avanzar si la validación es exitosa
-              setCurrentStep(step);
-              window.scrollTo(0, 0);
-            });
+            // Limpiar errores anteriores
+            setErrors(prev => ({
+              ...prev,
+              1: { fields: { street: false, number: false } }
+            }));
+            setIsSubmitting(true);
             
-            // No hacer nada si la validación falló, ya que mostrará los errores
-            if (!isValid) return;
+            try {
+              // Obtener los datos del formulario usando el nuevo método getData()
+              const { addressDetails, addressResult } = step1Ref.current.getData();
+              const formContext: FormContext = {
+                addressDetails,
+                addressResult
+              };
+              
+              // Validar usando el sistema centralizado
+              const result = await validateAndSubmitStep(1, formContext, {
+                showToast: true,
+                isSubmitting: setIsSubmitting
+              });
+              
+              // Actualizar estado de errores
+              if (result.fieldErrors) {
+                setErrors(prev => ({
+                  ...prev,
+                  1: {
+                    fields: result.fieldErrors || {}
+                  }
+                }));
+              }
+              
+              // Avanzar si la validación es exitosa
+              if (result.isValid && result.isSubmitted) {
+                setCurrentStep(step);
+                window.scrollTo(0, 0);
+              }
+            } catch (error) {
+              console.error('Error validando paso 1:', error);
+              const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+              showErrorToast(errorMessage);
+            } finally {
+              setIsSubmitting(false);
+            }
           }
           break;
         
@@ -162,7 +210,14 @@ const AddReviewForm: React.FC = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1ObjectiveData ref={step1Ref} onNext={handleNext} />;
+        return (
+          <Step1ObjectiveData 
+            ref={step1Ref} 
+            onNext={handleNext} 
+            fieldErrors={errors[1]?.fields} 
+            isSubmitting={isSubmitting} 
+          />
+        );
       case 2:
         return <Step2RentalPeriod onNext={handleNext} onPrevious={handlePrevious} />;
       case 3:
@@ -204,7 +259,9 @@ const AddReviewForm: React.FC = () => {
             </div>
 
             {/* Form content for mobile */}
-            <div className="rounded-lg bg-white p-6 shadow-md">{renderStep()}</div>
+            <div className="rounded-lg bg-white p-6 shadow-md">
+              {renderStep()}
+            </div>
           </div>
 
           {/* Desktop layout - Three columns: Stepper | Form | Messages */}

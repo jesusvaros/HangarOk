@@ -4,8 +4,8 @@ import AddressAutocomplete from '../ui/AddressAutocomplete';
 import type { AddressResult } from '../ui/AddressAutocomplete';
 import CustomInput from '../ui/CustomInput';
 import LocationMap from '../ui/LocationMap';
-import { validateAndSubmitStep1 } from './validation/Step1ValidationAndSubmit';
 import { useMapLocationHandler } from './location/mapLocationHandler';
+// No longer need FormContext import
 
 // Define extended address details type
 interface AddressDetails {
@@ -39,40 +39,33 @@ interface Step1Props {
 
 // Definir la interfaz para la referencia expuesta
 export interface Step1Ref {
-  getValidationContext: () => {
+  // For use with AddReviewForm centralized validation
+  getData: () => { 
     addressDetails: AddressDetails;
     addressResult: AddressResult | undefined;
-    setValidationError: (error: string | null) => void;
-    setIsSubmitting: (isSubmitting: boolean) => void;
   };
-  validateAndSubmit: () => Promise<void>;
 }
 
-const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext }, ref) => {
+// Update props interface to receive error state from parent
+interface Step1Props {
+  onNext: () => void;
+  fieldErrors?: {
+    street?: boolean;
+    number?: boolean;
+  };
+  isSubmitting?: boolean;
+}
+
+const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext, fieldErrors, isSubmitting = false }, ref) => {
   const { formData, updateFormData } = useFormContext();
   // Usar useState para addressDetails para mantener la referencia estable
   const [addressDetails, setAddressDetails] = useState(formData.addressDetails || {});
   const [addressResult, setAddressResult] = useState<AddressResult | undefined>(formData.addressAutocompleteResult);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Consolidated error state object
-  const [errors, setErrors] = useState({
-    validation: null as string | null,
-    street: false,
-    number: false
-  });
-  
-  // Create separate setter functions for compatibility with existing code
-  const setValidationError = (error: string | null) => {
-    setErrors(prev => ({ ...prev, validation: error }));
-  };
-  
-  const setStreetError = (hasError: boolean) => {
-    setErrors(prev => ({ ...prev, street: hasError }));
-  };
-  
-  const setNumberError = (hasError: boolean) => {
-    setErrors(prev => ({ ...prev, number: hasError }));
+  // Use error states passed from parent instead of managing locally
+  const errors = {
+    street: fieldErrors?.street || false,
+    number: fieldErrors?.number || false
   };
 
   useEffect(() => {
@@ -129,30 +122,18 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext }, ref) =>
   // Use the map location handler hook
   const handleLocationSelect = useMapLocationHandler(handleAddressSelect);
 
-  // Function to validate address details and submit data
-  const validateAndSubmit = async () => {
-    await validateAndSubmitStep1({
-      addressDetails: addressDetails, // Corregido: usar addressDetails en lugar de formData.addressDetails
-      addressResult: addressResult,
-      setValidationError,
-      setIsSubmitting,
-      onNext,
-      setStreetError,
-      setNumberError
-    });
+  // Function for centralized validation in AddReviewForm
+  const getData = () => {
+    return {
+      addressDetails,
+      addressResult,
+    };
   };
 
   // Exponer métodos al componente padre mediante ref
   useImperativeHandle(ref, () => ({
-    getValidationContext: () => ({
-      addressDetails,
-      addressResult,
-      setValidationError,
-      setIsSubmitting,
-      setStreetError,
-      setNumberError,
-    }),
-    validateAndSubmit,
+    // Method for centralized validation
+    getData,
   }));
 
   return (
@@ -213,7 +194,7 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext }, ref) =>
       <div className="mt-4 flex justify-end">
         <button
           type="button"
-          onClick={validateAndSubmit}
+          onClick={onNext}
           disabled={isSubmitting}
           className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)] disabled:opacity-50"
         >
