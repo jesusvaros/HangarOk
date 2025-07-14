@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle, useCallback } from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import AddressAutocomplete from '../ui/AddressAutocomplete';
 import type { AddressResult } from '../ui/AddressAutocomplete';
@@ -36,12 +36,27 @@ interface Step1Props {
   onNext: () => void;
 }
 
-const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
+// Definir la interfaz para la referencia expuesta
+export interface Step1Ref {
+  getValidationContext: () => {
+    addressDetails: AddressDetails;
+    addressResult: AddressResult | undefined;
+    setValidationError: (error: string | null) => void;
+    setIsSubmitting: (isSubmitting: boolean) => void;
+  };
+  validateAndSubmit: () => Promise<void>;
+}
+
+const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(({ onNext }, ref) => {
   const { formData, updateFormData } = useFormContext();
+  // Usar useState para addressDetails para mantener la referencia estable
   const [addressDetails, setAddressDetails] = useState(formData.addressDetails || {});
   const [addressResult, setAddressResult] = useState<AddressResult | undefined>(formData.addressAutocompleteResult);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [validationError, setValidationError] = useState<string | null>(null);
+  // Validation state - utilizados por validateAndSubmitStep1
+  const [, setValidationError] = useState<string | null>(null);
+  const [streetError, setStreetError] = useState(false);
+  const [numberError, setNumberError] = useState(false);
 
   useEffect(() => {
     // Actualizar el estado local cuando cambia formData
@@ -139,16 +154,31 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   // Function to validate address details and submit data
   const validateAndSubmit = async () => {
     await validateAndSubmitStep1({
+      addressDetails: addressDetails, // Corregido: usar addressDetails en lugar de formData.addressDetails
+      addressResult: addressResult,
+      setValidationError,
+      setIsSubmitting,
+      onNext,
+      setStreetError,
+      setNumberError
+    });
+  };
+
+  // Exponer métodos al componente padre mediante ref
+  useImperativeHandle(ref, () => ({
+    getValidationContext: () => ({
       addressDetails,
       addressResult,
       setValidationError,
       setIsSubmitting,
-      onNext
-    });
-  };
-  
+      setStreetError,
+      setNumberError,
+    }),
+    validateAndSubmit,
+  }));
+
   return (
-    <div>
+    <div className="w-full">
       {/* Sección: Dirección */}
       <div className="">
         <div className="flex flex-col pb-4 md:flex-row md:items-center md:justify-between">
@@ -156,19 +186,17 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
         </div>
 
         <AddressAutocomplete
-          id="street"
+          id="address-step1"
           label="Dirección"
           initialValue={addressDetails.street || ''}
-          initialStreetNumber={addressDetails.components?.house_number || ''}
-          initialResult={formData.addressAutocompleteResult}
-          selectedResult={addressResult}
+          initialStreetNumber={addressDetails.number || ''}
+          placeholder="Buscar dirección..."
+          required={true}
           onSelect={handleAddressSelect}
-          placeholder="Ej: Calle Mayor"
-          required
           showNumberField={true}
-          validateNumber={true}
+          hasError={streetError}
         />
-        
+
         {/* Always show the map */}
         <LocationMap 
           coordinates={addressDetails.coordinates && addressDetails.coordinates.lat !== 0 ? {
@@ -183,29 +211,26 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
           <div className="w-1/2 px-2">
             <CustomInput
               id="floor"
-              label="Piso"
-              value={formData.addressDetails?.floor || ''}
-              onChange={(e) => handleAddressChange('floor', e.target.value)}
+              type="text"
               placeholder="Piso"
+              onChange={(e) => handleAddressChange('floor', e.target.value)}
+              value={addressDetails.floor || ''}
+              className="w-1/2"
             />
           </div>
           <div className="w-1/2 px-2">
             <CustomInput
               id="door"
-              label="Puerta"
-              value={formData.addressDetails?.door || ''}
-              onChange={(e) => handleAddressChange('door', e.target.value)}
+              type="text"
               placeholder="Puerta"
+              onChange={(e) => handleAddressChange('door', e.target.value)}
+              value={addressDetails.door || ''}
+              className="w-1/2"
             />
           </div>
         </div>
       </div>
 
-      {validationError && (
-        <div className="mt-4 rounded-md bg-red-50 p-3">
-          <p className="text-sm text-red-600">{validationError}</p>
-        </div>
-      )}
       <div className="mt-4 flex justify-end">
         <button
           type="button"
@@ -218,6 +243,6 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Step1ObjectiveData;

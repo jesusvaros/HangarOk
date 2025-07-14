@@ -21,6 +21,7 @@ interface AddressAutocompleteProps {
   streetNumberValue?: string;
   selectedResult?: AddressResult;
   label?: string;
+  hasError?: boolean;
 }
 
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
@@ -37,6 +38,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   value,
   streetNumberValue,
   selectedResult,
+  hasError = false,
 }) => {
   // State management
   const [query, setQuery] = useState(initialResult ? initialResult.formatted : initialValue);
@@ -205,6 +207,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             loading={loading}
             hideLabel={hideLabel}
             required={required}
+            hasError={hasError}
           />
         </div>
 

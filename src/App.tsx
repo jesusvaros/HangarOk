@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 
 // Import our components
 import Header from './components/Header';
@@ -19,6 +20,28 @@ function App() {
   return (
     <FormProvider>
       <div className={`min-h-screen ${isAddReviewPage ? 'bg-gray-100' : 'bg-white'}`}>
+        <Toaster 
+          position="bottom-left" 
+          reverseOrder={false}
+          gutter={8}
+          containerClassName=""
+          containerStyle={{}}
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#363636',
+              color: '#fff',
+            },
+            error: {
+              style: {
+                background: '#E53E3E',
+                color: '#fff',
+              },
+            },
+            // Asegurar que los toasts muestran el botón de cerrar
+            className: ''
+          }}
+        />
         <Header />
 
         <Routes>

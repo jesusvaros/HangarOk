@@ -1,5 +1,6 @@
 import { submitAddressStep1, type AddressStep1Payload } from '../../../services/supabase';
 import type { AddressResult } from '../../ui/AddressAutocomplete';
+import toast from 'react-hot-toast';
 
 /**
  * Interface for address details used in Step 1
@@ -38,30 +39,41 @@ export const validateAndSubmitStep1 = async ({
   addressResult,
   setValidationError,
   setIsSubmitting,
-  onNext
+  onNext,
+  setStreetError = () => {},
+  setNumberError = () => {}
 }: {
   addressDetails: AddressDetails;
   addressResult: AddressResult | undefined;
   setValidationError: (error: string | null) => void;
   setIsSubmitting: (isSubmitting: boolean) => void;
   onNext: () => void;
+  setStreetError?: (hasError: boolean) => void;
+  setNumberError?: (hasError: boolean) => void;
 }): Promise<void> => {
   setValidationError(null);
+  setStreetError(false);
+  setNumberError(false);
   
   // Validate required fields
   if (!addressDetails.street || !addressDetails.street.trim()) {
     setValidationError('La dirección es obligatoria');
+    setStreetError(true);
+    toast.error('La dirección es obligatoria');
     return;
   }
   
   if (!addressDetails.number && (!addressDetails.components?.house_number || addressDetails.components.house_number === '')) {
-    console.log('errorr')
     setValidationError('El número de la dirección es obligatorio');
+    setNumberError(true);
+    toast.error('El número de la dirección es obligatorio');
     return;
   }
   
   if (!addressDetails.coordinates || !addressDetails.coordinates.lat || !addressDetails.coordinates.lng) {
     setValidationError('No se han podido obtener las coordenadas de la dirección');
+    setStreetError(true);
+    toast.error('No se han podido obtener las coordenadas de la dirección');
     return;
   }
   

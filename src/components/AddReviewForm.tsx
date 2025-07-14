@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useFormContext } from '../store/useFormContext';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
+import type { Step1Ref } from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
 import Step3PropertyCondition from './review-steps/Step3PropertyCondition';
 import Step4Community from './review-steps/Step4Community';
@@ -10,6 +11,7 @@ import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
 import { createReviewSession } from '../supabaseClient';
+import { validateStep } from './review-steps/validation/stepsValidation';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -25,6 +27,9 @@ const AddReviewForm: React.FC = () => {
   const sessionInitRef = useRef(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  
+  // Referencias a los componentes de los pasos para acceder a sus métodos de validación
+  const step1Ref = useRef<Step1Ref>(null);
 
   // Initialize or retrieve review session ID
   useEffect(() => {
@@ -121,9 +126,33 @@ const AddReviewForm: React.FC = () => {
   const steps = ['Dirección', 'Estancia', 'Piso', 'Comunidad', 'Gestión'];
 
   // Manejar el clic en un paso del stepper
-  const handleStepClick = (step: number) => {
-    // Solo permitir navegar a pasos anteriores o al siguiente paso
-    if (step <= currentStep || step === currentStep + 1) {
+  const handleStepClick = async (step: number) => {
+    // Si está intentando avanzar al siguiente paso, validar el paso actual
+    if (step === currentStep + 1) {
+      // Validar según el paso actual
+      switch (currentStep) {
+        case 1:
+          if (step1Ref.current) {
+            const validationContext = step1Ref.current.getValidationContext();
+            const isValid = await validateStep(1, { step1: validationContext }, () => {
+              // Solo avanzar si la validación es exitosa
+              setCurrentStep(step);
+              window.scrollTo(0, 0);
+            });
+            
+            // No hacer nada si la validación falló, ya que mostrará los errores
+            if (!isValid) return;
+          }
+          break;
+        
+        // Implementar para otros pasos cuando sea necesario
+        default:
+          // Para pasos sin validación implementada, permitir navegación
+          setCurrentStep(step);
+          window.scrollTo(0, 0);
+      }
+    } else if (step <= currentStep) {
+      // Permitir siempre navegar hacia atrás
       setCurrentStep(step);
       window.scrollTo(0, 0);
     }
@@ -133,7 +162,7 @@ const AddReviewForm: React.FC = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1ObjectiveData onNext={handleNext} />;
+        return <Step1ObjectiveData ref={step1Ref} onNext={handleNext} />;
       case 2:
         return <Step2RentalPeriod onNext={handleNext} onPrevious={handlePrevious} />;
       case 3:
@@ -143,7 +172,7 @@ const AddReviewForm: React.FC = () => {
       case 5:
         return <Step5Owner onNext={handleOpenModal} onPrevious={handlePrevious} />;
       default:
-        return <Step1ObjectiveData onNext={handleNext} />;
+        return <Step1ObjectiveData ref={step1Ref} onNext={handleNext} />;
     }
   };
 
