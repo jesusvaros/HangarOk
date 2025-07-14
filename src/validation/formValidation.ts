@@ -125,17 +125,20 @@ export const submitStep1 = async (context: FormContext): Promise<{ success: bool
       return { success: false, message: 'Datos de dirección incompletos' };
     }
 
-    // Get the token from localStorage
-    const token = localStorage.getItem('auth_token');
-    if (!token) {
-      return { success: false, message: 'No se ha encontrado el token de autenticación' };
+    // Get the reviewSessionId from localStorage
+    const sessionId = localStorage.getItem('reviewSessionId');
+    
+    // If no sessionId exists, we can't proceed with submission
+    if (!sessionId || sessionId === 'PENDING') {
+      console.error('No valid review session ID found');
+      return { success: false, message: 'No se ha encontrado una sesión válida' };
     }
     
     // Submit data using our Supabase client function with simplified payload
     const success = await submitAddressStep1({
       address: addressResult || null,
       addressDetails
-    }, token);
+    }, sessionId);
     
     return { 
       success, 
