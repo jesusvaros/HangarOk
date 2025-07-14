@@ -4,6 +4,7 @@ import AddressAutocomplete from '../ui/AddressAutocomplete';
 import type { AddressResult } from '../ui/AddressAutocomplete';
 import CustomInput from '../ui/CustomInput';
 import LocationMap from '../ui/LocationMap';
+import { validateAndSubmitStep1 } from './validation/Step1ValidationAndSubmit';
 
 // Define extended address details type
 interface AddressDetails {
@@ -39,6 +40,8 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
   const { formData, updateFormData } = useFormContext();
   const [addressDetails, setAddressDetails] = useState(formData.addressDetails || {});
   const [addressResult, setAddressResult] = useState<AddressResult | undefined>(formData.addressAutocompleteResult);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   useEffect(() => {
     // Actualizar el estado local cuando cambia formData
@@ -133,6 +136,17 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
     }
   }, [handleAddressSelect]);
 
+  // Function to validate address details and submit data
+  const validateAndSubmit = async () => {
+    await validateAndSubmitStep1({
+      addressDetails,
+      addressResult,
+      setValidationError,
+      setIsSubmitting,
+      onNext
+    });
+  };
+  
   return (
     <div>
       {/* Sección: Dirección */}
@@ -187,13 +201,19 @@ const Step1ObjectiveData: React.FC<Step1Props> = ({ onNext }) => {
         </div>
       </div>
 
+      {validationError && (
+        <div className="mt-4 rounded-md bg-red-50 p-3">
+          <p className="text-sm text-red-600">{validationError}</p>
+        </div>
+      )}
       <div className="mt-4 flex justify-end">
         <button
           type="button"
-          onClick={onNext}
-          className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
+          onClick={validateAndSubmit}
+          disabled={isSubmitting}
+          className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)] disabled:opacity-50"
         >
-          Siguiente
+          {isSubmitting ? 'Enviando...' : 'Siguiente'}
         </button>
       </div>
     </div>

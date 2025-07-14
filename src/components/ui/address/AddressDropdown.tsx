@@ -24,7 +24,7 @@ export const AddressDropdown: React.FC<AddressDropdownProps> = ({
         hideLabel ? 'top-[48px]' : 'top-[80px]'
       }`}
     >
-      {results.map((result) => {
+      {results.map((result, index) => {
         const road = result.components.road;
         const park = result.components.park;
         const parking = result.components.parking;
@@ -42,10 +42,18 @@ export const AddressDropdown: React.FC<AddressDropdownProps> = ({
             <strong>{road || park || parking}</strong>, {city} {postcode}
           </span>
         );
+        
+        // Use a combination of geohash and index to ensure uniqueness
+        // If geohash is missing, use formatted_address or index as fallback
+        const uniqueKey = result.annotations?.geohash 
+          ? `${result.annotations.geohash}-${index}` 
+          : result.formatted 
+            ? `addr-${result.formatted}-${index}` 
+            : `result-${index}`;
 
         return (
           <li
-            key={result.annotations.geohash}
+            key={uniqueKey}
             onClick={() => onSelect(result)}
             className="cursor-pointer px-3 py-2 hover:bg-gray-100"
           >
