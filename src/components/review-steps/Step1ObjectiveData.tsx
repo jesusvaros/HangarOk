@@ -1,4 +1,5 @@
 import {
+  useEffect,
   useState,
 } from "react";
 import { useFormContext } from "../../store/useFormContext";
@@ -28,6 +29,9 @@ const Step1ObjectiveData = ({
   const [addressDetails, setAddressDetails] = useState<AddressDetails>(
     formData.addressDetails || {}
   );
+  useEffect(() => {
+    setAddressDetails(formData.addressDetails || {});
+  }, [formData.addressDetails]);
   
     const handleNumberChange = (number: string) => {
       const updated = { ...addressDetails, number };
