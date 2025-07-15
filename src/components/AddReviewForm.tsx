@@ -28,34 +28,7 @@ const AddReviewForm: React.FC = () => {
   const [errors, setErrors] = useState<Record<number, { fields: Record<string, boolean> }>>({ 
     1: { fields: { street: false, number: false } }
   });
-
-  useEffect(() => {
-    if (sessionInitRef.current) return; 
-    sessionInitRef.current = true;
-    console.log('sessionInitRef.current', sessionInitRef.current)
-
-    const initSession = async () => {
-      const storedId = localStorage.getItem('reviewSessionId');
-      if (storedId && storedId !== 'PENDING') {
-        setSessionId(storedId);
-        
-        const sessionStatus = await getReviewSessionStatus(storedId);
-        console.log('Session status:', sessionStatus);
-        
-      } else {
-        localStorage.setItem('reviewSessionId', 'PENDING');
-        const generatedId = await createReviewSession();
-        if (generatedId) {
-          localStorage.setItem('reviewSessionId', generatedId);
-          setSessionId(generatedId);
-        }
-      }
-    };
-
-    initSession();
-  }, []);
-
-  // Handle responsive layout
+  //mobile layout
   useEffect(() => {
     const checkIfMobile = () => {
       const isMobile = window.innerWidth < 768;
@@ -65,12 +38,32 @@ const AddReviewForm: React.FC = () => {
         document.body.style.padding = '0px';
       }
     };
-    // Check on initial load
     checkIfMobile();
-    // Add event listener for window resize
     window.addEventListener('resize', checkIfMobile);
-    // Cleanup
     return () => window.removeEventListener('resize', checkIfMobile);
+  }, []);
+  //session init
+  useEffect(() => {
+    if (sessionInitRef.current) return; 
+    sessionInitRef.current = true;
+    console.log('sessionInitRef.current', sessionInitRef.current)
+
+    const initSession = async () => {
+      const storedId = localStorage.getItem('reviewSessionId');
+      if (storedId && storedId !== 'PENDING') {
+        setSessionId(storedId);
+        const sessionStatus = await getReviewSessionStatus(storedId);
+        console.log('Session status:', sessionStatus);
+      } else {
+        localStorage.setItem('reviewSessionId', 'PENDING');
+        const generatedId = await createReviewSession();
+        if (generatedId) {
+          localStorage.setItem('reviewSessionId', generatedId);
+          setSessionId(generatedId);
+        }
+      }
+    };
+    initSession();
   }, []);
 
   const handleNext = async () => { 
@@ -79,7 +72,6 @@ const AddReviewForm: React.FC = () => {
       window.scrollTo(0, 0);
     }
   };
-
   const handlePrevious = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
