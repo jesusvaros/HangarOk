@@ -19,6 +19,17 @@ export interface ReviewSessionPayload {
   street?: string;
 }
 
+export interface ReviewSessionStatus {
+  id: string;
+  created_at: string;
+  step1_completed?: boolean;
+  step2_completed?: boolean;
+  step3_completed?: boolean;
+  step4_completed?: boolean;
+  step5_completed?: boolean;
+  submission_completed?: boolean;
+}
+
 export interface AddressStep1Payload {
   address: AddressResult | null; // Allow null for manual address entry
   addressDetails: {

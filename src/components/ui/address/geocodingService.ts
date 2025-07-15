@@ -1,3 +1,4 @@
+import type { AddressDetails } from '../../../validation/formValidation';
 import type { AddressResult, HereGeocodeItem } from './types';
 
 /**
@@ -68,78 +69,58 @@ export const geocodingService = {
    * @returns Promise with the updated address result including coordinates
    */
   async getCoordinatesForAddress(
-    selectedAddress: AddressResult, 
+    currentDetails: AddressDetails,
     newNumber: string
-  ): Promise<AddressResult> {
-    try {
-      // Extract address components
-      const street = selectedAddress.components.road;
-      const city =
-        selectedAddress.components.city ||
-        selectedAddress.components.town ||
-        selectedAddress.components.village ||
-        '';
-      
-      // Skip API call if we don't have enough information
-      if (!street || !city || !newNumber.trim()) {
-        return {
-          ...selectedAddress,
-          components: {
-            ...selectedAddress.components,
-            house_number: newNumber,
-          },
-        };
-      }
-      
-      const fullAddressQuery = `${street} ${newNumber}, ${city}, España`;
-      
-      // Make API request to get coordinates
-      const apiKey = import.meta.env.VITE_HERE_API_KEY;
-      const response = await fetch(
-        `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(
-          fullAddressQuery
-        )}&in=countryCode:ESP&lang=es-ES&limit=1&apiKey=${apiKey}`
-      );
-      
-      const data = await response.json();
-      
-      if (data.items && data.items.length > 0) {
-        // Extract coordinates from the result
-        const position = data.items[0].position;
-        
-        // Return updated result with new coordinates
-        return {
-          ...selectedAddress,
-          geometry: {
-            lat: position.lat,
-            lng: position.lng,
-          },
-          components: {
-            ...selectedAddress.components,
-            house_number: newNumber,
-          },
-        };
-      }
-      
-      // If no results, just update the house number
+  ): Promise<AddressDetails> {
+    const street = currentDetails.street;
+    const city = currentDetails.city || "";
+    if (!street || !newNumber.trim()) {
       return {
-        ...selectedAddress,
-        components: {
-          ...selectedAddress.components,
-          house_number: newNumber,
-        },
+        ...currentDetails,
+        number: newNumber,
       };
-    } catch (error) {
-      console.error('Error al obtener coordenadas:', error);
-      
-      // In case of error, just update the house number
+    }
+  
+    const fullAddressQuery = `${street} ${newNumber}, ${city}, España`;
+  
+    const apiKey = import.meta.env.VITE_HERE_API_KEY;
+    const response = await fetch(
+      `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(
+        fullAddressQuery
+      )}&in=countryCode:ESP&lang=es-ES&limit=1&apiKey=${apiKey}`
+    );
+  
+    const data = await response.json();
+  
+    if (data.items && data.items.length > 0) {
+      const item = data.items[0];
+      const addr = item.address;
+  
       return {
-        ...selectedAddress,
+        street: addr.street,
+        number: addr.houseNumber || newNumber,
+        city: addr.city,
+        postalCode: addr.postalCode,
+        state: addr.state,
+        fullAddress: addr.label,
+        coordinates: {
+          lat: item.position.lat,
+          lng: item.position.lng,
+        },
         components: {
-          ...selectedAddress.components,
-          house_number: newNumber,
+          road: addr.street,
+          house_number: addr.houseNumber,
+          postcode: addr.postalCode,
+          city: addr.city,
+          state: addr.state,
+          country: addr.countryName,
         },
       };
     }
+  
+    return {
+      ...currentDetails,
+      number: newNumber,
+    };
   }
 };

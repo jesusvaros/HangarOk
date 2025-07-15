@@ -10,7 +10,7 @@ import EmailConfirmation from './review-steps/EmailConfirmation';
 import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
-import { createReviewSession } from '../supabaseClient';
+import { createReviewSession, getReviewSessionStatus } from '../services/supabase/sessions';
 import { validateAndSubmitStep, type FormContext } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
 
@@ -47,10 +47,15 @@ const AddReviewForm: React.FC = () => {
       const storedId = localStorage.getItem('reviewSessionId');
       if (storedId && storedId !== 'PENDING') {
         setSessionId(storedId);
+        
+        // Check if this session has steps already completed
+        const sessionStatus = await getReviewSessionStatus(storedId);
+        console.log('Session status:', sessionStatus);
+        
       } else {
         // Mark localStorage to avoid other tabs/instances creating another session
-          localStorage.setItem('reviewSessionId', 'PENDING');
-          const generatedId = await createReviewSession();
+        localStorage.setItem('reviewSessionId', 'PENDING');
+        const generatedId = await createReviewSession();
         if (generatedId) {
           localStorage.setItem('reviewSessionId', generatedId);
           setSessionId(generatedId);
@@ -81,14 +86,11 @@ const AddReviewForm: React.FC = () => {
 
   // Go to next step
   const handleNext = async () => {
-    // For step 1, use the validation logic before proceeding
     if (currentStep === 1) {
-      // Use handleStepClick to validate and navigate
       handleStepClick(2);
       return;
     }
     
-    // For other steps (to be implemented with validation later)
     if (currentStep < 5) {
       setCurrentStep(currentStep + 1);
       window.scrollTo(0, 0);
@@ -154,10 +156,9 @@ const AddReviewForm: React.FC = () => {
             
             try {
               // Obtener los datos del formulario usando el nuevo método getData()
-              const { addressDetails, addressResult } = step1Ref.current.getData();
+              const { addressDetails } = step1Ref.current.getData();
               const formContext: FormContext = {
                 addressDetails,
-                addressResult
               };
               
               // Validar usando el sistema centralizado
