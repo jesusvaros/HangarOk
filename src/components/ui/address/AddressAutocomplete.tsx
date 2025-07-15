@@ -99,12 +99,12 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             hideLabel={hideLabel}
           />
         </div>
-        {showNumberField && onNumberChange && onNumberBlur && streetNumberValue && (
+        {showNumberField && onNumberChange && onNumberBlur && (
           <StreetNumberInput
             id="number"
-            value={streetNumberValue}
+            value={streetNumberValue || ""}
             onChange={onNumberChange}
-            onBlur={() => onNumberBlur(streetNumberValue)}
+            onBlur={() => onNumberBlur(streetNumberValue || "")}
             disabled={!value || value.trim() === ""}
             hasError={numberHasError}
           />

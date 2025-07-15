@@ -73,15 +73,9 @@ const AddReviewForm: React.FC = () => {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
-  // Go to next step
-  const handleNext = async () => {
-    if (currentStep === 1) {
-      handleStepClick(2);
-      return;
-    }
-    
+  const handleNext = async () => { 
     if (currentStep < 5) {
-      setCurrentStep(currentStep + 1);
+      handleStepClick(currentStep + 1); 
       window.scrollTo(0, 0);
     }
   };
@@ -101,10 +95,8 @@ const AddReviewForm: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  // Handle form submission
   const handleSubmit = () => {
     try {
-      // Aquí iría la lógica para enviar los datos a la API
       console.log('Formulario enviado:', formData);
       setIsModalOpen(false);
       setIsSubmitted(true);
@@ -113,38 +105,26 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
-  // Handle contact data submission from modal
   const handleContactSubmit = (contactData: { contactName: string; contactEmail: string }) => {
     updateFormData({
       contactName: contactData.contactName,
       contactEmail: contactData.contactEmail,
     });
-
-    // Submit the form
     handleSubmit();
   };
 
-  // Stepper bar with steps
   const steps = ['Dirección', 'Estancia', 'Piso', 'Comunidad', 'Gestión'];
 
-  // Manejar el clic en un paso del stepper
   const handleStepClick = async (step: number) => {
-    // Si está intentando avanzar al siguiente paso, validar el paso actual
     if (step === currentStep + 1) {
-      // Validar según el paso actual
       switch (currentStep) {
         case 1:
-            // Limpiar errores anteriores
             setErrors(prev => ({
               ...prev,
               1: { fields: { street: false, number: false } }
             }));
             setIsSubmitting(true);
-            
             try {
-              console.log('4', formData)
-              
-              // Validar usando el sistema centralizado
               const result = await validateAndSubmitStep(1, formData, {
                 showToast: true,
                 isSubmitting: setIsSubmitting

@@ -74,6 +74,8 @@ const Step1ObjectiveData = ({
           lat: r.geometry.lat,
           lng: r.geometry.lng,
         },
+        floor: formData.addressDetails?.floor || "",
+        door: formData.addressDetails?.door || "",
         components: c,
       };
     }
@@ -126,12 +128,14 @@ const Step1ObjectiveData = ({
               id="floor"
               type="text"
               placeholder="Piso"
-              value={addressDetails.floor || ""}
-              onChange={(e) =>
-                setAddressDetails((prev) => ({
-                  ...prev,
-                  floor: e.target.value,
-                }))
+              value={formData.addressDetails?.floor || ""}
+              onChange={(e) =>{
+                updateFormData({
+                  addressDetails: {
+                    ...formData.addressDetails,
+                    floor: e.target.value,
+                  },
+                })}
               }
             />
           </div>
@@ -141,12 +145,14 @@ const Step1ObjectiveData = ({
               id="door"
               type="text"
               placeholder="Puerta"
-              value={addressDetails.door || ""}
+              value={formData.addressDetails?.door || ""}
               onChange={(e) =>
-                setAddressDetails((prev) => ({
-                  ...prev,
-                  door: e.target.value,
-                }))
+                updateFormData({
+                  addressDetails: {
+                    ...formData.addressDetails,
+                    door: e.target.value,
+                  },
+                })
               }
             />
           </div>
