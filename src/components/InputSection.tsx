@@ -5,56 +5,18 @@ import type { ReviewSessionPayload } from '../supabaseClient';
 import { useFormContext } from '../store/useFormContext';
 import AddressAutocomplete from './ui/AddressAutocomplete';
 import type { AddressResult } from './ui/AddressAutocomplete';
+import { showErrorToast } from './ui/toast/toastUtils';
 
 const InputSection: React.FC = () => {
   const navigate = useNavigate();
   const { address, setAddress, updateFormData, formData } = useFormContext();
-  const initialAddressData = (() => {
-    if (formData.addressAutocompleteResult) {
-      const r = formData.addressAutocompleteResult as unknown as {
-        formatted: string;
-        geometry: { lat: number; lng: number };
-        components: Record<string, string | undefined>;
-      };
-      const comp = r.components;
-      const cityName =
-        comp.city ||
-        comp.town ||
-        comp.village ||
-        comp.municipality ||
-        comp.county ||
-        comp.state ||
-        '';
-      const coords = { lat: r.geometry.lat, lng: r.geometry.lng };
-      const streetName =
-        comp.road ||
-        comp.street ||
-        comp.residential ||
-        comp.footway ||
-        comp.neighbourhood ||
-        comp.suburb ||
-        '';
-      return {
-        selectedAddress: r.formatted,
-        coords,
-        city: cityName,
-        street: streetName,
-      };
-    }
-    return {
-      selectedAddress: '',
-      coords: null as { lat: number; lng: number } | null,
-      city: '',
-      street: '',
-    };
-  })();
+
 
   const [state, setState] = useState({
     currentMessageIndex: 0,
     nextMessageIndex: 1,
     isAnimating: false,
-    isMobile: false,
-    ...initialAddressData
+    isMobile: false
   });
 
   const {
@@ -62,10 +24,6 @@ const InputSection: React.FC = () => {
     nextMessageIndex,
     isAnimating,
     isMobile,
-    selectedAddress,
-    coords,
-    city,
-    street,
   } = state;
 
   const messages = [
@@ -88,42 +46,6 @@ const InputSection: React.FC = () => {
       window.removeEventListener('resize', checkIfMobile);
     };
     }, []);
-
-  // Restore previously selected address if coming back from other pages
-  useEffect(() => {
-    if (formData.addressAutocompleteResult && !coords) {
-      const r = formData.addressAutocompleteResult as unknown as {
-        formatted: string;
-        geometry: { lat: number; lng: number };
-        components: Record<string, string | undefined>;
-      };
-      const coordinates = { lat: r.geometry.lat, lng: r.geometry.lng };
-      const comp = r.components;
-      const cityName =
-        comp.city ||
-        comp.town ||
-        comp.village ||
-        comp.municipality ||
-        comp.county ||
-        comp.state ||
-        '';
-      const streetName =
-        comp.road ||
-        comp.street ||
-        comp.residential ||
-        comp.footway ||
-        comp.neighbourhood ||
-        comp.suburb ||
-        '';
-      setState((prev) => ({
-        ...prev,
-        selectedAddress: r.formatted,
-        coords: coordinates,
-        city: cityName,
-        street: streetName,
-      }));
-    }
-  }, [formData.addressAutocompleteResult, coords]);
 
   // Rotate through messages on mobile
   useEffect(() => {
@@ -149,11 +71,10 @@ const InputSection: React.FC = () => {
   }, [isMobile, nextMessageIndex, messages.length]);
 
   const handleStart = async () => {
-    const fullAddress = selectedAddress || address.trim();
+    const fullAddress = address.trim();
     if (!fullAddress) return;
-    if (!coords) {
-      // Require selecting an autocomplete option to ensure we have coordinates
-      alert('Por favor selecciona una dirección de la lista para continuar');
+    if (!formData.addressDetails?.coordinates) {
+      showErrorToast('Por favor selecciona una dirección de la lista para continuar');
       return;
     }
 
@@ -162,12 +83,12 @@ const InputSection: React.FC = () => {
       // set PENDING to avoid race conditions
       localStorage.setItem('reviewSessionId', 'PENDING');
       const payload: ReviewSessionPayload = { full_address: fullAddress };
-      if (coords) {
-        payload.lat = coords.lat;
-        payload.lng = coords.lng;
+      if (formData.addressDetails?.coordinates) {
+        payload.lat = formData.addressDetails.coordinates.lat;
+        payload.lng = formData.addressDetails.coordinates.lng;
       }
-      if (city) payload.city = city;
-      if (street) payload.street = street;
+      if (formData.addressDetails?.city) payload.city = formData.addressDetails.city;
+      if (formData.addressDetails?.street) payload.street = formData.addressDetails.street;
       const generatedId = await createReviewSession(payload);
       if (generatedId) {
         localStorage.setItem('reviewSessionId', generatedId);
@@ -186,34 +107,14 @@ const InputSection: React.FC = () => {
       selectedAddress: fullAddress,
       coords: coordinates,
     }));
-    // Persist full result for later steps
+    
     updateFormData({ addressAutocompleteResult: result });
-  // Extract city and street from components
-  const comp = result.components;
-  const cityName =
-    comp.city ||
-    comp.town ||
-    comp.village ||
-    comp.municipality ||
-    comp.county ||
-    comp.state ||
-    '';
-  const streetName =
-    comp.road ||
-    comp.street ||
-    comp.residential ||
-    comp.footway ||
-    comp.neighbourhood ||
-    comp.suburb ||
-    '';
-  setState((prev) => ({ ...prev, city: cityName, street: streetName }));
+    
   // Persist full address details in form context so Step1 loads it
   updateFormData({
     addressAutocompleteResult: result,
     addressDetails: {
       street: fullAddress,
-      city: cityName,
-      fullAddress: fullAddress,
       coordinates,
       components: result.components,
     },
@@ -287,8 +188,7 @@ const InputSection: React.FC = () => {
             <div className="w-full">
               <AddressAutocomplete
                 onSelect={handleAddressSelect}
-                initialValue={address}
-                initialResult={formData.addressAutocompleteResult}
+                value={address}
                 placeholder="Dirección del inmueble"
                 hideLabel
               />
@@ -351,8 +251,7 @@ const InputSection: React.FC = () => {
           <div className="w-full">
             <AddressAutocomplete
               onSelect={handleAddressSelect}
-              initialValue={address}
-              initialResult={formData.addressAutocompleteResult}
+              value={address}
               placeholder="Dirección del inmueble"
               hideLabel
             />

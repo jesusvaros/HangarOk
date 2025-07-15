@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useFormContext } from '../store/useFormContext';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
-import type { Step1Ref } from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
 import Step3PropertyCondition from './review-steps/Step3PropertyCondition';
 import Step4Community from './review-steps/Step4Community';
@@ -11,7 +10,7 @@ import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
 import { createReviewSession, getReviewSessionStatus } from '../services/supabase/sessions';
-import { validateAndSubmitStep, type FormContext } from '../validation/formValidation';
+import { validateAndSubmitStep } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
 
 /**
@@ -21,25 +20,17 @@ import { showErrorToast } from './ui/toast/toastUtils';
 const AddReviewForm: React.FC = () => {
   const { formData, updateFormData } = useFormContext();
   const [currentStep, setCurrentStep] = useState(1);
-  // _sessionId will be used once the form payload is persisted
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_sessionId, setSessionId] = useState<string | null>(null);
-  // Prevent double session creation in React 18 StrictMode (dev)
   const sessionInitRef = useRef(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // States for centralized validation
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<number, { fields: Record<string, boolean> }>>({ 
     1: { fields: { street: false, number: false } }
   });
-  
-  // Referencias a los componentes de los pasos para acceder a sus métodos de validación
-  const step1Ref = useRef<Step1Ref>(null);
 
-  // Initialize or retrieve review session ID
   useEffect(() => {
-    if (sessionInitRef.current) return; // Prevent double run in React 18 StrictMode dev
+    if (sessionInitRef.current) return; 
     sessionInitRef.current = true;
     console.log('sessionInitRef.current', sessionInitRef.current)
 
@@ -48,12 +39,10 @@ const AddReviewForm: React.FC = () => {
       if (storedId && storedId !== 'PENDING') {
         setSessionId(storedId);
         
-        // Check if this session has steps already completed
         const sessionStatus = await getReviewSessionStatus(storedId);
         console.log('Session status:', sessionStatus);
         
       } else {
-        // Mark localStorage to avoid other tabs/instances creating another session
         localStorage.setItem('reviewSessionId', 'PENDING');
         const generatedId = await createReviewSession();
         if (generatedId) {
@@ -126,7 +115,6 @@ const AddReviewForm: React.FC = () => {
 
   // Handle contact data submission from modal
   const handleContactSubmit = (contactData: { contactName: string; contactEmail: string }) => {
-    // Update form data with contact information
     updateFormData({
       contactName: contactData.contactName,
       contactEmail: contactData.contactEmail,
@@ -146,7 +134,6 @@ const AddReviewForm: React.FC = () => {
       // Validar según el paso actual
       switch (currentStep) {
         case 1:
-          if (step1Ref.current) {
             // Limpiar errores anteriores
             setErrors(prev => ({
               ...prev,
@@ -155,14 +142,10 @@ const AddReviewForm: React.FC = () => {
             setIsSubmitting(true);
             
             try {
-              // Obtener los datos del formulario usando el nuevo método getData()
-              const { addressDetails } = step1Ref.current.getData();
-              const formContext: FormContext = {
-                addressDetails,
-              };
+              console.log('4', formData)
               
               // Validar usando el sistema centralizado
-              const result = await validateAndSubmitStep(1, formContext, {
+              const result = await validateAndSubmitStep(1, formData, {
                 showToast: true,
                 isSubmitting: setIsSubmitting
               });
@@ -189,7 +172,7 @@ const AddReviewForm: React.FC = () => {
             } finally {
               setIsSubmitting(false);
             }
-          }
+          
           break;
         
         // Implementar para otros pasos cuando sea necesario
@@ -211,7 +194,6 @@ const AddReviewForm: React.FC = () => {
       case 1:
         return (
           <Step1ObjectiveData 
-            ref={step1Ref} 
             onNext={handleNext} 
             fieldErrors={errors[1]?.fields} 
             isSubmitting={isSubmitting} 
@@ -226,7 +208,7 @@ const AddReviewForm: React.FC = () => {
       case 5:
         return <Step5Owner onNext={handleOpenModal} onPrevious={handlePrevious} />;
       default:
-        return <Step1ObjectiveData ref={step1Ref} onNext={handleNext} />;
+        return <Step1ObjectiveData onNext={handleNext} />;
     }
   };
 

@@ -1,4 +1,3 @@
-import type { AddressResult } from '../../components/ui/AddressAutocomplete';
 
 // Define types for our database
 export type Opinion = {
@@ -31,7 +30,6 @@ export interface ReviewSessionStatus {
 }
 
 export interface AddressStep1Payload {
-  address: AddressResult | null; // Allow null for manual address entry
   addressDetails: {
     street?: string;
     number?: string;

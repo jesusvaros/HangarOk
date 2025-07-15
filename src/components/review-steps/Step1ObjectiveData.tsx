@@ -1,7 +1,5 @@
 import {
   useState,
-  forwardRef,
-  useImperativeHandle,
 } from "react";
 import { useFormContext } from "../../store/useFormContext";
 import AddressAutocomplete, { type AddressResult } from "../ui/AddressAutocomplete";
@@ -20,27 +18,17 @@ interface Step1Props {
   isSubmitting?: boolean;
 }
 
-export interface Step1Ref {
-  getData: () => {
-    addressDetails: AddressDetails;
-  };
-}
 
-const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(
-  ({ onNext, fieldErrors, isSubmitting = false }, ref) => {
-    const { formData, updateFormData } = useFormContext();
-
-    const [addressDetails, setAddressDetails] = useState<AddressDetails>(
-      formData.addressDetails || {}
-    );
-
-    // Exponer datos al padre
-    useImperativeHandle(ref, () => ({
-      getData: () => ({
-        addressDetails: addressDetails || {},
-      }),
-    }));
-
+const Step1ObjectiveData = ({
+  onNext,
+  fieldErrors,
+  isSubmitting = false,
+}: Step1Props) => {
+  const { formData, updateFormData } = useFormContext();
+  const [addressDetails, setAddressDetails] = useState<AddressDetails>(
+    formData.addressDetails || {}
+  );
+  
     const handleNumberChange = (number: string) => {
       const updated = { ...addressDetails, number };
       setAddressDetails(updated);
@@ -131,8 +119,10 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(
           className="mt-2"
         />
         <div className="-mx-2 mt-4 flex">
+
           <div className="w-1/2 px-2">
             <CustomInput
+              label="Piso"
               id="floor"
               type="text"
               placeholder="Piso"
@@ -147,6 +137,7 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(
           </div>
           <div className="w-1/2 px-2">
             <CustomInput
+              label="Puerta"
               id="door"
               type="text"
               placeholder="Puerta"
@@ -173,6 +164,5 @@ const Step1ObjectiveData = forwardRef<Step1Ref, Step1Props>(
       </div>
     );
   }
-);
 
 export default Step1ObjectiveData;

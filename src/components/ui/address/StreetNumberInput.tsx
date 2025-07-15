@@ -18,6 +18,14 @@ export const StreetNumberInput: React.FC<StreetNumberInputProps> = ({
   disabled,
   hasError,
 }) => {
+  const handleInputChange = (inputValue: string) => {
+    if (inputValue === '') {
+      onChange(inputValue);
+      return;
+    }
+    onChange(inputValue);
+  };
+
   return (
     <div className="w-1/4">
       <label
@@ -32,11 +40,10 @@ export const StreetNumberInput: React.FC<StreetNumberInputProps> = ({
         placeholder="Número"
         value={value}
         disabled={disabled}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => handleInputChange(e.target.value)}
         onBlur={(e) => onBlur(e.target.value)}
         className={`${hasError ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
       />
-      {hasError && <p className="mt-1 text-xs text-red-500">Número no coincide</p>}
     </div>
   );
 };

@@ -1,10 +1,8 @@
 import { supabaseWrapper } from './client';
-import type { AddressResult } from '../../components/ui/address/types';
 import type { AddressStep1Payload } from './types';
 
 // Define types for the address data returned from the database
 interface AddressStepData {
-  address_data: AddressResult | null;
   address_details: {
     street?: string;
     number?: string;

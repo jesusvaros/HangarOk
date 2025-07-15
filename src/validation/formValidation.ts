@@ -1,15 +1,8 @@
-/**
- * Centralized form validation system for the entire application
- * This file provides validation functions for all form steps
- */
 
-import type { AddressResult } from '../components/ui/AddressAutocomplete';
 import { showErrorToast } from '../components/ui/toast/toastUtils';
 import { submitAddressStep1 } from '../services/supabase';
 
-/**
- * Address details interface used in Step 1
- */
+
 export interface AddressDetails {
   street?: string;
   number?: string;
@@ -46,27 +39,14 @@ export interface ValidationResult {
   };
 }
 
-/**
- * Form context interface containing all form data
- */
 export interface FormContext {
-  // Step 1 data
   addressDetails?: AddressDetails;
-  addressResult?: AddressResult;
-  // Add more steps as they are implemented
 }
 
-/**
- * Validates Step 1 (Address) data
- * 
- * @param context Form context containing all form data
- * @returns ValidationResult with validation status and error information
- */
 export const validateStep1 = (context: FormContext): ValidationResult => {
   const { addressDetails } = context;
   const fieldErrors = { street: false, number: false };
   
-  // Check if we have address details
   if (!addressDetails) {
     return {
       isValid: false,
@@ -75,7 +55,6 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
     };
   }
   
-  // Validate required street field
   if (!addressDetails.street || !addressDetails.street.trim()) {
     return {
       isValid: false,
@@ -84,11 +63,17 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
     };
   }
   
-  // Validate required number field - check both direct number and components
   if (!addressDetails.number && (!addressDetails.components?.house_number || addressDetails.components.house_number === '')) {
     return {
       isValid: false,
       message: 'El número de la dirección es obligatorio',
+      fieldErrors: { ...fieldErrors, number: true }
+    };
+  }
+  if (addressDetails.components?.house_number !== addressDetails.number) {
+    return {
+      isValid: false,
+      message: 'Revisa el número de la dirección',
       fieldErrors: { ...fieldErrors, number: true }
     };
   }
@@ -110,15 +95,10 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
   };
 };
 
-/**
- * Submits Step 1 data to the server
- * 
- * @param context Form context containing all form data
- * @returns Promise with submission result
- */
+
 export const submitStep1 = async (context: FormContext): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { addressDetails, addressResult } = context;
+    const { addressDetails } = context;
     
     // Basic check - validation should have already happened
     if (!addressDetails?.coordinates) {
@@ -136,7 +116,6 @@ export const submitStep1 = async (context: FormContext): Promise<{ success: bool
     
     // Submit data using our Supabase client function with simplified payload
     const success = await submitAddressStep1({
-      address: addressResult || null,
       addressDetails
     }, sessionId);
     
@@ -153,32 +132,16 @@ export const submitStep1 = async (context: FormContext): Promise<{ success: bool
   }
 };
 
-/**
- * Validates any form step
- * 
- * @param step Step number to validate
- * @param context Form context containing all form data
- * @returns ValidationResult with validation status and error information
- */
 export const validateStep = (step: number, context: FormContext): ValidationResult => {
   switch (step) {
     case 1:
       return validateStep1(context);
-    // Add more cases as more steps are implemented
     default:
-      // For steps without validation, return valid
       return { isValid: true, message: null };
   }
 };
 
-/**
- * Validates and submits a step
- * 
- * @param step Step number to validate and submit
- * @param context Form context containing all form data
- * @param options Options for validation and submission
- * @returns Promise with validation and submission result
- */
+
 export const validateAndSubmitStep = async (
   step: number, 
   context: FormContext,

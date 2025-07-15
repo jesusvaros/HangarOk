@@ -7,15 +7,16 @@ import { geocodingService } from "./geocodingService";
 
 interface AddressAutocompleteProps {
   value: string;
-  streetNumberValue: string;
-  onNumberChange: (v: string) => void;
-  onNumberBlur: (v: string) => void;
+  streetNumberValue?: string;
+  onNumberChange?: (v: string) => void;
+  onNumberBlur?: (v: string) => void;
   onSelect: (r: AddressResult) => void;
   placeholder?: string;
   showNumberField?: boolean;
   hasError?: boolean;
   numberHasError?: boolean;
   className?: string;
+  hideLabel?: boolean;
 }
 
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
@@ -29,6 +30,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   hasError = false,
   numberHasError = false,
   className = "",
+  hideLabel = false
 }) => {
   const [results, setResults] = useState<AddressResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -62,7 +64,21 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 
   // Handle selection
   const handleSelect = (r: AddressResult) => {
-    setQuery(r.formatted || ""); 
+    // Format a complete address with street, city and postal code
+    const street = r.components?.road || r.components?.park || r.components?.parking || "";
+    const number = r.components?.house_number || "";
+    const city = r.components?.city || r.components?.town || r.components?.village || "";
+    const postcode = r.components?.postcode || "";
+    
+    // Create a complete formatted address
+    const completeAddress = [
+      street + (number ? " " + number : ""),
+      city,
+      postcode
+    ].filter(Boolean).join(", ");
+    
+    // Use the complete address or fallback to formatted
+    setQuery(completeAddress || r.formatted || ""); 
     onSelect(r);
     setResults([]);
   };
@@ -80,9 +96,10 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             loading={loading}
             placeholder={placeholder}
             hasError={hasError}
+            hideLabel={hideLabel}
           />
         </div>
-        {showNumberField && (
+        {showNumberField && onNumberChange && onNumberBlur && streetNumberValue && (
           <StreetNumberInput
             id="number"
             value={streetNumberValue}

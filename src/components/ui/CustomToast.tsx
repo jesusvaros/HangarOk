@@ -55,31 +55,3 @@ const CustomToast: React.FC<CustomToastProps> = ({ t, message, type }) => {
 };
 
 export default CustomToast;
-
-/**
- * Funciones helper para mostrar toasts personalizados
- */
-
-export const showErrorToast = (message: string) => {
-  return toast.custom((t) => (
-    <CustomToast t={t} message={message} type="error" />
-  ), {
-    duration: 5000,
-  });
-};
-
-export const showSuccessToast = (message: string) => {
-  return toast.custom((t) => (
-    <CustomToast t={t} message={message} type="success" />
-  ), {
-    duration: 3000,
-  });
-};
-
-export const showInfoToast = (message: string) => {
-  return toast.custom((t) => (
-    <CustomToast t={t} message={message} type="info" />
-  ), {
-    duration: 4000,
-  });
-};
