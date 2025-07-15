@@ -1,3 +1,4 @@
+import { getSessionIdBack } from '../sessionManager';
 import { supabaseWrapper } from './client';
 import type { AddressStep1Payload } from './types';
 
@@ -14,28 +15,17 @@ interface AddressStepData {
   };
 }
 
-/**
- * Submit address data from Step 1
- * @param payload Address data payload
- * @returns Success status
- */
-/**
- * Fetch address step 1 data by session ID
- * @param sessionId The session ID to retrieve data for
- * @returns Address data or null if not found
- */
-export async function getAddressStep1Data(sessionId: string): Promise<AddressStepData | null> {
+export async function getAddressStep1Data(): Promise<AddressStepData | null> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
     
+    const sessionId = await getSessionIdBack();
+
     console.log('Fetching address data for session ID:', sessionId);
     
     // Using RPC call to match the insert pattern
-    const { data, error } = await client
-      .rpc('get_address_step1_data', {
-        p_session_id: sessionId
-      });
+    const { data, error } = await client.rpc('get_address_step1_data', { p_review_session_id: sessionId })
     
     if (error) throw error;
     
@@ -44,27 +34,25 @@ export async function getAddressStep1Data(sessionId: string): Promise<AddressSte
       return null;
     }
     
-    return data;
+    return data[0];
   } catch (error) {
     console.error('Error fetching address data:', error);
     return null;
   }
 }
 
-export async function submitAddressStep1(payload: AddressStep1Payload, sessionId: string): Promise<boolean> {
+export async function submitAddressStep1(payload: AddressStep1Payload): Promise<boolean> {
   try {
     // Get Supabase client
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
     
-    console.log('Submitting address data with session ID:', sessionId);
-    
-    // Insert data into address-step1 table
-    const { error } = await client
-      .rpc('insert_address_step1', {
-        p_session_id: sessionId,
-        p_address_details: payload.addressDetails,
-      });
+    const sessionId = await getSessionIdBack();
+
+    const { error } = await client.rpc('upsert_address_step1_and_mark_review_session', {
+      p_review_session_id: sessionId,
+      p_address_details: payload.addressDetails,
+    });
 
     if (error) throw error;
     return true;

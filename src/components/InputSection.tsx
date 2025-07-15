@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createReviewSession } from '../supabaseClient';
-import type { ReviewSessionPayload } from '../supabaseClient';
 import { useFormContext } from '../store/useFormContext';
 import AddressAutocomplete from './ui/AddressAutocomplete';
 import type { AddressResult } from './ui/AddressAutocomplete';
 import { showErrorToast } from './ui/toast/toastUtils';
+import { initializeSession } from '../services/sessionManager';
 
 const InputSection: React.FC = () => {
   const navigate = useNavigate();
   const { address, setAddress, updateFormData, formData } = useFormContext();
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const [state, setState] = useState({
@@ -71,31 +71,29 @@ const InputSection: React.FC = () => {
   }, [isMobile, nextMessageIndex, messages.length]);
 
   const handleStart = async () => {
-    const fullAddress = address.trim();
-    if (!fullAddress) return;
-    if (!formData.addressDetails?.coordinates) {
-      showErrorToast('Por favor selecciona una dirección de la lista para continuar');
-      return;
-    }
-
-    const storedId = localStorage.getItem('reviewSessionId');
-    if (!storedId) {
-      // set PENDING to avoid race conditions
-      localStorage.setItem('reviewSessionId', 'PENDING');
-      const payload: ReviewSessionPayload = { full_address: fullAddress };
-      if (formData.addressDetails?.coordinates) {
-        payload.lat = formData.addressDetails.coordinates.lat;
-        payload.lng = formData.addressDetails.coordinates.lng;
+    try {
+      if (!formData.addressDetails?.coordinates || !address.trim()) {
+        showErrorToast('Por favor selecciona una dirección de la lista para continuar');
+        return;
       }
-      if (formData.addressDetails?.city) payload.city = formData.addressDetails.city;
-      if (formData.addressDetails?.street) payload.street = formData.addressDetails.street;
-      const generatedId = await createReviewSession(payload);
-      if (generatedId) {
-        localStorage.setItem('reviewSessionId', generatedId);
-      }
-    }
 
-    navigate('/add-review');
+      updateFormData({
+        addressDetails: formData.addressDetails,
+        addressAutocompleteResult: formData.addressAutocompleteResult,
+      });
+
+      // Inicializar o recuperar la sesión
+      const { sessionId } = await initializeSession();
+
+      if (sessionId) {
+        navigate('/add-review');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showErrorToast('Ha ocurrido un error al procesar tu solicitud');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleAddressSelect = (result: AddressResult) => {
@@ -106,11 +104,21 @@ const InputSection: React.FC = () => {
       ...prev,
       selectedAddress: fullAddress,
       coords: coordinates,
+      addressDetailsState: {
+        street: fullAddress,
+        coordinates,
+        components: result.components,
+      },
     }));
-    
-    updateFormData({ addressAutocompleteResult: result });
-    
-  // Persist full address details in form context so Step1 loads it
+
+    updateFormData({
+      addressAutocompleteResult: result,
+      addressDetails: {
+        street: fullAddress,
+        coordinates,
+        components: result.components,
+      },
+    });
   updateFormData({
     addressAutocompleteResult: result,
     addressDetails: {
@@ -259,6 +267,7 @@ const InputSection: React.FC = () => {
 
           <button
             onClick={handleStart}
+            disabled={isLoading}
             className="mt-[1px] flex h-[48px] items-center justify-center rounded-r-lg bg-[#F97316] px-8 py-4 font-medium text-white hover:bg-[#EA580C] focus:outline-none"
           >
             Empezar

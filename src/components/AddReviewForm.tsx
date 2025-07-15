@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useFormContext } from '../store/useFormContext';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
@@ -9,9 +9,10 @@ import EmailConfirmation from './review-steps/EmailConfirmation';
 import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
-import { createReviewSession, getReviewSessionStatus } from '../services/supabase/sessions';
+import { initializeSession } from '../services/sessionManager';
 import { validateAndSubmitStep } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
+import { getAddressStep1Data } from '../services/supabase/address';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -20,14 +21,13 @@ import { showErrorToast } from './ui/toast/toastUtils';
 const AddReviewForm: React.FC = () => {
   const { formData, updateFormData } = useFormContext();
   const [currentStep, setCurrentStep] = useState(1);
-  const [_sessionId, setSessionId] = useState<string | null>(null);
-  const sessionInitRef = useRef(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<number, { fields: Record<string, boolean> }>>({ 
     1: { fields: { street: false, number: false } }
   });
+  
   //mobile layout
   useEffect(() => {
     const checkIfMobile = () => {
@@ -42,29 +42,30 @@ const AddReviewForm: React.FC = () => {
     window.addEventListener('resize', checkIfMobile);
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
-  //session init
-  useEffect(() => {
-    if (sessionInitRef.current) return; 
-    sessionInitRef.current = true;
-    console.log('sessionInitRef.current', sessionInitRef.current)
+  // Inicialización unificada de sesión
 
+  const fetchStep1Data = useCallback(async () => {
+    const addressData = await getAddressStep1Data();
+
+    if(addressData){
+      updateFormData({
+        addressDetails: addressData.address_details,
+      });
+    }
+  }, [updateFormData]);
+
+  useEffect(() => {
     const initSession = async () => {
-      const storedId = localStorage.getItem('reviewSessionId');
-      if (storedId && storedId !== 'PENDING') {
-        setSessionId(storedId);
-        const sessionStatus = await getReviewSessionStatus(storedId);
-        console.log('Session status:', sessionStatus);
-      } else {
-        localStorage.setItem('reviewSessionId', 'PENDING');
-        const generatedId = await createReviewSession();
-        if (generatedId) {
-          localStorage.setItem('reviewSessionId', generatedId);
-          setSessionId(generatedId);
+        const { sessionStatus } = await initializeSession();
+
+        if(sessionStatus?.step1_completed){
+          fetchStep1Data();   
         }
-      }
+       
     };
     initSession();
-  }, []);
+  }, [fetchStep1Data]);
+
 
   const handleNext = async () => { 
     if (currentStep < 5) {

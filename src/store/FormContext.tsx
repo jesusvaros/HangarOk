@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import type { ReactNode } from 'react';
 import type { FormDataType } from './formTypes';
 import { initialFormData } from './formTypes';
@@ -8,14 +8,14 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [address, setAddress] = useState('');
   const [formData, setFormData] = useState<FormDataType>(initialFormData);
 
-  const updateFormData = (data: Partial<FormDataType>) => {
+  const updateFormData = useCallback((data: Partial<FormDataType>) => {
     setFormData((prev) => ({ ...prev, ...data }));
-  };
+  }, []);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     setFormData(initialFormData);
     setAddress('');
-  };
+  }, []);
 
   return (
     <FormContext.Provider

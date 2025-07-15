@@ -10,23 +10,15 @@ export type Opinion = {
   created_at?: string;
 };
 
-export interface ReviewSessionPayload {
-  full_address?: string;
-  lat?: number;
-  lng?: number;
-  city?: string;
-  street?: string;
-}
-
 export interface ReviewSessionStatus {
   id: string;
+  session_id: string;
   created_at: string;
   step1_completed?: boolean;
   step2_completed?: boolean;
   step3_completed?: boolean;
   step4_completed?: boolean;
   step5_completed?: boolean;
-  submission_completed?: boolean;
 }
 
 export interface AddressStep1Payload {

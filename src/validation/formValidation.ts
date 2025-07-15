@@ -117,7 +117,7 @@ export const submitStep1 = async (context: FormContext): Promise<{ success: bool
     // Submit data using our Supabase client function with simplified payload
     const success = await submitAddressStep1({
       addressDetails
-    }, sessionId);
+    });
     
     return { 
       success, 
