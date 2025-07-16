@@ -1,9 +1,9 @@
-import React, { useState, useMemo, useEffect } from "react";
-import debounce from "lodash.debounce";
-import { AddressInput } from "./AddressInput";
-import { StreetNumberInput } from "./StreetNumberInput";
-import type { AddressResult } from "./types";
-import { geocodingService } from "./geocodingService";
+import React, { useState, useMemo, useEffect } from 'react';
+import debounce from 'lodash.debounce';
+import { AddressInput } from './AddressInput';
+import { StreetNumberInput } from './StreetNumberInput';
+import type { AddressResult } from './types';
+import { geocodingService } from './geocodingService';
 
 interface AddressAutocompleteProps {
   value: string;
@@ -25,19 +25,19 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   onNumberChange,
   onNumberBlur,
   onSelect,
-  placeholder = "Buscar dirección...",
+  placeholder = 'Buscar dirección...',
   showNumberField = false,
   hasError = false,
   numberHasError = false,
-  className = "",
-  hideLabel = false
+  className = '',
+  hideLabel = false,
 }) => {
   const [results, setResults] = useState<AddressResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState(value || "");
+  const [query, setQuery] = useState(value || '');
 
   useEffect(() => {
-    setQuery(value || "");
+    setQuery(value || '');
   }, [value]);
 
   // Debounce search function
@@ -65,20 +65,18 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   // Handle selection
   const handleSelect = (r: AddressResult) => {
     // Format a complete address with street, city and postal code
-    const street = r.components?.road || r.components?.park || r.components?.parking || "";
-    const number = r.components?.house_number || "";
-    const city = r.components?.city || r.components?.town || r.components?.village || "";
-    const postcode = r.components?.postcode || "";
-    
+    const street = r.components?.road || r.components?.park || r.components?.parking || '';
+    const number = r.components?.house_number || '';
+    const city = r.components?.city || r.components?.town || r.components?.village || '';
+    const postcode = r.components?.postcode || '';
+
     // Create a complete formatted address
-    const completeAddress = [
-      street + (number ? " " + number : ""),
-      city,
-      postcode
-    ].filter(Boolean).join(", ");
-    
+    const completeAddress = [street + (number ? ' ' + number : ''), city, postcode]
+      .filter(Boolean)
+      .join(', ');
+
     // Use the complete address or fallback to formatted
-    setQuery(completeAddress || r.formatted || ""); 
+    setQuery(completeAddress || r.formatted || '');
     onSelect(r);
     setResults([]);
   };
@@ -86,7 +84,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   return (
     <div className={`relative w-full ${className}`}>
       <div className="flex space-x-2">
-        <div className={`relative ${showNumberField ? "w-3/4" : "w-full"}`}>
+        <div className={`relative ${showNumberField ? 'w-3/4' : 'w-full'}`}>
           <AddressInput
             id="address"
             value={query}
@@ -102,10 +100,10 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
         {showNumberField && onNumberChange && onNumberBlur && (
           <StreetNumberInput
             id="number"
-            value={streetNumberValue || ""}
+            value={streetNumberValue || ''}
             onChange={onNumberChange}
-            onBlur={() => onNumberBlur(streetNumberValue || "")}
-            disabled={!value || value.trim() === ""}
+            onBlur={() => onNumberBlur(streetNumberValue || '')}
+            disabled={!value || value.trim() === ''}
             hasError={numberHasError}
           />
         )}
@@ -115,5 +113,3 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 };
 
 export default AddressAutocomplete;
-
-

@@ -6,13 +6,10 @@ import ErrorToast from './ErrorToast';
  * @param message Mensaje de error a mostrar
  */
 export const showErrorToast = (message: string) => {
-  return toast.custom(
-    (t) => <ErrorToast t={t} message={message} />,
-    {
-      duration: 5000,
-      position: 'bottom-left',
-    }
-  );
+  return toast.custom(t => <ErrorToast t={t} message={message} />, {
+    duration: 5000,
+    position: 'bottom-left',
+  });
 };
 
 /**
@@ -21,9 +18,7 @@ export const showErrorToast = (message: string) => {
  */
 export const showSuccessToast = (message: string) => {
   return toast.custom(
-    () => (
-      <div className="bg-green-100 text-green-800 p-4 rounded">{message}</div>
-    ),
+    () => <div className="bg-green-100 text-green-800 p-4 rounded">{message}</div>,
     {
       duration: 3000,
       position: 'bottom-left',

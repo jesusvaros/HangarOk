@@ -12,7 +12,7 @@ interface CustomToastProps {
  */
 const CustomToast: React.FC<CustomToastProps> = ({ t, message, type }) => {
   const backgroundColor = type === 'error' ? '#E53E3E' : type === 'success' ? '#48BB78' : '#363636';
-  
+
   return (
     <div
       className={`max-w-md rounded shadow-lg`}
@@ -41,10 +41,10 @@ const CustomToast: React.FC<CustomToastProps> = ({ t, message, type }) => {
           opacity: 0.7,
           transition: 'opacity 0.2s ease',
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
           e.currentTarget.style.opacity = '1';
         }}
-        onMouseLeave={(e) => {
+        onMouseLeave={e => {
           e.currentTarget.style.opacity = '0.7';
         }}
       >

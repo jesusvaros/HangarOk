@@ -11,20 +11,14 @@ const InputSection: React.FC = () => {
   const { address, setAddress, updateFormData, formData } = useFormContext();
   const [isLoading, setIsLoading] = useState(false);
 
-
   const [state, setState] = useState({
     currentMessageIndex: 0,
     nextMessageIndex: 1,
     isAnimating: false,
-    isMobile: false
+    isMobile: false,
   });
 
-  const {
-    currentMessageIndex,
-    nextMessageIndex,
-    isAnimating,
-    isMobile,
-  } = state;
+  const { currentMessageIndex, nextMessageIndex, isAnimating, isMobile } = state;
 
   const messages = [
     'Todas las reviews son Anónimas',
@@ -36,7 +30,7 @@ const InputSection: React.FC = () => {
   // Check if the device is mobile
   useEffect(() => {
     const checkIfMobile = () => {
-      setState((prev) => ({ ...prev, isMobile: window.innerWidth < 768 })); // 768px md breakpoint
+      setState(prev => ({ ...prev, isMobile: window.innerWidth < 768 })); // 768px md breakpoint
     };
 
     checkIfMobile();
@@ -45,7 +39,7 @@ const InputSection: React.FC = () => {
     return () => {
       window.removeEventListener('resize', checkIfMobile);
     };
-    }, []);
+  }, []);
 
   // Rotate through messages on mobile
   useEffect(() => {
@@ -53,11 +47,11 @@ const InputSection: React.FC = () => {
 
     const rotateMessages = () => {
       // Start animation
-      setState((prev) => ({ ...prev, isAnimating: true }));
+      setState(prev => ({ ...prev, isAnimating: true }));
 
       // After animation completes, update the displayed message
       setTimeout(() => {
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           currentMessageIndex: prev.nextMessageIndex,
           nextMessageIndex: (prev.nextMessageIndex + 1) % messages.length,
@@ -100,7 +94,7 @@ const InputSection: React.FC = () => {
     const fullAddress = result.formatted;
     setAddress(fullAddress);
     const coordinates = { lat: result.geometry.lat, lng: result.geometry.lng };
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       selectedAddress: fullAddress,
       coords: coordinates,
@@ -119,14 +113,14 @@ const InputSection: React.FC = () => {
         components: result.components,
       },
     });
-  updateFormData({
-    addressAutocompleteResult: result,
-    addressDetails: {
-      street: fullAddress,
-      coordinates,
-      components: result.components,
-    },
-  });
+    updateFormData({
+      addressAutocompleteResult: result,
+      addressDetails: {
+        street: fullAddress,
+        coordinates,
+        components: result.components,
+      },
+    });
   };
 
   // Render message with last word bold
@@ -139,7 +133,7 @@ const InputSection: React.FC = () => {
         </span>
       ) : (
         <span key={i}>{word} </span>
-      ),
+      )
     );
   };
 

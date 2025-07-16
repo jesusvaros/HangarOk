@@ -24,10 +24,10 @@ const AddReviewForm: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [errors, setErrors] = useState<Record<number, { fields: Record<string, boolean> }>>({ 
-    1: { fields: { street: false, number: false } }
+  const [errors, setErrors] = useState<Record<number, { fields: Record<string, boolean> }>>({
+    1: { fields: { street: false, number: false } },
   });
-  
+
   //mobile layout
   useEffect(() => {
     const checkIfMobile = () => {
@@ -42,12 +42,11 @@ const AddReviewForm: React.FC = () => {
     window.addEventListener('resize', checkIfMobile);
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
-  // Inicialización unificada de sesión
 
   const fetchStep1Data = useCallback(async () => {
     const addressData = await getAddressStep1Data();
 
-    if(addressData){
+    if (addressData) {
       updateFormData({
         addressDetails: addressData.address_details,
       });
@@ -56,20 +55,18 @@ const AddReviewForm: React.FC = () => {
 
   useEffect(() => {
     const initSession = async () => {
-        const { sessionStatus } = await initializeSession();
+      const { sessionStatus } = await initializeSession();
 
-        if(sessionStatus?.step1_completed){
-          fetchStep1Data();   
-        }
-       
+      if (sessionStatus?.step1_completed) {
+        fetchStep1Data();
+      }
     };
     initSession();
   }, [fetchStep1Data]);
 
-
-  const handleNext = async () => { 
+  const handleNext = async () => {
     if (currentStep < 5) {
-      handleStepClick(currentStep + 1); 
+      handleStepClick(currentStep + 1);
       window.scrollTo(0, 0);
     }
   };
@@ -110,49 +107,38 @@ const AddReviewForm: React.FC = () => {
 
   const handleStepClick = async (step: number) => {
     if (step === currentStep + 1) {
-      switch (currentStep) {
-        case 1:
-            setErrors(prev => ({
-              ...prev,
-              1: { fields: { street: false, number: false } }
-            }));
-            setIsSubmitting(true);
-            try {
-              const result = await validateAndSubmitStep(1, formData, {
-                showToast: true,
-                isSubmitting: setIsSubmitting
-              });
-              
-              // Actualizar estado de errores
-              if (result.fieldErrors) {
-                setErrors(prev => ({
-                  ...prev,
-                  1: {
-                    fields: result.fieldErrors || {}
-                  }
-                }));
-              }
-              
-              // Avanzar si la validación es exitosa
-              if (result.isValid && result.isSubmitted) {
-                setCurrentStep(step);
-                window.scrollTo(0, 0);
-              }
-            } catch (error) {
-              console.error('Error validando paso 1:', error);
-              const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
-              showErrorToast(errorMessage);
-            } finally {
-              setIsSubmitting(false);
-            }
-          
-          break;
-        
-        // Implementar para otros pasos cuando sea necesario
-        default:
-          // Para pasos sin validación implementada, permitir navegación
+      setErrors(prev => ({
+        ...prev,
+        1: { fields: { street: false, number: false } },
+      }));
+      setIsSubmitting(true);
+      try {
+        const result = await validateAndSubmitStep(currentStep, formData, {
+          showToast: true,
+          isSubmitting: setIsSubmitting,
+        });
+
+        // Actualizar estado de errores
+        if (result.fieldErrors) {
+          setErrors(prev => ({
+            ...prev,
+            [step]: {
+              fields: result.fieldErrors || {},
+            },
+          }));
+        }
+
+        // Avanzar si la validación es exitosa
+        if (result.isValid && result.isSubmitted) {
           setCurrentStep(step);
           window.scrollTo(0, 0);
+        }
+      } catch (error) {
+        console.error('Error validando paso 1:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+        showErrorToast(errorMessage);
+      } finally {
+        setIsSubmitting(false);
       }
     } else if (step <= currentStep) {
       // Permitir siempre navegar hacia atrás
@@ -166,10 +152,10 @@ const AddReviewForm: React.FC = () => {
     switch (currentStep) {
       case 1:
         return (
-          <Step1ObjectiveData 
-            onNext={handleNext} 
-            fieldErrors={errors[1]?.fields} 
-            isSubmitting={isSubmitting} 
+          <Step1ObjectiveData
+            onNext={handleNext}
+            fieldErrors={errors[1]?.fields}
+            isSubmitting={isSubmitting}
           />
         );
       case 2:
@@ -213,9 +199,7 @@ const AddReviewForm: React.FC = () => {
             </div>
 
             {/* Form content for mobile */}
-            <div className="rounded-lg bg-white p-6 shadow-md">
-              {renderStep()}
-            </div>
+            <div className="rounded-lg bg-white p-6 shadow-md">{renderStep()}</div>
           </div>
 
           {/* Desktop layout - Three columns: Stepper | Form | Messages */}

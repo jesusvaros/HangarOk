@@ -34,7 +34,7 @@ const EmailConfirmation: React.FC<EmailConfirmationProps> = ({
             id="email"
             type="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
             className="w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-orange-500"
             placeholder="tu@email.com"
           />

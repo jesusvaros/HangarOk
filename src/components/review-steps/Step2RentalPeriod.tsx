@@ -27,10 +27,10 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
               <label className="mb-2 block text-sm font-medium text-gray-700">Año de inicio</label>
               <select
                 value={formData.startYear || new Date().getFullYear()}
-                onChange={(e) => updateFormData({ startYear: parseInt(e.target.value) })}
+                onChange={e => updateFormData({ startYear: parseInt(e.target.value) })}
                 className="w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               >
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
                   <option key={year} value={year}>
                     {year}
                   </option>
@@ -44,7 +44,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
               </label>
               <select
                 value={isCurrentlyLiving ? 'current' : formData.endYear || new Date().getFullYear()}
-                onChange={(e) => {
+                onChange={e => {
                   const value = e.target.value;
                   if (value === 'current') {
                     // Use undefined instead of null to avoid type issues
@@ -56,7 +56,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
                 className="w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               >
                 <option value="current">Actualmente</option>
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map((year) => (
+                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
                   <option key={year} value={year}>
                     {year}
                   </option>
@@ -75,7 +75,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
           label="Precio mensual (€)"
           type="number"
           value={formData.price || ''}
-          onChange={(e) => updateFormData({ price: parseFloat(e.target.value) || 0 })}
+          onChange={e => updateFormData({ price: parseFloat(e.target.value) || 0 })}
           placeholder="Ej: 800"
         />
 
@@ -84,7 +84,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
             label="Incluye:"
             options={['Luz', 'Agua', 'Comunidad', 'Gas', 'Garaje']}
             selectedOptions={formData.includedServices || []}
-            onChange={(selected) => updateFormData({ includedServices: selected })}
+            onChange={selected => updateFormData({ includedServices: selected })}
             multiSelect={true}
           />
         </div>

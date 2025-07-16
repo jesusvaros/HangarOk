@@ -1,4 +1,3 @@
-
 // Define types for our database
 export type Opinion = {
   id?: number;

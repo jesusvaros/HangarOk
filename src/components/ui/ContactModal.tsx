@@ -60,7 +60,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, onSubmit }) => {
               type="text"
               id="name"
               value={formData.contactName || ''}
-              onChange={(e) => updateFormData({ contactName: e.target.value })}
+              onChange={e => updateFormData({ contactName: e.target.value })}
               className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               placeholder="Tu nombre"
               required
@@ -75,7 +75,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, onSubmit }) => {
               type="email"
               id="email"
               value={formData.contactEmail || ''}
-              onChange={(e) => updateFormData({ contactEmail: e.target.value })}
+              onChange={e => updateFormData({ contactEmail: e.target.value })}
               className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
               placeholder="tu@email.com"
               required

@@ -80,7 +80,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
 
   return (
     <div className={`${isMobile ? 'mt-2 w-full space-y-6' : ''}`}>
-      {messages.map((msg) => (
+      {messages.map(msg => (
         <StaticFormMessage
           key={msg.id}
           title={msg.title}

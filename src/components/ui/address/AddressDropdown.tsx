@@ -42,13 +42,13 @@ export const AddressDropdown: React.FC<AddressDropdownProps> = ({
             <strong>{road || park || parking}</strong>, {city} {postcode}
           </span>
         );
-        
+
         // Use a combination of geohash and index to ensure uniqueness
         // If geohash is missing, use formatted_address or index as fallback
-        const uniqueKey = result.annotations?.geohash 
-          ? `${result.annotations.geohash}-${index}` 
-          : result.formatted 
-            ? `addr-${result.formatted}-${index}` 
+        const uniqueKey = result.annotations?.geohash
+          ? `${result.annotations.geohash}-${index}`
+          : result.formatted
+            ? `addr-${result.formatted}-${index}`
             : `result-${index}`;
 
         return (

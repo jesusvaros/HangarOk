@@ -24,7 +24,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
         <SelectableTagGroup
           options={['Propietario', 'Agencia']}
           selectedOptions={[formData.ownerType === 'Particular' ? 'Propietario' : 'Agencia']}
-          onChange={(selected) => {
+          onChange={selected => {
             if (selected.length > 0) {
               updateFormData({
                 ownerType: selected[0] === 'Propietario' ? 'Particular' : 'Agencia',
@@ -44,7 +44,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
           id="ownerName"
           label="Nombre completo"
           value={formData.ownerName || ''}
-          onChange={(e) => updateFormData({ ownerName: e.target.value })}
+          onChange={e => updateFormData({ ownerName: e.target.value })}
           placeholder={`Nombre del ${formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}`}
         />
       </div>
@@ -58,7 +58,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
           label="Teléfono de contacto"
           type="tel"
           value={formData.ownerPhone || ''}
-          onChange={(e) => updateFormData({ ownerPhone: e.target.value })}
+          onChange={e => updateFormData({ ownerPhone: e.target.value })}
           placeholder="Ej: 600123456"
         />
 
@@ -68,7 +68,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
             label="Correo electrónico"
             type="email"
             value={formData.ownerEmail || ''}
-            onChange={(e) => updateFormData({ ownerEmail: e.target.value })}
+            onChange={e => updateFormData({ ownerEmail: e.target.value })}
             placeholder="correo@ejemplo.com"
           />
         </div>
@@ -83,7 +83,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
         <CustomTextarea
           id="ownerOpinion"
           value={formData.ownerOpinion || ''}
-          onChange={(e) => updateFormData({ ownerOpinion: e.target.value })}
+          onChange={e => updateFormData({ ownerOpinion: e.target.value })}
           placeholder={`Describe tu experiencia de manera honesta, respetuosa y basada en hechos reales. Evita incluir datos personales, insultos o amenazas.
 `}
           rows={5}

@@ -13,7 +13,7 @@ class SupabaseWrapper {
       // Only create client if both URL and key are valid
       if (supabaseUrl && supabaseAnonKey && this.isValidUrl(supabaseUrl)) {
         this.client = createClient(supabaseUrl, supabaseAnonKey);
-      } 
+      }
     } catch {
       this.client = null;
     }
@@ -27,7 +27,6 @@ class SupabaseWrapper {
       return false;
     }
   }
-
 
   getClient() {
     return this.client;

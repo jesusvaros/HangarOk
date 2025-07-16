@@ -16,11 +16,11 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
   // Helper function to handle multi-select options
   const handleMultiSelectToggle = (
     field: 'neighborTypes' | 'communityEnvironment',
-    value: string,
+    value: string
   ) => {
     const currentValues = formData[field] || [];
     const newValues = currentValues.includes(value)
-      ? currentValues.filter((item) => item !== value)
+      ? currentValues.filter(item => item !== value)
       : [...currentValues, value];
 
     updateFormData({ [field]: newValues });
@@ -48,7 +48,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
             'Pisos de estudiantes',
             'Pisos compartidos',
             'Mayores +75 años',
-          ].map((option) => (
+          ].map(option => (
             <SelectableTag
               key={option}
               label={option}
@@ -66,7 +66,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
           <span className="ml-2 text-xs text-gray-500">Opcional</span>
         </div>
         <div className="flex flex-wrap gap-3">
-          {['Sí, tolerable', 'Sí, molestos', 'No hay'].map((option) => (
+          {['Sí, tolerable', 'Sí, molestos', 'No hay'].map(option => (
             <SelectableTag
               key={option}
               label={option}
@@ -88,7 +88,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
           <span className="ml-2 text-xs text-gray-500">Opcional</span>
         </div>
         <div className="flex flex-wrap gap-3">
-          {['Muy limpio', 'Buena', 'Poca', 'Sin limpieza'].map((option) => (
+          {['Muy limpio', 'Buena', 'Poca', 'Sin limpieza'].map(option => (
             <SelectableTag
               key={option}
               label={option}
@@ -110,7 +110,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
           <span className="ml-2 text-xs text-gray-500">Elige al menos una opción</span>
         </div>
         <div className="flex flex-wrap gap-3">
-          {['Tranquilo', 'Lúdico/Festivo', 'Familiar', 'Estudiantil', 'Nocturno'].map((option) => (
+          {['Tranquilo', 'Lúdico/Festivo', 'Familiar', 'Estudiantil', 'Nocturno'].map(option => (
             <SelectableTag
               key={option}
               label={option}
@@ -128,7 +128,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
           <span className="ml-2 text-xs text-gray-500">Opcional</span>
         </div>
         <div className="flex flex-wrap gap-3">
-          {['Muy segura', 'Sin problemas', 'Mejorable', 'Poco segura'].map((option) => (
+          {['Muy segura', 'Sin problemas', 'Mejorable', 'Poco segura'].map(option => (
             <SelectableTag
               key={option}
               label={option}
@@ -155,7 +155,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
         <CustomTextarea
           id="communityOpinion"
           value={formData.communityOpinion || ''}
-          onChange={(e) => updateFormData({ communityOpinion: e.target.value })}
+          onChange={e => updateFormData({ communityOpinion: e.target.value })}
           placeholder="Comparte tu experiencia y opinión sobre la comunidad y el barrio..."
           rows={5}
         />

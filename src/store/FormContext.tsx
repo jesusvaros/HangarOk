@@ -9,7 +9,7 @@ export const FormProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const [formData, setFormData] = useState<FormDataType>(initialFormData);
 
   const updateFormData = useCallback((data: Partial<FormDataType>) => {
-    setFormData((prev) => ({ ...prev, ...data }));
+    setFormData(prev => ({ ...prev, ...data }));
   }, []);
 
   const resetForm = useCallback(() => {

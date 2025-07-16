@@ -19,21 +19,23 @@ export async function getAddressStep1Data(): Promise<AddressStepData | null> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
-    
+
     const sessionId = await getSessionIdBack();
 
     console.log('Fetching address data for session ID:', sessionId);
-    
+
     // Using RPC call to match the insert pattern
-    const { data, error } = await client.rpc('get_address_step1_data', { p_review_session_id: sessionId })
-    
+    const { data, error } = await client.rpc('get_address_step1_data', {
+      p_review_session_id: sessionId,
+    });
+
     if (error) throw error;
-    
+
     // If no data found, return null
     if (!data || data.length === 0) {
       return null;
     }
-    
+
     return data[0];
   } catch (error) {
     console.error('Error fetching address data:', error);
@@ -46,7 +48,7 @@ export async function submitAddressStep1(payload: AddressStep1Payload): Promise<
     // Get Supabase client
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
-    
+
     const sessionId = await getSessionIdBack();
 
     const { error } = await client.rpc('upsert_address_step1_and_mark_review_session', {

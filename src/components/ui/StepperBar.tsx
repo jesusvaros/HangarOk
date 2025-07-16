@@ -18,7 +18,9 @@ const StepperBar: React.FC<StepperBarProps> = ({
   const lightGreenColor = 'rgba(74, 94, 50, 0.2)'; // Lighter green color for background
 
   return (
-    <div className={`${isVertical ? 'h-full' : 'mb-0 w-full overflow-x-auto pb-4'} hide-scrollbar `}>
+    <div
+      className={`${isVertical ? 'h-full' : 'mb-0 w-full overflow-x-auto pb-4'} hide-scrollbar `}
+    >
       <div
         className={`relative ${
           isVertical
@@ -36,7 +38,9 @@ const StepperBar: React.FC<StepperBarProps> = ({
             <div key={`circle-${index}`} className="relative">
               <div
                 className={`relative z-10 cursor-pointer ${
-                  isVertical ? 'mb-10 flex items-center last:mb-0' : 'flex flex-col items-center w-[100px]'
+                  isVertical
+                    ? 'mb-10 flex items-center last:mb-0'
+                    : 'flex flex-col items-center w-[100px]'
                 } `}
                 onClick={() => onStepClick(index + 1)}
               >

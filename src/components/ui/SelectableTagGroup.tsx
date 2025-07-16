@@ -23,7 +23,7 @@ const SelectableTagGroup: React.FC<SelectableTagGroupProps> = ({
       // Para multiselección
       if (selectedOptions.includes(option)) {
         // Si ya está seleccionado, lo quitamos
-        onChange(selectedOptions.filter((item) => item !== option));
+        onChange(selectedOptions.filter(item => item !== option));
       } else {
         // Si no está seleccionado, lo añadimos
         onChange([...selectedOptions, option]);
@@ -38,7 +38,7 @@ const SelectableTagGroup: React.FC<SelectableTagGroupProps> = ({
     <div className={`mb-4 ${className}`}>
       {label && <label className="mb-2 block text-sm font-medium text-gray-700">{label}</label>}
       <div className="flex flex-wrap gap-2">
-        {options.map((option) => (
+        {options.map(option => (
           <SelectableTag
             key={option}
             label={option}

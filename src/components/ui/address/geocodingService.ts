@@ -32,7 +32,7 @@ export const geocodingService = {
       }
 
       // Map HERE items to AddressResult shape expected by the component
-      const processedResults: AddressResult[] = (data.items as HereGeocodeItem[]).map((item) => {
+      const processedResults: AddressResult[] = (data.items as HereGeocodeItem[]).map(item => {
         const addr = item.address || {};
         return {
           formatted: addr.label,
@@ -73,29 +73,29 @@ export const geocodingService = {
     newNumber: string
   ): Promise<AddressDetails> {
     const street = currentDetails.street;
-    const city = currentDetails.city || "";
+    const city = currentDetails.city || '';
     if (!street || !newNumber.trim()) {
       return {
         ...currentDetails,
         number: newNumber,
       };
     }
-  
+
     const fullAddressQuery = `${street} ${newNumber}, ${city}, España`;
-  
+
     const apiKey = import.meta.env.VITE_HERE_API_KEY;
     const response = await fetch(
       `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(
         fullAddressQuery
       )}&in=countryCode:ESP&lang=es-ES&limit=1&apiKey=${apiKey}`
     );
-  
+
     const data = await response.json();
-  
+
     if (data.items && data.items.length > 0) {
       const item = data.items[0];
       const addr = item.address;
-  
+
       return {
         street: addr.street,
         number: addr.houseNumber || newNumber,
@@ -117,10 +117,10 @@ export const geocodingService = {
         },
       };
     }
-  
+
     return {
       ...currentDetails,
       number: newNumber,
     };
-  }
+  },
 };

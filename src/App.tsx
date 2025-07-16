@@ -20,8 +20,8 @@ function App() {
   return (
     <FormProvider>
       <div className={`min-h-screen ${isAddReviewPage ? 'bg-gray-100' : 'bg-white'}`}>
-        <Toaster 
-          position="bottom-left" 
+        <Toaster
+          position="bottom-left"
           gutter={8}
           toastOptions={{
             duration: 5000,

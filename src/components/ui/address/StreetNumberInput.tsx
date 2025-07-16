@@ -28,10 +28,7 @@ export const StreetNumberInput: React.FC<StreetNumberInputProps> = ({
 
   return (
     <div className="w-1/4">
-      <label
-        htmlFor={id}
-        className="mb-2 block text-sm font-medium text-gray-700"
-      >
+      <label htmlFor={id} className="mb-2 block text-sm font-medium text-gray-700">
         Número
       </label>
       <CustomInput
@@ -40,8 +37,8 @@ export const StreetNumberInput: React.FC<StreetNumberInputProps> = ({
         placeholder="Número"
         value={value}
         disabled={disabled}
-        onChange={(e) => handleInputChange(e.target.value)}
-        onBlur={(e) => onBlur(e.target.value)}
+        onChange={e => handleInputChange(e.target.value)}
+        onBlur={e => onBlur(e.target.value)}
         className={`${hasError ? 'border-red-500 bg-red-50' : 'border-gray-300'}`}
       />
     </div>

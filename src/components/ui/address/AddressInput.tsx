@@ -44,7 +44,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
         id={id}
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
           // Delay hiding the dropdown to allow for clicks on the options
@@ -57,9 +57,9 @@ export const AddressInput: React.FC<AddressInputProps> = ({
           <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-[rgb(74,94,50)]"></div>
         </div>
       )}
-      
+
       {/* Dropdown results */}
-      <AddressDropdown 
+      <AddressDropdown
         results={results}
         isFocused={isFocused}
         hideLabel={hideLabel}

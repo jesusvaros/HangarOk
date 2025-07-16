@@ -12,7 +12,7 @@ const defaultIcon = L.icon({
   iconSize: [25, 41],
   iconAnchor: [12, 41],
   popupAnchor: [1, -34],
-  shadowSize: [41, 41]
+  shadowSize: [41, 41],
 });
 
 L.Marker.prototype.options.icon = defaultIcon;
@@ -20,22 +20,26 @@ L.Marker.prototype.options.icon = defaultIcon;
 // Component to update map view when coordinates change
 const ChangeView = ({ center }: { center: [number, number] }) => {
   const map = useMap();
-  
+
   useEffect(() => {
     map.setView(center, 16);
   }, [center, map]);
-  
+
   return null;
 };
 
 // Component to handle map clicks
-const MapClickHandler = ({ onLocationSelect }: { onLocationSelect: (lat: number, lng: number) => void }) => {
+const MapClickHandler = ({
+  onLocationSelect,
+}: {
+  onLocationSelect: (lat: number, lng: number) => void;
+}) => {
   useMapEvents({
-    click: (e) => {
+    click: e => {
       onLocationSelect(e.latlng.lat, e.latlng.lng);
     },
   });
-  
+
   return null;
 };
 
@@ -48,35 +52,42 @@ interface LocationMapProps {
   onLocationSelect?: (lat: number, lng: number) => void;
 }
 
-const LocationMap: React.FC<LocationMapProps> = ({ coordinates, className = '', onLocationSelect }) => {
+const LocationMap: React.FC<LocationMapProps> = ({
+  coordinates,
+  className = '',
+  onLocationSelect,
+}) => {
   // Default to Madrid if no coordinates are provided
-  const position: [number, number] = coordinates 
-    ? [coordinates.lat, coordinates.lng] 
+  const position: [number, number] = coordinates
+    ? [coordinates.lat, coordinates.lng]
     : [40.4168, -3.7038]; // Madrid coordinates
-  
+
   // State for the marker position (can be different from coordinates prop if user clicks on map)
   const [markerPosition, setMarkerPosition] = useState<[number, number]>(position);
-  
+
   // Update marker position when coordinates prop changes
   useEffect(() => {
     if (coordinates) {
       setMarkerPosition([coordinates.lat, coordinates.lng]);
     }
   }, [coordinates]);
-  
+
   // Handle map click to update marker position
-  const handleLocationSelect = useCallback((lat: number, lng: number) => {
-    setMarkerPosition([lat, lng]);
-    if (onLocationSelect) {
-      onLocationSelect(lat, lng);
-    }
-  }, [onLocationSelect]);
+  const handleLocationSelect = useCallback(
+    (lat: number, lng: number) => {
+      setMarkerPosition([lat, lng]);
+      if (onLocationSelect) {
+        onLocationSelect(lat, lng);
+      }
+    },
+    [onLocationSelect]
+  );
 
   return (
     <div className={`h-64 w-full rounded-lg overflow-hidden border border-gray-300 ${className}`}>
-      <MapContainer 
-        center={position} 
-        zoom={coordinates ? 16 : 13} 
+      <MapContainer
+        center={position}
+        zoom={coordinates ? 16 : 13}
         style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
@@ -84,11 +95,11 @@ const LocationMap: React.FC<LocationMapProps> = ({ coordinates, className = '', 
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {/* Always show the marker, use markerPosition state */}
-        <Marker 
-          position={markerPosition} 
+        <Marker
+          position={markerPosition}
           draggable={!!onLocationSelect}
           eventHandlers={{
-            dragend: (e) => {
+            dragend: e => {
               const marker = e.target;
               const position = marker.getLatLng();
               if (onLocationSelect) {
@@ -104,6 +115,5 @@ const LocationMap: React.FC<LocationMapProps> = ({ coordinates, className = '', 
     </div>
   );
 };
-
 
 export default LocationMap;

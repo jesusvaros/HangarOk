@@ -54,7 +54,7 @@ const MapView = () => {
         const fetchedOpinions = await getOpinionsByCaseroHash(hash);
 
         // Add random coordinates to opinions without location
-        const opinionsWithCoords = fetchedOpinions.map((opinion) => {
+        const opinionsWithCoords = fetchedOpinions.map(opinion => {
           if (!opinion.lat || !opinion.lng) {
             const coords = generateRandomCoordinates();
             return { ...opinion, lat: coords.lat, lng: coords.lng };
@@ -104,7 +104,7 @@ const MapView = () => {
               maxZoom={19}
             />
 
-            {opinions.map((opinion) => (
+            {opinions.map(opinion => (
               <Marker key={opinion.id} position={[opinion.lat || 0, opinion.lng || 0]}>
                 <Popup>
                   <div>
