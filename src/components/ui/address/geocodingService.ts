@@ -1,4 +1,4 @@
-import type { AddressDetails } from '../../../validation/formValidation';
+import type { FormDataType } from '../../../store/formTypes';
 import type { AddressResult, HereGeocodeItem } from './types';
 
 /**
@@ -69,11 +69,11 @@ export const geocodingService = {
    * @returns Promise with the updated address result including coordinates
    */
   async getCoordinatesForAddress(
-    currentDetails: AddressDetails,
+    currentDetails: FormDataType['addressDetails'],
     newNumber: string
-  ): Promise<AddressDetails> {
-    const street = currentDetails.street;
-    const city = currentDetails.city || '';
+  ): Promise<FormDataType['addressDetails']> {
+    const street = currentDetails?.street;
+    const city = currentDetails?.city || '';
     if (!street || !newNumber.trim()) {
       return {
         ...currentDetails,
