@@ -18,7 +18,7 @@ export async function getSessionStep3Data(): Promise<EstanciaStep2Payload | null
     const sessionId = await getSessionIdBack();
 
     // Using RPC call to match the insert pattern
-    const { data, error } = await client.rpc('get_estancia_step3_data', {
+    const { data, error } = await client.rpc('get_piso_step3_data', {
     p_review_session_id: sessionId,
     });
 
@@ -44,7 +44,7 @@ export async function submitSessionStep3(payload: { summerTemperature: string; w
 
     const sessionId = await getSessionIdBack();
 
-    const { error } = await client.rpc('upsert_estancia_step3_and_mark_review_session', {
+    const { error } = await client.rpc('upsert_piso_step3_and_mark_review_session', {
       p_review_session_id: sessionId,
       p_summer_temperature: payload.summerTemperature,
       p_winter_temperature: payload.winterTemperature,
