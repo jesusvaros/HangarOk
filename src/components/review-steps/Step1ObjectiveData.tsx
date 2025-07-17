@@ -5,7 +5,7 @@ import CustomInput from '../ui/CustomInput';
 import LocationMap from '../ui/LocationMap';
 import { useMapLocationHandler } from './location/mapLocationHandler';
 import { geocodingService } from '../ui/address/geocodingService';
-import type { AddressDetails } from '../../validation/formValidation';
+import type { FormDataType } from '../../store/formTypes';
 
 interface Step1Props {
   onNext: () => void;
@@ -18,9 +18,10 @@ interface Step1Props {
 
 const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1Props) => {
   const { formData, updateFormData } = useFormContext();
-  const [addressDetails, setAddressDetails] = useState<AddressDetails>(
+  const [addressDetails, setAddressDetails] = useState<FormDataType['addressDetails']>(
     formData.addressDetails || {}
   );
+
   useEffect(() => {
     setAddressDetails(formData.addressDetails || {});
   }, [formData.addressDetails]);
@@ -32,10 +33,10 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
   };
 
   const handleNumberBlur = async (number: string) => {
-    if (addressDetails.street && addressDetails.street.trim() !== '' && number.trim() !== '') {
+    if (addressDetails?.street && addressDetails.street.trim() !== '' && number.trim() !== '') {
       const updatedResult = await geocodingService.getCoordinatesForAddress(addressDetails, number);
 
-      const updated: AddressDetails = {
+      const updated: FormDataType['addressDetails'] = {
         ...addressDetails,
         number: updatedResult.number,
         coordinates: updatedResult.coordinates,
@@ -50,7 +51,7 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
     }
   };
 
-  function resultToAddressDetails(r: AddressResult): AddressDetails {
+  function resultToAddressDetails(r: AddressResult): FormDataType['addressDetails'] {
     const c = r.components || {};
     return {
       street: c.road || '',
@@ -89,8 +90,8 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
     <div className="w-full">
       <h3 className="mb-4 text-xl font-medium text-black">Dirección</h3>
       <AddressAutocomplete
-        value={addressDetails.street || ''}
-        streetNumberValue={addressDetails.number || ''}
+        value={addressDetails?.street || ''}
+        streetNumberValue={addressDetails?.number || ''}
         onNumberChange={handleNumberChange}
         onNumberBlur={handleNumberBlur}
         onSelect={handleSelect}
@@ -100,7 +101,7 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
       />
       <LocationMap
         coordinates={
-          addressDetails.coordinates && addressDetails.coordinates.lat !== 0
+          addressDetails?.coordinates && addressDetails.coordinates.lat !== 0
             ? addressDetails.coordinates
             : undefined
         }
