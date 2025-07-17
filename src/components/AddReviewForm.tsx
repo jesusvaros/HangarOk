@@ -13,6 +13,7 @@ import { initializeSession } from '../services/sessionManager';
 import { validateAndSubmitStep } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
 import { getAddressStep1Data } from '../services/supabase/address';
+import { getSessionStep2Data } from '../services/supabase/estancia';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -24,9 +25,15 @@ const AddReviewForm: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [errors, setErrors] = useState<Record<number, { fields: Record<string, boolean> }>>({
+  const errorsDefault = {
     1: { fields: { street: false, number: false } },
-  });
+    2: { fields: { startDate: false, endDate: false, montlyPrice: false } },
+    3: { fields: { condition: false } },
+    4: { fields: { community: false } },
+    5: { fields: { owner: false } },
+  };
+  const [errors, setErrors] =
+    useState<Record<number, { fields: Record<string, boolean> }>>(errorsDefault);
 
   //mobile layout
   useEffect(() => {
@@ -43,6 +50,7 @@ const AddReviewForm: React.FC = () => {
     return () => window.removeEventListener('resize', checkIfMobile);
   }, []);
 
+  //fetch step 1 data
   const fetchStep1Data = useCallback(async () => {
     const addressData = await getAddressStep1Data();
 
@@ -53,16 +61,34 @@ const AddReviewForm: React.FC = () => {
     }
   }, [updateFormData]);
 
+  //fetch step 2 data
+  const fetchStep2Data = useCallback(async () => {
+    const estanciaData = await getSessionStep2Data();
+
+    if (estanciaData) {
+      updateFormData({
+        startYear: estanciaData.start_year,
+        endYear: estanciaData.end_year,
+        price: estanciaData.price,
+        includedServices: estanciaData.included_services,
+      });
+    }
+  }, [updateFormData]);
+
+
+ //session
   useEffect(() => {
     const initSession = async () => {
       const { sessionStatus } = await initializeSession();
-
       if (sessionStatus?.step1_completed) {
         fetchStep1Data();
       }
+      if (sessionStatus?.step2_completed) {
+        fetchStep2Data();
+      }
     };
     initSession();
-  }, [fetchStep1Data]);
+  }, [fetchStep1Data, fetchStep2Data]);
 
   const handleNext = async () => {
     if (currentStep < 5) {
@@ -107,11 +133,7 @@ const AddReviewForm: React.FC = () => {
 
   const handleStepClick = async (step: number) => {
     if (step === currentStep + 1) {
-      setErrors(prev => ({
-        ...prev,
-        1: { fields: { street: false, number: false } },
-      }));
-      setIsSubmitting(true);
+      setErrors(errorsDefault);
       try {
         const result = await validateAndSubmitStep(currentStep, formData, {
           showToast: true,
@@ -122,7 +144,7 @@ const AddReviewForm: React.FC = () => {
         if (result.fieldErrors) {
           setErrors(prev => ({
             ...prev,
-            [step]: {
+            [currentStep]: {
               fields: result.fieldErrors || {},
             },
           }));
@@ -137,8 +159,6 @@ const AddReviewForm: React.FC = () => {
         console.error('Error validando paso 1:', error);
         const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
         showErrorToast(errorMessage);
-      } finally {
-        setIsSubmitting(false);
       }
     } else if (step <= currentStep) {
       // Permitir siempre navegar hacia atrás

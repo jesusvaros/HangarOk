@@ -1,6 +1,5 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Create a wrapper for Supabase client that falls back to mock data
 class SupabaseWrapper {
   private client: SupabaseClient | null = null;
 

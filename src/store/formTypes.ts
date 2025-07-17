@@ -34,12 +34,13 @@ export type FormDataType = {
       [key: string]: string | undefined;
     };
   };
-  price?: number;
-  includedServices?: string[];
 
   // Step 2: Rental Period
   startYear?: number;
-  endYear?: number;
+  endYear?: number | null;
+  price?: number;
+  includedServices?: string[];
+  
 
   // Step 3: Property Condition
   summerTemperature?: 'Bien aislado' | 'Correcto' | 'Caluroso';

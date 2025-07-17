@@ -1,11 +1,6 @@
 import { supabaseWrapper } from './client';
 import type { Opinion } from './types';
 
-/**
- * Get opinions by casero hash
- * @param caseroHash SHA-256 hash of casero identifier
- * @returns Array of opinions
- */
 export async function getOpinionsByCaseroHash(caseroHash: string): Promise<Opinion[]> {
   try {
     // Otherwise use real Supabase client
@@ -25,11 +20,6 @@ export async function getOpinionsByCaseroHash(caseroHash: string): Promise<Opini
   }
 }
 
-/**
- * Add a new opinion
- * @param opinion Opinion object to add
- * @returns Success status
- */
 export async function addOpinion(opinion: Opinion): Promise<boolean> {
   try {
     // Otherwise use real Supabase client
