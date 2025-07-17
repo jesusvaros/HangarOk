@@ -3,6 +3,7 @@ import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 import CustomTextarea from '../ui/CustomTextarea';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
+import CustomCheckbox from '../ui/CustomCheckbox';
 
 interface Step5OwnerProps {
   onNext: () => void;
@@ -107,8 +108,17 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
         <div className="mt-4">
           <CustomCheckbox
             id="checkboxReadTerms"
-            label="He leído y acepto los términos y condiciones"
-            checked={formData.checkboxReadTerms}
+            label={<>
+              He leído y acepto los <a 
+                href="/terminosCondiciones" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-[rgb(74,94,50)] underline hover:text-[rgb(60,76,40)]"
+              >
+                términos y condiciones
+              </a>
+            </>}
+            checked={Boolean(formData.checkboxReadTerms)}
             onChange={e => updateFormData({ checkboxReadTerms: e.target.checked })}
           />
         </div>
