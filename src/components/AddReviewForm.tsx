@@ -225,7 +225,7 @@ const AddReviewForm: React.FC = () => {
       case 4:
         return <Step4Community onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[4]?.fields} />;
       case 5:
-        return <Step5Owner onNext={handleOpenModal} onPrevious={handlePrevious} />;
+        return <Step5Owner onNext={handleOpenModal} onPrevious={handlePrevious} fieldErrors={errors[5]?.fields}/>;
       default:
         return <Step1ObjectiveData onNext={handleNext} />;
     }

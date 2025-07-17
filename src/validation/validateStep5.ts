@@ -1,5 +1,5 @@
 import type { FormDataType } from '../store/formTypes';
-import { submitAddressStep1 } from '../services/supabase';
+import { submitSessionStep5 } from '../services/supabase/GetSubmitStep5';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -9,15 +9,12 @@ export interface ValidationResult {
   };
 }
 
-export interface FormContext {
-  addressDetails?: FormDataType['addressDetails'];
-}
 
-export const validateStep1 = (context: FormContext): ValidationResult => {
-  const { addressDetails } = context;
-  const fieldErrors = { street: false, number: false };
+export const validateStep5 = (context: FormDataType): ValidationResult => {
+  const { ownerType, checkboxReadTerms } = context;
+  const fieldErrors = { ownerType: false, checkboxReadTerms: false };
 
-  if (!addressDetails) {
+  if (!ownerType) {
     return {
       isValid: false,
       message: 'No se ha proporcionado información de dirección',
@@ -25,44 +22,15 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
     };
   }
 
-  if (!addressDetails.street || !addressDetails.street.trim()) {
+  if (!checkboxReadTerms) {
     return {
       isValid: false,
-      message: 'La dirección es obligatoria',
-      fieldErrors: { ...fieldErrors, street: true },
+      message: 'Acepta los términos y condiciones',
+      fieldErrors:{...fieldErrors, checkboxReadTerms: true},
     };
   }
 
-  if (
-    !addressDetails.number &&
-    (!addressDetails.components?.house_number || addressDetails.components.house_number === '')
-  ) {
-    return {
-      isValid: false,
-      message: 'El número de la dirección es obligatorio',
-      fieldErrors: { ...fieldErrors, number: true },
-    };
-  }
-  if (addressDetails.components?.house_number !== addressDetails.number) {
-    return {
-      isValid: false,
-      message: 'Revisa el número de la dirección',
-      fieldErrors: { ...fieldErrors, number: true },
-    };
-  }
-
-  // Validate coordinates
-  if (
-    !addressDetails.coordinates ||
-    !addressDetails.coordinates.lat ||
-    !addressDetails.coordinates.lng
-  ) {
-    return {
-      isValid: false,
-      message: 'No se han podido obtener las coordenadas de la dirección',
-      fieldErrors: { ...fieldErrors, street: true },
-    };
-  }
+  // ai to check the text??
 
   return {
     isValid: true,
@@ -71,14 +39,14 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
   };
 };
 
-export const submitStep1 = async (
-  context: FormContext
+export const submitStep5 = async (
+  context: FormDataType
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { addressDetails } = context;
+    const { ownerType, ownerName, ownerPhone, ownerEmail, ownerOpinion } = context;
 
     // Basic check - validation should have already happened
-    if (!addressDetails?.coordinates) {
+    if (!ownerType) {
       return { success: false, message: 'Datos de dirección incompletos' };
     }
 
@@ -92,8 +60,12 @@ export const submitStep1 = async (
     }
 
     // Submit data using our Supabase client function with simplified payload
-    const success = await submitAddressStep1({
-      addressDetails,
+    const success = await submitSessionStep5({
+      ownerType,
+      ownerName,
+      ownerPhone,
+      ownerEmail,
+      ownerOpinion,
     });
 
     return {

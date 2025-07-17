@@ -7,23 +7,28 @@ import SelectableTagGroup from '../ui/SelectableTagGroup';
 interface Step5OwnerProps {
   onNext: () => void;
   onPrevious: () => void;
+  fieldErrors?: {
+    [key: string]: boolean;
+  };
 }
 
-const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
+const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors }) => {
   const { formData, updateFormData } = useFormContext();
 
-  // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
+  const isOwnerTypeParticular = formData.ownerType === 'Particular';
 
   return (
     <div>
-      {/* Los mensajes ahora se gestionan a través del sistema de mensajes */}
       {/* Sección: Tipo de propietario */}
       <div className="mb-8">
         <h3 className="mb-4 text-lg font-medium text-black">Tipo de propietario</h3>
+        {fieldErrors?.ownerType && (
+          <p className="text-red-500">Por favor, selecciona el tipo de propietario.</p>
+        )}
 
         <SelectableTagGroup
           options={['Propietario', 'Agencia']}
-          selectedOptions={[formData.ownerType === 'Particular' ? 'Propietario' : 'Agencia']}
+          selectedOptions={[isOwnerTypeParticular ? 'Propietario' : 'Agencia']}
           onChange={selected => {
             if (selected.length > 0) {
               updateFormData({
@@ -37,21 +42,31 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
 
       {/* Sección: Datos del propietario/agencia */}
       <div className="mb-8 ">
-        <h3 className="mb-4 text-lg font-medium text-black">
-          Datos del {formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}
-        </h3>
+        <div className="flex items-end mb-4">
+          <h3 className="text-lg font-medium text-black">
+            Datos {isOwnerTypeParticular ? 'del propietario' : 'de la agencia'}
+          </h3>
+          {isOwnerTypeParticular && (
+            <span className="ml-2 text-gray-500 text-sm mb-0.5">opcional</span>
+          )}
+        </div>
         <CustomInput
           id="ownerName"
           label="Nombre completo"
           value={formData.ownerName || ''}
           onChange={e => updateFormData({ ownerName: e.target.value })}
-          placeholder={`Nombre del ${formData.ownerType === 'Particular' ? 'propietario' : 'agencia'}`}
+          placeholder={`Nombre ${isOwnerTypeParticular ? 'del propietario' : 'de la agencia'}`}
         />
       </div>
 
       {/* Sección: Información de contacto */}
       <div className="relative mb-8">
-        <h3 className="mb-4 text-lg font-medium text-black">Información de contacto</h3>
+        <div className="flex items-end mb-4">
+          <h3 className=" text-lg font-medium text-black">Información de contacto</h3>
+          {isOwnerTypeParticular && (
+            <span className="ml-2 text-gray-500 text-sm mb-0.5">opcional</span>
+          )}
+        </div>
 
         <CustomInput
           id="ownerPhone"
@@ -61,6 +76,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
           onChange={e => updateFormData({ ownerPhone: e.target.value })}
           placeholder="Ej: 600123456"
         />
+
 
         <div className="mt-4">
           <CustomInput
@@ -77,9 +93,8 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
       {/* Opinión sobre el propietario/agencia */}
       <div className="relative mb-8">
         <h3 className="mb-4 text-lg font-medium text-black">
-          Tu opinión sobre {formData.ownerType === 'Particular' ? 'el propietario' : 'la agencia'}
+          Tu opinión sobre {isOwnerTypeParticular ? 'el propietario' : 'la agencia'}
         </h3>
-        {/* El mensaje de sugerencias ahora se gestiona a través del sistema de mensajes */}
         <CustomTextarea
           id="ownerOpinion"
           value={formData.ownerOpinion || ''}
@@ -88,6 +103,15 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious }) => {
 `}
           rows={5}
         />
+
+        <div className="mt-4">
+          <CustomCheckbox
+            id="checkboxReadTerms"
+            label="He leído y acepto los términos y condiciones"
+            checked={formData.checkboxReadTerms}
+            onChange={e => updateFormData({ checkboxReadTerms: e.target.checked })}
+          />
+        </div>
       </div>
 
       <div className="mt-4 flex justify-between">

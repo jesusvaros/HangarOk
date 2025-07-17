@@ -60,12 +60,11 @@ export type FormDataType = {
 
   // Step 5: Owner
   ownerType?: 'Particular' | 'Agencia';
-  ownerRating?: number;
-  showOwnerContact?: boolean;
   ownerName?: string;
   ownerPhone?: string;
   ownerEmail?: string;
   ownerOpinion?: string;
+  checkboxReadTerms?: boolean;
 
   // Contact Information (Modal)
   contactName?: string;
@@ -82,10 +81,14 @@ export const initialFormData: FormDataType = {
     city: '',
     postalCode: '',
   },
+
+  // Step 2: Rental Period
   price: undefined,
   includedServices: [],
   startYear: undefined,
   endYear: undefined,
+
+  // Step 3: Property Condition
   summerTemperature: undefined,
   winterTemperature: undefined,
   noiseLevel: undefined,
@@ -93,7 +96,7 @@ export const initialFormData: FormDataType = {
   maintenanceStatus: undefined,
   propertyOpinion: '',
 
-  // Community step fields
+  // Step 4: Community
   neighborTypes: [],
   touristApartments: undefined,
   buildingCleanliness: undefined,
@@ -101,13 +104,15 @@ export const initialFormData: FormDataType = {
   communitySecurity: undefined,
   communityOpinion: '',
 
+  // Step 5: Owner
   ownerType: 'Particular',
-  ownerRating: 0,
   ownerName: '',
   ownerPhone: '',
   ownerEmail: '',
-  showOwnerContact: false,
   ownerOpinion: '',
+  checkboxReadTerms: false,
+
+  // Contact Information (Modal)
   contactName: '',
   contactEmail: '',
 };
