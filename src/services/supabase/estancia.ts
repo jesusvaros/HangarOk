@@ -15,8 +15,6 @@ export async function getSessionStep2Data(): Promise<EstanciaStep2Payload | null
 
     const sessionId = await getSessionIdBack();
 
-    console.log('Fetching address data for session ID:', sessionId);
-
     // Using RPC call to match the insert pattern
     const { data, error } = await client.rpc('get_estancia_step2_data', {
     p_review_session_id: sessionId,

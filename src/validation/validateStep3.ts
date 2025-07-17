@@ -1,5 +1,5 @@
 import type { FormDataType } from '../store/formTypes';
-import { submitAddressStep1 } from '../services/supabase';
+import { submitSessionStep3 } from '../services/supabase/piso';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -9,57 +9,51 @@ export interface ValidationResult {
   };
 }
 
-export interface FormContext {
-  addressDetails?: FormDataType['addressDetails'];
-}
 
-export const validateStep1 = (context: FormContext): ValidationResult => {
-  const { addressDetails } = context;
-  const fieldErrors = { street: false, number: false };
+export const validateStep3 = (context: FormDataType): ValidationResult => {
+  const { summerTemperature, winterTemperature, noiseLevel, lightLevel, maintenanceStatus } = context;
+  const fieldErrors = { summerTemperature: false, winterTemperature: false, noiseLevel: false, lightLevel: false, maintenanceStatus: false };
 
-  if (!addressDetails) {
+  if (!summerTemperature) {
     return {
       isValid: false,
-      message: 'No se ha proporcionado información de dirección',
-      fieldErrors,
+      message: 'La temperatura en verano es obligatoria',
+      fieldErrors: { ...fieldErrors, summerTemperature: true },
     };
   }
 
-  if (!addressDetails.street || !addressDetails.street.trim()) {
+  if (!winterTemperature) {
     return {
       isValid: false,
-      message: 'La dirección es obligatoria',
-      fieldErrors: { ...fieldErrors, street: true },
+      message: 'La temperatura en invierno es obligatoria',
+      fieldErrors: { ...fieldErrors, winterTemperature: true },
     };
   }
 
   if (
-    !addressDetails.number &&
-    (!addressDetails.components?.house_number || addressDetails.components.house_number === '')
+    !noiseLevel
   ) {
     return {
       isValid: false,
-      message: 'El número de la dirección es obligatorio',
-      fieldErrors: { ...fieldErrors, number: true },
+      message: 'El nivel de ruido es obligatorio',
+      fieldErrors: { ...fieldErrors, noiseLevel: true },
     };
   }
-  if (addressDetails.components?.house_number !== addressDetails.number) {
+  if (!lightLevel) {
     return {
       isValid: false,
-      message: 'Revisa el número de la dirección',
-      fieldErrors: { ...fieldErrors, number: true },
+      message: 'El nivel de luz es obligatorio',
+      fieldErrors: { ...fieldErrors, lightLevel: true },
     };
   }
 
   // Validate coordinates
   if (
-    !addressDetails.coordinates ||
-    !addressDetails.coordinates.lat ||
-    !addressDetails.coordinates.lng
+    !maintenanceStatus
   ) {
     return {
       isValid: false,
-      message: 'No se han podido obtener las coordenadas de la dirección',
+      message: 'El estado de mantenimiento es obligatorio',
       fieldErrors: { ...fieldErrors, street: true },
     };
   }
@@ -71,15 +65,15 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
   };
 };
 
-export const submitStep1 = async (
-  context: FormContext
+export const submitStep3 = async (
+  context: FormDataType
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { addressDetails } = context;
+    const { summerTemperature, winterTemperature, noiseLevel, lightLevel, maintenanceStatus, propertyOpinion } = context;
 
     // Basic check - validation should have already happened
-    if (!addressDetails?.coordinates) {
-      return { success: false, message: 'Datos de dirección incompletos' };
+    if (!summerTemperature || !winterTemperature || !noiseLevel || !lightLevel || !maintenanceStatus) {
+      return { success: false, message: 'Datos incompletos' };
     }
 
     // Get the reviewSessionId from localStorage
@@ -92,8 +86,13 @@ export const submitStep1 = async (
     }
 
     // Submit data using our Supabase client function with simplified payload
-    const success = await submitAddressStep1({
-      addressDetails,
+    const success = await submitSessionStep3({
+      summerTemperature,
+      winterTemperature,
+      noiseLevel,
+      lightLevel,
+      maintenanceStatus,
+      propertyOpinion,
     });
 
     return {

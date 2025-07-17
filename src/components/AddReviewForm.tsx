@@ -14,6 +14,7 @@ import { validateAndSubmitStep } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
 import { getAddressStep1Data } from '../services/supabase/address';
 import { getSessionStep2Data } from '../services/supabase/estancia';
+import { getSessionStep3Data } from '../services/supabase/piso';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -75,6 +76,21 @@ const AddReviewForm: React.FC = () => {
     }
   }, [updateFormData]);
 
+  const fetchStep3Data = useCallback(async () => {
+    const pisoData = await getSessionStep3Data();
+
+    if (pisoData) {
+      updateFormData({
+        summerTemperature: pisoData.summer_temperature,
+        winterTemperature: pisoData.winter_temperature,
+        noiseLevel: pisoData.noise_level,
+        lightLevel: pisoData.light_level,
+        maintenanceStatus: pisoData.maintenance_status,
+        propertyOpinion: pisoData.property_opinion,
+      });
+    }
+  }, [updateFormData]);
+
 
  //session
   useEffect(() => {
@@ -86,9 +102,12 @@ const AddReviewForm: React.FC = () => {
       if (sessionStatus?.step2_completed) {
         fetchStep2Data();
       }
+      if (sessionStatus?.step3_completed) {
+        fetchStep3Data();
+      }
     };
     initSession();
-  }, [fetchStep1Data, fetchStep2Data]);
+  }, [fetchStep1Data, fetchStep2Data, fetchStep3Data]);
 
   const handleNext = async () => {
     if (currentStep < 5) {

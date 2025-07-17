@@ -48,7 +48,6 @@ export type FormDataType = {
   noiseLevel?: 'Silencioso' | 'Tolerable' | 'Bastante' | 'Se oye todo';
   lightLevel?: 'Nada de luz' | 'Poca luz' | 'Luminoso' | 'Muy luminoso';
   maintenanceStatus?: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Poco' | 'Malo';
-  amenities?: string[];
   propertyOpinion?: string;
 
   // Step 4: Community
@@ -96,7 +95,6 @@ export const initialFormData: FormDataType = {
   noiseLevel: undefined,
   lightLevel: undefined,
   maintenanceStatus: undefined,
-  amenities: [],
   propertyOpinion: '',
 
   // Community step fields

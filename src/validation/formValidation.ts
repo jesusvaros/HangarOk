@@ -2,6 +2,7 @@ import { showErrorToast } from '../components/ui/toast/toastUtils';
 import type { FormDataType } from '../store/formTypes';
 import { submitStep1, validateStep1 } from './validateStep1';
 import { submitStep2, validateStep2 } from './validateStep2';
+import { submitStep3, validateStep3 } from './validateStep3';
 
 /**
  * Result of step validation
@@ -25,8 +26,8 @@ export const validateStep = (step: number, context: FormContext): ValidationResu
       return validateStep1(context);
     case 2:
       return validateStep2(context);
-    // case 3:
-    //   return validateStep3(context);
+    case 3:
+      return validateStep3(context);
     // case 4:
     //   return validateStep4(context);
     // case 5:
@@ -43,8 +44,8 @@ export const submitStep = (step: number, context: FormContext): Promise<{ succes
       return submitStep1(context);
     case 2:
       return submitStep2(context);
-    // case 3:
-    //   return submitStep3(context);
+    case 3:
+      return submitStep3(context);
     // case 4:
     //   return submitStep4(context);
     // case 5:
