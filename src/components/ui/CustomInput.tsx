@@ -11,6 +11,7 @@ interface CustomInputProps {
   disabled?: boolean;
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
   onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  error?: boolean;
 }
 
 const CustomInput: React.FC<CustomInputProps> = ({
@@ -24,6 +25,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
   disabled = false,
   onBlur,
   onFocus,
+  error,
 }) => {
   return (
     <div className={`mb-4 ${className}`}>
@@ -37,7 +39,7 @@ const CustomInput: React.FC<CustomInputProps> = ({
         type={type}
         value={value}
         onChange={onChange}
-        className={`focus:ring-inline-[rgb(74,94,50)] w-full rounded-lg border p-3 focus:outline-none focus:ring-[1px] ${className}`}
+        className={`w-full rounded-lg border p-3 focus:outline-none focus:ring-[1px] ${className} ${error ? 'bg-red-100 border-red-400' : 'focus:ring-inline-[rgb(74,94,50)]'}`}
         placeholder={placeholder}
         disabled={disabled}
         onBlur={onBlur}

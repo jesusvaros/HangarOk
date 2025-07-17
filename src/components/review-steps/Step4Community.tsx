@@ -6,9 +6,12 @@ import CustomTextarea from '../ui/CustomTextarea';
 interface Step4CommunityProps {
   onNext: () => void;
   onPrevious: () => void;
+  fieldErrors?: {
+    [key: string]: boolean;
+  };
 }
 
-const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) => {
+const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fieldErrors }) => {
   const { formData, updateFormData } = useFormContext();
 
   // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
@@ -39,7 +42,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
           <h3 className="text-lg font-medium text-black">
             ¿Cómo definirías la escalera de vecinos?
           </h3>
-          <span className="ml-2 text-xs text-gray-500">Elige tantas como quieras</span>
+          <span className={`ml-2 text-xs text-gray-500 ${fieldErrors?.neighborTypes && 'text-red-500'}`}>Elige al menos una opción</span>
         </div>
         <div className="flex flex-wrap gap-3">
           {[
@@ -107,7 +110,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious }) =
       <div className="mb-6">
         <div className="mb-3 flex items-center">
           <h3 className="text-lg font-medium text-black">Ambiente del barrio</h3>
-          <span className="ml-2 text-xs text-gray-500">Elige al menos una opción</span>
+          <span className={`ml-2 text-xs text-gray-500 ${fieldErrors?.communityEnvironment && 'text-red-500'}`}>Elige al menos una opción</span>
         </div>
         <div className="flex flex-wrap gap-3">
           {['Tranquilo', 'Lúdico/Festivo', 'Familiar', 'Estudiantil', 'Nocturno'].map(option => (

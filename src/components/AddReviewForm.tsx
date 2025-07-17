@@ -12,9 +12,10 @@ import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
 import { initializeSession } from '../services/sessionManager';
 import { validateAndSubmitStep } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
-import { getAddressStep1Data } from '../services/supabase/address';
-import { getSessionStep2Data } from '../services/supabase/estancia';
-import { getSessionStep3Data } from '../services/supabase/piso';
+import { getAddressStep1Data } from '../services/supabase/GetSubmitStep1';
+import { getSessionStep2Data } from '../services/supabase/GetSubmitStep2';
+import { getSessionStep3Data } from '../services/supabase/GetSubmitStep3';
+import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -29,8 +30,8 @@ const AddReviewForm: React.FC = () => {
   const errorsDefault = {
     1: { fields: { street: false, number: false } },
     2: { fields: { startDate: false, endDate: false, montlyPrice: false } },
-    3: { fields: { condition: false } },
-    4: { fields: { community: false } },
+    3: { fields: { summerTemperature: false, winterTemperature: false, noiseLevel: false, lightLevel: false, maintenanceStatus: false } },
+    4: { fields: { neighborTypes: false, communityEnvironment : false } },
     5: { fields: { owner: false } },
   };
   const [errors, setErrors] =
@@ -76,6 +77,7 @@ const AddReviewForm: React.FC = () => {
     }
   }, [updateFormData]);
 
+  //fetch step 3 data
   const fetchStep3Data = useCallback(async () => {
     const pisoData = await getSessionStep3Data();
 
@@ -87,6 +89,22 @@ const AddReviewForm: React.FC = () => {
         lightLevel: pisoData.light_level,
         maintenanceStatus: pisoData.maintenance_status,
         propertyOpinion: pisoData.property_opinion,
+      });
+    }
+  }, [updateFormData]);
+
+  //fetch step 4 data
+  const fetchStep4Data = useCallback(async () => {
+    const comunidadData = await getSessionStep4Data();
+
+    if (comunidadData) {
+      updateFormData({
+        neighborTypes: comunidadData.neighbor_types,
+        communityEnvironment: comunidadData.community_environment,
+        touristApartments: comunidadData.tourist_apartments,
+        buildingCleanliness: comunidadData.building_cleanliness,
+        communitySecurity: comunidadData.community_security,
+        communityOpinion: comunidadData.community_opinion,
       });
     }
   }, [updateFormData]);
@@ -105,9 +123,12 @@ const AddReviewForm: React.FC = () => {
       if (sessionStatus?.step3_completed) {
         fetchStep3Data();
       }
+      if (sessionStatus?.step4_completed) {
+        fetchStep4Data();
+      }
     };
     initSession();
-  }, [fetchStep1Data, fetchStep2Data, fetchStep3Data]);
+  }, [fetchStep1Data, fetchStep2Data, fetchStep3Data, fetchStep4Data]);
 
   const handleNext = async () => {
     if (currentStep < 5) {
@@ -198,11 +219,11 @@ const AddReviewForm: React.FC = () => {
           />
         );
       case 2:
-        return <Step2RentalPeriod onNext={handleNext} onPrevious={handlePrevious} />;
+        return <Step2RentalPeriod onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[2]?.fields} />;
       case 3:
-        return <Step3PropertyCondition onNext={handleNext} onPrevious={handlePrevious} />;
+        return <Step3PropertyCondition onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[3]?.fields} />;
       case 4:
-        return <Step4Community onNext={handleNext} onPrevious={handlePrevious} />;
+        return <Step4Community onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[4]?.fields} />;
       case 5:
         return <Step5Owner onNext={handleOpenModal} onPrevious={handlePrevious} />;
       default:

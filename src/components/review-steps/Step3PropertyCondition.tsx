@@ -6,9 +6,12 @@ import CustomTextarea from '../ui/CustomTextarea';
 interface Step3Props {
   onNext: () => void;
   onPrevious: () => void;
+  fieldErrors?: {
+    [key: string]: boolean;
+  };
 }
 
-const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) => {
+const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious, fieldErrors }) => {
   const { formData, updateFormData } = useFormContext();
 
   // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
@@ -18,6 +21,9 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
       {/* Temperatura en verano */}
       <div className="mb-6">
         <h3 className="mb-3 text-lg font-medium text-black">Temperatura en verano</h3>
+        {fieldErrors?.summerTemperature && (
+          <p className="text-red-500">Por favor, selecciona una opción.</p>
+        )}
         <div className="flex flex-wrap gap-3">
           {['Bien aislado', 'Correcto', 'Caluroso'].map(option => (
             <SelectableTag
@@ -37,6 +43,9 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
       {/* Temperatura en invierno */}
       <div className="mb-6">
         <h3 className="mb-3 text-lg font-medium text-black">Temperatura en invierno</h3>
+        {fieldErrors?.winterTemperature && (
+          <p className="text-red-500">Por favor, selecciona una opción.</p>
+        )}
         <div className="flex flex-wrap gap-3">
           {['Bien aislado', 'Correcto', 'Frío'].map(option => (
             <SelectableTag
@@ -56,6 +65,9 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
       {/* Nivel de ruido */}
       <div className="mb-6">
         <h3 className="mb-3 text-lg font-medium text-black">Nivel de ruido</h3>
+        {fieldErrors?.noiseLevel && (
+          <p className="text-red-500">Por favor, selecciona una opción.</p>
+        )}
         <div className="flex flex-wrap gap-3">
           {['Silencioso', 'Tolerable', 'Bastante', 'Se oye todo'].map(option => (
             <SelectableTag
@@ -75,6 +87,9 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
       {/* Nivel de luz */}
       <div className="mb-6">
         <h3 className="mb-3 text-lg font-medium text-black">Nivel de luz</h3>
+        {fieldErrors?.lightLevel && (
+          <p className="text-red-500">Por favor, selecciona una opción.</p>
+        )}
         <div className="flex flex-wrap gap-3">
           {['Nada de luz', 'Poca luz', 'Luminoso', 'Muy luminoso'].map(option => (
             <SelectableTag
@@ -94,6 +109,9 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious }) =>
       {/* Estado de mantenimiento */}
       <div className="mb-6">
         <h3 className="mb-3 text-lg font-medium text-black">Estado de mantenimiento</h3>
+        {fieldErrors?.maintenanceStatus && (
+          <p className="text-red-500">Por favor, selecciona una opción.</p>
+        )}
         <div className="flex flex-wrap gap-3">
           {['Como nuevo', 'Bueno', 'Aceptable', 'Poco', 'Malo'].map(option => (
             <SelectableTag

@@ -1,5 +1,5 @@
 import type { FormDataType } from '../store/formTypes';
-import { submitSessionStep3 } from '../services/supabase/piso';
+import { submitSessionStep3 } from '../services/supabase/GetSubmitStep3';
 
 export interface ValidationResult {
   isValid: boolean;

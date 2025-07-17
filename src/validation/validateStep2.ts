@@ -1,5 +1,5 @@
 import type { FormDataType } from '../store/formTypes';
-import {  submitSessionStep2 } from '../services/supabase/estancia';
+import {  submitSessionStep2 } from '../services/supabase/GetSubmitStep2';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -17,7 +17,7 @@ export const validateStep2 = (context: FormDataType): ValidationResult => {
     return {
       isValid: false,
       message: 'El año de inicio es obligatorio',
-      fieldErrors,
+      fieldErrors:{...fieldErrors, startYear: true},
     };
   }
 
@@ -33,7 +33,7 @@ export const validateStep2 = (context: FormDataType): ValidationResult => {
     return {
       isValid: false,
       message: 'El año de fin debe ser antes del año de inicio',
-      fieldErrors: { ...fieldErrors, endYear: true },
+      fieldErrors: { ...fieldErrors, endYear: true, startYear: true },
     };
   }
 

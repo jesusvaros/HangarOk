@@ -53,12 +53,8 @@ export type FormDataType = {
   // Step 4: Community
   neighborTypes?: string[];
   touristApartments?: 'Sí, tolerable' | 'Sí, molestos' | 'No hay';
-  neighborRelationship?: 'Muy buena' | 'Cordial' | 'Mala' | 'Sin relación';
-  buildingCondition?: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Malo';
   buildingCleanliness?: 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza';
   communityEnvironment?: string[];
-  tourists?: 'Muchos' | 'Bastantes' | 'Pocos' | 'No hay';
-  communityNoise?: 'Silenciosa' | 'Tolerable' | 'Ruidosa';
   communitySecurity?: 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura';
   communityOpinion?: string;
 
@@ -100,12 +96,8 @@ export const initialFormData: FormDataType = {
   // Community step fields
   neighborTypes: [],
   touristApartments: undefined,
-  neighborRelationship: undefined,
-  buildingCondition: undefined,
   buildingCleanliness: undefined,
   communityEnvironment: [],
-  tourists: undefined,
-  communityNoise: undefined,
   communitySecurity: undefined,
   communityOpinion: '',
 

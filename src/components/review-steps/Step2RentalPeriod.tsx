@@ -6,15 +6,14 @@ import SelectableTagGroup from '../ui/SelectableTagGroup';
 interface Step2Props {
   onNext: () => void;
   onPrevious: () => void;
+  fieldErrors?: {
+    [key: string]: boolean;
+  };
 }
 
-const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
+const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious, fieldErrors }) => {
   const { formData, updateFormData } = useFormContext();
-
-  // Handle the currently living situation
   const isCurrentlyLiving = formData.endYear === null || formData.endYear === undefined;
-
-  // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
 
   return (
     <div>
@@ -28,9 +27,9 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
               <select
                 value={formData.startYear || new Date().getFullYear()}
                 onChange={e => updateFormData({ startYear: parseInt(e.target.value) })}
-                className="w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
+                className={`w-full rounded border p-3 focus:outline-none focus:ring-2  ${fieldErrors?.startYear ? 'bg-red-100 border-red-400' : 'focus:ring-[rgb(74,94,50)]'}`}
               >
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
+                {Array.from({ length: 20 }, (_, i) => new Date().getFullYear() - i).map(year => (
                   <option key={year} value={year}>
                     {year}
                   </option>
@@ -47,13 +46,12 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
                 onChange={e => {
                   const value = e.target.value;
                   if (value === 'current') {
-                    // Use undefined instead of null to avoid type issues
                     updateFormData({ endYear: undefined });
                   } else {
                     updateFormData({ endYear: parseInt(value) });
                   }
                 }}
-                className="w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
+                className={`w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)] ${fieldErrors?.endYear ? 'bg-red-100 border-red-400' : ''}`}
               >
                 <option value="current">Actualmente</option>
                 {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
@@ -77,6 +75,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious }) => {
           value={formData.price || ''}
           onChange={e => updateFormData({ price: parseFloat(e.target.value) || 0 })}
           placeholder="Ej: 800"
+          error={fieldErrors?.montlyPrice}
         />
 
         <div className="mt-6">
