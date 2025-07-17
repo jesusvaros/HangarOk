@@ -38,10 +38,10 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
 
       const updated: FormDataType['addressDetails'] = {
         ...addressDetails,
-        number: updatedResult.number,
-        coordinates: updatedResult.coordinates,
-        fullAddress: updatedResult.fullAddress,
-        components: updatedResult.components,
+        number: updatedResult?.number,
+        coordinates: updatedResult?.coordinates,
+        fullAddress: updatedResult?.fullAddress,
+        components: updatedResult?.components,
       };
 
       setAddressDetails(updated);
