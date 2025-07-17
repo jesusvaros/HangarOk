@@ -4,6 +4,7 @@ import { submitStep1, validateStep1 } from './validateStep1';
 import { submitStep2, validateStep2 } from './validateStep2';
 import { submitStep3, validateStep3 } from './validateStep3';
 import { submitStep4, validateStep4 } from './validateStep4';
+import { submitStep5, validateStep5 } from './validateStep5';
 
 /**
  * Result of step validation
@@ -31,8 +32,8 @@ export const validateStep = (step: number, context: FormContext): ValidationResu
       return validateStep3(context);
     case 4:
       return validateStep4(context);
-    // case 5:
-    //   return validateStep5(context);
+    case 5:
+      return validateStep5(context);
     default:
       return { isValid: true, message: null };
   }
@@ -49,8 +50,8 @@ export const submitStep = (step: number, context: FormContext): Promise<{ succes
       return submitStep3(context);
     case 4:
       return submitStep4(context);
-    // case 5:
-    //   return submitStep5(context);
+    case 5:
+      return submitStep5(context);
     default:
       return Promise.resolve({ success: true, message: null });
   }

@@ -113,13 +113,14 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
                 href="/terminosCondiciones" 
                 target="_blank" 
                 rel="noopener noreferrer"
-                className="text-[rgb(74,94,50)] underline hover:text-[rgb(60,76,40)]"
+                className={`underline hover:text-[rgb(60,76,40)] ${fieldErrors?.checkboxReadTerms ? 'text-red-500' : 'text-[rgb(74,94,50)]'}`}
               >
                 términos y condiciones
               </a>
             </>}
             checked={Boolean(formData.checkboxReadTerms)}
             onChange={e => updateFormData({ checkboxReadTerms: e.target.checked })}
+            error={fieldErrors?.checkboxReadTerms}
           />
         </div>
       </div>

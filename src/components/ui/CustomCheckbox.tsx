@@ -6,6 +6,7 @@ interface CustomCheckboxProps {
   checked: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
+  error?: boolean;
 }
 
 const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
@@ -14,6 +15,7 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
   checked,
   onChange,
   required = false,
+  error = false,
 }) => {
   return (
     <div className="flex items-start">
@@ -24,10 +26,10 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
           checked={checked}
           onChange={onChange}
           required={required}
-          className="w-4 h-4 accent-[rgb(74,94,50)] border-gray-300 rounded focus:ring-[rgb(74,94,50)] focus:ring-2"
+          className="w-4 h-4 accent-[rgb(74,94,50)] border-gray-300 rounded"
         />
       </div>
-      <label htmlFor={id} className="ml-2 text-sm text-gray-700">
+      <label htmlFor={id} className={`ml-2 text-sm text-gray-700 ${error ? 'text-red-500' : ''}`}>
         {label}
       </label>
     </div>

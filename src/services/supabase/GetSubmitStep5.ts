@@ -1,13 +1,13 @@
 import { getSessionIdBack } from '../sessionManager';
 import { supabaseWrapper } from './client';
+import { hashValue } from './hashValues';
 
-interface EstanciaStep2Payload {
-    neighbor_types?: string[];
-    tourist_apartments?: 'Sí, tolerable' | 'Sí, molestos' | 'No hay';
-    building_cleanliness?: 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza';
-    community_environment?: string[];
-    community_security?: 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura';
-    community_opinion?: string;
+interface SubmitStep5Payload {
+    owner_type?: 'Particular' | 'Agencia';
+    owner_name_hash?: string;
+    owner_phone_hash?: string;
+    owner_email_hash?: string;
+    owner_opinion?: string;
 }
 
 interface SubmitStep5Payload {
@@ -18,7 +18,7 @@ interface SubmitStep5Payload {
     ownerOpinion?: string;
 }
 
-export async function getSessionStep4Data(): Promise<EstanciaStep2Payload | null> {
+export async function getSessionStep5Data(): Promise<SubmitStep5Payload | null> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
@@ -44,6 +44,26 @@ export async function getSessionStep4Data(): Promise<EstanciaStep2Payload | null
   }
 }
 
+async function hashOwnerData({
+  name,
+  email,
+  phone,
+}: {
+  name?: string;
+  email?: string;
+  phone?: string;
+}): Promise<{
+  nameHash?: string;
+  emailHash?: string;
+  phoneHash?: string;
+}> {
+  const nameHash = name ? await hashValue(name) : undefined;
+  const emailHash = email ? await hashValue(email) : undefined;
+  const phoneHash = phone ? await hashValue(phone) : undefined;
+
+  return { nameHash, emailHash, phoneHash };
+}
+
 export async function submitSessionStep5(payload: SubmitStep5Payload  ): Promise<boolean> {
   try {
     const client = supabaseWrapper.getClient();
@@ -51,12 +71,21 @@ export async function submitSessionStep5(payload: SubmitStep5Payload  ): Promise
 
     const sessionId = await getSessionIdBack();
 
+    const { nameHash, emailHash, phoneHash } = await hashOwnerData({
+      name: payload.ownerName,
+      email: payload.ownerEmail,
+      phone: payload.ownerPhone,
+    });
+
+    console.log(payload.ownerName,nameHash,payload.ownerEmail,emailHash,payload.ownerPhone, phoneHash)
+
     const { error } = await client.rpc('upsert_gestion_step5_and_mark_review_session', {
       p_review_session_id: sessionId,
       p_owner_type: payload.ownerType,
-      p_owner_name: payload.ownerName,
-      p_owner_phone: payload.ownerPhone,
-      p_owner_email: payload.ownerEmail,
+      p_owner_name: nameHash,
+      p_owner_phone: phoneHash,
+      p_owner_email: emailHash,
+      // checkear este campo con ia es legal?
       p_owner_opinion: payload.ownerOpinion,
     });
 

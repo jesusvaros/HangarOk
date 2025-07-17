@@ -16,6 +16,7 @@ import { getAddressStep1Data } from '../services/supabase/GetSubmitStep1';
 import { getSessionStep2Data } from '../services/supabase/GetSubmitStep2';
 import { getSessionStep3Data } from '../services/supabase/GetSubmitStep3';
 import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
+import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
 
 /**
  * AddReviewForm - Main wrapper component for the 5-step form
@@ -109,8 +110,23 @@ const AddReviewForm: React.FC = () => {
     }
   }, [updateFormData]);
 
+  //fetch step 5 data
+  const fetchStep5Data = useCallback(async () => {
+    const gestionData = await getSessionStep5Data();
 
- //session
+    if (gestionData) {
+      updateFormData({
+        ownerType: gestionData.owner_type,
+        ownerName: gestionData.owner_name_hash,
+        ownerPhone: gestionData.owner_phone_hash,
+        ownerEmail: gestionData.owner_email_hash,
+        ownerOpinion: gestionData.owner_opinion,
+      });
+    }
+  }, [updateFormData]);
+
+
+ //session and fetch data
   useEffect(() => {
     const initSession = async () => {
       const { sessionStatus } = await initializeSession();
@@ -126,15 +142,18 @@ const AddReviewForm: React.FC = () => {
       if (sessionStatus?.step4_completed) {
         fetchStep4Data();
       }
+      if (sessionStatus?.step5_completed) {
+        fetchStep5Data();
+      }
     };
     initSession();
-  }, [fetchStep1Data, fetchStep2Data, fetchStep3Data, fetchStep4Data]);
+  }, [fetchStep1Data, fetchStep2Data, fetchStep3Data, fetchStep4Data, fetchStep5Data]);
 
   const handleNext = async () => {
-    if (currentStep < 5) {
       handleStepClick(currentStep + 1);
-      window.scrollTo(0, 0);
-    }
+      if(currentStep !== 5){
+        window.scrollTo(0, 0);
+      }
   };
   const handlePrevious = () => {
     if (currentStep > 1) {
@@ -192,8 +211,12 @@ const AddReviewForm: React.FC = () => {
 
         // Avanzar si la validación es exitosa
         if (result.isValid && result.isSubmitted) {
-          setCurrentStep(step);
-          window.scrollTo(0, 0);
+          if(step === 6){
+            handleOpenModal();
+          }else{
+            setCurrentStep(step);
+            window.scrollTo(0, 0);
+          }
         }
       } catch (error) {
         console.error('Error validando paso 1:', error);
@@ -225,7 +248,7 @@ const AddReviewForm: React.FC = () => {
       case 4:
         return <Step4Community onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[4]?.fields} />;
       case 5:
-        return <Step5Owner onNext={handleOpenModal} onPrevious={handlePrevious} fieldErrors={errors[5]?.fields}/>;
+        return <Step5Owner onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[5]?.fields}/>;
       default:
         return <Step1ObjectiveData onNext={handleNext} />;
     }
