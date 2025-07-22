@@ -85,7 +85,7 @@ export const initialFormData: FormDataType = {
   // Step 2: Rental Period
   price: undefined,
   includedServices: [],
-  startYear: undefined,
+  startYear: 2025,
   endYear: undefined,
 
   // Step 3: Property Condition

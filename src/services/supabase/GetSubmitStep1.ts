@@ -45,7 +45,6 @@ export async function getAddressStep1Data(): Promise<AddressStepData | null> {
 
 export async function submitAddressStep1(payload: AddressStep1Payload): Promise<boolean> {
   try {
-    // Get Supabase client
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
 
