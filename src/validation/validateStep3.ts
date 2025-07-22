@@ -54,7 +54,7 @@ export const validateStep3 = (context: FormDataType): ValidationResult => {
     return {
       isValid: false,
       message: 'El estado de mantenimiento es obligatorio',
-      fieldErrors: { ...fieldErrors, street: true },
+      fieldErrors: { ...fieldErrors, maintenanceStatus: true },
     };
   }
 

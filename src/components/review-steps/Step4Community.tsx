@@ -34,16 +34,24 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fie
     return (formData[field] || []).includes(value);
   };
 
+
+  const titleAndError = (title: string, error?: boolean, optional?: boolean,elige?: boolean) => {
+    return (
+      <div className="mb-3 flex items-center gap-2">
+        <h3 className="mb-3 text-lg font-medium text-black">{title}</h3>
+
+        {optional && <p className="mb-2 text-xs">Opcional</p>}
+        {elige && <p className={`mb-2 text-xs ${error ? 'text-red-500' : ''}`}>Elige al menos una opción</p>}
+        {error && !elige && <p className="mb-2 text-red-500 text-xs">Por favor, selecciona una opción.</p>}
+      </div>
+    );
+  };
+
   return (
     <div>
       {/* Tipos de vecinos */}
       <div className="mb-6">
-        <div className="mb-3 flex items-center">
-          <h3 className="text-lg font-medium text-black">
-            ¿Cómo definirías la escalera de vecinos?
-          </h3>
-          <span className={`ml-2 text-xs text-gray-500 ${fieldErrors?.neighborTypes && 'text-red-500'}`}>Elige al menos una opción</span>
-        </div>
+        {titleAndError('Tipos de vecinos', fieldErrors?.neighborTypes, false, true)}
         <div className="flex flex-wrap gap-3">
           {[
             'Familiar',
@@ -64,10 +72,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fie
 
       {/* Pisos turísticos */}
       <div className="mb-6">
-        <div className="mb-3 flex items-center">
-          <h3 className="text-lg font-medium text-black">Pisos turísticos en el edificio</h3>
-          <span className="ml-2 text-xs text-gray-500">Opcional</span>
-        </div>
+        {titleAndError('Pisos turísticos en el edificio', fieldErrors?.touristApartments, true)}
         <div className="flex flex-wrap gap-3">
           {['Sí, tolerable', 'Sí, molestos', 'No hay'].map(option => (
             <SelectableTag
@@ -86,10 +91,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fie
 
       {/* Limpieza del edificio */}
       <div className="mb-6">
-        <div className="mb-3 flex items-center">
-          <h3 className="text-lg font-medium text-black">Limpieza del edificio</h3>
-          <span className="ml-2 text-xs text-gray-500">Opcional</span>
-        </div>
+        {titleAndError('Limpieza del edificio', fieldErrors?.buildingCleanliness, true)}
         <div className="flex flex-wrap gap-3">
           {['Muy limpio', 'Buena', 'Poca', 'Sin limpieza'].map(option => (
             <SelectableTag
@@ -108,10 +110,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fie
 
       {/* Ambiente del barrio */}
       <div className="mb-6">
-        <div className="mb-3 flex items-center">
-          <h3 className="text-lg font-medium text-black">Ambiente del barrio</h3>
-          <span className={`ml-2 text-xs text-gray-500 ${fieldErrors?.communityEnvironment && 'text-red-500'}`}>Elige al menos una opción</span>
-        </div>
+        {titleAndError('Ambiente del barrio', fieldErrors?.communityEnvironment, false, true)}
         <div className="flex flex-wrap gap-3">
           {['Tranquilo', 'Lúdico/Festivo', 'Familiar', 'Estudiantil', 'Nocturno'].map(option => (
             <SelectableTag
@@ -126,10 +125,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fie
 
       {/* Seguridad del barrio */}
       <div className="mb-6">
-        <div className="mb-3 flex items-center">
-          <h3 className="text-lg font-medium text-black">Seguridad del barrio</h3>
-          <span className="ml-2 text-xs text-gray-500">Opcional</span>
-        </div>
+        {titleAndError('Seguridad del barrio', fieldErrors?.communitySecurity, true)}
         <div className="flex flex-wrap gap-3">
           {['Muy segura', 'Sin problemas', 'Mejorable', 'Poco segura'].map(option => (
             <SelectableTag
@@ -152,9 +148,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fie
 
       {/* Opinión sobre la comunidad y el barrio */}
       <div className="mb-6">
-        <h3 className="mb-3 text-lg font-medium text-black">
-          Tu opinión sobre la comunidad y el barrio
-        </h3>
+        {titleAndError('Tu opinión sobre la comunidad y el barrio', fieldErrors?.communityOpinion)}
         <CustomTextarea
           id="communityOpinion"
           value={formData.communityOpinion || ''}
