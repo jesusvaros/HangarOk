@@ -234,21 +234,15 @@ const AddReviewForm: React.FC = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return (
-          <Step1ObjectiveData
-            onNext={handleNext}
-            fieldErrors={errors[1]?.fields}
-            isSubmitting={isSubmitting}
-          />
-        );
+        return <Step1ObjectiveData onNext={handleNext} fieldErrors={errors[1]?.fields} isSubmitting={isSubmitting} />;
       case 2:
-        return <Step2RentalPeriod onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[2]?.fields} />;
+        return <Step2RentalPeriod onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[2]?.fields} isSubmitting={isSubmitting} />;
       case 3:
-        return <Step3PropertyCondition onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[3]?.fields} />;
+        return <Step3PropertyCondition onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[3]?.fields} isSubmitting={isSubmitting} />;
       case 4:
-        return <Step4Community onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[4]?.fields} />;
+        return <Step4Community onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[4]?.fields} isSubmitting={isSubmitting} />;
       case 5:
-        return <Step5Owner onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[5]?.fields}/>;
+        return <Step5Owner onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[5]?.fields} isSubmitting={isSubmitting} />;
       default:
         return <Step1ObjectiveData onNext={handleNext} />;
     }

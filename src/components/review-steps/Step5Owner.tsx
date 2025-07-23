@@ -11,9 +11,10 @@ interface Step5OwnerProps {
   fieldErrors?: {
     [key: string]: boolean;
   };
+  isSubmitting?: boolean;
 }
 
-const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors }) => {
+const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors, isSubmitting }) => {
   const { formData, updateFormData } = useFormContext();
 
   const isOwnerTypeParticular = formData.ownerType === 'Particular';
@@ -132,9 +133,10 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
         <button
           type="button"
           onClick={onNext}
+          disabled={isSubmitting}
           className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
         >
-          Finalizar
+          {isSubmitting ? 'Enviando...' : 'Finalizar'}
         </button>
       </div>
     </div>

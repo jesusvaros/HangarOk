@@ -9,9 +9,10 @@ interface Step2Props {
   fieldErrors?: {
     [key: string]: boolean;
   };
+  isSubmitting?: boolean;
 }
 
-const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious, fieldErrors }) => {
+const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious, fieldErrors, isSubmitting }) => {
   const { formData, updateFormData } = useFormContext();
   const isCurrentlyLiving = formData.endYear === null || formData.endYear === undefined;
 
@@ -96,9 +97,10 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious, fieldErro
         <button
           type="button"
           onClick={onNext}
+          disabled={isSubmitting}
           className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
         >
-          Siguiente
+          {isSubmitting ? 'Enviando...' : 'Siguiente'}
         </button>
       </div>
     </div>

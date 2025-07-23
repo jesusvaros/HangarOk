@@ -55,9 +55,9 @@ export async function submitSessionStep4(payload: SubmitStep4Payload): Promise<b
     const { error } = await client.rpc('upsert_comunidad_step4_and_mark_review_session', {
       p_review_session_id: sessionId,
       p_neighbor_types: payload.neighborTypes,
-      p_community_environment: payload.communityEnvironment,
-      p_tourist_apartments: payload.touristApartments,
-      p_building_cleanliness: payload.buildingCleanliness,
+      p_community_environment: payload.communityEnvironment,//opcional
+      p_tourist_apartments: payload.touristApartments,//opcional
+      p_building_cleanliness: payload.buildingCleanliness,//opcional
       p_community_security: payload.communitySecurity,
       p_community_opinion: payload.communityOpinion,
     });

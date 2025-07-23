@@ -9,9 +9,10 @@ interface Step3Props {
   fieldErrors?: {
     [key: string]: boolean;
   };
+  isSubmitting?: boolean;
 }
 
-const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious, fieldErrors }) => {
+const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious, fieldErrors, isSubmitting }) => {
   const { formData, updateFormData } = useFormContext();
 
 
@@ -145,9 +146,10 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious, fiel
         <button
           type="button"
           onClick={onNext}
+          disabled={isSubmitting}
           className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
         >
-          Siguiente
+          {isSubmitting ? 'Enviando...' : 'Siguiente'}
         </button>
       </div>
     </div>

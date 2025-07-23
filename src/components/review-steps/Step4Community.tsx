@@ -9,9 +9,10 @@ interface Step4CommunityProps {
   fieldErrors?: {
     [key: string]: boolean;
   };
+  isSubmitting?: boolean;
 }
 
-const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fieldErrors }) => {
+const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fieldErrors, isSubmitting }) => {
   const { formData, updateFormData } = useFormContext();
 
   // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
@@ -166,9 +167,10 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fie
         <button
           type="button"
           onClick={onNext}
+          disabled={isSubmitting}
           className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
         >
-          Siguiente
+          {isSubmitting ? 'Enviando...' : 'Siguiente'}
         </button>
       </div>
     </div>
