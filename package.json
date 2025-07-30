@@ -11,6 +11,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.1.1",
     "@supabase/supabase-js": "^2.50.2",
     "@types/lodash.debounce": "^4.0.9",

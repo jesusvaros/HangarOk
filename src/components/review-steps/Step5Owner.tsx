@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
-import CustomInput from '../ui/CustomInput';
 import CustomTextarea from '../ui/CustomTextarea';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
 import CustomCheckbox from '../ui/CustomCheckbox';
@@ -53,13 +52,15 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
             <span className="ml-2 text-gray-500 text-sm mb-0.5">opcional</span>
           )}
         </div>
-        <CustomInput
-          id="ownerName"
-          label="Nombre completo"
-          value={formData.ownerName || ''}
-          onChange={e => updateFormData({ ownerName: e.target.value })}
-          placeholder={`Nombre ${isOwnerTypeParticular ? 'del propietario' : 'de la agencia'}`}
-        />
+<HashedContactInput
+            id="ownerName"
+            label="Nombre completo"
+            type="text"
+            value={formData.ownerName || ''}
+            hashValue={formData.ownerNameHash || ''}
+            onChange={(value: string) => updateFormData({ ownerName: value})}
+            placeholder="Nombre completo"
+          />
       </div>
 
       {/* Sección: Información de contacto */}
@@ -80,7 +81,6 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
           onChange={(value: string) => updateFormData({ ownerPhone: value})}
           placeholder="Ej: 600123456"
         />
-
 
         <div className="mt-4">
           <HashedContactInput

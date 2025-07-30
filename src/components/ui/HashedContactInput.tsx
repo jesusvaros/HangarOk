@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { ArrowRightIcon, LockClosedIcon } from '@heroicons/react/24/solid';
 import CustomInput from './CustomInput';
 import DecryptedText from './DecryptedText';
 import { hashValue as hashValueSupabase } from '../../services/supabase/hashValues.ts';
@@ -41,8 +42,8 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
   }, [value]);
 
   return (
-    <div className={`flex gap-4 flex-col ${className}`}>
-      <div className="flex-1">
+    <div className={`flex lg:gap-4 flex-col lg:flex-row items-center ${className}`}>
+      <div className="flex-1 w-full lg:w-1/2 ">
         <CustomInput
           id={id}
           label={label}
@@ -52,8 +53,17 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
           placeholder={placeholder}
         />
       </div>
-      
-      <div className="w-full border border-gray-200 bg-gray-100 p-2 rounded-lg max-w-full overflow-hidden"> 
+
+      {/* Arrow and info */}
+      <div className="flex items-center text-gray-600 lg:flex-col lg:items-center">
+        <div className="flex items-center">
+        <LockClosedIcon className="w-4 h-4" />
+          <ArrowRightIcon className="w-6 h-6 lg:rotate-0 rotate-90" />
+        </div>
+        <span className="text-xs ml-1 lg:ml-0 lg:mt-1 font-bold lg:max-w-[70px]">Cifrado anonimo</span>
+      </div>
+
+      <div className=" border bg-[rgb(225,245,110)] p-2 rounded-lg max-w-full overflow-hidden lg:w-1/2 mt-2 lg:mt-0"> 
           <DecryptedText
             text={computedHash !== '' ? computedHash : hashValue? hashValue: 'Aqui se muestra el valor secreto que guardaremos'}
             revealDirection="end"
