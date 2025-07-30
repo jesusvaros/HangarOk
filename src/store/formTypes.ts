@@ -61,8 +61,11 @@ export type FormDataType = {
   // Step 5: Owner
   ownerType?: 'Particular' | 'Agencia';
   ownerName?: string;
+  ownerNameHash?: string;
   ownerPhone?: string;
+  ownerPhoneHash?: string;
   ownerEmail?: string;
+  ownerEmailHash?: string;
   ownerOpinion?: string;
   checkboxReadTerms?: boolean;
 

@@ -124,9 +124,9 @@ const AddReviewForm: React.FC = () => {
     if (gestionData) {
       updateFormData({
         ownerType: gestionData.owner_type,
-        ownerName: gestionData.owner_name_hash,
-        ownerPhone: gestionData.owner_phone_hash,
-        ownerEmail: gestionData.owner_email_hash,
+        ownerNameHash: gestionData.owner_name_hash,
+        ownerPhoneHash: gestionData.owner_phone_hash,
+        ownerEmailHash: gestionData.owner_email_hash,
         ownerOpinion: gestionData.owner_opinion,
       });
     }

@@ -4,6 +4,7 @@ import CustomInput from '../ui/CustomInput';
 import CustomTextarea from '../ui/CustomTextarea';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
 import CustomCheckbox from '../ui/CustomCheckbox';
+import HashedContactInput from '../ui/HashedContactInput';
 
 interface Step5OwnerProps {
   onNext: () => void;
@@ -70,23 +71,25 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
           )}
         </div>
 
-        <CustomInput
+        <HashedContactInput
           id="ownerPhone"
           label="Teléfono de contacto"
           type="tel"
           value={formData.ownerPhone || ''}
-          onChange={e => updateFormData({ ownerPhone: e.target.value })}
+          hashValue={formData.ownerPhoneHash || ''}
+          onChange={(value: string) => updateFormData({ ownerPhone: value})}
           placeholder="Ej: 600123456"
         />
 
 
         <div className="mt-4">
-          <CustomInput
+          <HashedContactInput
             id="ownerEmail"
             label="Correo electrónico"
             type="email"
             value={formData.ownerEmail || ''}
-            onChange={e => updateFormData({ ownerEmail: e.target.value })}
+            hashValue={formData.ownerEmailHash || ''}
+            onChange={(value: string) => updateFormData({ ownerEmail: value})}
             placeholder="correo@ejemplo.com"
           />
         </div>
