@@ -18,16 +18,23 @@ import { getSessionStep3Data } from '../services/supabase/GetSubmitStep3';
 import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
 import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
 
-/**
- * AddReviewForm - Main wrapper component for the 5-step form
- * This component manages the step navigation and form submission
- */
+
+export interface SessionStatus {
+  step1_completed?: boolean;
+  step2_completed?: boolean;
+  step3_completed?: boolean;
+  step4_completed?: boolean;
+  step5_completed?: boolean;
+  created_at?: string;
+}
 const AddReviewForm: React.FC = () => {
   const { formData, updateFormData } = useFormContext();
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [sessionStatus, setSessionStatus] = useState<SessionStatus | null>(null);
+
   const errorsDefault = {
     1: { fields: { street: false, number: false } },
     2: { fields: { startDate: false, endDate: false, montlyPrice: false } },
@@ -126,27 +133,33 @@ const AddReviewForm: React.FC = () => {
   }, [updateFormData]);
 
 
- //session and fetch data
+  //session and fetch data
   useEffect(() => {
     const initSession = async () => {
-      const { sessionStatus } = await initializeSession();
-      if (sessionStatus?.step1_completed) {
+      const { sessionStatus: sessionStatusResponse } = await initializeSession();
+      setSessionStatus(sessionStatusResponse);
+      
+      if (sessionStatusResponse?.step1_completed) {
         fetchStep1Data();
       }
-      if (sessionStatus?.step2_completed) {
+      if (sessionStatusResponse?.step2_completed) {
         fetchStep2Data();
       }
-      if (sessionStatus?.step3_completed) {
+      if (sessionStatusResponse?.step3_completed) {
         fetchStep3Data();
       }
-      if (sessionStatus?.step4_completed) {
+      if (sessionStatusResponse?.step4_completed) {
         fetchStep4Data();
       }
-      if (sessionStatus?.step5_completed) {
+      if (sessionStatusResponse?.step5_completed) {
         fetchStep5Data();
       }
+
     };
+
+    
     initSession();
+
   }, [fetchStep1Data, fetchStep2Data, fetchStep3Data, fetchStep4Data, fetchStep5Data]);
 
   const handleNext = async () => {
@@ -191,7 +204,7 @@ const AddReviewForm: React.FC = () => {
   const steps = ['Dirección', 'Estancia', 'Piso', 'Comunidad', 'Gestión'];
 
   const handleStepClick = async (step: number) => {
-    if (step === currentStep + 1) {
+    if (step >= currentStep + 1) {
       setErrors(errorsDefault);
       try {
         const result = await validateAndSubmitStep(currentStep, formData, {
@@ -224,7 +237,6 @@ const AddReviewForm: React.FC = () => {
         showErrorToast(errorMessage);
       }
     } else if (step <= currentStep) {
-      // Permitir siempre navegar hacia atrás
       setCurrentStep(step);
       window.scrollTo(0, 0);
     }
@@ -268,6 +280,7 @@ const AddReviewForm: React.FC = () => {
               steps={steps}
               onStepClick={handleStepClick}
               orientation="horizontal"
+              sessionStatus={sessionStatus}
             />
 
             {/* Container for form messages on mobile and tablet */}
@@ -289,6 +302,7 @@ const AddReviewForm: React.FC = () => {
                   steps={steps}
                   onStepClick={handleStepClick}
                   orientation="vertical"
+                  sessionStatus={sessionStatus}
                 />
               </div>
             </div>
