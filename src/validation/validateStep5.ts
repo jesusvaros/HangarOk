@@ -43,7 +43,7 @@ export const submitStep5 = async (
   context: FormDataType
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { ownerType, ownerName, ownerPhone, ownerEmail, ownerOpinion } = context;
+    const { ownerType, ownerName, ownerPhone, ownerEmail, ownerOpinion ,ownerNameHash, ownerPhoneHash, ownerEmailHash} = context;
 
     // Basic check - validation should have already happened
     if (!ownerType) {
@@ -66,6 +66,9 @@ export const submitStep5 = async (
       ownerPhone,
       ownerEmail,
       ownerOpinion,
+      ownerNameHash,
+      ownerPhoneHash,
+      ownerEmailHash,
     });
 
     return {

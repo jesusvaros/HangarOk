@@ -16,6 +16,9 @@ interface SubmitStep5Payload {
     ownerPhone?: string;
     ownerEmail?: string;
     ownerOpinion?: string;
+    ownerNameHash?: string;
+    ownerPhoneHash?: string;
+    ownerEmailHash?: string;
 }
 
 export async function getSessionStep5Data(): Promise<SubmitStep5Payload | null> {
@@ -71,20 +74,20 @@ export async function submitSessionStep5(payload: SubmitStep5Payload  ): Promise
 
     const sessionId = await getSessionIdBack();
 
-    const { nameHash, emailHash, phoneHash } = await hashOwnerData({
+    const { nameHash, emailHash, phoneHash,} = await hashOwnerData({
       name: payload.ownerName,
       email: payload.ownerEmail,
       phone: payload.ownerPhone,
     });
 
-    console.log(payload.ownerName,nameHash,payload.ownerEmail,emailHash,payload.ownerPhone, phoneHash)
+    console.log(nameHash,emailHash,phoneHash)
 
     const { error } = await client.rpc('upsert_gestion_step5_and_mark_review_session', {
       p_review_session_id: sessionId,
       p_owner_type: payload.ownerType,
-      p_owner_name: nameHash,
-      p_owner_phone: phoneHash,
-      p_owner_email: emailHash,
+      p_owner_name: nameHash || payload.ownerNameHash,
+      p_owner_phone: phoneHash || payload.ownerPhoneHash,
+      p_owner_email: emailHash || payload.ownerEmailHash,
       // checkear este campo con ia es legal?
       p_owner_opinion: payload.ownerOpinion,
     });
