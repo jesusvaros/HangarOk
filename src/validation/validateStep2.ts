@@ -1,5 +1,5 @@
 import type { FormDataType } from '../store/formTypes';
-import {  submitSessionStep2 } from '../services/supabase/GetSubmitStep2';
+import { submitSessionStep2 } from '../services/supabase/GetSubmitStep2';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -17,7 +17,7 @@ export const validateStep2 = (context: FormDataType): ValidationResult => {
     return {
       isValid: false,
       message: 'El año de inicio es obligatorio',
-      fieldErrors:{...fieldErrors, startYear: true},
+      fieldErrors: { ...fieldErrors, startYear: true },
     };
   }
 
@@ -29,7 +29,7 @@ export const validateStep2 = (context: FormDataType): ValidationResult => {
     };
   }
 
-  if(endYear && startYear > endYear) {
+  if (endYear && startYear > endYear) {
     return {
       isValid: false,
       message: 'El año de fin debe ser antes del año de inicio',
@@ -50,7 +50,7 @@ export const submitStep2 = async (
   try {
     const { startYear, endYear, price, includedServices } = context;
 
-    console.log('submitStep2', context)
+    console.log('submitStep2', context);
 
     // Basic check - validation should have already happened
     if (!startYear || !price) {

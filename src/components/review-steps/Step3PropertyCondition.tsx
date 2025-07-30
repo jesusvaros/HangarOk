@@ -12,9 +12,13 @@ interface Step3Props {
   isSubmitting?: boolean;
 }
 
-const Step3PropertyCondition: React.FC<Step3Props> = ({ onNext, onPrevious, fieldErrors, isSubmitting }) => {
+const Step3PropertyCondition: React.FC<Step3Props> = ({
+  onNext,
+  onPrevious,
+  fieldErrors,
+  isSubmitting,
+}) => {
   const { formData, updateFormData } = useFormContext();
-
 
   const titleAndError = (title: string, error?: boolean) => {
     return (

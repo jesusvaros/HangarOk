@@ -12,7 +12,12 @@ interface Step2Props {
   isSubmitting?: boolean;
 }
 
-const Step2RentalPeriod: React.FC<Step2Props> = ({ onNext, onPrevious, fieldErrors, isSubmitting }) => {
+const Step2RentalPeriod: React.FC<Step2Props> = ({
+  onNext,
+  onPrevious,
+  fieldErrors,
+  isSubmitting,
+}) => {
   const { formData, updateFormData } = useFormContext();
   const isCurrentlyLiving = formData.endYear === null || formData.endYear === undefined;
 

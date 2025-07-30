@@ -14,7 +14,12 @@ interface Step5OwnerProps {
   isSubmitting?: boolean;
 }
 
-const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors, isSubmitting }) => {
+const Step5Owner: React.FC<Step5OwnerProps> = ({
+  onNext,
+  onPrevious,
+  fieldErrors,
+  isSubmitting,
+}) => {
   const { formData, updateFormData } = useFormContext();
 
   const isOwnerTypeParticular = formData.ownerType === 'Particular';
@@ -52,15 +57,15 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
             <span className="ml-2 text-gray-500 text-sm mb-0.5">opcional</span>
           )}
         </div>
-<HashedContactInput
-            id="ownerName"
-            label="Nombre completo"
-            type="text"
-            value={formData.ownerName || ''}
-            hashValue={formData.ownerNameHash || ''}
-            onChange={(value: string) => updateFormData({ ownerName: value})}
-            placeholder="Nombre completo"
-          />
+        <HashedContactInput
+          id="ownerName"
+          label="Nombre completo"
+          type="text"
+          value={formData.ownerName || ''}
+          hashValue={formData.ownerNameHash || ''}
+          onChange={(value: string) => updateFormData({ ownerName: value })}
+          placeholder="Nombre completo"
+        />
       </div>
 
       {/* Sección: Información de contacto */}
@@ -78,7 +83,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
           type="tel"
           value={formData.ownerPhone || ''}
           hashValue={formData.ownerPhoneHash || ''}
-          onChange={(value: string) => updateFormData({ ownerPhone: value})}
+          onChange={(value: string) => updateFormData({ ownerPhone: value })}
           placeholder="Ej: 600123456"
         />
 
@@ -89,7 +94,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
             type="email"
             value={formData.ownerEmail || ''}
             hashValue={formData.ownerEmailHash || ''}
-            onChange={(value: string) => updateFormData({ ownerEmail: value})}
+            onChange={(value: string) => updateFormData({ ownerEmail: value })}
             placeholder="correo@ejemplo.com"
           />
         </div>
@@ -112,16 +117,19 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({ onNext, onPrevious, fieldErrors
         <div className="mt-4">
           <CustomCheckbox
             id="checkboxReadTerms"
-            label={<>
-              He leído y acepto los <a 
-                href="/terminosCondiciones" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className={`underline hover:text-[rgb(60,76,40)] ${fieldErrors?.checkboxReadTerms ? 'text-red-500' : 'text-[rgb(74,94,50)]'}`}
-              >
-                términos y condiciones
-              </a>
-            </>}
+            label={
+              <>
+                He leído y acepto los{' '}
+                <a
+                  href="/terminosCondiciones"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`underline hover:text-[rgb(60,76,40)] ${fieldErrors?.checkboxReadTerms ? 'text-red-500' : 'text-[rgb(74,94,50)]'}`}
+                >
+                  términos y condiciones
+                </a>
+              </>
+            }
             checked={Boolean(formData.checkboxReadTerms)}
             onChange={e => updateFormData({ checkboxReadTerms: e.target.checked })}
             error={fieldErrors?.checkboxReadTerms}

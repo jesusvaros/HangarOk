@@ -39,7 +39,10 @@ export const validateStep = (step: number, context: FormContext): ValidationResu
   }
 };
 
-export const submitStep = (step: number, context: FormContext): Promise<{ success: boolean; message: string | null }> => {
+export const submitStep = (
+  step: number,
+  context: FormContext
+): Promise<{ success: boolean; message: string | null }> => {
   console.log('submitStep', step, context);
   switch (step) {
     case 1:

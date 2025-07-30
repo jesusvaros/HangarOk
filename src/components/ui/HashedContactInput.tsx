@@ -57,21 +57,29 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
       {/* Arrow and info */}
       <div className="flex items-center text-gray-600 lg:flex-col lg:items-center">
         <div className="flex items-center">
-        <LockClosedIcon className="w-4 h-4" />
+          <LockClosedIcon className="w-4 h-4" />
           <ArrowRightIcon className="w-6 h-6 lg:rotate-0 rotate-90" />
         </div>
-        <span className="text-xs ml-1 lg:ml-0 lg:mt-1 font-bold lg:max-w-[70px]">Cifrado anonimo</span>
+        <span className="text-xs ml-1 lg:ml-0 lg:mt-1 font-bold lg:max-w-[70px]">
+          Cifrado anonimo
+        </span>
       </div>
 
-      <div className=" border bg-[rgb(225,245,110)] p-2 rounded-lg max-w-full overflow-hidden lg:w-1/2 mt-2 lg:mt-0"> 
-          <DecryptedText
-            text={computedHash !== '' ? computedHash : hashValue? hashValue: 'Aqui se muestra el valor secreto que guardaremos'}
-            revealDirection="end"
-            animateOn="view"
-            speed={155}
-            className="break-all text-sm"
-            encryptedClassName=' break-all text-sm'
-          />
+      <div className=" border bg-[rgb(225,245,110)] p-2 rounded-lg max-w-full overflow-hidden lg:w-1/2 mt-2 lg:mt-0">
+        <DecryptedText
+          text={
+            computedHash !== ''
+              ? computedHash
+              : hashValue
+                ? hashValue
+                : 'Aqui se muestra el valor secreto que guardaremos'
+          }
+          revealDirection="end"
+          animateOn="view"
+          speed={155}
+          className="break-all text-sm"
+          encryptedClassName=" break-all text-sm"
+        />
       </div>
     </div>
   );

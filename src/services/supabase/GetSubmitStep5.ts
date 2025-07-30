@@ -3,22 +3,22 @@ import { supabaseWrapper } from './client';
 import { hashValue } from './hashValues';
 
 interface SubmitStep5Payload {
-    owner_type?: 'Particular' | 'Agencia';
-    owner_name_hash?: string;
-    owner_phone_hash?: string;
-    owner_email_hash?: string;
-    owner_opinion?: string;
+  owner_type?: 'Particular' | 'Agencia';
+  owner_name_hash?: string;
+  owner_phone_hash?: string;
+  owner_email_hash?: string;
+  owner_opinion?: string;
 }
 
 interface SubmitStep5Payload {
-    ownerType?: 'Particular' | 'Agencia';
-    ownerName?: string;
-    ownerPhone?: string;
-    ownerEmail?: string;
-    ownerOpinion?: string;
-    ownerNameHash?: string;
-    ownerPhoneHash?: string;
-    ownerEmailHash?: string;
+  ownerType?: 'Particular' | 'Agencia';
+  ownerName?: string;
+  ownerPhone?: string;
+  ownerEmail?: string;
+  ownerOpinion?: string;
+  ownerNameHash?: string;
+  ownerPhoneHash?: string;
+  ownerEmailHash?: string;
 }
 
 export async function getSessionStep5Data(): Promise<SubmitStep5Payload | null> {
@@ -30,7 +30,7 @@ export async function getSessionStep5Data(): Promise<SubmitStep5Payload | null> 
 
     // Using RPC call to match the insert pattern
     const { data, error } = await client.rpc('get_gestion_step5_data', {
-    p_review_session_id: sessionId,
+      p_review_session_id: sessionId,
     });
 
     if (error) throw error;
@@ -67,20 +67,20 @@ async function hashOwnerData({
   return { nameHash, emailHash, phoneHash };
 }
 
-export async function submitSessionStep5(payload: SubmitStep5Payload  ): Promise<boolean> {
+export async function submitSessionStep5(payload: SubmitStep5Payload): Promise<boolean> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
 
     const sessionId = await getSessionIdBack();
 
-    const { nameHash, emailHash, phoneHash,} = await hashOwnerData({
+    const { nameHash, emailHash, phoneHash } = await hashOwnerData({
       name: payload.ownerName,
       email: payload.ownerEmail,
       phone: payload.ownerPhone,
     });
 
-    console.log(nameHash,emailHash,phoneHash)
+    console.log(nameHash, emailHash, phoneHash);
 
     const { error } = await client.rpc('upsert_gestion_step5_and_mark_review_session', {
       p_review_session_id: sessionId,

@@ -9,7 +9,6 @@ export interface ValidationResult {
   };
 }
 
-
 export const validateStep5 = (context: FormDataType): ValidationResult => {
   const { ownerType, checkboxReadTerms } = context;
   const fieldErrors = { ownerType: false, checkboxReadTerms: false };
@@ -26,7 +25,7 @@ export const validateStep5 = (context: FormDataType): ValidationResult => {
     return {
       isValid: false,
       message: 'Acepta los términos y condiciones',
-      fieldErrors:{...fieldErrors, checkboxReadTerms: true},
+      fieldErrors: { ...fieldErrors, checkboxReadTerms: true },
     };
   }
 
@@ -43,7 +42,16 @@ export const submitStep5 = async (
   context: FormDataType
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { ownerType, ownerName, ownerPhone, ownerEmail, ownerOpinion ,ownerNameHash, ownerPhoneHash, ownerEmailHash} = context;
+    const {
+      ownerType,
+      ownerName,
+      ownerPhone,
+      ownerEmail,
+      ownerOpinion,
+      ownerNameHash,
+      ownerPhoneHash,
+      ownerEmailHash,
+    } = context;
 
     // Basic check - validation should have already happened
     if (!ownerType) {

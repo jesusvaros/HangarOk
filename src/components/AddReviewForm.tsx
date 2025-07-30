@@ -18,7 +18,6 @@ import { getSessionStep3Data } from '../services/supabase/GetSubmitStep3';
 import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
 import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
 
-
 export interface SessionStatus {
   step1_completed?: boolean;
   step2_completed?: boolean;
@@ -38,8 +37,16 @@ const AddReviewForm: React.FC = () => {
   const errorsDefault = {
     1: { fields: { street: false, number: false } },
     2: { fields: { startDate: false, endDate: false, montlyPrice: false } },
-    3: { fields: { summerTemperature: false, winterTemperature: false, noiseLevel: false, lightLevel: false, maintenanceStatus: false } },
-    4: { fields: { neighborTypes: false, communityEnvironment : false } },
+    3: {
+      fields: {
+        summerTemperature: false,
+        winterTemperature: false,
+        noiseLevel: false,
+        lightLevel: false,
+        maintenanceStatus: false,
+      },
+    },
+    4: { fields: { neighborTypes: false, communityEnvironment: false } },
     5: { fields: { owner: false } },
   };
   const [errors, setErrors] =
@@ -132,13 +139,12 @@ const AddReviewForm: React.FC = () => {
     }
   }, [updateFormData]);
 
-
   //session and fetch data
   useEffect(() => {
     const initSession = async () => {
       const { sessionStatus: sessionStatusResponse } = await initializeSession();
       setSessionStatus(sessionStatusResponse);
-      
+
       if (sessionStatusResponse?.step1_completed) {
         fetchStep1Data();
       }
@@ -154,19 +160,16 @@ const AddReviewForm: React.FC = () => {
       if (sessionStatusResponse?.step5_completed) {
         fetchStep5Data();
       }
-
     };
 
-    
     initSession();
-
   }, [fetchStep1Data, fetchStep2Data, fetchStep3Data, fetchStep4Data, fetchStep5Data]);
 
   const handleNext = async () => {
-      handleStepClick(currentStep + 1);
-      if(currentStep !== 5){
-        window.scrollTo(0, 0);
-      }
+    handleStepClick(currentStep + 1);
+    if (currentStep !== 5) {
+      window.scrollTo(0, 0);
+    }
   };
   const handlePrevious = () => {
     if (currentStep > 1) {
@@ -224,9 +227,9 @@ const AddReviewForm: React.FC = () => {
 
         // Avanzar si la validación es exitosa
         if (result.isValid && result.isSubmitted) {
-          if(step === 6){
+          if (step === 6) {
             handleOpenModal();
-          }else{
+          } else {
             setCurrentStep(step);
             window.scrollTo(0, 0);
           }
@@ -246,15 +249,49 @@ const AddReviewForm: React.FC = () => {
   const renderStep = () => {
     switch (currentStep) {
       case 1:
-        return <Step1ObjectiveData onNext={handleNext} fieldErrors={errors[1]?.fields} isSubmitting={isSubmitting} />;
+        return (
+          <Step1ObjectiveData
+            onNext={handleNext}
+            fieldErrors={errors[1]?.fields}
+            isSubmitting={isSubmitting}
+          />
+        );
       case 2:
-        return <Step2RentalPeriod onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[2]?.fields} isSubmitting={isSubmitting} />;
+        return (
+          <Step2RentalPeriod
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            fieldErrors={errors[2]?.fields}
+            isSubmitting={isSubmitting}
+          />
+        );
       case 3:
-        return <Step3PropertyCondition onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[3]?.fields} isSubmitting={isSubmitting} />;
+        return (
+          <Step3PropertyCondition
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            fieldErrors={errors[3]?.fields}
+            isSubmitting={isSubmitting}
+          />
+        );
       case 4:
-        return <Step4Community onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[4]?.fields} isSubmitting={isSubmitting} />;
+        return (
+          <Step4Community
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            fieldErrors={errors[4]?.fields}
+            isSubmitting={isSubmitting}
+          />
+        );
       case 5:
-        return <Step5Owner onNext={handleNext} onPrevious={handlePrevious} fieldErrors={errors[5]?.fields} isSubmitting={isSubmitting} />;
+        return (
+          <Step5Owner
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            fieldErrors={errors[5]?.fields}
+            isSubmitting={isSubmitting}
+          />
+        );
       default:
         return <Step1ObjectiveData onNext={handleNext} />;
     }

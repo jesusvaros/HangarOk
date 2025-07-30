@@ -17,7 +17,7 @@ export async function getSessionStep2Data(): Promise<EstanciaStep2Payload | null
 
     // Using RPC call to match the insert pattern
     const { data, error } = await client.rpc('get_estancia_step2_data', {
-    p_review_session_id: sessionId,
+      p_review_session_id: sessionId,
     });
 
     if (error) throw error;
@@ -34,7 +34,12 @@ export async function getSessionStep2Data(): Promise<EstanciaStep2Payload | null
   }
 }
 
-export async function submitSessionStep2(payload: { startYear: number; endYear: number | null; price: number; includedServices: string[] }): Promise<boolean> {
+export async function submitSessionStep2(payload: {
+  startYear: number;
+  endYear: number | null;
+  price: number;
+  includedServices: string[];
+}): Promise<boolean> {
   try {
     // Get Supabase client
     const client = supabaseWrapper.getClient();

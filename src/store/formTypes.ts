@@ -40,7 +40,6 @@ export type FormDataType = {
   endYear?: number | null;
   price?: number;
   includedServices?: string[];
-  
 
   // Step 3: Property Condition
   summerTemperature?: 'Bien aislado' | 'Correcto' | 'Caluroso';

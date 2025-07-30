@@ -19,7 +19,13 @@ const StepperBar: React.FC<StepperBarProps> = ({
   const isVertical = orientation === 'vertical';
   const greenColor = 'rgb(74 94 50)'; // Green color for active and completed steps
   const lightGreenColor = 'rgba(74, 94, 50, 0.2)'; // Lighter green color for background
-  const stepsCompleted = [sessionStatus?.step1_completed, sessionStatus?.step2_completed, sessionStatus?.step3_completed, sessionStatus?.step4_completed, sessionStatus?.step5_completed]
+  const stepsCompleted = [
+    sessionStatus?.step1_completed,
+    sessionStatus?.step2_completed,
+    sessionStatus?.step3_completed,
+    sessionStatus?.step4_completed,
+    sessionStatus?.step5_completed,
+  ];
 
   return (
     <div
@@ -36,7 +42,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
         {steps.map((step, index) => {
           const isActive = index + 1 === currentStep;
           const isCompleted = !!(index + 1 < currentStep || stepsCompleted[index]);
-          
+
           // Circle element for the step
           return (
             <div key={`circle-${index}`} className="relative">

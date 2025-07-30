@@ -12,7 +12,12 @@ interface Step4CommunityProps {
   isSubmitting?: boolean;
 }
 
-const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fieldErrors, isSubmitting }) => {
+const Step4Community: React.FC<Step4CommunityProps> = ({
+  onNext,
+  onPrevious,
+  fieldErrors,
+  isSubmitting,
+}) => {
   const { formData, updateFormData } = useFormContext();
 
   // Los mensajes ahora se manejan a través de StaticFormMessagesContainer
@@ -35,15 +40,18 @@ const Step4Community: React.FC<Step4CommunityProps> = ({ onNext, onPrevious, fie
     return (formData[field] || []).includes(value);
   };
 
-
-  const titleAndError = (title: string, error?: boolean, optional?: boolean,elige?: boolean) => {
+  const titleAndError = (title: string, error?: boolean, optional?: boolean, elige?: boolean) => {
     return (
       <div className="mb-3 flex items-center gap-2">
         <h3 className="mb-3 text-lg font-medium text-black">{title}</h3>
 
         {optional && <p className="mb-2 text-xs">Opcional</p>}
-        {elige && <p className={`mb-2 text-xs ${error ? 'text-red-500' : ''}`}>Elige al menos una opción</p>}
-        {error && !elige && <p className="mb-2 text-red-500 text-xs">Por favor, selecciona una opción.</p>}
+        {elige && (
+          <p className={`mb-2 text-xs ${error ? 'text-red-500' : ''}`}>Elige al menos una opción</p>
+        )}
+        {error && !elige && (
+          <p className="mb-2 text-red-500 text-xs">Por favor, selecciona una opción.</p>
+        )}
       </div>
     );
   };

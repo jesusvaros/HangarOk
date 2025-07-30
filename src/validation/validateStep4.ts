@@ -10,10 +10,8 @@ export interface ValidationResult {
 }
 
 export const validateStep4 = (context: FormDataType): ValidationResult => {
-  const {neighborTypes, communityEnvironment } = context;
+  const { neighborTypes, communityEnvironment } = context;
   const fieldErrors = { neighborTypes: false, communityEnvironment: false };
-
-
 
   if (!neighborTypes || neighborTypes.length === 0) {
     return {
@@ -42,7 +40,14 @@ export const submitStep4 = async (
   context: FormDataType
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { neighborTypes, communityEnvironment, touristApartments, buildingCleanliness, communitySecurity, communityOpinion } = context;
+    const {
+      neighborTypes,
+      communityEnvironment,
+      touristApartments,
+      buildingCleanliness,
+      communitySecurity,
+      communityOpinion,
+    } = context;
 
     // Basic check - validation should have already happened
     if (!neighborTypes || !communityEnvironment) {

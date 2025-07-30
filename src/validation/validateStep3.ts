@@ -9,10 +9,16 @@ export interface ValidationResult {
   };
 }
 
-
 export const validateStep3 = (context: FormDataType): ValidationResult => {
-  const { summerTemperature, winterTemperature, noiseLevel, lightLevel, maintenanceStatus } = context;
-  const fieldErrors = { summerTemperature: false, winterTemperature: false, noiseLevel: false, lightLevel: false, maintenanceStatus: false };
+  const { summerTemperature, winterTemperature, noiseLevel, lightLevel, maintenanceStatus } =
+    context;
+  const fieldErrors = {
+    summerTemperature: false,
+    winterTemperature: false,
+    noiseLevel: false,
+    lightLevel: false,
+    maintenanceStatus: false,
+  };
 
   if (!summerTemperature) {
     return {
@@ -30,9 +36,7 @@ export const validateStep3 = (context: FormDataType): ValidationResult => {
     };
   }
 
-  if (
-    !noiseLevel
-  ) {
+  if (!noiseLevel) {
     return {
       isValid: false,
       message: 'El nivel de ruido es obligatorio',
@@ -48,9 +52,7 @@ export const validateStep3 = (context: FormDataType): ValidationResult => {
   }
 
   // Validate coordinates
-  if (
-    !maintenanceStatus
-  ) {
+  if (!maintenanceStatus) {
     return {
       isValid: false,
       message: 'El estado de mantenimiento es obligatorio',
@@ -69,10 +71,23 @@ export const submitStep3 = async (
   context: FormDataType
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { summerTemperature, winterTemperature, noiseLevel, lightLevel, maintenanceStatus, propertyOpinion } = context;
+    const {
+      summerTemperature,
+      winterTemperature,
+      noiseLevel,
+      lightLevel,
+      maintenanceStatus,
+      propertyOpinion,
+    } = context;
 
     // Basic check - validation should have already happened
-    if (!summerTemperature || !winterTemperature || !noiseLevel || !lightLevel || !maintenanceStatus) {
+    if (
+      !summerTemperature ||
+      !winterTemperature ||
+      !noiseLevel ||
+      !lightLevel ||
+      !maintenanceStatus
+    ) {
       return { success: false, message: 'Datos incompletos' };
     }
 
