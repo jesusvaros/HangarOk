@@ -8,6 +8,8 @@ import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
 import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
+import AuthCallback from './components/AuthCallback';
+import ReviewPage from './components/review/ReviewPage';
 
 // Import Providers
 import { FormProvider } from './store/FormContext';
@@ -34,6 +36,8 @@ function App() {
         <Header />
 
         <Routes>
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          <Route path="/review/:id" element={<ReviewPage />} />
           <Route path="/map" element={<MapView />} />
           <Route
             path="/add-review"

@@ -80,8 +80,6 @@ export async function submitSessionStep5(payload: SubmitStep5Payload): Promise<b
       phone: payload.ownerPhone,
     });
 
-    console.log(nameHash, emailHash, phoneHash);
-
     const { error } = await client.rpc('upsert_gestion_step5_and_mark_review_session', {
       p_review_session_id: sessionId,
       p_owner_type: payload.ownerType,
