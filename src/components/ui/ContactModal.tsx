@@ -1,5 +1,7 @@
 // ContactModal.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getSessionIdBack } from '../../services/sessionManager';
 import { useFormContext } from '../../store/useFormContext';
 import { supabaseWrapper } from '../../services/supabase/client';
 
@@ -9,7 +11,8 @@ interface ContactModalProps {
 
 const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
   const { formData, updateFormData } = useFormContext();
-  const [status, setStatus] = useState<'idle' | 'loading' | 'link-sent' | 'error'>('link-sent');
+  const navigate = useNavigate();
+  const [status, setStatus] = useState<'idle' | 'loading' | 'link-sent' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
   const [resendTimer, setResendTimer] = useState(30);
@@ -24,6 +27,40 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
       setCanResend(true);
     }
   }, [status, resendTimer]);
+
+  // Check Supabase session and redirect to review page if user is already validated
+  const checkUserSession = useCallback(async () => {
+    const client = supabaseWrapper.getClient();
+    if (!client) return;
+    const {
+      data: { session },
+    } = await client.auth.getSession();
+    if (!session) return;
+    const sessionId = await getSessionIdBack();
+    navigate(sessionId ? `/review/${sessionId}` : '/');
+  }, [navigate]);
+
+  // Listen to localStorage changes from another tab / window (magic link opened)
+  useEffect(() => {
+    // Initial session check on mount
+    checkUserSession();
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === 'supabase.auth.token') {
+        checkUserSession();
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [checkUserSession]);
+
+  // Periodically poll session in case storage event is missed
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkUserSession();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, [checkUserSession]);
 
   // Function to send the magic link (OTP) email
   const sendEmailOtp = async () => {
@@ -177,11 +214,6 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
                   📩 Hemos enviado un enlace a{' '}
                   <span className="font-semibold">{formData.contactEmail}</span>.
                 </p>
-                <p className="mb-3">
-                  Ábrelo para continuar y{' '}
-                  <span className="font-semibold">guardar tu opinión de forma segura</span>.
-                </p>
-
                 <div className="flex items-center justify-between">
                   <button
                     onClick={() => setIsEditingEmail(true)}
