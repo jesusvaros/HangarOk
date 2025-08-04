@@ -184,7 +184,6 @@ const AddReviewForm: React.FC = () => {
     setIsModalOpen(false);
   };
 
-
   const steps = ['Dirección', 'Estancia', 'Piso', 'Comunidad', 'Gestión'];
 
   const handleStepClick = async (step: number) => {
@@ -286,43 +285,43 @@ const AddReviewForm: React.FC = () => {
           currentStep={currentStep}
           steps={steps}
           onStepClick={handleStepClick}
-              orientation="horizontal"
+          orientation="horizontal"
+          sessionStatus={sessionStatus}
+        />
+        {/* Container for form messages on mobile and tablet */}
+        <div className="mt-50 mb-4">
+          <StaticFormMessagesContainer step={currentStep} isMobile={true} />
+        </div>
+        {/* Form content for mobile */}
+        <div className="rounded-lg bg-white p-6 shadow-md">{renderStep()}</div>
+      </div>
+      {/* Desktop layout - Three columns: Stepper | Form | Messages */}
+      <div className="mx-auto hidden max-w-[1100px] justify-center space-x-6 px-4 lg:flex">
+        {/* Stepper - Left column */}
+        <div className="flex-shrink-0" style={{ width: '150px' }}>
+          <div className="sticky" style={{ top: '6rem' }}>
+            <StepperBar
+              currentStep={currentStep}
+              steps={steps}
+              onStepClick={handleStepClick}
+              orientation="vertical"
               sessionStatus={sessionStatus}
             />
-            {/* Container for form messages on mobile and tablet */}
-            <div className="mt-50 mb-4">
-              <StaticFormMessagesContainer step={currentStep} isMobile={true} />
-            </div>
-            {/* Form content for mobile */}
-            <div className="rounded-lg bg-white p-6 shadow-md">{renderStep()}</div>
           </div>
-          {/* Desktop layout - Three columns: Stepper | Form | Messages */}
-          <div className="mx-auto hidden max-w-[1100px] justify-center space-x-6 px-4 lg:flex">
-            {/* Stepper - Left column */}
-            <div className="flex-shrink-0" style={{ width: '150px' }}>
-              <div className="sticky" style={{ top: '6rem' }}>
-                <StepperBar
-                  currentStep={currentStep}
-                  steps={steps}
-                  onStepClick={handleStepClick}
-                  orientation="vertical"
-                  sessionStatus={sessionStatus}
-                />
-              </div>
-            </div>
+        </div>
 
-            {/* Form content - Center column - Fixed width */}
-            <div className="flex-shrink-0 rounded-lg bg-white p-6 shadow-md md:w-[500px] lg:w-[650px]">
-              {renderStep()}
-            </div>
+        {/* Form content - Center column - Fixed width */}
+        <div className="flex-shrink-0 rounded-lg bg-white p-6 shadow-md md:w-[500px] lg:w-[650px]">
+          {renderStep()}
+        </div>
 
-            {/* Space for message boxes - Right column - 24px gap */}
-            <div className="hidden flex-shrink-0 lg:block" style={{ width: '200px' }}>
-              <div className="sticky" style={{ top: '6rem' }}>
-                <StaticFormMessagesContainer step={currentStep} isMobile={false} />
-              </div>
-            </div>
+        {/* Space for message boxes - Right column - 24px gap */}
+        <div className="hidden flex-shrink-0 lg:block" style={{ width: '200px' }}>
+          <div className="sticky" style={{ top: '6rem' }}>
+            <StaticFormMessagesContainer step={currentStep} isMobile={false} />
           </div>
+        </div>
+      </div>
       {isModalOpen && <ContactModal onClose={handleCloseModal} />}
     </div>
   );

@@ -45,12 +45,12 @@ const AuthCallback = () => {
           .update({ user_id: session.user.id })
           .eq('id', sessionId)
           .select();
-      } catch { 
+      } catch {
         console.log('Error al insertar sesión en la base de datos');
       }
 
-      console.log('reviewId que pasa', sessionId)
-      navigate( sessionId ? `/review/${sessionId}` : '/');
+      console.log('reviewId que pasa', sessionId);
+      navigate(sessionId ? `/review/${sessionId}` : '/');
     };
 
     completeLogin();
