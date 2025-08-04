@@ -1,6 +1,6 @@
 // No need to import ReactNode here as it's not used in this file
 
-export interface FormContextType {
+export interface  FormContextType {
   address: string;
   setAddress: (address: string) => void;
   formData: FormDataType;
