@@ -29,7 +29,6 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
     }
 
     setStatus('loading');
-    console.log('email', formData.contactEmail,`${window.location.origin}/auth/callback`);
     const { error } = await client.auth.signInWithOtp({
       email: formData.contactEmail,
       options: { shouldCreateUser: true ,

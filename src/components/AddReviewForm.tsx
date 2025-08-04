@@ -5,7 +5,6 @@ import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
 import Step3PropertyCondition from './review-steps/Step3PropertyCondition';
 import Step4Community from './review-steps/Step4Community';
 import Step5Owner from './review-steps/Step5Owner';
-import EmailConfirmation from './review-steps/EmailConfirmation';
 import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
@@ -29,7 +28,6 @@ export interface SessionStatus {
 const AddReviewForm: React.FC = () => {
   const { formData, updateFormData } = useFormContext();
   const [currentStep, setCurrentStep] = useState(1);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [sessionStatus, setSessionStatus] = useState<SessionStatus | null>(null);
@@ -186,23 +184,6 @@ const AddReviewForm: React.FC = () => {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = () => {
-    try {
-      console.log('Formulario enviado:', formData);
-      setIsModalOpen(false);
-      setIsSubmitted(true);
-    } catch (err) {
-      console.error('Error al guardar la opinión:', err);
-    }
-  };
-
-  const handleContactSubmit = (contactData: { contactName: string; contactEmail: string }) => {
-    updateFormData({
-      contactName: contactData.contactName,
-      contactEmail: contactData.contactEmail,
-    });
-    handleSubmit();
-  };
 
   const steps = ['Dirección', 'Estancia', 'Piso', 'Comunidad', 'Gestión'];
 
@@ -226,7 +207,7 @@ const AddReviewForm: React.FC = () => {
         }
 
         // Avanzar si la validación es exitosa
-        if (result.isValid && result.isSubmitted) {
+        if (result.isValid) {
           if (step === 6) {
             handleOpenModal();
           } else {
@@ -299,36 +280,22 @@ const AddReviewForm: React.FC = () => {
 
   return (
     <div className="w-full py-8 pt-24">
-      {isSubmitted ? (
-        <div className="mx-auto max-w-2xl px-4">
-          <EmailConfirmation
-            email={formData.contactEmail || ''}
-            setEmail={() => {}}
-            onSubmit={() => {}}
-            onBack={() => {}}
-          />
-        </div>
-      ) : (
-        <>
-          {/* Mobile Stepper - Only visible on smaller screens (up to 950px) */}
-          <div className="mb-6 w-full px-4 lg:hidden">
-            <StepperBar
-              currentStep={currentStep}
-              steps={steps}
-              onStepClick={handleStepClick}
+      {/* Mobile Stepper - Only visible on smaller screens (up to 950px) */}
+      <div className="mb-6 w-full px-4 lg:hidden">
+        <StepperBar
+          currentStep={currentStep}
+          steps={steps}
+          onStepClick={handleStepClick}
               orientation="horizontal"
               sessionStatus={sessionStatus}
             />
-
             {/* Container for form messages on mobile and tablet */}
             <div className="mt-50 mb-4">
               <StaticFormMessagesContainer step={currentStep} isMobile={true} />
             </div>
-
             {/* Form content for mobile */}
             <div className="rounded-lg bg-white p-6 shadow-md">{renderStep()}</div>
           </div>
-
           {/* Desktop layout - Three columns: Stepper | Form | Messages */}
           <div className="mx-auto hidden max-w-[1100px] justify-center space-x-6 px-4 lg:flex">
             {/* Stepper - Left column */}
@@ -356,12 +323,7 @@ const AddReviewForm: React.FC = () => {
               </div>
             </div>
           </div>
-
-          {isModalOpen && (
-            <ContactModal onClose={handleCloseModal} onSubmit={handleContactSubmit} />
-          )}
-        </>
-      )}
+      {isModalOpen && <ContactModal onClose={handleCloseModal} />}
     </div>
   );
 };

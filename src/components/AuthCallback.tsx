@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabaseWrapper } from '../services/supabase/client';
 import toast from 'react-hot-toast';
+import { getSessionIdBack } from '../services/sessionManager';
 
 /**
  * AuthCallback handles the redirection coming from Supabase OAuth / Magic-Link.
@@ -34,20 +35,22 @@ const AuthCallback = () => {
         return;
       }
 
+      const sessionId = await getSessionIdBack();
+
       localStorage.setItem('cv_session', JSON.stringify(session));
 
       try {
-        await client.from('review_session').insert({
-          user_id: session.user.id,
-        });
+        await client
+          .from('review_sessions')
+          .update({ user_id: session.user.id })
+          .eq('id', sessionId)
+          .select();
       } catch { 
         console.log('Error al insertar sesión en la base de datos');
       }
 
-      const reviewId = searchParams.get('reviewId');
-
-      console.log('reviewId que pasa', reviewId)
-      navigate(reviewId ? `/review/${reviewId}` : '/');
+      console.log('reviewId que pasa', sessionId)
+      navigate( sessionId ? `/review/${sessionId}` : '/');
     };
 
     completeLogin();
