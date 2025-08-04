@@ -97,18 +97,17 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
               </li>
               <li>
                 🕵️{' '}
-                <span className="font-semibold">
-                  Tu review seguirá siendo completamente anónima.
-                </span>
+
+                Tu review seguirá siendo completamente  {" "}
+                <span className="font-semibold">anónima.</span>
               </li>
               <li>
                 🔒{' '}
                 <span className="font-semibold">
-                  Solo lo usamos para verificar que eres una persona real
-                </span>{' '}
-                y para que
+                  Solo lo usamos para verificar que eres una persona real 
+                </span>
+               {" "} y para que{' '}
                 <span className="font-semibold">
-                  {' '}
                   puedas editar o borrar tu review en el futuro.
                 </span>
               </li>
@@ -205,7 +204,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
           </div>
         )}
 
-        <div className="my-4 flex items-center justify-center">
+        <div className="my-2 mb-4 flex items-center justify-center">
           <span className="mx-2 text-sm text-gray-500">ó</span>
         </div>
 
@@ -213,7 +212,12 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
           onClick={handleGoogleLogin}
           className="flex w-full items-center justify-center rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-100"
         >
-          <img src="/google-icon.svg" alt="Google" className="mr-2 h-5 w-5" />
+          <svg className="mr-2 h-5 w-5" viewBox="0 0 533.5 544.3" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+            <path fill="#4285F4" d="M533.5 278.4c0-17.4-1.4-34.2-4-50.4H272v95.4h146.9c-6.3 34-25.2 62.8-53.7 82v68h86.8c50.8-46.8 80.5-115.7 80.5-195z"/>
+            <path fill="#34A853" d="M272 544.3c72.6 0 133.6-24 178.1-65.6l-86.8-68c-24.1 16.2-55 25.8-91.3 25.8-70 0-129.4-47.2-150.7-110.2H32.4v69.2C76.4 482.8 168.5 544.3 272 544.3z"/>
+            <path fill="#FBBC05" d="M121.3 326.3c-10.2-30-10.2-62.5 0-92.5V164.6H32.4c-40.5 80.4-40.5 175.1 0 255.6l88.9-69.5z"/>
+            <path fill="#EA4335" d="M272 107.7c39.5-.6 77.4 14.5 106.2 41.8l79.2-79.2C413.3 24.3 346.2-.4 272 0 168.5 0 76.4 61.5 32.4 164.6l88.9 69.2C142.6 154.9 202 107.7 272 107.7z"/>
+          </svg>
           <span className="font-medium text-gray-700">Continuar con Google</span>
         </button>
       </div>
