@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import LoginProfileStatus from './LoginProfileStatus';
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -100,6 +101,9 @@ const Header: React.FC = () => {
             </svg>
           </div>
         </Link>
+        
+        {/* Login/Profile Status Component */}
+        <LoginProfileStatus />
       </div>
     </header>
   );
