@@ -10,7 +10,7 @@ interface EstanciaStep2Payload {
   property_opinion?: string;
 }
 
-export async function getSessionStep3Data(): Promise<EstanciaStep2Payload | null> {
+export async function getSessionStep3Data(id?: string): Promise<EstanciaStep2Payload | null> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
@@ -19,7 +19,7 @@ export async function getSessionStep3Data(): Promise<EstanciaStep2Payload | null
 
     // Using RPC call to match the insert pattern
     const { data, error } = await client.rpc('get_piso_step3_data', {
-      p_review_session_id: sessionId,
+      p_review_session_id: id || sessionId,
     });
 
     if (error) throw error;

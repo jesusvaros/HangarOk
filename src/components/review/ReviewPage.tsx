@@ -93,11 +93,11 @@ const ReviewPage = () => {
       try {
         // Cargar datos de todos los pasos en paralelo
         const [step1, step2, step3, step4, step5] = await Promise.all([
-          getAddressStep1Data(),
-          getSessionStep2Data(),
-          getSessionStep3Data(),
-          getSessionStep4Data(),
-          getSessionStep5Data(),
+          getAddressStep1Data(id),
+          getSessionStep2Data(id),
+          getSessionStep3Data(id),
+          getSessionStep4Data(id),
+          getSessionStep5Data(id),
         ]);
 
         // Actualizar estados con los datos obtenidos

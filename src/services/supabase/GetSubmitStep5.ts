@@ -21,7 +21,7 @@ interface SubmitStep5Payload {
   ownerEmailHash?: string;
 }
 
-export async function getSessionStep5Data(): Promise<SubmitStep5Payload | null> {
+export async function getSessionStep5Data(id?: string): Promise<SubmitStep5Payload | null> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
@@ -30,7 +30,7 @@ export async function getSessionStep5Data(): Promise<SubmitStep5Payload | null> 
 
     // Using RPC call to match the insert pattern
     const { data, error } = await client.rpc('get_gestion_step5_data', {
-      p_review_session_id: sessionId,
+      p_review_session_id: id || sessionId,
     });
 
     if (error) throw error;
