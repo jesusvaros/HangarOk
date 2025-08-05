@@ -20,7 +20,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({ ownerData }) => {
           <p className="text-lg font-medium">{ownerData.owner_type}</p>
         </div>
       )}
-      
+
       {ownerData.owner_opinion && (
         <div>
           <p className="text-sm font-medium text-gray-500">Opinión sobre el propietario</p>

@@ -21,8 +21,8 @@ const AddressSection: React.FC<AddressSectionProps> = ({ addressData }) => {
       {/* Mapa con la ubicación */}
       {addressData?.address_details?.coordinates ? (
         <div className="h-64 md:h-80 lg:h-96">
-          <LocationMap 
-            coordinates={addressData.address_details.coordinates} 
+          <LocationMap
+            coordinates={addressData.address_details.coordinates}
             className="h-full w-full"
           />
         </div>

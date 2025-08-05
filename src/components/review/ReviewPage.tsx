@@ -60,7 +60,7 @@ const ReviewPage = () => {
   const { id } = useParams<{ id: string }>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Estados para cada paso
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
   const [step2Data, setStep2Data] = useState<Step2Data | null>(null);
@@ -71,14 +71,14 @@ const ReviewPage = () => {
   // Función para formatear la dirección como título
   const getAddressTitle = () => {
     if (!step1Data?.address_details) return 'Revisión de la propiedad';
-    
+
     const { street, number, city } = step1Data.address_details;
     let title = '';
-    
+
     if (street) title += street;
     if (number) title += ` ${number}`;
     if (city) title += `, ${city}`;
-    
+
     return title || 'Revisión de la propiedad';
   };
 
@@ -97,7 +97,7 @@ const ReviewPage = () => {
           getSessionStep2Data(),
           getSessionStep3Data(),
           getSessionStep4Data(),
-          getSessionStep5Data()
+          getSessionStep5Data(),
         ]);
 
         // Actualizar estados con los datos obtenidos
@@ -124,29 +124,29 @@ const ReviewPage = () => {
         <h2 className="mb-4 text-xl font-bold">Dirección</h2>
         <AddressSection addressData={step1Data} />
       </div>
-      
+
       <div className="rounded-lg bg-white p-6 shadow">
         <h2 className="mb-4 text-xl font-bold">Período y precio</h2>
         <PeriodSection periodData={step2Data} />
       </div>
-      
+
       <div className="rounded-lg bg-white p-6 shadow">
         <h2 className="mb-4 text-xl font-bold">Características del piso</h2>
         <PropertySection propertyData={step3Data} />
       </div>
-      
+
       <div className="rounded-lg bg-white p-6 shadow">
         <h2 className="mb-4 text-xl font-bold">Comunidad y vecindario</h2>
         <CommunitySection communityData={step4Data} />
       </div>
-      
+
       <div className="rounded-lg bg-white p-6 shadow">
         <h2 className="mb-4 text-xl font-bold">Propietario/Agencia</h2>
         <OwnerSection ownerData={step5Data} />
       </div>
     </div>
   );
-  
+
   // Componente para la vista de escritorio
   const DesktopView = () => (
     <div className="grid grid-cols-2 gap-6">
@@ -154,22 +154,22 @@ const ReviewPage = () => {
         <h2 className="mb-4 text-xl font-bold">Dirección</h2>
         <AddressSection addressData={step1Data} />
       </div>
-      
+
       <div className="rounded-lg bg-white p-8 shadow">
         <h2 className="mb-4 text-xl font-bold">Período y precio</h2>
         <PeriodSection periodData={step2Data} />
       </div>
-      
+
       <div className="rounded-lg bg-white p-8 shadow">
         <h2 className="mb-4 text-xl font-bold">Características del piso</h2>
         <PropertySection propertyData={step3Data} />
       </div>
-      
+
       <div className="rounded-lg bg-white p-8 shadow">
         <h2 className="mb-4 text-xl font-bold">Comunidad y vecindario</h2>
         <CommunitySection communityData={step4Data} />
       </div>
-      
+
       <div className="rounded-lg bg-white p-8 shadow">
         <h2 className="mb-4 text-xl font-bold">Propietario/Agencia</h2>
         <OwnerSection ownerData={step5Data} />
@@ -183,7 +183,7 @@ const ReviewPage = () => {
       <h1 className="mb-8 text-center text-2xl font-bold md:text-3xl lg:text-4xl">
         {getAddressTitle()}
       </h1>
-      
+
       {loading ? (
         <div className="flex h-64 items-center justify-center">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-green-600 border-t-transparent"></div>
@@ -198,7 +198,7 @@ const ReviewPage = () => {
           <div className="md:hidden">
             <MobileView />
           </div>
-          
+
           {/* Vista de escritorio (oculta en pantallas pequeñas) */}
           <div className="hidden md:block">
             <DesktopView />

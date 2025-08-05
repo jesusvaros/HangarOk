@@ -23,8 +23,8 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ communityData }) =>
           <p className="mb-2 text-sm font-medium text-gray-500">Tipos de vecinos</p>
           <div className="flex flex-wrap gap-2">
             {communityData.neighbor_types.map((type, index) => (
-              <span 
-                key={index} 
+              <span
+                key={index}
                 className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-800"
               >
                 {type}
@@ -33,35 +33,35 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ communityData }) =>
           </div>
         </div>
       )}
-      
+
       {communityData.tourist_apartments && (
         <div>
           <p className="text-sm font-medium text-gray-500">Apartamentos turísticos</p>
           <p className="text-lg font-medium">{communityData.tourist_apartments}</p>
         </div>
       )}
-      
+
       {communityData.building_cleanliness && (
         <div>
           <p className="text-sm font-medium text-gray-500">Limpieza del edificio</p>
           <p className="text-lg font-medium">{communityData.building_cleanliness}</p>
         </div>
       )}
-      
+
       {communityData.community_security && (
         <div>
           <p className="text-sm font-medium text-gray-500">Seguridad</p>
           <p className="text-lg font-medium">{communityData.community_security}</p>
         </div>
       )}
-      
+
       {communityData.community_environment && communityData.community_environment.length > 0 && (
         <div className="md:col-span-2">
           <p className="mb-2 text-sm font-medium text-gray-500">Ambiente</p>
           <div className="flex flex-wrap gap-2">
             {communityData.community_environment.map((env, index) => (
-              <span 
-                key={index} 
+              <span
+                key={index}
                 className="rounded-full bg-green-100 px-3 py-1 text-sm text-green-800"
               >
                 {env}
@@ -70,7 +70,7 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ communityData }) =>
           </div>
         </div>
       )}
-      
+
       {communityData.community_opinion && (
         <div className="md:col-span-2">
           <p className="text-sm font-medium text-gray-500">Opinión sobre la comunidad</p>
