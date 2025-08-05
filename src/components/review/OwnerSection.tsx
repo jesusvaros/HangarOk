@@ -13,7 +13,7 @@ const OwnerSection: React.FC<OwnerSectionProps> = ({ ownerData }) => {
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 text-[16px]">
       {ownerData.owner_type && (
         <div>
           <p className="text-sm font-medium text-gray-500">Tipo de propietario</p>

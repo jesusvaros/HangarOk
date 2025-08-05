@@ -143,7 +143,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
   const isCurrentlyLiving = periodData.end_year === null;
 
   return (
-    <div className="grid gap-6 md:grid-cols-2">
+    <div className="grid gap-6 md:grid-cols-2 text-[16px]">
       <div className="md:col-span-2">
         {/* Línea temporal */}
         <div className="mt-4  relative h-16 w-full">
@@ -152,7 +152,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
 
           {/* Segmento de tiempo activo */}
           <div
-            className="absolute top-8 h-1 bg-green-600"
+            className="absolute top-8 h-1 bg-green-600 text-[16px] "
             style={{
               left: '5%',
               width: '90%',
@@ -166,7 +166,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
           >
             <div className="h-3 w-3 rounded-full bg-green-600"></div>
             <div className="mt-2 h-4 w-[1px] bg-green-600"></div>
-            <span className="mt-1 text-sm font-medium">{startYear}</span>
+            <span className="mt-1 text-[18px] font-medium ">{startYear}</span>
           </div>
 
           {/* Marcador de fin */}
@@ -180,7 +180,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
             <div
               className={`mt-2 h-4 w-[1px] ${isCurrentlyLiving ? 'bg-green-300' : 'bg-green-600'}`}
             ></div>
-            <span className="mt-1 text-sm font-medium">
+            <span className="mt-1 text-[18px] font-medium">
               {isCurrentlyLiving ? 'Actual' : endYear}
             </span>
           </div>
@@ -189,16 +189,16 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
 
       <div>
         <div className="flex items-center gap-1">
-          <p className="text-sm font-medium text-gray-500">Precio mensual</p>
+          <p className="text-[16px] font-medium text-gray-500">Precio mensual</p>
           <div className="flex h-5 w-5 items-center justify-center rounded-full bg-green-100">
             <MoneyIcon />
           </div>
         </div>
-        <p className="text-lg font-medium">{periodData.price}€</p>
+        <p className="text-[18px] font-medium">{periodData.price}€</p>
       </div>
 
       <div className="md:col-span-2">
-        <p className="text-sm font-medium text-gray-500">Incluidos en el precio</p>
+        <p className="text-[16px] font-medium text-gray-500">Incluidos en el precio</p>
         <div className="mt-4 flex w-full justify-between">
           {/* Luz */}
           <div className="flex flex-col items-center">
@@ -212,7 +212,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
                 </div>
               )}
             </div>
-            <span className="mt-1 text-sm">Luz</span>
+            <span className="mt-1 text-[16px]">Luz</span>
           </div>
 
           {/* Agua */}
@@ -227,7 +227,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
                 </div>
               )}
             </div>
-            <span className="mt-1 text-sm">Agua</span>
+            <span className="mt-1 text-[16px]">Agua</span>
           </div>
 
           {/* Comunidad */}
@@ -242,7 +242,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
                 </div>
               )}
             </div>
-            <span className="mt-1 text-sm">Comunidad</span>
+            <span className="mt-1 text-[16px]">Comunidad</span>
           </div>
 
           {/* Gas */}
@@ -257,7 +257,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
                 </div>
               )}
             </div>
-            <span className="mt-1 text-sm">Gas</span>
+            <span className="mt-1 text-[16px]">Gas</span>
           </div>
 
           {/* Garaje */}
@@ -272,7 +272,7 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
                 </div>
               )}
             </div>
-            <span className="mt-1 text-sm">Garaje</span>
+            <span className="mt-1 text-[16px]">Garaje</span>
           </div>
         </div>
       </div>

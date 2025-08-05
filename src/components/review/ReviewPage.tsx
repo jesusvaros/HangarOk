@@ -121,27 +121,27 @@ const ReviewPage = () => {
   const MobileView = () => (
     <div className="space-y-6">
       <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-xl font-bold">Dirección</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Dirección</h2>
         <AddressSection addressData={step1Data} />
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-xl font-bold">Período y precio</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Período y precio</h2>
         <PeriodSection periodData={step2Data} />
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-xl font-bold">Características del piso</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Características del piso</h2>
         <PropertySection propertyData={step3Data} />
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-xl font-bold">Comunidad y vecindario</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Comunidad y vecindario</h2>
         <CommunitySection communityData={step4Data} />
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-xl font-bold">Propietario/Agencia</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Propietario/Agencia</h2>
         <OwnerSection ownerData={step5Data} />
       </div>
     </div>
@@ -151,34 +151,34 @@ const ReviewPage = () => {
   const DesktopView = () => (
     <div className="grid grid-cols-2 gap-6">
       <div className="col-span-2 rounded-lg bg-white p-8 shadow">
-        <h2 className="mb-4 text-xl font-bold">Dirección</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Dirección</h2>
         <AddressSection addressData={step1Data} />
       </div>
 
       <div className="rounded-lg bg-white p-8 shadow">
-        <h2 className="mb-4 text-xl font-bold">Período y precio</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Período y precio</h2>
         <PeriodSection periodData={step2Data} />
       </div>
 
       <div className="rounded-lg bg-white p-8 shadow">
-        <h2 className="mb-4 text-xl font-bold">Características del piso</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Características del piso</h2>
         <PropertySection propertyData={step3Data} />
       </div>
 
       <div className="rounded-lg bg-white p-8 shadow">
-        <h2 className="mb-4 text-xl font-bold">Comunidad y vecindario</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Comunidad y vecindario</h2>
         <CommunitySection communityData={step4Data} />
       </div>
 
       <div className="rounded-lg bg-white p-8 shadow">
-        <h2 className="mb-4 text-xl font-bold">Propietario/Agencia</h2>
+        <h2 className="mb-4 text-[20px] font-bold">Propietario/Agencia</h2>
         <OwnerSection ownerData={step5Data} />
       </div>
     </div>
   );
 
   return (
-    <div className="container mx-auto px-4 py-8 mt-24">
+    <div className="container mx-auto px-4 py-8 mt-24 text-[16px]">
       {/* Título principal con la dirección */}
       <h1 className="mb-8 text-center text-2xl font-bold md:text-3xl lg:text-4xl">
         {getAddressTitle()}

@@ -17,7 +17,7 @@ interface AddressSectionProps {
 
 const AddressSection: React.FC<AddressSectionProps> = ({ addressData }) => {
   return (
-    <>
+    <div className="text-[16px]">
       {/* Mapa con la ubicación */}
       {addressData?.address_details?.coordinates ? (
         <div className="h-64 md:h-80 lg:h-96">
@@ -31,7 +31,7 @@ const AddressSection: React.FC<AddressSectionProps> = ({ addressData }) => {
           <p className="text-gray-500">Ubicación no disponible</p>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -71,9 +71,9 @@ const PropertySection: React.FC<PropertySectionProps> = ({ propertyData }) => {
   };
 
   return (
-    <div className="grid gap-12 md:grid-cols-2 text-sm">
+    <div className="grid gap-12 md:grid-cols-2 text-[16px]">
       {/* Temperatura Verano */}
-      <div className="flex justify-between gap-3">
+      <div className="flex justify-between gap-3 ml-2 mr-2">
         <Thermometer
           level={getSummerTemp().percent}
           icon={getSummerTemp().icon}
@@ -94,7 +94,7 @@ const PropertySection: React.FC<PropertySectionProps> = ({ propertyData }) => {
       </div>
 
       {/* Nivel de ruido */}
-      <div className="md:col-span-1">
+      <div className="md:col-span-1 ">
         <div className="pb-2">
           <p className="text-gray-500 flex items-center gap-2 ">
             Nivel de ruido <SpeakerXMarkIcon width={24} height={24} />
