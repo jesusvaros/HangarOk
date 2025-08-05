@@ -28,6 +28,7 @@ interface UserReview {
   updated_at?: string;
   status?: string;
   address?: AddressStep1[];
+  validated?: boolean;
 }
 
 const ProfilePage: React.FC = () => {
@@ -93,7 +94,8 @@ const ProfilePage: React.FC = () => {
         
         return {
           ...session,
-          displayAddress: addressResult?.address_details?.street || 'Dirección no disponible'
+          displayAddress: addressResult?.address_details?.street || 'Dirección no disponible',
+          validated: session.validated === true
         };
       });
       
@@ -156,10 +158,14 @@ const ProfilePage: React.FC = () => {
                     role="button"
                   >
                     <div className="flex items-center justify-between">
-                      <div>
-                        <p className="font-medium ">
-                          {review.displayAddress}
-                        </p>
+                      <div className="flex-1">
+                        <div className="flex items-center">
+                          <p className="font-medium mr-2">
+                            {review.displayAddress}
+                          </p>
+                          {/* Validation status indicator */}
+                          <div className={`h-2 w-2 rounded-full ${review.validated ? 'bg-green-500' : 'bg-orange-500'}`}></div>
+                        </div>
                         <p className="text-sm text-gray-500">
                           {new Date(review.created_at).toLocaleDateString('es-ES')}
                         </p>

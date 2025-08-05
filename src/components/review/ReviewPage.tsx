@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { supabaseWrapper } from '../../services/supabase/client';
 import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
 import { getSessionStep2Data } from '../../services/supabase/GetSubmitStep2';
 import { getSessionStep3Data } from '../../services/supabase/GetSubmitStep3';
@@ -58,8 +59,11 @@ interface Step5Data {
 
 const ReviewPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isUserReview, setIsUserReview] = useState(false);
+  const [isValidated, setIsValidated] = useState(false);
 
   // Estados para cada paso
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
@@ -70,7 +74,7 @@ const ReviewPage = () => {
 
   // Función para formatear la dirección como título
   const getAddressTitle = () => {
-    if (!step1Data?.address_details) return 'Revisión de la propiedad';
+    if (!step1Data?.address_details) return 'Review de la propiedad';
 
     const { street, number, city } = step1Data.address_details;
     let title = '';
@@ -79,7 +83,7 @@ const ReviewPage = () => {
     if (number) title += ` ${number}`;
     if (city) title += `, ${city}`;
 
-    return title || 'Revisión de la propiedad';
+    return title || 'Review de la propiedad';
   };
 
   useEffect(() => {
@@ -91,6 +95,45 @@ const ReviewPage = () => {
       }
 
       try {
+        const client = supabaseWrapper.getClient();
+        if (!client) {
+          setError('Error de configuración de Supabase');
+          setLoading(false);
+          return;
+        }
+
+        // Get current user
+        const { data: userData } = await client.auth.getUser();
+        const currentUserId = userData?.user?.id;
+
+        // Check if this review belongs to the current user and its validation status
+        const { data: reviewSession, error: reviewError } = await client
+          .from('review_sessions')
+          .select('*')
+          .eq('id', id)
+          .single();
+
+        if (reviewError) {
+          console.error('Error fetching review session:', reviewError);
+          setError('Error al cargar la información de la revisión');
+          setLoading(false);
+          navigate('/map');
+          return;
+        }
+
+        // Set validation status
+        setIsValidated(reviewSession.validated === true);
+        
+        // Check if this is the user's own review
+        const isOwnReview = currentUserId && reviewSession.user_id === currentUserId;
+        setIsUserReview(isOwnReview || false);
+
+        // If not user's review and not validated, redirect to map
+        if (!isOwnReview && !reviewSession.validated) {
+          navigate('/map');
+          return;
+        }
+
         // Cargar datos de todos los pasos en paralelo
         const [step1, step2, step3, step4, step5] = await Promise.all([
           getAddressStep1Data(id),
@@ -115,7 +158,7 @@ const ReviewPage = () => {
     };
 
     fetchAllData();
-  }, [id]);
+  }, [id, navigate]);
 
   // Componente para la vista móvil
   const MobileView = () => (
@@ -224,9 +267,21 @@ const ReviewPage = () => {
   return (
     <div className="container mx-auto px-4 py-8 mt-16 text-[16px] bg-gray-100">
       {/* Título principal con la dirección */}
-      <h1 className="mb-8 text-center text-2xl font-bold md:text-3xl lg:text-4xl mt-8">
-        {getAddressTitle()}
-      </h1>
+      <div className="flex flex-col items-center mb-8">
+        <h1 className="text-center text-2xl font-bold md:text-3xl lg:text-4xl mt-8">
+          {getAddressTitle()}
+        </h1>
+        
+        {/* Validation status indicator for user's own reviews */}
+        {isUserReview && (
+          <div className="flex items-center mt-2">
+            <div className={`h-3 w-3 rounded-full mr-2 ${isValidated ? 'bg-green-500' : 'bg-orange-500'}`}></div>
+            <span className="text-sm text-gray-600">
+              {isValidated ? 'Validado' : 'Pendiente de validación'}
+            </span>
+          </div>
+        )}
+      </div>
 
       {loading ? (
         <div className="flex h-64 items-center justify-center">
