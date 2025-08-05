@@ -11,7 +11,7 @@ import LocationMap from '../ui/LocationMap';
 import PeriodSection from './PeriodSection';
 import PropertySection from './PropertySection';
 import CommunitySection from './CommunitySection';
-import OwnerSection from './OwnerSection';
+import OpinionSection from './OpinionSection';
 
 // Definición de tipos para los datos de cada paso
 interface Step1Data {
@@ -145,6 +145,15 @@ const ReviewPage = () => {
       </div>
 
       <div className="rounded-lg bg-white p-6 shadow">
+        <h2 className="mb-4 text-[20px] font-bold">Opinión</h2>
+        <OpinionSection 
+          propertyOpinion={step3Data?.property_opinion}
+          communityOpinion={step4Data?.community_opinion}
+          ownerOpinion={step5Data?.owner_opinion}
+        />
+      </div>
+      
+      <div className="rounded-lg bg-white p-6 shadow">
         <h2 className="mb-4 text-[20px] font-bold">Características del piso</h2>
         <PropertySection propertyData={step3Data} />
       </div>
@@ -152,11 +161,6 @@ const ReviewPage = () => {
       <div className="rounded-lg bg-white p-6 shadow">
         <h2 className="mb-4 text-[20px] font-bold">Comunidad y vecindario</h2>
         <CommunitySection communityData={step4Data} />
-      </div>
-
-      <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-[20px] font-bold">Propietario/Agencia</h2>
-        <OwnerSection ownerData={step5Data} />
       </div>
     </div>
   );
@@ -196,6 +200,15 @@ const ReviewPage = () => {
       {/* Columna derecha con el resto de secciones */}
       <div className="w-2/3 space-y-6">
         <div className="rounded-lg bg-white p-8 shadow">
+          <h2 className="mb-4 text-[20px] font-bold">Opinión</h2>
+          <OpinionSection 
+            propertyOpinion={step3Data?.property_opinion}
+            communityOpinion={step4Data?.community_opinion}
+            ownerOpinion={step5Data?.owner_opinion}
+          />
+        </div>
+        
+        <div className="rounded-lg bg-white p-8 shadow">
           <h2 className="mb-4 text-[20px] font-bold">Características del piso</h2>
           <PropertySection propertyData={step3Data} />
         </div>
@@ -203,11 +216,6 @@ const ReviewPage = () => {
         <div className="rounded-lg bg-white p-8 shadow">
           <h2 className="mb-4 text-[20px] font-bold">Comunidad y vecindario</h2>
           <CommunitySection communityData={step4Data} />
-        </div>
-
-        <div className="rounded-lg bg-white p-8 shadow">
-          <h2 className="mb-4 text-[20px] font-bold">Propietario/Agencia</h2>
-          <OwnerSection ownerData={step5Data} />
         </div>
       </div>
     </div>

@@ -1,0 +1,61 @@
+import React from 'react';
+import { ChatBubbleLeftRightIcon, HomeIcon, UserGroupIcon, UserIcon } from '@heroicons/react/24/outline';
+
+interface OpinionSectionProps {
+  propertyOpinion?: string;
+  communityOpinion?: string;
+  ownerOpinion?: string;
+}
+
+const OpinionSection: React.FC<OpinionSectionProps> = ({
+  propertyOpinion,
+  communityOpinion,
+  ownerOpinion,
+}) => {
+  const hasOpinions = propertyOpinion || communityOpinion || ownerOpinion;
+
+  if (!hasOpinions) {
+    return null;
+  }
+
+  return (
+    <div className="space-y-6 text-[16px]">
+      <div className="flex items-center gap-2 mb-2">
+        <ChatBubbleLeftRightIcon className="h-5 w-5 text-green-700" />
+        <h3 className="text-[18px] font-semibold">Opiniones del inquilino</h3>
+      </div>
+
+      {propertyOpinion && (
+        <div className="border-l-4 border-green-200 pl-4">
+          <div className="flex items-center gap-2 mb-2">
+            <HomeIcon className="h-5 w-5 text-green-600" />
+            <h4 className="text-[16px] font-medium">Sobre la casa</h4>
+          </div>
+          <p className="text-gray-700 whitespace-pre-line">{propertyOpinion}</p>
+        </div>
+      )}
+
+      {communityOpinion && (
+        <div className="border-l-4 border-green-200 pl-4">
+          <div className="flex items-center gap-2 mb-2">
+            <UserGroupIcon className="h-5 w-5 text-green-600" />
+            <h4 className="text-[16px] font-medium">Sobre la comunidad</h4>
+          </div>
+          <p className="text-gray-700 whitespace-pre-line">{communityOpinion}</p>
+        </div>
+      )}
+
+      {ownerOpinion && (
+        <div className="border-l-4 border-green-200 pl-4">
+          <div className="flex items-center gap-2 mb-2">
+            <UserIcon className="h-5 w-5 text-green-600" />
+            <h4 className="text-[16px] font-medium">Sobre {ownerOpinion.toLowerCase().includes('agencia') ? 'la agencia' : 'el propietario'}</h4>
+          </div>
+          <p className="text-gray-700 whitespace-pre-line">{ownerOpinion}</p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default OpinionSection;
