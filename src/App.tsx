@@ -10,6 +10,7 @@ import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
 import AuthCallback from './components/AuthCallback';
 import ReviewPage from './components/review/ReviewPage';
+import ProfilePage from './components/profile/ProfilePage';
 
 // Import Providers
 import { FormProvider } from './store/FormContext';
@@ -17,7 +18,7 @@ import { FormMessagesProvider } from './store/FormMessagesProvider';
 
 function App() {
   const location = useLocation();
-  const isGrayPage = location.pathname === '/add-review' || location.pathname.includes('/review/');
+  const isGrayPage = location.pathname === '/add-review' || location.pathname.includes('/review/') || location.pathname === '/profile';
   return (
     <FormProvider>
       <div className={`min-h-screen ${isGrayPage ? 'bg-gray-100' : 'bg-white'}`}>
@@ -38,6 +39,7 @@ function App() {
           <Route path="/auth/callback" element={<AuthCallback />} />
           <Route path="/review/:id" element={<ReviewPage />} />
           <Route path="/map" element={<MapView />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route
             path="/add-review"
             element={

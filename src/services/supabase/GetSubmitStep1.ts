@@ -15,18 +15,16 @@ interface AddressStepData {
   };
 }
 
-export async function getAddressStep1Data(): Promise<AddressStepData | null> {
+export async function getAddressStep1Data(sessionIdExternal?: string): Promise<AddressStepData | null> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
 
     const sessionId = await getSessionIdBack();
 
-    console.log('Fetching address data for session ID:', sessionId);
-
     // Using RPC call to match the insert pattern
     const { data, error } = await client.rpc('get_address_step1_data', {
-      p_review_session_id: sessionId,
+      p_review_session_id: sessionIdExternal || sessionId,
     });
 
     if (error) throw error;
