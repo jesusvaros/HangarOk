@@ -222,9 +222,9 @@ const ReviewPage = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8 mt-24 text-[16px]">
+    <div className="container mx-auto px-4 py-8 mt-16 text-[16px] bg-gray-100">
       {/* Título principal con la dirección */}
-      <h1 className="mb-8 text-center text-2xl font-bold md:text-3xl lg:text-4xl">
+      <h1 className="mb-8 text-center text-2xl font-bold md:text-3xl lg:text-4xl mt-8">
         {getAddressTitle()}
       </h1>
 

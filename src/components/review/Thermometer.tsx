@@ -50,7 +50,7 @@ const Thermometer: React.FC<ThermometerProps> = ({
         </div>
         <p
           className={`border-2 border-black absolute transition-all flex items-center justify-center bg-white px-2 rounded-xl mb-[-2px]`}
-          style={{ top: iconOffset, zIndex: 12, left: left ? '-85px' : '32px' }}
+          style={{ top: iconOffset, zIndex: 12, left: left ? '-92px' : '32px' }}
         >
           {label}
         </p>

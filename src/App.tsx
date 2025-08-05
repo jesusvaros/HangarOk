@@ -17,11 +17,10 @@ import { FormMessagesProvider } from './store/FormMessagesProvider';
 
 function App() {
   const location = useLocation();
-  const isAddReviewPage = location.pathname === '/add-review';
-
+  const isGrayPage = location.pathname === '/add-review' || location.pathname.includes('/review/');
   return (
     <FormProvider>
-      <div className={`min-h-screen ${isAddReviewPage ? 'bg-gray-100' : 'bg-white'}`}>
+      <div className={`min-h-screen ${isGrayPage ? 'bg-gray-100' : 'bg-white'}`}>
         <Toaster
           position="bottom-left"
           gutter={8}
@@ -59,7 +58,7 @@ function App() {
           />
         </Routes>
 
-        {!isAddReviewPage && (
+        {!isGrayPage && (
           <footer className="mx-auto mt-8 max-w-6xl py-6 text-center text-sm text-gray-500">
             <p>
               © {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas
