@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useFormContext } from '../store/useFormContext';
+import { useAuth } from '../store/auth/hooks';
 import AddressAutocomplete from './ui/AddressAutocomplete';
 import type { AddressResult } from './ui/AddressAutocomplete';
 import { showErrorToast } from './ui/toast/toastUtils';
@@ -10,6 +11,7 @@ const InputSection: React.FC = () => {
   const navigate = useNavigate();
   const { address, setAddress, updateFormData, formData } = useFormContext();
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   const [state, setState] = useState({
     currentMessageIndex: 0,
@@ -76,8 +78,8 @@ const InputSection: React.FC = () => {
         addressAutocompleteResult: formData.addressAutocompleteResult,
       });
 
-      // Inicializar o recuperar la sesión
-      const { sessionId } = await initializeSession();
+      // Inicializar o recuperar la sesión con el ID del usuario si está autenticado
+      const { sessionId } = await initializeSession(user?.id);
 
       if (sessionId) {
         navigate('/add-review');

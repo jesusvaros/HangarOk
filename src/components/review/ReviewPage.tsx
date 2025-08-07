@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabaseWrapper } from '../../services/supabase/client';
+import { useAuth } from '../../store/auth/hooks';
 import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
 import { getSessionStep2Data } from '../../services/supabase/GetSubmitStep2';
 import { getSessionStep3Data } from '../../services/supabase/GetSubmitStep3';
@@ -64,6 +65,9 @@ const ReviewPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isUserReview, setIsUserReview] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
+  
+  // Use the auth context
+  const { user } = useAuth();
 
   // Estados para cada paso
   const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
@@ -87,6 +91,8 @@ const ReviewPage = () => {
   };
 
   useEffect(() => {
+    // Skip if no ID provided
+    if (!id) return;
     const fetchAllData = async () => {
       if (!id) {
         setError('ID de sesión no proporcionado');
@@ -102,9 +108,8 @@ const ReviewPage = () => {
           return;
         }
 
-        // Get current user
-        const { data: userData } = await client.auth.getUser();
-        const currentUserId = userData?.user?.id;
+        // Use user from auth context instead of fetching again
+        const currentUserId = user?.id;
 
         // Check if this review belongs to the current user and its validation status
         const { data: reviewSession, error: reviewError } = await client
@@ -158,7 +163,7 @@ const ReviewPage = () => {
     };
 
     fetchAllData();
-  }, [id, navigate]);
+  }, [id, navigate, user?.id]);
 
   // Componente para la vista móvil
   const MobileView = () => (

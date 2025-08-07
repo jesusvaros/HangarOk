@@ -1,42 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { supabaseWrapper } from '../services/supabase/client';
+import { useAuth } from '../store/auth/hooks';
 
 const LoginProfileStatus: React.FC = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  
-  useEffect(() => {
-    // Check if user is logged in by looking for the session in localStorage
-    const checkLoginStatus = async () => {
-      const sessionStr = localStorage.getItem('cv_session');
-      
-      if (sessionStr) {
-        try {
-          // Parse session just to validate it's proper JSON
-          JSON.parse(sessionStr);
-          // Verify if the session is still valid with Supabase
-          const client = supabaseWrapper.getClient();
-          if (client) {
-            const { data } = await client.auth.getUser();
-            setIsLoggedIn(!!data.user);
-          }
-        } catch (error) {
-          console.error('Error checking login status:', error);
-          // If there's an error parsing the session, consider the user logged out
-          localStorage.removeItem('cv_session');
-          setIsLoggedIn(false);
-        }
-      } else {
-        setIsLoggedIn(false);
-      }
-    };
-
-    checkLoginStatus();
-  }, []);
+  // Use the auth context instead of local state and direct Supabase calls
+  const { user, isLoading } = useAuth();
 
   return (
     <div className="ml-4">
-      {isLoggedIn ? (
+      {/* Show loading state while auth is being determined */}
+      {isLoading ? (
+        <div className="h-10 w-10 animate-pulse rounded-full bg-gray-300"></div>
+      ) : user ? (
         // Profile icon for logged in users
         <Link to="/profile" className="flex items-center">
           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#5A6E42]">

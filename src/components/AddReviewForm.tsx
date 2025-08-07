@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useFormContext } from '../store/useFormContext';
+import { useAuth } from '../store/auth/hooks';
+import { useSearchParams } from 'react-router-dom';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
 import Step3PropertyCondition from './review-steps/Step3PropertyCondition';
@@ -27,10 +29,47 @@ export interface SessionStatus {
 }
 const AddReviewForm: React.FC = () => {
   const { formData, updateFormData } = useFormContext();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentStep, setCurrentStep] = useState(1); // Start with step 1 by default
+  
+  // Update URL when step changes
+  const updateStep = (step: number) => {
+    // Ensure step is valid before updating
+    if (isStepAccessible(step)) {
+      // Set flag to indicate this is a programmatic change
+      isProgrammaticChange.current = true;
+      
+      // Update state first
+      setCurrentStep(step);
+      
+      // Then update URL with replace to prevent history entries
+      setSearchParams({ step: step.toString() }, { replace: true });
+    }
+  };
+  
+  // Determine the highest accessible step based on completion status
+  const getHighestAccessibleStep = () => {
+    if (!sessionStatus) return 1;
+    
+    if (sessionStatus.step5_completed) return 5;
+    if (sessionStatus.step4_completed) return 5;
+    if (sessionStatus.step3_completed) return 4;
+    if (sessionStatus.step2_completed) return 3;
+    if (sessionStatus.step1_completed) return 2;
+    return 1;
+  };
+  
+  // Check if a step is accessible based on completion status
+  const isStepAccessible = (step: number) => {
+    const highestAccessible = getHighestAccessibleStep();
+    return step <= highestAccessible;
+  };
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [sessionStatus, setSessionStatus] = useState<SessionStatus | null>(null);
+  
+  // Use the auth context
+  const { user } = useAuth();
 
   const errorsDefault = {
     1: { fields: { street: false, number: false } },
@@ -137,10 +176,42 @@ const AddReviewForm: React.FC = () => {
     }
   }, [updateFormData]);
 
-  //session and fetch data
+  // Use a ref to keep track of programmatic URL changes to avoid flickering
+  const isProgrammaticChange = useRef(false);
+  const initialRenderDone = useRef(false);
+  
+  // Handle URL parameter changes separately to avoid dependency loops
+  useEffect(() => {
+    // Skip URL parameter handling on initial render or during programmatic changes
+    if (!initialRenderDone.current || !sessionStatus || isProgrammaticChange.current) {
+      initialRenderDone.current = true;
+      isProgrammaticChange.current = false;
+      return;
+    }
+    
+    // This is a change from user manually editing the URL or using browser navigation
+    const step = parseInt(searchParams.get('step') || '1', 10);
+    if (step !== currentStep) {
+      // Get highest accessible step based on session status
+      let highestAccessible = 1;
+      if (sessionStatus.step5_completed) highestAccessible = 5;
+      else if (sessionStatus.step4_completed) highestAccessible = 5;
+      else if (sessionStatus.step3_completed) highestAccessible = 4;
+      else if (sessionStatus.step2_completed) highestAccessible = 3;
+      else if (sessionStatus.step1_completed) highestAccessible = 2;
+      
+      const validStep = Math.min(step, highestAccessible);
+      if (validStep !== currentStep) {
+        setCurrentStep(validStep);
+      }
+    }
+  }, [searchParams, sessionStatus, currentStep]);
+
+  //session and fetch data - keep this separate from URL param handling
   useEffect(() => {
     const initSession = async () => {
-      const { sessionStatus: sessionStatusResponse } = await initializeSession();
+      // Pass the user ID from auth context to the initializeSession function
+      const { sessionStatus: sessionStatusResponse } = await initializeSession(user?.id);
       setSessionStatus(sessionStatusResponse);
 
       if (sessionStatusResponse?.step1_completed) {
@@ -158,20 +229,41 @@ const AddReviewForm: React.FC = () => {
       if (sessionStatusResponse?.step5_completed) {
         fetchStep5Data();
       }
+      
+      // Set initial step based on URL and session status
+      const requestedStep = parseInt(searchParams.get('step') || '1', 10);
+      
+      // Get highest accessible step based on session status
+      let highestAccessible = 1;
+      if (sessionStatusResponse) {
+        if (sessionStatusResponse.step5_completed) highestAccessible = 5;
+        else if (sessionStatusResponse.step4_completed) highestAccessible = 5;
+        else if (sessionStatusResponse.step3_completed) highestAccessible = 4;
+        else if (sessionStatusResponse.step2_completed) highestAccessible = 3;
+        else if (sessionStatusResponse.step1_completed) highestAccessible = 2;
+      }
+      
+      const validStep = Math.min(requestedStep, highestAccessible);
+      
+      // Update step and URL if needed
+      if (validStep !== currentStep) {
+        setCurrentStep(validStep);
+        setSearchParams({ step: validStep.toString() }, { replace: true });
+      }
     };
 
     initSession();
-  }, [fetchStep1Data, fetchStep2Data, fetchStep3Data, fetchStep4Data, fetchStep5Data]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchStep1Data, fetchStep2Data, fetchStep3Data, fetchStep4Data, fetchStep5Data, user?.id]);
 
   const handleNext = async () => {
-    handleStepClick(currentStep + 1);
-    if (currentStep !== 5) {
-      window.scrollTo(0, 0);
+    if (currentStep < 5) {
+      updateStep(currentStep + 1);
     }
   };
   const handlePrevious = () => {
     if (currentStep > 1) {
-      setCurrentStep(currentStep - 1);
+      updateStep(currentStep - 1);
       window.scrollTo(0, 0);
     }
   };
@@ -210,7 +302,7 @@ const AddReviewForm: React.FC = () => {
           if (step === 6) {
             handleOpenModal();
           } else {
-            setCurrentStep(step);
+            updateStep(step);
             window.scrollTo(0, 0);
           }
         }
@@ -220,7 +312,7 @@ const AddReviewForm: React.FC = () => {
         showErrorToast(errorMessage);
       }
     } else if (step <= currentStep) {
-      setCurrentStep(step);
+      updateStep(step);
       window.scrollTo(0, 0);
     }
   };

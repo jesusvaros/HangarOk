@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { supabaseWrapper } from '../../services/supabase/client';
+import { useAuth } from '../../store/auth/hooks';
 
 interface Review {
   review_session_id: string;
@@ -26,46 +27,26 @@ const ModerationPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  // Use the auth context instead of local state
+  const { isAdmin, isLoading: authLoading } = useAuth();
   const [expandedReviews, setExpandedReviews] = useState<Record<string, boolean>>({});
   const [rejectionReasons, setRejectionReasons] = useState<Record<string, string>>({}); 
   const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
   const [actionMessage, setActionMessage] = useState<{text: string, type: 'success' | 'error'} | null>(null);
 
-  // Verificar si el usuario es administrador
+  // Cargar reviews cuando el usuario está autenticado y es admin
   useEffect(() => {
-    const checkAdminStatus = async () => {
-      try {
-        const client = supabaseWrapper.getClient();
-        if (!client) {
-          setError('Error de configuración de Supabase');
-          setLoading(false);
-          return;
-        }
-
-        const { data: userData } = await client.auth.getUser();
-        const userEmail = userData?.user?.email;
-
-        // Aquí deberías usar el mismo email que configuraste en la Edge Function
-        // Asegúrate de cambiar esto a tu email real
-        const ADMIN_EMAIL = 'xjesusvr@gmail.com';
-        
-        if (userEmail === ADMIN_EMAIL) {
-          setIsAdmin(true);
-          fetchReviews();
-        } else {
-          setError('No tienes permisos para acceder a esta página');
-          setLoading(false);
-        }
-      } catch (err) {
-        console.error('Error checking admin status:', err);
-        setError('Error al verificar permisos de administrador');
-        setLoading(false);
-      }
-    };
-
-    checkAdminStatus();
-  }, []);
+    // Esperar a que la autenticación termine de cargar
+    if (authLoading) return;
+    
+    if (isAdmin) {
+      fetchReviews();
+    } else if (!authLoading) {
+      // Solo mostrar error si ya terminó de cargar la autenticación y no es admin
+      setError('No tienes permisos para acceder a esta página');
+      setLoading(false);
+    }
+  }, [isAdmin, authLoading]);
 
   // Cargar todas las reviews
   const fetchReviews = async () => {

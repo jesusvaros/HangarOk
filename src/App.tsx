@@ -16,13 +16,15 @@ import ModerationPage from './components/admin/ModerationPage';
 // Import Providers
 import { FormProvider } from './store/FormContext';
 import { FormMessagesProvider } from './store/FormMessagesProvider';
+import { AuthProvider } from './store/auth';
 
 function App() {
   const location = useLocation();
   const isGrayPage = location.pathname === '/add-review' || location.pathname.includes('/review/') || location.pathname === '/profile';
   return (
-    <FormProvider>
-      <div className={`min-h-screen ${isGrayPage ? 'bg-gray-100' : 'bg-white'}`}>
+    <AuthProvider>
+      <FormProvider>
+        <div className={`min-h-screen ${isGrayPage ? 'bg-gray-100' : 'bg-white'}`}>
         <Toaster
           position="bottom-left"
           gutter={8}
@@ -69,8 +71,9 @@ function App() {
             </p>
           </footer>
         )}
-      </div>
-    </FormProvider>
+        </div>
+      </FormProvider>
+    </AuthProvider>
   );
 }
 

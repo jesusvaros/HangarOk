@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabaseWrapper } from '../../services/supabase/client';
 import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
+import { useAuth } from '../../store/auth/hooks';
 
 interface UserProfile {
   id: string;
@@ -36,37 +37,34 @@ const ProfilePage: React.FC = () => {
   const [userReviews, setUserReviews] = useState<UserReview[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const navigate = useNavigate();
+  // Use the auth context
+  const { user, isLoading: authLoading, logout } = useAuth();
 
   useEffect(() => {
+    // Wait for auth to load
+    if (authLoading) return;
+    
     const fetchUserData = async () => {
       setLoading(true);
       const client = supabaseWrapper.getClient();
       
-      if (!client) {
+      if (!client || !user) {
         navigate('/');
         return;
       }
 
-      // Get current user
-      const { data: userData, error: userError } = await client.auth.getUser();
-      
-      if (userError || !userData.user) {
-        console.error('Error fetching user:', userError);
-        navigate('/');
-        return;
-      }
-
+      // Use user from auth context instead of fetching again
       setUserProfile({
-        id: userData.user.id,
-        email: userData.user.email || '',
-        created_at: userData.user.created_at || ''
+        id: user.id,
+        email: user.email || '',
+        created_at: user.created_at || ''
       });
 
       // 1. Get review sessions for the user
       const { data: sessions, error: sessionsError } = await client
         .from('review_sessions')
         .select('*')
-        .eq('user_id', userData.user.id);
+        .eq('user_id', user.id);
 
       if (sessionsError) {
         console.error('Error fetching sessions:', sessionsError);
@@ -104,16 +102,12 @@ const ProfilePage: React.FC = () => {
     };
 
     fetchUserData();
-  }, [navigate]);
+  }, [navigate, user, authLoading]);
 
   const handleLogout = async () => {
-    const client = supabaseWrapper.getClient();
-    
-    if (client) {
-      await client.auth.signOut();
-      localStorage.removeItem('cv_session');
-      navigate('/');
-    }
+    // Use the logout method from auth context
+    await logout();
+    navigate('/');
   };
 
   if (loading) {

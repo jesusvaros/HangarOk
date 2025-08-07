@@ -5,7 +5,7 @@ import type { ReviewSessionStatus } from './supabase/types';
 const SESSION_ID_KEY_FRONT = 'reviewSessionId';
 const SESSION_ID_KEY_BACK = 'reviewSessionIdBack';
 
-export async function initializeSession(): Promise<{
+export async function initializeSession(userId?: string): Promise<{
   sessionId: string;
   sessionStatus: ReviewSessionStatus | null;
 }> {
@@ -16,8 +16,11 @@ export async function initializeSession(): Promise<{
     sessionId = crypto.randomUUID();
     localStorage.setItem(SESSION_ID_KEY_FRONT, sessionId);
 
-    // Create the session in the DB
-    await createReviewSession({ session_id: sessionId });
+    // Create the session in the DB with user_id if available
+    await createReviewSession({ 
+      session_id: sessionId,
+      user_id: userId || null 
+    });
   }
 
   // Retrieve the current status

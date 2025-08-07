@@ -1,7 +1,7 @@
 import { supabaseWrapper } from './client';
 import type { ReviewSessionStatus } from './types';
 
-export async function createReviewSession(payload: { session_id: string }): Promise<void> {
+export async function createReviewSession(payload: { session_id: string; user_id?: string | null }): Promise<void> {
   const client = supabaseWrapper.getClient();
   if (!client) throw new Error('Supabase client not available');
 

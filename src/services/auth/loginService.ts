@@ -1,0 +1,72 @@
+import { supabaseWrapper } from '../supabase/client';
+
+export type LoginStatus = 'idle' | 'loading' | 'link-sent' | 'error';
+
+export const sendEmailOtp = async (email: string) => {
+  const client = supabaseWrapper.getClient();
+  if (!client || !email) {
+    return { 
+      success: false, 
+      error: 'Introduce un correo electrónico válido.' 
+    };
+  }
+
+  try {
+    const result = await client.auth.signInWithOtp({
+      email,
+      options: {
+        shouldCreateUser: true,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+
+    if (result.error) {
+      return { 
+        success: false, 
+        error: result.error.message 
+      };
+    }
+
+    return { success: true };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: 'Error al conectar con el servidor de autenticación.' + error 
+    };
+  }
+};
+
+/**
+ * Initiates Google OAuth login flow
+ * @returns Object containing success status and error message if any
+ */
+export const signInWithGoogle = async () => {
+  const client = supabaseWrapper.getClient();
+  if (!client) {
+    return { 
+      success: false, 
+      error: 'Error de conexión con el servidor.' 
+    };
+  }
+
+  try {
+    const result = await client.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (result.error) {
+      return {
+        success: false,
+        error: result.error.message
+      };
+    }
+    return { success: true };
+  } catch (error) {
+    return { 
+      success: false, 
+      error: 'Error al iniciar sesión con Google. ' + error 
+    };
+  }
+};

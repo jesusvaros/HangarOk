@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import LoginProfileStatus from './LoginProfileStatus';
+import { useAuth } from '../store/auth/hooks';
+import LoginContent from './ui/LoginContent';
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [address, setAddress] = useState('');
-  const navigate = useNavigate();
   const location = useLocation();
+  const navigate = useNavigate();
 
   // Handle scroll event to change header appearance
   useEffect(() => {
@@ -18,10 +19,22 @@ const Header: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
+
+  // Extract address from URL if on review page
+  useEffect(() => {
+    if (location.pathname.includes('/review/')) {
+      const pathParts = location.pathname.split('/');
+      if (pathParts.length > 2) {
+        // Here you would fetch the address based on the review ID
+        // For now, just use a placeholder
+        setAddress('Calle de ejemplo, 123');
+      }
+    } else {
+      setAddress('');
+    }
+  }, [location]);
 
   const handleStart = () => {
     if (address.trim()) {
@@ -102,10 +115,95 @@ const Header: React.FC = () => {
           </div>
         </Link>
         
-        {/* Login/Profile Status Component */}
-        <LoginProfileStatus />
+        {/* Login Dropdown Component */}
+        <LoginDropdown />
       </div>
     </header>
+  );
+};
+
+// Login Dropdown Component
+const LoginDropdown: React.FC = () => {
+  const { user, logout } = useAuth();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    setIsDropdownOpen(false);
+    navigate('/');
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  return (
+    <div className="relative ml-4" ref={dropdownRef}>
+      <button
+        onClick={toggleDropdown}
+        className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#5A6E42]"
+        aria-expanded={isDropdownOpen}
+        aria-label={user ? 'Perfil de usuario' : 'Iniciar sesión'}
+      >
+        {user ? (
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        ) : (
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
+          </svg>
+        )}
+      </button>
+
+      {isDropdownOpen && (
+        <div className="absolute right-0 top-12 z-50 w-80 rounded-lg bg-white p-4 shadow-lg">
+          {user ? (
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-[#4A5E32]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <span className="font-medium">{user.email}</span>
+              </div>
+              <Link 
+                to="/profile"
+                onClick={() => setIsDropdownOpen(false)}
+                className="mt-2 w-full rounded bg-[#4A5E32] px-4 py-2 text-center text-white transition-colors hover:bg-[#5A6E42]"
+              >
+                Mi Perfil
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="mt-2 w-full rounded bg-[#4A5E32] px-4 py-2 text-white transition-colors hover:bg-[#5A6E42]"
+              >
+                Cerrar sesión
+              </button>
+            </div>
+          ) : (
+            <div className="p-2">
+              <LoginContent onClose={() => setIsDropdownOpen(false)} showTitle={false} />
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 
