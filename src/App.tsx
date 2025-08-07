@@ -11,6 +11,7 @@ import AddReviewForm from './components/AddReviewForm';
 import AuthCallback from './components/AuthCallback';
 import ReviewPage from './components/review/ReviewPage';
 import ProfilePage from './components/profile/ProfilePage';
+import ModerationPage from './components/admin/ModerationPage';
 
 // Import Providers
 import { FormProvider } from './store/FormContext';
@@ -40,6 +41,7 @@ function App() {
           <Route path="/review/:id" element={<ReviewPage />} />
           <Route path="/map" element={<MapView />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/admin/moderate" element={<ModerationPage />} />
           <Route
             path="/add-review"
             element={
