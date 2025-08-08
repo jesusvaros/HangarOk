@@ -76,8 +76,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const client = supabaseWrapper.getClient();
     if (client) {
       await client.auth.signOut();
-      // Clear any local storage items related to auth
+      // Clear any local storage items related to auth and review sessions
       localStorage.removeItem('cv_session');
+      localStorage.removeItem('reviewSessionId');
+      localStorage.removeItem('reviewSessionIdBack');
       setUser(null);
       setIsAdmin(false);
     }

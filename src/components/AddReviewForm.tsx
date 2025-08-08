@@ -257,8 +257,32 @@ const AddReviewForm: React.FC = () => {
   }, [fetchStep1Data, fetchStep2Data, fetchStep3Data, fetchStep4Data, fetchStep5Data, user?.id]);
 
   const handleNext = async () => {
-    if (currentStep < 5) {
-      updateStep(currentStep + 1);
+    // First check if we need to validate and submit the current step
+    try {
+      const result = await validateAndSubmitStep(currentStep, formData, {
+        showToast: true,
+        isSubmitting: setIsSubmitting,
+      });
+      
+      // Update error state if needed
+      if (result.fieldErrors) {
+        setErrors(prev => ({
+          ...prev,
+          [currentStep]: {
+            fields: result.fieldErrors || {},
+          },
+        }));
+      }
+      
+      // Only proceed if validation is successful
+      if (result.isValid && currentStep < 5) {
+        updateStep(currentStep + 1);
+        window.scrollTo(0, 0);
+      }
+    } catch (error) {
+      console.error(`Error validating step ${currentStep}:`, error);
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      showErrorToast(errorMessage);
     }
   };
   const handlePrevious = () => {
