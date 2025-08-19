@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useFormContext } from '../store/useFormContext';
 import { useAuth } from '../store/auth/hooks';
 import { useSearchParams } from 'react-router-dom';
@@ -33,12 +33,9 @@ const AddReviewForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1); // Start with step 1 by default
   
   // Update URL when step changes
-  const updateStep = (step: number) => {
-    // Ensure step is valid before updating
-    if (isStepAccessible(step)) {
-      // Set flag to indicate this is a programmatic change
-      isProgrammaticChange.current = true;
-      
+  const updateStep = (step: number, force: boolean = false) => {
+    // Ensure step is valid before updating unless forcing (e.g., after successful submit)
+    if (force || isStepAccessible(step)) {
       // Update state first
       setCurrentStep(step);
       
@@ -89,20 +86,7 @@ const AddReviewForm: React.FC = () => {
   const [errors, setErrors] =
     useState<Record<number, { fields: Record<string, boolean> }>>(errorsDefault);
 
-  //mobile layout
-  useEffect(() => {
-    const checkIfMobile = () => {
-      const isMobile = window.innerWidth < 768;
-      if (isMobile) {
-        document.body.style.padding = '0px';
-      } else {
-        document.body.style.padding = '0px';
-      }
-    };
-    checkIfMobile();
-    window.addEventListener('resize', checkIfMobile);
-    return () => window.removeEventListener('resize', checkIfMobile);
-  }, []);
+  // No-op mobile padding logic removed (it set the same padding for both cases)
 
   //fetch step 1 data
   const fetchStep1Data = useCallback(async () => {
@@ -176,36 +160,16 @@ const AddReviewForm: React.FC = () => {
     }
   }, [updateFormData]);
 
-  // Use a ref to keep track of programmatic URL changes to avoid flickering
-  const isProgrammaticChange = useRef(false);
-  const initialRenderDone = useRef(false);
-  
-  // Handle URL parameter changes separately to avoid dependency loops
+  // Sync currentStep from URL param and sessionStatus without refs/flags
   useEffect(() => {
-    // Skip URL parameter handling on initial render or during programmatic changes
-    if (!initialRenderDone.current || !sessionStatus || isProgrammaticChange.current) {
-      initialRenderDone.current = true;
-      isProgrammaticChange.current = false;
-      return;
+    if (!sessionStatus) return;
+    const requestedStep = parseInt(searchParams.get('step') || '1', 10);
+    const validStep = Math.min(requestedStep, getHighestAccessibleStep());
+    if (validStep !== currentStep) {
+      setCurrentStep(validStep);
     }
-    
-    // This is a change from user manually editing the URL or using browser navigation
-    const step = parseInt(searchParams.get('step') || '1', 10);
-    if (step !== currentStep) {
-      // Get highest accessible step based on session status
-      let highestAccessible = 1;
-      if (sessionStatus.step5_completed) highestAccessible = 5;
-      else if (sessionStatus.step4_completed) highestAccessible = 5;
-      else if (sessionStatus.step3_completed) highestAccessible = 4;
-      else if (sessionStatus.step2_completed) highestAccessible = 3;
-      else if (sessionStatus.step1_completed) highestAccessible = 2;
-      
-      const validStep = Math.min(step, highestAccessible);
-      if (validStep !== currentStep) {
-        setCurrentStep(validStep);
-      }
-    }
-  }, [searchParams, sessionStatus, currentStep]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams, sessionStatus]);
 
   //session and fetch data - keep this separate from URL param handling
   useEffect(() => {
@@ -276,7 +240,18 @@ const AddReviewForm: React.FC = () => {
       
       // Only proceed if validation is successful
       if (result.isValid && currentStep < 5) {
-        updateStep(currentStep + 1);
+        // Optimistically mark current step as completed so Stepper UI and access checks stay in sync
+        setSessionStatus(prev => ({
+          ...(prev || {}),
+          step1_completed: currentStep === 1 ? true : prev?.step1_completed,
+          step2_completed: currentStep === 2 ? true : prev?.step2_completed,
+          step3_completed: currentStep === 3 ? true : prev?.step3_completed,
+          step4_completed: currentStep === 4 ? true : prev?.step4_completed,
+          step5_completed: currentStep === 5 ? true : prev?.step5_completed,
+        }));
+
+        // Force navigation forward by one step after successful submit
+        updateStep(currentStep + 1, true);
         window.scrollTo(0, 0);
       }
     } catch (error) {
