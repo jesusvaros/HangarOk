@@ -20,6 +20,9 @@ interface Review {
   property_opinion: string;
   community_opinion: string;
   owner_opinion: string;
+  // status y rejection_reason vienen de la vista/base de datos
+  status?: string;
+  rejection_reason?: string;
   moderation_status?: 'pending' | 'approved' | 'rejected';
 }
 
@@ -99,6 +102,9 @@ const ModerationPage = () => {
         property_opinion?: string;
         community_opinion?: string;
         owner_opinion?: string;
+        status?: string;
+        rejection_reason?: string;
+        validated?: boolean;
       }) => ({
         review_session_id: review.review_session_id,
         created_at: review.created_at,
@@ -107,7 +113,13 @@ const ModerationPage = () => {
         property_opinion: review.property_opinion || '',
         community_opinion: review.community_opinion || '',
         owner_opinion: review.owner_opinion || '',
-        moderation_status: 'pending' as const
+        status: review.status,
+        rejection_reason: review.rejection_reason,
+        moderation_status: (review.status === 'rejected'
+          ? 'rejected'
+          : review.validated
+            ? 'approved'
+            : 'pending') as 'pending' | 'approved' | 'rejected'
       }));
 
       setReviews(formattedReviews);
@@ -152,47 +164,57 @@ const ModerationPage = () => {
       const client = supabaseWrapper.getClient();
       if (!client) throw new Error('Error de configuración de Supabase');
       
-      // Preparar los datos para la llamada a la función
-      const requestBody: {
-        review_id: string;
-        moderation_status: 'approved' | 'rejected';
-        rejection_reason?: string;
-        property_opinion?: string;
-        community_opinion?: string;
-        owner_opinion?: string;
-      } = {
-        review_id: reviewId,
-        moderation_status: status,
-        property_opinion: review.property_opinion,
-        community_opinion: review.community_opinion,
-        owner_opinion: review.owner_opinion
-      };
-      
-      // Añadir el motivo de rechazo si es necesario
-      if (status === 'rejected') {
+      if (status === 'approved') {
+        // Aprobar: validar la sesión mediante RPC en la base de datos
+        const { error } = await client.rpc('validate_review', {
+          p_session_id: reviewId
+        });
+
+        if (error) throw new Error(error.message);
+
+        // Al validarse, desaparece del listado (query filtra validated = false)
+        setReviews(prev => prev.filter(r => r.review_session_id !== reviewId));
+      } else {
+        // Rechazar: usar RPC reject_review con motivo
         const reason = rejectionReasons[reviewId] || '';
         if (!reason.trim()) {
           throw new Error('Debes proporcionar un motivo para rechazar la review');
         }
-        requestBody.rejection_reason = reason;
+
+        const { data: sessionRes } = await client.auth.getSession();
+        const token = sessionRes?.session?.access_token;
+        if (!token) throw new Error('No se pudo obtener el token de sesión para autenticar la petición');
+
+        const functionsUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reject-review`;
+        const resp = await fetch(functionsUrl, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            review_session_id: reviewId,
+            rejection_reason: reason,
+          }),
+        });
+
+        if (!resp.ok) {
+          const txt = await resp.text();
+          throw new Error(txt || 'Fallo al rechazar la review');
+        }
+
+        // El estado local se actualizará más abajo en el bloque común para 'rejected'
       }
       
-      // Llamar a la Edge Function para moderar la review
-      const { error } = await client.functions.invoke('moderate-review', {
-        body: requestBody
-      });
-      
-      if (error) throw new Error(error.message);
-      
-      // Actualizar la lista de reviews
-      setReviews(reviews.map(r => 
-        r.review_session_id === reviewId
-          ? {
-              ...r,
-              moderation_status: status
-            }
-          : r
-      ));
+      // Actualizar la lista de reviews solo en caso de rechazo (en aprobación ya se eliminó del listado)
+      if (status === 'rejected') {
+        const reason = rejectionReasons[reviewId] || '';
+        setReviews(reviews.map(r => 
+          r.review_session_id === reviewId
+            ? { ...r, moderation_status: 'rejected' as const, status: 'rejected', rejection_reason: reason }
+            : r
+        ));
+      }
       
       setActionMessage({
         text: `Review ${status === 'approved' ? 'aprobada' : 'rechazada'} correctamente`,
@@ -334,7 +356,15 @@ const ModerationPage = () => {
                               </tr>
                             </tbody>
                           </table>
-                          
+                           
+                          {/* Motivo de rechazo guardado (si aplica) */}
+                          {review.moderation_status === 'rejected' && (
+                            <div className="mb-4 rounded border border-red-200 bg-red-50 p-3 text-red-800">
+                              <div className="font-semibold mb-1">Motivo del rechazo</div>
+                              <p className="whitespace-pre-line">{review.rejection_reason || '—'}</p>
+                            </div>
+                          )}
+
                           {/* Campo para el motivo de rechazo */}
                           <div className="mb-4">
                             <label className="block font-medium mb-1">Motivo del rechazo (requerido para rechazar):</label>
