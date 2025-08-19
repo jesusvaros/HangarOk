@@ -138,6 +138,44 @@ const ReviewPage = () => {
           navigate('/map');
           return;
         }
+        
+        // Check if all steps are completed for user's own review
+        if (isOwnReview) {
+          // Get the current session status to check steps completion
+          const { data: sessionData, error: sessionError } = await client.rpc('get_review_session', {
+            p_session_id: id,
+          });
+          
+          if (sessionError) {
+            console.error('Error checking review completion:', sessionError);
+          } else if (sessionData && sessionData.length > 0) {
+            const sessionStatus = sessionData[0];
+            
+            // Check which steps are completed
+            const { step1_completed, step2_completed, step3_completed, step4_completed, step5_completed } = sessionStatus;
+            
+            // If not all steps are completed, redirect to the form at the last incomplete step
+            if (!(step1_completed && step2_completed && step3_completed && step4_completed && step5_completed)) {
+              // Determine which step to continue from
+              if (!step1_completed) {
+                navigate(`/add-review?step=1`);
+                return;
+              } else if (!step2_completed) {
+                navigate(`/add-review?step=2`);
+                return;
+              } else if (!step3_completed) {
+                navigate(`/add-review?step=3`);
+                return;
+              } else if (!step4_completed) {
+                navigate(`/add-review?step=4`);
+                return;
+              } else if (!step5_completed) {
+                navigate(`/add-review?step=5`);
+                return;
+              }
+            }
+          }
+        }
 
         // Cargar datos de todos los pasos en paralelo
         const [step1, step2, step3, step4, step5] = await Promise.all([

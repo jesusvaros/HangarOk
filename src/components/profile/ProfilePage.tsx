@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabaseWrapper } from '../../services/supabase/client';
 import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
 import { useAuth } from '../../store/auth/hooks';
+import toast from 'react-hot-toast';
 
 interface UserProfile {
   id: string;
@@ -30,6 +31,13 @@ interface UserReview {
   status?: string;
   address?: AddressStep1[];
   validated?: boolean;
+  completed?: boolean;
+  nextIncompleteStep?: number;
+  step1_completed?: boolean;
+  step2_completed?: boolean;
+  step3_completed?: boolean;
+  step4_completed?: boolean;
+  step5_completed?: boolean;
 }
 
 const ProfilePage: React.FC = () => {
@@ -60,45 +68,68 @@ const ProfilePage: React.FC = () => {
         created_at: user.created_at || ''
       });
 
-      // 1. Get review sessions for the user
-      const { data: sessions, error: sessionsError } = await client
-        .from('review_sessions')
-        .select('*')
-        .eq('user_id', user.id);
+      try {
+        // Get review sessions and address data in a single batch
+        const [sessionsResponse] = await Promise.all([
+          client
+            .from('review_sessions')
+            .select('*')
+            .eq('user_id', user.id)
+        ]);
 
-      if (sessionsError) {
-        console.error('Error fetching sessions:', sessionsError);
-        setLoading(false);
-        return;
-      }
+        if (sessionsResponse.error) {
+          throw sessionsResponse.error;
+        }
 
-      if (!sessions || sessions.length === 0) {
-        // No reviews found
-        setUserReviews([]);
-        setLoading(false);
-        return;
-      }
+        const sessions = sessionsResponse.data || [];
 
-      // 2. Then for each session, get address_step1 by review_session_id
-      const addressPromises = sessions.map((session) => 
-        getAddressStep1Data(session.id)
-      );
+        if (sessions.length === 0) {
+          // No reviews found
+          setUserReviews([]);
+          return;
+        }
 
-      const addressResults = await Promise.all(addressPromises);
-
-      // 3. Combine sessions with their addresses
-      const processedReviews = sessions.map((session, index) => {
-        const addressResult = addressResults[index];
+        // Fetch all address data in a single batch with Promise.all
+        const addressPromises = sessions.map(session => 
+          getAddressStep1Data(session.id)
+        );
         
-        return {
-          ...session,
-          displayAddress: addressResult?.address_details?.street || 'Dirección no disponible',
-          validated: session.validated === true
-        };
-      });
-      
-      setUserReviews(processedReviews);
-      setLoading(false);
+        const addressResults = await Promise.all(addressPromises);
+
+        // Combine sessions with their addresses and check completion status
+        const processedReviews = sessions.map((session, index) => {
+          const addressResult = addressResults[index];
+          
+          // Check if all steps are completed
+          const allStepsCompleted = session.step1_completed && 
+                                   session.step2_completed && 
+                                   session.step3_completed && 
+                                   session.step4_completed && 
+                                   session.step5_completed;
+          
+          // Determine the next incomplete step (for redirection)
+          let nextIncompleteStep = 1;
+          if (session.step1_completed) nextIncompleteStep = 2;
+          if (session.step2_completed) nextIncompleteStep = 3;
+          if (session.step3_completed) nextIncompleteStep = 4;
+          if (session.step4_completed) nextIncompleteStep = 5;
+          
+          return {
+            ...session,
+            displayAddress: addressResult?.address_details?.street || 'Dirección no disponible',
+            validated: session.validated === true,
+            completed: allStepsCompleted,
+            nextIncompleteStep
+          };
+        });
+        
+        setUserReviews(processedReviews);
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+        toast.error('Error al cargar los datos del perfil');
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchUserData();
@@ -148,7 +179,15 @@ const ProfilePage: React.FC = () => {
                   <div 
                     key={review.id} 
                     className="rounded-lg border border-gray-200 p-4 transition-all hover:border-[#4A5E32] hover:shadow-sm"
-                    onClick={() => navigate(`/review/${review.id}`)}
+                    onClick={() => {
+                      // If review is incomplete, redirect to the form at the next incomplete step
+                      if (!review.completed) {
+                        navigate(`/add-review?step=${review.nextIncompleteStep}`);
+                      } else {
+                        // Otherwise, show the complete review
+                        navigate(`/review/${review.id}`);
+                      }
+                    }}
                     role="button"
                   >
                     <div className="flex items-center justify-between">
