@@ -175,53 +175,73 @@ const ProfilePage: React.FC = () => {
             </h2>
             {userReviews.length > 0 ? (
               <div className="space-y-4">
-                {userReviews.map((review) => (
-                  <div 
-                    key={review.id} 
-                    className="rounded-lg border border-gray-200 p-4 transition-all hover:border-[#4A5E32] hover:shadow-sm"
-                    onClick={() => {
-                      // If review is incomplete, redirect to the form at the next incomplete step
-                      if (!review.completed) {
-                        navigate(`/add-review?step=${review.nextIncompleteStep}`);
-                      } else {
-                        // Otherwise, show the complete review
-                        navigate(`/review/${review.id}`);
-                      }
-                    }}
-                    role="button"
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center">
-                          <p className="font-medium mr-2">
-                            {review.displayAddress}
-                          </p>
-                          {/* Validation status indicator */}
-                          <div className={`h-2 w-2 rounded-full ${review.validated ? 'bg-green-500' : 'bg-orange-500'}`}></div>
+                {userReviews.map((review) => {
+                  const isIncomplete = !review.completed;
+                  const isPendingValidation = review.completed && !review.validated;
+                  const isValidated = review.completed && review.validated;
+                  return (
+                    <article
+                      key={review.id}
+                      className="rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-[#4A5E32] hover:shadow-sm"
+                      onClick={() => {
+                        if (isIncomplete) {
+                          navigate(`/add-review?step=${review.nextIncompleteStep}`);
+                        } else {
+                          navigate(`/review/${review.id}`);
+                        }
+                      }}
+                      role="button"
+                    >
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="min-w-0 flex-1">
+                          <header className="flex flex-wrap items-center gap-2">
+                            <h3 className="mr-1 truncate font-medium text-black">
+                              {review.displayAddress}
+                            </h3>
+                            {/* Status badges */}
+                            {isPendingValidation && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-[rgb(225,245,110)] px-2 py-0.5 text-xs font-medium text-black">
+                                <span className="h-2 w-2 rounded-full bg-orange-500"></span>
+                                Pendiente de validación
+                              </span>
+                            )}
+                            {isIncomplete && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-black ring-1 ring-orange-200">
+                                <span className="h-2 w-2 rounded-full bg-orange-500"></span>
+                                Incompleta
+                              </span>
+                            )}
+                            {isValidated && (
+                              <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-black ring-1 ring-green-200">
+                                <span className="h-2 w-2 rounded-full bg-green-500"></span>
+                                Validada
+                              </span>
+                            )}
+                          </header>
+                          <time className="block text-sm text-black" dateTime={new Date(review.created_at).toISOString()}>
+                            {new Date(review.created_at).toLocaleDateString('es-ES')}
+                          </time>
                         </div>
-                        <p className="text-sm text-gray-500">
-                          {new Date(review.created_at).toLocaleDateString('es-ES')}
-                        </p>
+                        <aside className="shrink-0 rounded-full bg-[rgb(225,245,110)] p-2">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </aside>
                       </div>
-                      <div className="rounded-full bg-[rgb(225,245,110)] p-2">
-                        <svg 
-                          xmlns="http://www.w3.org/2000/svg" 
-                          className="h-5 w-5 " 
-                          fill="none" 
-                          viewBox="0 0 24 24" 
-                          stroke="currentColor"
-                        >
-                          <path 
-                            strokeLinecap="round" 
-                            strokeLinejoin="round" 
-                            strokeWidth={2} 
-                            d="M9 5l7 7-7 7" 
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    </article>
+                  );
+                })}
               </div>
             ) : (
               <p className="text-gray-500">No has creado ninguna reseña todavía.</p>
