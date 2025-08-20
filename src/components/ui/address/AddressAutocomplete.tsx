@@ -17,6 +17,10 @@ interface AddressAutocompleteProps {
   numberHasError?: boolean;
   className?: string;
   hideLabel?: boolean;
+  onActionClick?: () => void;
+  actionDisabled?: boolean;
+  onUserInput?: (v: string) => void;
+  actionIcon?: React.ComponentType<{ className?: string }>;
 }
 
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
@@ -31,6 +35,10 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   numberHasError = false,
   className = '',
   hideLabel = false,
+  onActionClick,
+  actionDisabled = false,
+  onUserInput,
+  actionIcon,
 }) => {
   const [results, setResults] = useState<AddressResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -60,6 +68,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   const handleQueryChange = (v: string) => {
     debouncedSearch(v);
     setQuery(v);
+    onUserInput?.(v);
   };
 
   // Handle selection
@@ -95,6 +104,9 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             placeholder={placeholder}
             hasError={hasError}
             hideLabel={hideLabel}
+            onActionClick={onActionClick}
+            actionDisabled={actionDisabled}
+            actionIcon={actionIcon}
           />
         </div>
         {showNumberField && onNumberChange && onNumberBlur && (
