@@ -7,38 +7,48 @@ type Props = {
 
 export default function DetailsPanel({ review, onClose }: Props) {
   return (
-    <div className="bg-white rounded-xl shadow-xl border border-gray-200 p-4 max-h-[70vh] overflow-auto">
-      <div className="flex items-start justify-between gap-4 mb-2">
-        <h3 className="text-sm font-semibold text-gray-900">Detalles del piso</h3>
+    <div className="flex flex-col max-h-[70vh]">
+      {/* Header verde */}
+      <div className="bg-green-600 text-white px-4 py-3 flex items-start justify-between">
+        <h3 className="text-sm font-semibold">Detalles del piso</h3>
         {review && (
           <button
             type="button"
             aria-label="Cerrar detalles"
-            className="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+            className="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-md text-white/90 hover:text-white hover:bg-white/10"
             onClick={onClose}
           >
             ✕
           </button>
         )}
       </div>
-      {review ? (
-        <div className="space-y-2">
-          {review.full_address && (
-            <p className="text-sm text-gray-700">
-              <span className="font-medium">Dirección: </span>
-              {review.full_address}
-            </p>
-          )}
-          {review.owner_opinion && (
-            <div>
-              <p className="text-sm font-medium text-gray-900 mb-1">Opinión del propietario</p>
-              <p className="text-sm text-gray-700 whitespace-pre-line">{review.owner_opinion}</p>
-            </div>
-          )}
-        </div>
-      ) : (
-        <p className="text-sm text-gray-500">Selecciona un punto del mapa o un item de la lista.</p>
-      )}
+
+      {/* Body */}
+      <div className="p-4 overflow-auto space-y-4 bg-white">
+        {review ? (
+          <>
+            {/* Sección: Dirección */}
+            {review.full_address && (
+              <section>
+                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Dirección</h4>
+                <p className="mt-1 text-sm text-gray-800 whitespace-normal break-words">{review.full_address}</p>
+              </section>
+            )}
+
+            <hr className="border-t" />
+
+            {/* Sección: Opinión del propietario */}
+            {review.owner_opinion && (
+              <section>
+                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Opinión del propietario</h4>
+                <p className="mt-1 text-sm text-gray-800 whitespace-pre-line break-words">{review.owner_opinion}</p>
+              </section>
+            )}
+          </>
+        ) : (
+          <p className="text-sm text-gray-500">Selecciona un punto del mapa o un item de la lista.</p>
+        )}
+      </div>
     </div>
   );
 }

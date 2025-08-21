@@ -19,36 +19,47 @@ interface ReviewsPanelProps {
 
 const ReviewsPanel: React.FC<ReviewsPanelProps> = ({ reviews, hoveredId, setHoveredId, onSelect }) => {
   return (
-    <div className="rounded-2xl bg-white p-3 shadow-sm border">
-      <div className="flex items-center justify-between mb-2">
-        <h2 className="font-semibold">Opiniones ({reviews.length})</h2>
-        {/* TODO: filtros / orden */}
-      </div>
-      <ul className="space-y-2 max-h-[78vh] overflow-auto pr-1">
-        {reviews.map((r) => {
-          const id = r.id ?? `${r.lat}-${r.lng}`;
-          const rating = typeof r.rating === 'number' ? r.rating : '—';
-          const texto = r.texto ?? r.comment ?? 'Sin comentario';
-          const createdAt = r.created_at ? new Date(r.created_at).toLocaleDateString() : '';
-          return (
-            <li
-              key={id}
-              onMouseEnter={() => setHoveredId(id)}
-              onMouseLeave={() => setHoveredId(null)}
-              onClick={() => onSelect(r)}
-              className={`cursor-pointer rounded-xl p-3 border transition ${hoveredId === id ? 'bg-amber-50 ring-1 ring-amber-200' : 'bg-white hover:bg-gray-50'}`}
-            >
-              <div className="flex items-center gap-2">
-                <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full bg-gray-900 text-white text-xs font-semibold">
-                  {rating}
-                </span>
-                <p className="truncate text-sm text-gray-700">{texto}</p>
-              </div>
-              <div className="mt-1 text-xs text-gray-500">{createdAt}</div>
-            </li>
-          );
-        })}
-      </ul>
+    <div className="rounded-2xl bg-white p-3 shadow-sm border h-full flex flex-col">
+      {reviews.length === 0 ? (
+        <div className="flex-1 flex items-center justify-center text-center px-4">
+          <div>
+            <div className="text-2xl">😞</div>
+            <p className="mt-2 text-lg font-semibold text-gray-700">Aún no hay opiniones en esta zona</p>
+          </div>
+        </div>
+      ) : (
+        <>
+          <ul className="space-y-2 overflow-auto pr-1 flex-1">
+            {reviews.map((r) => {
+              const id = r.id ?? `${r.lat}-${r.lng}`;
+              const address = r.texto ?? '—';
+              const opinion = r.comment ?? 'Sin comentario';
+              const createdAt = r.created_at ? new Date(r.created_at).toLocaleDateString() : '';
+              return (
+                <li
+                  key={id}
+                  onMouseEnter={() => setHoveredId(id)}
+                  onMouseLeave={() => setHoveredId(null)}
+                  onClick={() => onSelect(r)}
+                  className={`cursor-pointer rounded-xl overflow-hidden border transition ${hoveredId === id ? 'ring-1 ring-amber-200' : ''}`}
+                >
+                  {/* Header */}
+                  <div className="bg-green-600 text-white px-3 py-2 text-sm font-semibold flex items-center justify-between">
+                    <span>Opinión</span>
+                    {createdAt && <span className="text-xs opacity-90">{createdAt}</span>}
+                  </div>
+                  {/* Body */}
+                  <div className="px-3 py-3 bg-white">
+                    <p className="text-gray-800 text-sm md:text-base whitespace-normal break-words">{address}</p>
+                    <hr className="my-3 border-t" />
+                    <p className="text-gray-700 text-sm whitespace-pre-line break-words">{opinion}</p>
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        </>
+      )}
     </div>
   );
 };

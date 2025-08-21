@@ -1,9 +1,18 @@
-import { Marker, Popup } from 'react-leaflet';
+import { Marker } from 'react-leaflet';
 import type { Opinion } from '../../supabaseClient';
+import { svgToIcon } from './svgIcon';
+import { chatBubbleSVG } from './heroPin';
 
 interface Props {
   opinions: Opinion[];
 }
+
+// Use hero chat bubble shape as a green pin with white check
+const opinionIcon = svgToIcon(
+  chatBubbleSVG({ fill: '#22C55E', stroke: 'none', size: 34, includeCheck: true, checkStroke: '#FFFFFF' }),
+  [34, 34],
+  [17, 34]
+);
 
 export default function OpinionsLayer({ opinions }: Props) {
   return (
@@ -12,14 +21,13 @@ export default function OpinionsLayer({ opinions }: Props) {
         const lat = op.lat ?? 0;
         const lng = op.lng ?? 0;
         return (
-          <Marker key={op.id} position={[lat, lng]}>
-            <Popup>
-              <div>
-                <p className="font-semibold">Rating: {op.rating}/5</p>
-                {op.texto && <p>{op.texto}</p>}
-              </div>
-            </Popup>
-          </Marker>
+          <Marker
+            key={op.id}
+            position={[lat, lng]}
+            icon={opinionIcon}
+            riseOnHover
+            zIndexOffset={250}
+          />
         );
       })}
     </>

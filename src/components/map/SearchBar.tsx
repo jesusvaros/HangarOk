@@ -12,7 +12,7 @@ interface SearchBarProps {
 const SearchBar: React.FC<SearchBarProps> = ({ value, onSelect, onLocate, onUserInput, actionDisabled }) => {
   return (
     <div className="rounded-2xl bg-white/95 backdrop-blur p-2 shadow-lg border">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-0">
         <div className="flex-1">
           <AddressAutocomplete
             value={value}
@@ -26,7 +26,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onSelect, onLocate, onUser
           <button
             type="button"
             onClick={onLocate}
-            className="h-12 px-3 rounded-xl border hover:bg-gray-50"
+            className="ml-2 h-12 w-12 grid place-items-center rounded-xl border hover:bg-gray-50"
             title="Usar mi ubicación"
             disabled={!!actionDisabled}
           >

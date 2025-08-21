@@ -123,4 +123,36 @@ export const geocodingService = {
       number: newNumber,
     };
   },
+
+  /**
+   * Reverse geocode coordinates to a formatted address (HERE API)
+   */
+  async reverseGeocode(lat: number, lng: number): Promise<AddressResult | null> {
+    try {
+      const apiKey = import.meta.env.VITE_HERE_API_KEY;
+      const url = `https://reverse.geocode.search.hereapi.com/v1/revgeocode?at=${lat},${lng}&lang=es-ES&limit=1&apiKey=${apiKey}`;
+      const response = await fetch(url);
+      const data = await response.json();
+      const item: HereGeocodeItem | undefined = data.items?.[0];
+      if (!item) return null;
+      const addr: Partial<HereGeocodeItem['address']> = item.address ?? {};
+      const result: AddressResult = {
+        formatted: addr.label,
+        geometry: { lat: item.position.lat, lng: item.position.lng },
+        components: {
+          road: addr.street,
+          house_number: addr.houseNumber,
+          postcode: addr.postalCode,
+          city: addr.city,
+          state: addr.state,
+          country: addr.countryName,
+        },
+        annotations: { geohash: '' },
+      } as AddressResult;
+      return result;
+    } catch (e) {
+      console.error('Reverse geocode failed', e);
+      return null;
+    }
+  },
 };
