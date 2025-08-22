@@ -83,9 +83,9 @@ export async function submitSessionStep5(payload: SubmitStep5Payload): Promise<b
     const { error } = await client.rpc('upsert_gestion_step5_and_mark_review_session', {
       p_review_session_id: sessionId,
       p_owner_type: payload.ownerType,
-      p_owner_name: nameHash || payload.ownerNameHash,
-      p_owner_phone: phoneHash || payload.ownerPhoneHash,
-      p_owner_email: emailHash || payload.ownerEmailHash,
+      p_owner_name: nameHash || payload.ownerNameHash || null,
+      p_owner_phone: phoneHash || payload.ownerPhoneHash || null,
+      p_owner_email: emailHash || payload.ownerEmailHash || null,
       // checkear este campo con ia es legal?
       p_owner_opinion: payload.ownerOpinion,
     });
