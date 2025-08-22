@@ -7,9 +7,10 @@ interface SearchBarProps {
   onLocate?: () => void;
   onUserInput?: (v: string) => void;
   actionDisabled?: boolean;
+  allowBroadResults?: boolean; // allow cities/villages (not only streets)
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ value, onSelect, onLocate, onUserInput, actionDisabled }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ value, onSelect, onLocate, onUserInput, actionDisabled, allowBroadResults }) => {
   return (
     <div className="rounded-2xl bg-white/95 backdrop-blur p-2 shadow-lg border">
       <div className="flex items-center gap-0">
@@ -20,6 +21,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onSelect, onLocate, onUser
             hideLabel
             showNumberField={false}
             onUserInput={onUserInput}
+            allowBroadResults={allowBroadResults}
           />
         </div>
         {onLocate && (

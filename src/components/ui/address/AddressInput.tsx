@@ -19,6 +19,7 @@ interface AddressInputProps {
   onActionClick?: () => void;
   actionDisabled?: boolean;
   actionIcon?: React.ComponentType<{ className?: string }>;
+  allowBroadResults?: boolean;
 }
 
 export const AddressInput: React.FC<AddressInputProps> = ({
@@ -36,6 +37,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
   onActionClick,
   actionDisabled = false,
   actionIcon,
+  allowBroadResults = false,
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const Icon = actionIcon || MapPinIcon;
@@ -86,6 +88,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
         isFocused={isFocused}
         hideLabel={hideLabel}
         onSelect={onSelect}
+        allowBroadResults={allowBroadResults}
       />
     </div>
   );

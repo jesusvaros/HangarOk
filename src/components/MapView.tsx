@@ -248,6 +248,7 @@ const MapView = () => {
                 );
               }}
               onUserInput={(v) => setSearchValue(v)}
+              allowBroadResults
             />
           </div>
 

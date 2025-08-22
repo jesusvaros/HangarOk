@@ -6,6 +6,7 @@ interface AddressDropdownProps {
   isFocused: boolean;
   hideLabel?: boolean;
   onSelect: (result: AddressResult) => void;
+  allowBroadResults?: boolean;
 }
 
 export const AddressDropdown: React.FC<AddressDropdownProps> = ({
@@ -13,6 +14,7 @@ export const AddressDropdown: React.FC<AddressDropdownProps> = ({
   isFocused,
   hideLabel = false,
   onSelect,
+  allowBroadResults = false,
 }) => {
   if (results.length === 0 || !isFocused) {
     return null;
@@ -32,16 +34,34 @@ export const AddressDropdown: React.FC<AddressDropdownProps> = ({
           result.components.city || result.components.town || result.components.village || '';
         const postcode = result.components.postcode || '';
 
-        if (!(road || park || parking) || !city) {
-          return null;
+        // Filtering: if broad results are allowed, accept city/town/village-only entries
+        if (!allowBroadResults) {
+          if (!(road || park || parking) || !city) {
+            return null;
+          }
+        } else {
+          // For broad results, allow if we have either a street or a locality (city/town/village)
+          if (!road && !park && !parking && !city) {
+            return null;
+          }
         }
 
         // Format with street highlighted
-        const displayAddress = (
-          <span>
-            <strong>{road || park || parking}</strong>, {city} {postcode}
-          </span>
-        );
+        const displayAddress = (() => {
+          if (road || park || parking) {
+            return (
+              <span>
+                <strong>{road || park || parking}</strong>, {city} {postcode}
+              </span>
+            );
+          }
+          // Broad: show locality prominently
+          return (
+            <span>
+              <strong>{city}</strong>{postcode ? `, ${postcode}` : ''}
+            </span>
+          );
+        })();
 
         // Use a combination of geohash and index to ensure uniqueness
         // If geohash is missing, use formatted_address or index as fallback

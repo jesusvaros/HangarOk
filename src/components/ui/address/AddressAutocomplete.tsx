@@ -21,6 +21,7 @@ interface AddressAutocompleteProps {
   actionDisabled?: boolean;
   onUserInput?: (v: string) => void;
   actionIcon?: React.ComponentType<{ className?: string }>;
+  allowBroadResults?: boolean; // Allow cities/villages results (not only streets)
 }
 
 const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
@@ -39,6 +40,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   actionDisabled = false,
   onUserInput,
   actionIcon,
+  allowBroadResults = false,
 }) => {
   const [results, setResults] = useState<AddressResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -73,19 +75,24 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
 
   // Handle selection
   const handleSelect = (r: AddressResult) => {
-    // Format a complete address with street, city and postal code
-    const street = r.components?.road || r.components?.park || r.components?.parking || '';
-    const number = r.components?.house_number || '';
-    const city = r.components?.city || r.components?.town || r.components?.village || '';
-    const postcode = r.components?.postcode || '';
+    if (allowBroadResults) {
+      // For city/town/village or general places, just use formatted label
+      setQuery(r.formatted || '');
+    } else {
+      // Format a complete address with street, city and postal code
+      const street = r.components?.road || r.components?.park || r.components?.parking || '';
+      const number = r.components?.house_number || '';
+      const city = r.components?.city || r.components?.town || r.components?.village || '';
+      const postcode = r.components?.postcode || '';
 
-    // Create a complete formatted address
-    const completeAddress = [street + (number ? ' ' + number : ''), city, postcode]
-      .filter(Boolean)
-      .join(', ');
+      // Create a complete formatted address
+      const completeAddress = [street + (number ? ' ' + number : ''), city, postcode]
+        .filter(Boolean)
+        .join(', ');
 
-    // Use the complete address or fallback to formatted
-    setQuery(completeAddress || r.formatted || '');
+      // Use the complete address or fallback to formatted
+      setQuery(completeAddress || r.formatted || '');
+    }
     onSelect(r);
     setResults([]);
   };
@@ -107,6 +114,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             onActionClick={onActionClick}
             actionDisabled={actionDisabled}
             actionIcon={actionIcon}
+            allowBroadResults={allowBroadResults}
           />
         </div>
         {showNumberField && onNumberChange && onNumberBlur && (
