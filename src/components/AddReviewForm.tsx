@@ -401,8 +401,8 @@ const AddReviewForm: React.FC = () => {
           </div>
         </div>
 
-        {/* Form content - Center column - Fixed width */}
-        <div className="flex-shrink-0 rounded-lg bg-white p-6 shadow-md md:w-[500px] lg:w-[650px]">
+        {/* Form content - Center column - Fixed width (wider on laptop) */}
+        <div className="flex-shrink-0 rounded-lg bg-white p-6 shadow-md md:w-[500px] lg:w-[700px]">
           {renderStep()}
         </div>
 

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { LockClosedIcon } from '@heroicons/react/24/solid';
 import StaticFormMessage from './StaticFormMessage';
 
 interface StaticFormMessagesContainerProps {
@@ -21,6 +22,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
             message: 'La información que compartas no se mostrará de forma exacta.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
+            icon: undefined,
           },
         ];
       case 2:
@@ -32,6 +34,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
               'Indica el período en el que has vivido o estás viviendo en la propiedad para contextualizar tu opinión.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
+            icon: undefined,
           },
         ];
       case 3:
@@ -43,6 +46,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
               'Evalúa las condiciones del piso para ayudar a futuros inquilinos a tomar decisiones informadas.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
+            icon: undefined,
           },
         ];
       case 4:
@@ -54,6 +58,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
               'La información sobre la comunidad de vecinos y el barrio es muy valiosa para futuros inquilinos.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
+            icon: undefined,
           },
         ];
       case 5:
@@ -65,6 +70,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
               'Los datos personales se procesan mediante hashing irreversible solo para asociar opiniones con propietarios. Nunca se almacenan en texto claro ni se comparten con terceros.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
+            icon: <LockClosedIcon className="h-5 w-5 text-green-700" />,
           },
         ];
       default:
@@ -74,6 +80,19 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
 
   const messages = getMessagesForStep();
 
+  // React to hover/focus on the lock icon in HashedContactInput
+  const [privacyHover, setPrivacyHover] = useState(false);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      // CustomEvent<boolean>
+      const ce = e as CustomEvent<boolean>;
+      setPrivacyHover(Boolean(ce.detail));
+    };
+    window.addEventListener('cv:privacyHover', handler as EventListener);
+    return () => window.removeEventListener('cv:privacyHover', handler as EventListener);
+  }, []);
+
   if (messages.length === 0) {
     return null;
   }
@@ -81,13 +100,22 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
   return (
     <div className={`${isMobile ? 'mt-2 w-full space-y-6' : ''}`}>
       {messages.map(msg => (
-        <StaticFormMessage
-          key={msg.id}
-          title={msg.title}
-          message={msg.message}
-          backgroundColor={msg.backgroundColor}
-          textColor={msg.textColor}
-        />
+        <div key={msg.id} className="relative">
+          {/* Icon overlay on hover */}
+          {privacyHover && (
+            <div className="pointer-events-none absolute left-3 top-3 text-green-600">
+              <LockClosedIcon className="h-5 w-5" />
+            </div>
+          )}
+          <StaticFormMessage
+            title={msg.title}
+            message={msg.message}
+            backgroundColor={msg.backgroundColor}
+            textColor={msg.textColor}
+            className={`transition-transform duration-150 ${privacyHover ? 'scale-[1.05]' : ''}`}
+            icon={msg.icon || undefined} 
+          />
+        </div>
       ))}
     </div>
   );

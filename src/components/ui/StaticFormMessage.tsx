@@ -6,6 +6,7 @@ interface StaticFormMessageProps {
   backgroundColor?: string;
   textColor?: string;
   className?: string;
+  icon?: React.ReactNode;
 }
 
 /**
@@ -18,6 +19,7 @@ const StaticFormMessage: React.FC<StaticFormMessageProps> = ({
   backgroundColor = 'rgb(225, 245, 110)', // Amarillo verde por defecto (como en el header)
   textColor = 'black', // Verde oscuro por defecto
   className = '',
+  icon,
 }) => {
   return (
     <div
@@ -27,8 +29,17 @@ const StaticFormMessage: React.FC<StaticFormMessageProps> = ({
         color: textColor,
       }}
     >
-      {title && <h4 className="mb-1 text-base font-bold">{title}</h4>}
-      <p className="text-sm">{message}</p>
+      <div className="flex items-start gap-2">
+        <div>
+          {title && (
+            <h4 className="mb-1 text-base font-bold flex items-center gap-2">
+              {title}
+              {icon && <div className="mt-0.5 text-current">{icon}</div>}
+            </h4>
+          )}
+          <p className="text-sm">{message}</p>
+        </div>
+      </div>
     </div>
   );
 };
