@@ -166,10 +166,12 @@ const MapView = () => {
 
   return (
     <div className="w-full px-6 md:px-8 pt-24 md:pt-28 pb-8">
-      <div className="grid md:grid-cols-[360px_1fr] gap-4">
+
+<h1 className="text-left text-3xl font-semibold mb-4">Mapa de opiniones</h1>
+      <div className="mx-auto max-w-[1800px] shadow-lg rounded-xl p-4 bg-gray-50">
+        <div className="grid md:grid-cols-[360px_1fr] gap-4">
         {/* Sidebar (desktop) */}
         <aside className="hidden md:flex md:flex-col">
-          <h3 className="text-center text-xl font-semibold mb-2">Opiniones</h3>
           <div className="h-[80vh]">
             <ReviewsPanel
               reviews={visiblePublic.map((r) => ({
@@ -288,6 +290,7 @@ const MapView = () => {
               {error}
             </div>
           )}
+        </div>
         </div>
       </div>
     </div>

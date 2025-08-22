@@ -27,7 +27,7 @@ import { AuthProvider } from './store/auth';
 
 function App() {
   const location = useLocation();
-  const isGrayPage = location.pathname === '/add-review' || location.pathname.includes('/review/') || location.pathname === '/profile';
+  const isGrayPage = location.pathname === '/add-review' || location.pathname.includes('/review/') || location.pathname === '/profile' || location.pathname === '/map';
   return (
     <AuthProvider>
       <FormProvider>
