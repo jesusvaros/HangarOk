@@ -211,7 +211,7 @@ const MapView = () => {
         {/* Map container */}
         <div className="relative">
           {/* Floating centered Search Bar */}
-          <div className="absolute left-1/2 top-6 md:top-8 z-[1000] w-[min(640px,92vw)] -translate-x-1/2">
+          <div className="absolute left-1/2 top-6 md:top-8 z-[10] w-[min(640px,92vw)] -translate-x-1/2">
             <SearchBar
               value={searchValue}
               onSelect={(result: AddressResult) => {
@@ -252,11 +252,6 @@ const MapView = () => {
             />
           </div>
 
-          {/* Actions (placeholder for filters, etc.) */}
-          <div className="absolute right-4 top-4 z-[1000] flex flex-col gap-2">
-            {/* Future: MapActionButtons */}
-          </div>
-
           {/* Map */}
           <div className="relative z-0 w-full h-[80vh] rounded-3xl border border-gray-200 overflow-hidden shadow-md bg-white/10">
             <MapContainer
@@ -269,7 +264,6 @@ const MapView = () => {
               <CloseOnMove onMove={() => {
                 setSelectedReview(null);
                 setHoveredId(null);
-                // Clear the search field so the user searches a new place
                 setSearchValue('');
               }} />
               <TileLayer
@@ -291,7 +285,6 @@ const MapView = () => {
                 reviews={publicReviews}
                 selectedId={selectedReview?.id ?? null}
                 onSelect={(rev: PublicReview) => {
-                  // open right panel
                   setSelectedReview(rev);
                 }}
               />
