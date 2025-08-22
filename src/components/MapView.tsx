@@ -28,6 +28,23 @@ const CaptureMapRef = ({ onReady }: { onReady: (m: LeafletMap) => void }) => {
   return null;
 };
 
+// Close panel / clear search on map interactions
+const CloseOnMove = ({ onMove }: { onMove: () => void }) => {
+  const map = useMap();
+  useEffect(() => {
+    const handler = () => onMove();
+    map.on('dragstart', handler);
+    map.on('zoomstart', handler);
+    map.on('movestart', handler);
+    return () => {
+      map.off('dragstart', handler);
+      map.off('zoomstart', handler);
+      map.off('movestart', handler);
+    };
+  }, [map, onMove]);
+  return null;
+};
+
 const MapView = () => {
   const [searchParams] = useSearchParams();
   const [opinions, setOpinions] = useState<Opinion[]>([]);
@@ -248,6 +265,12 @@ const MapView = () => {
               scrollWheelZoom
             >
               <CaptureMapRef onReady={(m) => { mapRef.current = m; }} />
+              <CloseOnMove onMove={() => {
+                setSelectedReview(null);
+                setHoveredId(null);
+                // Clear the search field so the user searches a new place
+                setSearchValue('');
+              }} />
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
