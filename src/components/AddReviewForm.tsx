@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useFormContext } from '../store/useFormContext';
 import { useAuth } from '../store/auth/hooks';
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
 import Step3PropertyCondition from './review-steps/Step3PropertyCondition';
@@ -10,7 +10,7 @@ import Step5Owner from './review-steps/Step5Owner';
 import ContactModal from './ui/ContactModal';
 import StepperBar from './ui/StepperBar';
 import StaticFormMessagesContainer from './ui/StaticFormMessagesContainer';
-import { initializeSession } from '../services/sessionManager';
+import { getSessionIdBack, initializeSession } from '../services/sessionManager';
 import { validateAndSubmitStep } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
 import { getAddressStep1Data } from '../services/supabase/GetSubmitStep1';
@@ -28,8 +28,9 @@ export interface SessionStatus {
   created_at?: string;
 }
 const AddReviewForm: React.FC = () => {
-  const { formData, updateFormData } = useFormContext();
+  const { formData, updateFormData,resetForm } = useFormContext();
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1); // Start with step 1 by default
   
   // Update URL when step changes
@@ -239,7 +240,7 @@ const AddReviewForm: React.FC = () => {
       }
       
       // Only proceed if validation is successful
-      if (result.isValid && currentStep < 5) {
+      if (result.isValid) {
         // Optimistically mark current step as completed so Stepper UI and access checks stay in sync
         setSessionStatus(prev => ({
           ...(prev || {}),
@@ -250,9 +251,20 @@ const AddReviewForm: React.FC = () => {
           step5_completed: currentStep === 5 ? true : prev?.step5_completed,
         }));
 
-        // Force navigation forward by one step after successful submit
-        updateStep(currentStep + 1, true);
-        window.scrollTo(0, 0);
+        if (currentStep < 5) {
+          updateStep(currentStep + 1, true);
+          window.scrollTo(0, 0);
+        } else {
+          window.scrollTo(0, 0);
+          if (!user) {
+            setIsModalOpen(true);
+          }else{
+                  const sessionId = await getSessionIdBack();
+                  if (sessionId) {
+                    onloginComplete(sessionId, user.id);
+                  }
+          }
+        }
       }
     } catch (error) {
       console.error(`Error validating step ${currentStep}:`, error);
@@ -368,6 +380,23 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
+  const onloginComplete = (sessionId: string, userId: string) => {
+    try {
+      localStorage.removeItem('reviewSessionId');
+      localStorage.removeItem('reviewSessionIdBack');
+      localStorage.setItem(`reviewUserId:${sessionId}`, userId);
+    } catch {
+      // noop - storage may be unavailable
+    }
+    // Close modal and navigate to the review page
+    setIsModalOpen(false);
+    navigate(`/review/${sessionId}`);
+    resetForm();
+    setCurrentStep(1);
+    setErrors(errorsDefault);
+    setIsSubmitting(false);
+  };
+
   return (
     <div className="w-full py-8 pt-24">
       {/* Mobile Stepper - Only visible on smaller screens (up to 950px) */}
@@ -413,7 +442,12 @@ const AddReviewForm: React.FC = () => {
           </div>
         </div>
       </div>
-      {isModalOpen && <ContactModal onClose={handleCloseModal} />}
+      {isModalOpen && (
+        <ContactModal
+          onClose={handleCloseModal}
+          onLoginComplete={onloginComplete}
+        />
+      )}
     </div>
   );
 };

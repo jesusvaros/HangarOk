@@ -9,11 +9,13 @@ import type { LoginStatus } from '../../services/auth/loginService';
 interface LoginContentProps {
   onClose?: () => void;
   showTitle?: boolean;
+  onLoginComplete?: (sessionId: string, userId: string) => void;
 }
 
 const LoginContent: React.FC<LoginContentProps> = ({ 
   onClose, 
-  showTitle = true 
+  showTitle = true,
+  onLoginComplete,
 }) => {
   const { formData, updateFormData } = useFormContext();
   const navigate = useNavigate();
@@ -41,8 +43,13 @@ const LoginContent: React.FC<LoginContentProps> = ({
       // If we have a user from auth context, get the session ID and navigate
       const sessionId = await getSessionIdBack();
       if (sessionId) {
-        navigate(`/review/${sessionId}`);
-        if (onClose) onClose();
+        if (onLoginComplete && user?.id) {
+          // Delegate post-login flow to parent if provided
+          onLoginComplete(sessionId, user.id);
+        } else {
+          navigate(`/`);
+          if (onClose) onClose();
+        }
       } else {
         navigate('/');
         if (onClose) onClose();
@@ -67,7 +74,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
       window.removeEventListener('storage', handleStorageChange);
       clearInterval(interval);
     };
-  }, [navigate, user, onClose]);
+  }, [navigate, user, onClose, onLoginComplete]);
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();

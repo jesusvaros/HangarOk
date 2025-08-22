@@ -4,9 +4,10 @@ import LoginContent from './LoginContent';
 
 interface ContactModalProps {
   onClose: () => void;
+  onLoginComplete?: (sessionId: string, userId: string) => void;
 }
 
-const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
+const ContactModal: React.FC<ContactModalProps> = ({ onClose, onLoginComplete }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="relative w-full max-w-md rounded-lg bg-white p-6">
@@ -19,7 +20,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose }) => {
           ✕
         </button>
         
-        <LoginContent onClose={onClose} showTitle={true} />
+        <LoginContent onClose={onClose} showTitle={true} onLoginComplete={onLoginComplete} />
       </div>
     </div>
   );
