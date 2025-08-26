@@ -1,13 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import OpinionsLayer from './map/OpinionsLayer';
 import { useSearchParams } from 'react-router-dom';
 import type { Map as LeafletMap } from 'leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { getOpinionsByCaseroHash } from '../supabaseClient';
-import type { Opinion } from '../supabaseClient';
-import { calculateHash, generateRandomCoordinates } from '../utils';
 import type { AddressResult } from './ui/AddressAutocomplete';
 import ReviewsPanel from './map/ReviewsPanel';
 import SearchBar from './map/SearchBar';
@@ -47,7 +43,6 @@ const CloseOnMove = ({ onMove }: { onMove: () => void }) => {
 
 const MapView = () => {
   const [searchParams] = useSearchParams();
-  const [opinions, setOpinions] = useState<Opinion[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState('');
   // Removed map re-centering selection state to avoid automatic centering
@@ -56,15 +51,13 @@ const MapView = () => {
   const [visiblePublic, setVisiblePublic] = useState<PublicReview[]>([]);
   const [selectedReview, setSelectedReview] = useState<PublicReview | null>(null);
 
-  // Get caseroId from URL params
-  const caseroId = searchParams.get('caseroId');
-
   // Center/zoom state used with SetViewOnChange to avoid remounts
   const [center, setCenter] = useState<[number, number]>([40.416775, -3.70379]); // Madrid
   const [zoom, setZoom] = useState<number>(14);
   const centerInitialized = useRef(false);
   const geolocationAttempted = useRef(false);
   const mapRef = useRef<LeafletMap | null>(null);
+  const [mapReady, setMapReady] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   const currentIcon = L.divIcon({
@@ -78,53 +71,28 @@ const MapView = () => {
     iconAnchor: [8, 8],
   });
 
-  // Load opinions when caseroId changes
+  // Initialize from query params (?lat=..&lng=..&q=..)
   useEffect(() => {
-    const fetchOpinions = async () => {
-      if (!caseroId) return;
+    const latParam = searchParams.get('lat');
+    const lngParam = searchParams.get('lng');
+    const qParam = searchParams.get('q');
+    const lat = latParam ? parseFloat(latParam) : NaN;
+    const lng = lngParam ? parseFloat(lngParam) : NaN;
 
-      setError(null);
-
-      try {
-        // Calculate hash of caseroId for privacy
-        const hash = await calculateHash(caseroId);
-        const fetchedOpinions = await getOpinionsByCaseroHash(hash);
-
-        // Add random coordinates to opinions without location
-        const opinionsWithCoords = fetchedOpinions.map(opinion => {
-          if (!opinion.lat || !opinion.lng) {
-            const coords = generateRandomCoordinates();
-            return { ...opinion, lat: coords.lat, lng: coords.lng };
-          }
-          return opinion;
-        });
-
-        setOpinions(opinionsWithCoords);
-
-        // Initialize center from opinions only AFTER geolocation attempt
-        if (!centerInitialized.current && geolocationAttempted.current && opinionsWithCoords.length > 0) {
-          const lat = opinionsWithCoords.reduce((sum, op) => sum + (op.lat || 0), 0) / opinionsWithCoords.length;
-          const lng = opinionsWithCoords.reduce((sum, op) => sum + (op.lng || 0), 0) / opinionsWithCoords.length;
-          setCenter([lat, lng]);
-          centerInitialized.current = true;
-        }
-
-        if (opinionsWithCoords.length === 0) {
-          setError('No se encontraron opiniones para este casero.');
-        }
-      } catch (err) {
-        console.error('Error searching opinions:', err);
-        setError('Error al buscar opiniones. Por favor, inténtalo de nuevo.');
-        setOpinions([]);
-      } finally {
-        // no-op
+    if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+      setCenter([lat, lng]);
+      setZoom(17);
+      if (mapReady) {
+        mapRef.current?.setView([lat, lng], 17, { animate: true });
       }
-    };
+      centerInitialized.current = true;
+      geolocationAttempted.current = true;
+      if (qParam) setSearchValue(qParam);
+    } else if (qParam && !centerInitialized.current) {
+      setSearchValue(qParam);
+    }
+  }, [searchParams, mapReady]);
 
-    fetchOpinions();
-  }, [caseroId]);
-
-  // Load public reviews (is_public = true) once
   useEffect(() => {
     (async () => {
       const rows = await getPublicReviews();
@@ -176,10 +144,6 @@ const MapView = () => {
       geolocationAttempted.current = true;
     }
   }, []);
-
-  // AddressAutocomplete onSelect is handled inline in JSX below to keep local state updates together
-
-  // Geolocate and map-click actions are disabled for public browse mode
 
   return (
     <div className="w-full px-6 md:px-8 pt-24 md:pt-28 pb-8">
@@ -260,7 +224,7 @@ const MapView = () => {
               style={{ height: '100%', width: '100%' }}
               scrollWheelZoom
             >
-              <CaptureMapRef onReady={(m) => { mapRef.current = m; }} />
+              <CaptureMapRef onReady={(m) => { mapRef.current = m; setMapReady(true); }} />
               <CloseOnMove onMove={() => {
                 setSelectedReview(null);
                 setHoveredId(null);
@@ -280,7 +244,6 @@ const MapView = () => {
                 />
               )}
 
-              <OpinionsLayer opinions={opinions} />
               <PublicReviewsLayer
                 reviews={publicReviews}
                 selectedId={selectedReview?.id ?? null}

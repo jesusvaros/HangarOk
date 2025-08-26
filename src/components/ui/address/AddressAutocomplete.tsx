@@ -16,6 +16,7 @@ interface AddressAutocompleteProps {
   hasError?: boolean;
   numberHasError?: boolean;
   className?: string;
+  inputClassName?: string;
   hideLabel?: boolean;
   onActionClick?: () => void;
   actionDisabled?: boolean;
@@ -35,6 +36,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   hasError = false,
   numberHasError = false,
   className = '',
+  inputClassName = '',
   hideLabel = false,
   onActionClick,
   actionDisabled = false,
@@ -114,6 +116,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             onActionClick={onActionClick}
             actionDisabled={actionDisabled}
             actionIcon={actionIcon}
+            className={inputClassName}
             allowBroadResults={allowBroadResults}
           />
         </div>

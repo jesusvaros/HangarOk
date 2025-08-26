@@ -1,6 +1,9 @@
 import { Marker } from 'react-leaflet';
-import L from 'leaflet';
 import type { PublicReview } from '../../services/supabase/publicReviews';
+
+import { svgToIcon } from './svgIcon';
+import { chatBubbleSVG } from './heroPin';
+
 
 interface Props {
   reviews: PublicReview[];
@@ -8,31 +11,13 @@ interface Props {
   onSelect?: (review: PublicReview) => void;
 }
 
-const defaultIcon = L.divIcon({
-  className: '',
-  html: `
-<svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 30 40">
-  <circle cx="15" cy="15" r="13" fill="#22C55E" />
-  <path d="M9.5 15.5l3.5 3.5 7-7" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M15 30 L22 40 L8 40 Z" fill="#22C55E" />
-</svg>
-`,
-  iconSize: [30, 40],
-  iconAnchor: [15, 40],
-});
 
-const selectedIcon = L.divIcon({
-  className: '',
-  html: `
-<svg xmlns="http://www.w3.org/2000/svg" width="36" height="46" viewBox="0 0 36 46">
-  <circle cx="18" cy="18" r="15" fill="#22C55E" />
-  <path d="M11 18l4.2 4.2 8.4-8.4" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
-  <path d="M18 34 L26 46 L10 46 Z" fill="#22C55E" />
-</svg>
-`,
-  iconSize: [36, 46],
-  iconAnchor: [18, 46],
-});
+// Use hero chat bubble shape as a green pin with white check
+const opinionIcon = svgToIcon(
+  chatBubbleSVG({ fill: '#22C55E', stroke: 'none', size: 34, includeCheck: true, checkStroke: '#FFFFFF' }),
+  [34, 34],
+  [17, 34]
+);
 
 export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Props) {
   if (!reviews?.length) return null;
@@ -45,7 +30,7 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
         )
         .map((r) => {
           const isSelected = String(r.id) === String(selectedId ?? '');
-          const markerProps = isSelected ? { icon: selectedIcon } : { icon: defaultIcon };
+          const markerProps = isSelected ? { icon: opinionIcon } : { icon: opinionIcon };
           return (
             <Marker
               key={`public-${r.id}`}

@@ -1,13 +1,4 @@
 // Define types for our database
-export type Opinion = {
-  id?: number;
-  casero_hash: string;
-  texto: string;
-  rating: number;
-  lat?: number | null;
-  lng?: number | null;
-  created_at?: string;
-};
 
 export interface ReviewSessionStatus {
   id: string;

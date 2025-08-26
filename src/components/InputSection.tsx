@@ -11,6 +11,7 @@ const InputSection: React.FC = () => {
   const navigate = useNavigate();
   const { address, setAddress, updateFormData, formData } = useFormContext();
   const [isLoading, setIsLoading] = useState(false);
+  const [mode, setMode] = useState<'form' | 'map'>('form');
   const { user } = useAuth();
 
   const [state, setState] = useState({
@@ -90,6 +91,16 @@ const InputSection: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleGoToMap = () => {
+      if (!formData.addressDetails?.coordinates || !address.trim()) {
+        showErrorToast('Por favor selecciona una dirección de la lista para continuar');
+        return;
+      }
+      const coords = formData.addressDetails.coordinates;
+      const q = address;
+      navigate(`/map?lat=${coords.lat}&lng=${coords.lng}&q=${encodeURIComponent(q)}`);
   };
 
   const handleAddressSelect = (result: AddressResult) => {
@@ -187,6 +198,26 @@ const InputSection: React.FC = () => {
             </div>
           </div>
 
+          {/* Mode toggle */}
+          <div className="mx-auto mb-3 flex max-w-3xl justify-center px-4">
+            <div className="inline-flex rounded-lg bg-white p-1 shadow">
+              <button
+                type="button"
+                onClick={() => setMode('form')}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${mode === 'form' ? 'bg-[#4A5E32] text-white' : 'text-[#4A5E32] hover:bg-gray-100'}`}
+              >
+                Escribir review
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('map')}
+                className={`ml-1 px-4 py-2 text-sm font-medium rounded-md transition-colors ${mode === 'map' ? 'bg-[#4A5E32] text-white' : 'text-[#4A5E32] hover:bg-gray-100'}`}
+              >
+                Buscar en el mapa
+              </button>
+            </div>
+          </div>
+
           {/* Input and button */}
           <div className="flex max-w-3xl flex-row items-start justify-center px-4">
             <div className="w-full">
@@ -200,7 +231,7 @@ const InputSection: React.FC = () => {
 
             {/* Mobile button with icon */}
             <button
-              onClick={handleStart}
+              onClick={mode === 'form' ? handleStart : handleGoToMap}
               className="mt-[1px] h-12 flex-shrink-0 rounded-r-md bg-[#F97316] p-3 text-white"
             >
               <svg
@@ -251,6 +282,26 @@ const InputSection: React.FC = () => {
           </div>
         </div>
 
+        {/* Mode toggle */}
+        <div className="mx-auto mb-5 flex max-w-3xl justify-center">
+          <div className="inline-flex rounded-xl bg-white p-2 shadow-md">
+            <button
+              type="button"
+              onClick={() => setMode('form')}
+              className={`px-6 py-3 text-base md:text-lg font-semibold rounded-lg transition-colors ${mode === 'form' ? 'bg-[#4A5E32] text-white' : 'text-[#4A5E32] hover:bg-gray-100'}`}
+            >
+              Escribir review
+            </button>
+            <button
+              type="button"
+              onClick={() => setMode('map')}
+              className={`ml-2 px-6 py-3 text-base md:text-lg font-semibold rounded-lg transition-colors ${mode === 'map' ? 'bg-[#4A5E32] text-white' : 'text-[#4A5E32] hover:bg-gray-100'}`}
+            >
+              Buscar en el mapa
+            </button>
+          </div>
+        </div>
+
         <div className="mx-auto flex max-w-3xl flex-row items-start justify-center">
           <div className="w-full">
             <AddressAutocomplete
@@ -258,15 +309,16 @@ const InputSection: React.FC = () => {
               value={address}
               placeholder="Dirección del inmueble"
               hideLabel
+              inputClassName="[&_input]:h-14 [&_input]:text-lg [&_input]:px-5"
             />
           </div>
 
           <button
-            onClick={handleStart}
+            onClick={mode === 'form' ? handleStart : handleGoToMap}
             disabled={isLoading}
-            className="mt-[1px] flex h-[48px] items-center justify-center rounded-r-lg bg-[#F97316] px-8 py-4 font-medium text-white hover:bg-[#EA580C] focus:outline-none"
+            className="mt-[1px] flex h-14 items-center justify-center rounded-r-lg bg-[#F97316] px-8 py-4 text-lg font-semibold text-white hover:bg-[#EA580C] focus:outline-none"
           >
-            Empezar
+            {mode === 'form' ? 'Empezar' : 'Buscar'}
           </button>
         </div>
       </div>
