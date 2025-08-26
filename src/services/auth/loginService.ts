@@ -21,17 +21,18 @@ export const sendEmailOtp = async (email: string) => {
     });
 
     if (result.error) {
-      return { 
-        success: false, 
-        error: result.error.message 
+      return {
+        success: false,
+        error: result.error.message
       };
     }
 
     return { success: true };
-  } catch (error) {
-    return { 
-      success: false, 
-      error: 'Error al conectar con el servidor de autenticación.' + error 
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Error al conectar con el servidor de autenticación. ${message}`
     };
   }
 };
@@ -63,10 +64,11 @@ export const signInWithGoogle = async () => {
       };
     }
     return { success: true };
-  } catch (error) {
-    return { 
-      success: false, 
-      error: 'Error al iniciar sesión con Google. ' + error 
+  } catch (error: unknown) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      success: false,
+      error: `Error al iniciar sesión con Google. ${message}`
     };
   }
 };
