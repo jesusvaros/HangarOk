@@ -7,6 +7,7 @@ interface EstanciaStep2Payload {
   price: number;
   included_services: string[];
   would_recommend: '1'|'2'|'3'|'4'|'5'|undefined;
+  deposit_returned: string|undefined;
 }
 
 export async function getSessionStep2Data(id?: string): Promise<EstanciaStep2Payload | null> {
@@ -41,6 +42,7 @@ export async function submitSessionStep2(payload: {
   price: number;
   includedServices: string[];
   wouldRecommend: string;
+  depositReturned: boolean|undefined;
 }): Promise<boolean> {
   try {
     // Get Supabase client
@@ -56,6 +58,7 @@ export async function submitSessionStep2(payload: {
       p_price: payload.price,
       p_included_services: payload.includedServices,
       p_would_recommend: payload.wouldRecommend,
+      p_deposit_returned: payload.depositReturned,
     });
 
     if (error) throw error;

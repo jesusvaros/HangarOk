@@ -22,20 +22,6 @@ const Header: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [scrolled]);
 
-  // Extract address from URL if on review page
-  useEffect(() => {
-    if (location.pathname.includes('/review/')) {
-      const pathParts = location.pathname.split('/');
-      if (pathParts.length > 2) {
-        // Here you would fetch the address based on the review ID
-        // For now, just use a placeholder
-        setAddress('Calle de ejemplo, 123');
-      }
-    } else {
-      setAddress('');
-    }
-  }, [location]);
-
   const handleStart = () => {
     if (address.trim()) {
       navigate(`/add-review?address=${encodeURIComponent(address)}`);

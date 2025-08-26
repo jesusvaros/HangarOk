@@ -111,6 +111,7 @@ const AddReviewForm: React.FC = () => {
         price: estanciaData.price,
         includedServices: estanciaData.included_services,
         wouldRecommend: estanciaData.would_recommend,
+        depositReturned: estanciaData.deposit_returned === 'true',
       });
     }
   }, [updateFormData]);

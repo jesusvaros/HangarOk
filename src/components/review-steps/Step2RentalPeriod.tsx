@@ -113,23 +113,55 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
                   <p className="mt-2 text-sm text-red-600">Revisa el período seleccionado.</p>
                 )}
 
-                {/* Checkbox: Aún vivo aquí */}
-                <div className="flex items-center gap-2">
-                  <input
-                    id="stillHere"
-                    type="checkbox"
-                    checked={isLiving}
-                    onChange={(e) => {
-                      if (e.target.checked) {
-                        updateFormData({ endYear: undefined });
-                      } else {
-                        // Si se desmarca, fija el fin al año actual si no había ninguno
-                        updateFormData({ endYear: endRaw || maxYear });
-                      }
-                    }}
-                    className="h-4 w-4 text-[rgb(74,94,50)] focus:ring-[rgb(74,94,50)] border-gray-300 rounded"
-                  />
-                  <label htmlFor="stillHere" className="text-lg text-black font-medium">Aún vivo aquí</label>
+                {/* Aún vivo aquí + Fianza (en fila en desktop) */}
+                <div className="mt-3 md:flex md:items-start md:gap-6">
+                  <div className="md:flex-1">
+                    <SelectableTagGroup
+                      label="¿Aún vives en el piso?"
+                      options={['Sí', 'No']}
+                      selectedOptions={[isLiving ? 'Sí' : 'No']}
+                      onChange={(selected) => {
+                        const choice = selected[0];
+                        if (choice === 'Sí') {
+                          // Volvemos a 'vive aquí': fin indefinido y limpiamos respuesta de fianza
+                          updateFormData({ endYear: undefined, depositReturned: undefined });
+                        } else if (choice === 'No') {
+                          // Cambia a 'No': fijar fin si no había
+                          updateFormData({ endYear: endRaw || maxYear });
+                        }
+                      }}
+                      multiSelect={false}
+                    />
+                  </div>
+
+                  {/* Caja deslizante de fianza cuando NO vive */}
+                  <div
+                    className={`md:flex-1 transition-all duration-300 ease-in origin-right ${
+                      isLiving
+                        ? 'max-h-0 md:max-h-0 opacity-0 md:opacity-0 translate-x-2 md:translate-x-2 pointer-events-none'
+                        : 'max-h-40 md:max-h-none opacity-100 translate-x-0'
+                    }`}
+                  >
+                    {!isLiving && (
+                        <SelectableTagGroup
+                          label="¿Te devolvieron la fianza?"
+                          options={['Sí', 'No']}
+                          selectedOptions={
+                            formData.depositReturned === true
+                              ? ['Sí']
+                              : formData.depositReturned === false
+                                ? ['No']
+                                : []
+                          }
+                          onChange={(selected) => {
+                            const choice = selected[0] as 'Sí' | 'No' | undefined;
+                            const value = choice === 'Sí' ? true : choice === 'No' ? false : undefined;
+                            updateFormData({ depositReturned: value });
+                          }}
+                          multiSelect={false}
+                        />
+                    )}
+                  </div>
                 </div>
               </div>
             );

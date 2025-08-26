@@ -211,7 +211,7 @@ const ReviewPage = () => {
         <h2 className="mb-4 text-[20px] font-bold">Período y precio</h2>
         
         {/* Contenido de período */}
-        <PeriodSection periodData={step2Data} />
+        <PeriodSection periodData={step2Data} would_recommend={step2Data?.would_recommend} />
         
         {/* Mapa con la ubicación */}
         <div className="mt-6">
@@ -263,7 +263,7 @@ const ReviewPage = () => {
             <h2 className="mb-4 text-[20px] font-bold">Período y precio</h2>
             
             {/* Contenido de período */}
-            <PeriodSection periodData={step2Data} />
+            <PeriodSection periodData={step2Data} would_recommend={step2Data?.would_recommend} />
             
             {/* Mapa */}
             <div className="mt-6">

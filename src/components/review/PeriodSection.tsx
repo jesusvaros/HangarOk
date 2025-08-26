@@ -1,4 +1,6 @@
 import React from 'react';
+import { StarIcon as StarIconOutline } from '@heroicons/react/24/outline';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 // Icono para el precio
 const MoneyIcon = () => (
@@ -129,9 +131,10 @@ interface PeriodSectionProps {
     price: number;
     included_services: string[];
   } | null;
+  would_recommend?: '1'|'2'|'3'|'4'|'5';
 }
 
-const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
+const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData, would_recommend }) => {
   if (!periodData) {
     return <p className="text-gray-500">Información no disponible</p>;
   }
@@ -144,6 +147,23 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
 
   return (
     <div className="grid gap-6 md:grid-cols-2 text-[16px]">
+      {/* Recomendación (estrellas) */}
+      {would_recommend && (
+        <div className="md:col-span-2 flex items-center gap-2">
+          <span className="text-[16px] font-medium text-gray-500">Recomendación</span>
+          <div className="ml-1 flex items-center" aria-label={`Recomendación ${would_recommend} de 5`}>
+            {[1,2,3,4,5].map((i) => (
+              <span key={i} className="mr-0.5">
+                {i <= Number(would_recommend) ? (
+                  <StarIconSolid className="h-5 w-5 text-yellow-500" />
+                ) : (
+                  <StarIconOutline className="h-5 w-5 text-gray-300" />
+                )}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="md:col-span-2">
         {/* Línea temporal */}
         <div className="mt-4  relative h-16 w-full">

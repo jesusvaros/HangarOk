@@ -10,7 +10,7 @@ export interface ValidationResult {
 }
 
 export const validateStep2 = (context: FormDataType): ValidationResult => {
-  const { startYear, endYear, price, wouldRecommend } = context;
+  const { startYear, endYear, price, wouldRecommend , depositReturned} = context;
   const fieldErrors = { startYear: false, monthlyPrice: false, wouldRecommend: false };
 
   if (!startYear) {
@@ -43,6 +43,13 @@ export const validateStep2 = (context: FormDataType): ValidationResult => {
       fieldErrors: { ...fieldErrors, wouldRecommend: true },
     };
   }
+  if(!depositReturned && !endYear){
+    return {
+      isValid: false,
+      message: 'Si marcas que no vives en el piso, debes indicar si la fianza fue devuelta',
+      fieldErrors: { ...fieldErrors, depositReturned: true },
+    };
+  }
 
   return {
     isValid: true,
@@ -55,7 +62,7 @@ export const submitStep2 = async (
   context: FormDataType
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { startYear, endYear, price, includedServices, wouldRecommend } = context;
+    const { startYear, endYear, price, includedServices, wouldRecommend, depositReturned } = context;
 
     // Basic check - validation should have already happened
     if (!startYear || !price || !includedServices || !wouldRecommend) {
@@ -78,6 +85,7 @@ export const submitStep2 = async (
       price,
       includedServices: includedServices || [],
       wouldRecommend: wouldRecommend || '', 
+      depositReturned: depositReturned || undefined,
     });
 
     return {
