@@ -1,4 +1,5 @@
 import React from 'react';
+import Slider from '@mui/material/Slider';
 import { useFormContext } from '../../store/useFormContext';
 import CustomInput from '../ui/CustomInput';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
@@ -19,64 +20,128 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
   isSubmitting,
 }) => {
   const { formData, updateFormData } = useFormContext();
-  const isCurrentlyLiving = formData.endYear === null || formData.endYear === undefined;
+  
 
   return (
     <div>
       <div className="mb-8">
-        <h3 className="mb-4 text-lg font-medium text-black">Período de alquiler</h3>
-
+        {/* Rango de años con dos manejadores */}
         <div className="mb-6">
-          <div className="flex flex-col md:flex-row md:gap-4">
-            <div className="mb-4 md:mb-0 md:w-1/2">
-              <label className="mb-2 block text-sm font-medium text-gray-700">Año de inicio</label>
-              <select
-                value={formData.startYear || new Date().getFullYear()}
-                onChange={e => updateFormData({ startYear: parseInt(e.target.value) })}
-                className={`w-full rounded border p-3 focus:outline-none focus:ring-2  ${fieldErrors?.startYear ? 'bg-red-100 border-red-400' : 'focus:ring-[rgb(74,94,50)]'}`}
-              >
-                {Array.from({ length: 20 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {(() => {
+            const currentYear = new Date().getFullYear();
+            const minYear = currentYear - 20;
+            const maxYear = currentYear;
 
-            <div className="md:w-1/2">
-              <label className="mb-2 block text-sm font-medium text-gray-700">
-                Año de fin (o actual si sigues viviendo)
-              </label>
-              <select
-                value={isCurrentlyLiving ? 'current' : formData.endYear || new Date().getFullYear()}
-                onChange={e => {
-                  const value = e.target.value;
-                  if (value === 'current') {
-                    updateFormData({ endYear: undefined });
-                  } else {
-                    updateFormData({ endYear: parseInt(value) });
-                  }
-                }}
-                className={`w-full rounded border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)] ${fieldErrors?.endYear ? 'bg-red-100 border-red-400' : ''}`}
-              >
-                <option value="current">Actualmente</option>
-                {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() - i).map(year => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
+            // Normaliza valores por si vienen fuera de rango
+            const start = Math.min(
+              Math.max(formData.startYear ?? maxYear, minYear),
+              maxYear
+            );
+            const endRaw = Math.min(
+              Math.max((formData.endYear ?? maxYear), minYear),
+              maxYear
+            );
+            const isLiving = formData.endYear === undefined;
+            const endForUI = isLiving ? maxYear : endRaw;
+
+            
+
+            return (
+              <div>
+                <label className="mb-2 block text-lg font-medium text-black">
+                  ¿Cuántos años has estado en este piso?
+                </label>
+                <div className="relative pt-6 pb-6 select-none mx-8">
+                  <Slider
+                    value={[start, endForUI]}
+                    min={minYear}
+                    max={maxYear}
+                    step={1}
+                    disableSwap
+                    onChange={(_e: Event, val: number | number[], activeThumb: number) => {
+                      const [s, e] = val as number[];
+                      if (activeThumb === 0) {
+                        // mover inicio, no superar fin
+                        const newStart = Math.min(s, isLiving ? endForUI : endRaw);
+                        if (!isLiving && newStart > endRaw) {
+                          updateFormData({ startYear: newStart, endYear: newStart });
+                        } else {
+                          updateFormData({ startYear: newStart });
+                        }
+                      } else if (activeThumb === 1) {
+                        if (isLiving) return; // no mover fin cuando vive actualmente
+                        const newEnd = Math.max(e, start);
+                        updateFormData({ endYear: newEnd });
+                      }
+                    }}
+                    valueLabelDisplay="on"
+                    valueLabelFormat={(v: number) => `${v}`}
+                    sx={{
+                      pointerEvents: 'none',
+                      color: 'rgb(74,94,50)',
+                      height: 10,
+                      '& .MuiSlider-rail': { backgroundColor: '#D1D5DB', opacity: 1, pointerEvents: 'none' },
+                      '& .MuiSlider-track': { border: 'none', pointerEvents: 'none' },
+                      '& .MuiSlider-thumb': {
+                        pointerEvents: 'auto',
+                        bgcolor: '#fff',
+                        border: '1px solid #D1D5DB',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                        width: 56,
+                        height: 32,
+                        borderRadius: 8,
+                        '&:hover, &.Mui-focusVisible': { boxShadow: '0 0 0 8px rgba(74,94,50,0.08)' },
+                      },
+                      '& .MuiSlider-valueLabel': {
+                        background: '#fff',
+                        color: '#000',
+                        border: '1px solid #D1D5DB',
+                        borderRadius: 8,
+                        top: '110%',
+                        left: '-10%',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                        padding: '6px 10px',
+                        fontSize: '1.125rem',
+                        fontWeight: 500,
+                        '&:before': { display: 'none' },
+                        pointerEvents: 'none',
+                      },
+                    }}
+                  />
+                </div>
+                {(fieldErrors?.startYear || fieldErrors?.endYear) && (
+                  <p className="mt-2 text-sm text-red-600">Revisa el período seleccionado.</p>
+                )}
+
+                {/* Checkbox: Aún vivo aquí */}
+                <div className="flex items-center gap-2">
+                  <input
+                    id="stillHere"
+                    type="checkbox"
+                    checked={isLiving}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        updateFormData({ endYear: undefined });
+                      } else {
+                        // Si se desmarca, fija el fin al año actual si no había ninguno
+                        updateFormData({ endYear: endRaw || maxYear });
+                      }
+                    }}
+                    className="h-4 w-4 text-[rgb(74,94,50)] focus:ring-[rgb(74,94,50)] border-gray-300 rounded"
+                  />
+                  <label htmlFor="stillHere" className="text-lg text-black font-medium">Aún vivo aquí</label>
+                </div>
+              </div>
+            );
+          })()}
         </div>
       </div>
 
       {/* Sección: Precio del alquiler */}
       <div className="mb-8">
-        <h3 className="mb-4 text-lg font-medium text-black">Precio del alquiler</h3>
         <CustomInput
           id="price"
-          label="Precio mensual (€)"
+          label="Cuanto pagas al mes de alquiler?(€)"
           type="number"
           value={formData.price || ''}
           onChange={e => updateFormData({ price: parseFloat(e.target.value) || 0 })}
@@ -97,13 +162,13 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
 
       {/* Sección: ¿Recomendarías este piso? (1-5, no numérico) */}
       <div className="mb-8">
-        <h3 className="mb-4 text-lg font-medium text-black">Recomendación</h3>
         <SelectableTagGroup
           label="¿Recomendarías este piso?"
           options={['1', '2', '3', '4', '5']}
           selectedOptions={formData.wouldRecommend ? [formData.wouldRecommend] : []}
           onChange={(selected) => updateFormData({ wouldRecommend: (selected[0] as '1'|'2'|'3'|'4'|'5'|undefined) })}
           multiSelect={false}
+          error={fieldErrors?.wouldRecommend}
         />
       </div>
 

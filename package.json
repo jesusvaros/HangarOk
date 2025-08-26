@@ -11,8 +11,11 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.1",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.1.1",
+    "@mui/material": "^7.3.1",
     "@supabase/supabase-js": "^2.50.2",
     "@types/lodash.debounce": "^4.0.9",
     "framer-motion": "^12.23.12",

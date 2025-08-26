@@ -8,6 +8,7 @@ interface SelectableTagGroupProps {
   onChange: (selectedOptions: string[]) => void;
   multiSelect?: boolean;
   className?: string;
+  error?: boolean;
 }
 
 const SelectableTagGroup: React.FC<SelectableTagGroupProps> = ({
@@ -17,6 +18,7 @@ const SelectableTagGroup: React.FC<SelectableTagGroupProps> = ({
   onChange,
   multiSelect = true,
   className = '',
+  error = false,
 }) => {
   const handleTagClick = (option: string) => {
     if (multiSelect) {
@@ -36,7 +38,7 @@ const SelectableTagGroup: React.FC<SelectableTagGroupProps> = ({
 
   return (
     <div className={`mb-4 ${className}`}>
-      {label && <label className="mb-2 block text-sm font-medium text-gray-700">{label}</label>}
+      {label && <label className={`mb-2 block text-lg font-medium text-black ${error ? 'text-red-600' : ''}`}>{label}</label>}
       <div className="flex flex-wrap gap-2">
         {options.map(option => (
           <SelectableTag

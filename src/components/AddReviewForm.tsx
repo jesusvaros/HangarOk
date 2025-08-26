@@ -110,6 +110,7 @@ const AddReviewForm: React.FC = () => {
         endYear: estanciaData.end_year,
         price: estanciaData.price,
         includedServices: estanciaData.included_services,
+        wouldRecommend: estanciaData.would_recommend,
       });
     }
   }, [updateFormData]);

@@ -10,8 +10,8 @@ export interface ValidationResult {
 }
 
 export const validateStep2 = (context: FormDataType): ValidationResult => {
-  const { startYear, endYear, price } = context;
-  const fieldErrors = { startYear: false, montlyPrice: false };
+  const { startYear, endYear, price, wouldRecommend } = context;
+  const fieldErrors = { startYear: false, montlyPrice: false, wouldRecommend: false };
 
   if (!startYear) {
     return {
@@ -36,6 +36,13 @@ export const validateStep2 = (context: FormDataType): ValidationResult => {
       fieldErrors: { ...fieldErrors, endYear: true, startYear: true },
     };
   }
+  if(!wouldRecommend){
+    return {
+      isValid: false,
+      message: 'La recomendación es obligatoria',
+      fieldErrors: { ...fieldErrors, wouldRecommend: true },
+    };
+  }
 
   return {
     isValid: true,
@@ -48,12 +55,10 @@ export const submitStep2 = async (
   context: FormDataType
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { startYear, endYear, price, includedServices } = context;
-
-    console.log('submitStep2', context);
+    const { startYear, endYear, price, includedServices, wouldRecommend } = context;
 
     // Basic check - validation should have already happened
-    if (!startYear || !price) {
+    if (!startYear || !price || !includedServices || !wouldRecommend) {
       return { success: false, message: 'Datos incompletos' };
     }
 
@@ -72,6 +77,7 @@ export const submitStep2 = async (
       endYear: endYear == undefined ? null : endYear,
       price,
       includedServices: includedServices || [],
+      wouldRecommend: wouldRecommend || '', 
     });
 
     return {
