@@ -1,16 +1,19 @@
 import React from 'react';
-import { ChatBubbleLeftRightIcon, HomeIcon, UserGroupIcon, UserIcon } from '@heroicons/react/24/outline';
+import { ChatBubbleLeftRightIcon, HomeIcon, UserGroupIcon, UserIcon, StarIcon as StarIconOutline } from '@heroicons/react/24/outline';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 interface OpinionSectionProps {
   propertyOpinion?: string;
   communityOpinion?: string;
   ownerOpinion?: string;
+  wouldRecommend?: '1'|'2'|'3'|'4'|'5';
 }
 
 const OpinionSection: React.FC<OpinionSectionProps> = ({
   propertyOpinion,
   communityOpinion,
   ownerOpinion,
+  wouldRecommend,
 }) => {
   const hasOpinions = propertyOpinion || communityOpinion || ownerOpinion;
 
@@ -23,6 +26,19 @@ const OpinionSection: React.FC<OpinionSectionProps> = ({
       <div className="flex items-center gap-2 mb-2">
         <ChatBubbleLeftRightIcon className="h-5 w-5 text-green-700" />
         <h3 className="text-[18px] font-semibold">Opiniones del inquilino</h3>
+        {wouldRecommend && (
+          <div className="ml-3 flex items-center" aria-label={`Recomendación ${wouldRecommend} de 5`}>
+            {[1,2,3,4,5].map((i) => (
+              <span key={i} className="mr-0.5">
+                {i <= Number(wouldRecommend) ? (
+                  <StarIconSolid className="h-5 w-5 text-yellow-500" />
+                ) : (
+                  <StarIconOutline className="h-5 w-5 text-gray-300" />
+                )}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {propertyOpinion && (

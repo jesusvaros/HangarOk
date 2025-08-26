@@ -33,6 +33,7 @@ interface Step2Data {
   end_year: number | null;
   price: number;
   included_services: string[];
+  would_recommend?: '1'|'2'|'3'|'4'|'5';
 }
 
 interface Step3Data {
@@ -236,6 +237,7 @@ const ReviewPage = () => {
           propertyOpinion={step3Data?.property_opinion}
           communityOpinion={step4Data?.community_opinion}
           ownerOpinion={step5Data?.owner_opinion}
+          wouldRecommend={step2Data?.would_recommend}
         />
       </div>
       
@@ -291,6 +293,7 @@ const ReviewPage = () => {
             propertyOpinion={step3Data?.property_opinion}
             communityOpinion={step4Data?.community_opinion}
             ownerOpinion={step5Data?.owner_opinion}
+            wouldRecommend={step2Data?.would_recommend}
           />
         </div>
         
