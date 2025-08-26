@@ -34,6 +34,7 @@ interface Step2Data {
   price: number;
   included_services: string[];
   would_recommend?: '1'|'2'|'3'|'4'|'5';
+  deposit_returned?: string | undefined;
 }
 
 interface Step3Data {
@@ -211,7 +212,7 @@ const ReviewPage = () => {
         <h2 className="mb-4 text-[20px] font-bold">Período y precio</h2>
         
         {/* Contenido de período */}
-        <PeriodSection periodData={step2Data} would_recommend={step2Data?.would_recommend} />
+        <PeriodSection periodData={step2Data} />
         
         {/* Mapa con la ubicación */}
         <div className="mt-6">
@@ -263,7 +264,7 @@ const ReviewPage = () => {
             <h2 className="mb-4 text-[20px] font-bold">Período y precio</h2>
             
             {/* Contenido de período */}
-            <PeriodSection periodData={step2Data} would_recommend={step2Data?.would_recommend} />
+            <PeriodSection periodData={step2Data} />
             
             {/* Mapa */}
             <div className="mt-6">

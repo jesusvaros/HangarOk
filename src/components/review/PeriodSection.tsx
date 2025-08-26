@@ -130,11 +130,12 @@ interface PeriodSectionProps {
     end_year: number | null;
     price: number;
     included_services: string[];
+    would_recommend?: '1'|'2'|'3'|'4'|'5';
+    deposit_returned?: string | undefined;
   } | null;
-  would_recommend?: '1'|'2'|'3'|'4'|'5';
 }
 
-const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData, would_recommend }) => {
+const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData }) => {
   if (!periodData) {
     return <p className="text-gray-500">Información no disponible</p>;
   }
@@ -147,21 +148,35 @@ const PeriodSection: React.FC<PeriodSectionProps> = ({ periodData, would_recomme
 
   return (
     <div className="grid gap-6 md:grid-cols-2 text-[16px]">
-      {/* Recomendación (estrellas) */}
-      {would_recommend && (
-        <div className="md:col-span-2 flex items-center gap-2">
-          <span className="text-[16px] font-medium text-gray-500">Recomendación</span>
-          <div className="ml-1 flex items-center" aria-label={`Recomendación ${would_recommend} de 5`}>
-            {[1,2,3,4,5].map((i) => (
-              <span key={i} className="mr-0.5">
-                {i <= Number(would_recommend) ? (
-                  <StarIconSolid className="h-5 w-5 text-yellow-500" />
-                ) : (
-                  <StarIconOutline className="h-5 w-5 text-gray-300" />
-                )}
-              </span>
-            ))}
-          </div>
+      {/* Recomendación (estrellas) + Fianza devuelta */}
+      {(periodData.would_recommend || typeof periodData.deposit_returned !== 'undefined') && (
+        <div className="md:col-span-2 flex items-center gap-4 flex-wrap">
+          {periodData.would_recommend && (
+            <div className="flex items-center gap-2">
+              <span className="text-[16px] font-medium text-gray-500">Recomendación</span>
+              <div className="ml-1 flex items-center" aria-label={`Recomendación ${periodData.would_recommend} de 5`}>
+                {[1,2,3,4,5].map((i) => (
+                  <span key={i} className="mr-0.5">
+                    {i <= Number(periodData.would_recommend) ? (
+                      <StarIconSolid className="h-5 w-5 text-yellow-500" />
+                    ) : (
+                      <StarIconOutline className="h-5 w-5 text-gray-300" />
+                    )}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+          {typeof periodData.deposit_returned !== 'undefined' && (
+            <div className="flex items-center gap-2">
+              <span className="text-[16px] font-medium text-gray-500">Fianza devuelta</span>
+              {periodData.deposit_returned === 'true' ? (
+                <span className="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-green-700 text-[14px]">Sí</span>
+              ) : (
+                <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-red-700 text-[14px]">No</span>
+              )}
+            </div>
+          )}
         </div>
       )}
       <div className="md:col-span-2">
