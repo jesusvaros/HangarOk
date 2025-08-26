@@ -95,6 +95,18 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
         </div>
       </div>
 
+      {/* Sección: ¿Recomendarías este piso? (1-5, no numérico) */}
+      <div className="mb-8">
+        <h3 className="mb-4 text-lg font-medium text-black">Recomendación</h3>
+        <SelectableTagGroup
+          label="¿Recomendarías este piso?"
+          options={['1', '2', '3', '4', '5']}
+          selectedOptions={formData.wouldRecommend ? [formData.wouldRecommend] : []}
+          onChange={(selected) => updateFormData({ wouldRecommend: (selected[0] as '1'|'2'|'3'|'4'|'5'|undefined) })}
+          multiSelect={false}
+        />
+      </div>
+
       <div className="mt-4 flex justify-between">
         <button type="button" onClick={onPrevious} className="text-black hover:text-gray-800">
           Anterior

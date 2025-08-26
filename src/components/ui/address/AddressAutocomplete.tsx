@@ -100,8 +100,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   };
 
   return (
-    <div className={`relative w-full ${className}`}>
-      <div className="flex space-x-2">
+    <div className={`relative w-full ${className} flex space-x-2`}>
         <div className={`relative ${showNumberField ? 'w-3/4' : 'w-full'}`}>
           <AddressInput
             id="address"
@@ -130,7 +129,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
             hasError={numberHasError}
           />
         )}
-      </div>
+
     </div>
   );
 };

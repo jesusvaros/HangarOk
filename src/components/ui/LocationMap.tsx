@@ -84,7 +84,7 @@ const LocationMap: React.FC<LocationMapProps> = ({
   );
 
   return (
-    <div className={`h-64 w-full rounded-lg overflow-hidden border border-gray-300 ${className}`}>
+    <div className={`h-64 w-full rounded-xl overflow-hidden border border-gray-300 shadow-md ${className}`}>
       <MapContainer
         center={position}
         zoom={coordinates ? 16 : 13}

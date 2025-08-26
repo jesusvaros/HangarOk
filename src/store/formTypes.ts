@@ -40,6 +40,8 @@ export type FormDataType = {
   endYear?: number | null;
   price?: number;
   includedServices?: string[];
+  // Would you recommend this flat? 1-5 stored as string tags
+  wouldRecommend?: '1' | '2' | '3' | '4' | '5';
 
   // Step 3: Property Condition
   summerTemperature?: 'Bien aislado' | 'Correcto' | 'Caluroso';
@@ -89,6 +91,7 @@ export const initialFormData: FormDataType = {
   includedServices: [],
   startYear: 2025,
   endYear: undefined,
+  wouldRecommend: undefined,
 
   // Step 3: Property Condition
   summerTemperature: undefined,

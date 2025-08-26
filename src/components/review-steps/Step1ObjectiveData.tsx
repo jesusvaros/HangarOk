@@ -88,7 +88,6 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
 
   return (
     <div className="w-full">
-      <h3 className="mb-4 text-xl font-medium text-black">Dirección</h3>
       <AddressAutocomplete
         value={addressDetails?.street || ''}
         streetNumberValue={addressDetails?.number || ''}
@@ -106,9 +105,9 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
             : undefined
         }
         onLocationSelect={handleLocationSelect}
-        className="mt-2"
+        className="mt-8 "
       />
-      <div className="-mx-2 mt-4 flex">
+      <div className="-mx-2 mt-8 flex">
         <div className="w-1/2 px-2">
           <CustomInput
             label="Piso"

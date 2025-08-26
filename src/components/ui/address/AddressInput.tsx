@@ -45,7 +45,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
   return (
     <div className={`relative ${className}`}>
       {!hideLabel && (
-        <label htmlFor={id} className="mb-2 block text-sm font-medium text-gray-700">
+        <label htmlFor={id} className="mb-2 block text-lg font-medium text-black">
           Dirección {required && <span className="text-red-500">*</span>}
         </label>
       )}
