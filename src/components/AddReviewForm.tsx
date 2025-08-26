@@ -71,7 +71,7 @@ const AddReviewForm: React.FC = () => {
 
   const errorsDefault = {
     1: { fields: { street: false, number: false } },
-    2: { fields: { startDate: false, endDate: false, montlyPrice: false } },
+    2: { fields: { startDate: false, endDate: false, monthlyPrice: false } },
     3: {
       fields: {
         summerTemperature: false,

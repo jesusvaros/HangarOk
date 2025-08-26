@@ -11,7 +11,7 @@ export interface ValidationResult {
 
 export const validateStep2 = (context: FormDataType): ValidationResult => {
   const { startYear, endYear, price, wouldRecommend } = context;
-  const fieldErrors = { startYear: false, montlyPrice: false, wouldRecommend: false };
+  const fieldErrors = { startYear: false, monthlyPrice: false, wouldRecommend: false };
 
   if (!startYear) {
     return {
@@ -25,7 +25,7 @@ export const validateStep2 = (context: FormDataType): ValidationResult => {
     return {
       isValid: false,
       message: 'El precio es obligatorio',
-      fieldErrors: { ...fieldErrors, montlyPrice: true },
+      fieldErrors: { ...fieldErrors, monthlyPrice: true },
     };
   }
 
