@@ -146,7 +146,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
           value={formData.price || ''}
           onChange={e => updateFormData({ price: parseFloat(e.target.value) || 0 })}
           placeholder="Ej: 800"
-          error={fieldErrors?.montlyPrice}
+          error={fieldErrors?.monthlyPrice}
         />
 
         <div className="mt-6">
