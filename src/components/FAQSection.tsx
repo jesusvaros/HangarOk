@@ -50,7 +50,7 @@ const faqs = [
             aria-expanded={open}
             aria-controls={panelId}
             onClick={toggle}
-            className="flex w-full items-center justify-between py-4 text-left font-medium focus:outline-none"
+            className="flex w-full items-center justify-between py-4 text-left text-lg font-medium focus:outline-none"
           >
             {question}
             <span
@@ -69,7 +69,7 @@ const faqs = [
           className="overflow-hidden"
         >
           <div className="pb-4">
-            <p className="text-gray-600">{answer}</p>
+            <p className="text-base text-gray-700">{answer}</p>
           </div>
         </motion.div>
       </div>
@@ -78,8 +78,8 @@ const faqs = [
 
 const FAQSection = () => {
   return (
-    <section className="mx-auto max-w-3xl px-4 py-8">
-      <h2 className="mb-6 text-center text-2xl font-bold">Preguntas frecuentes</h2>
+    <section className="mx-auto max-w-3xl px-4 py-12">
+      <h2 className="mb-8 text-left text-3xl font-bold">Preguntas frecuentes</h2>
       <div className="space-y-4">
         {faqs.map((item, idx) => (
           <FAQItem key={item.question} index={idx} {...item} />
