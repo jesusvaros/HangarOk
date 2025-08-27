@@ -6,6 +6,7 @@ import Header from './components/Header';
 import InputSection from './components/InputSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
+import TestimonialsSection from './components/TestimonialsSection';
 import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
 import AuthCallback from './components/AuthCallback';
@@ -74,6 +75,7 @@ function App() {
                 <InputSection />
                 <ChromeStoreSection />
                 <PictureSection />
+                <TestimonialsSection />
               </>
             }
           />
