@@ -99,8 +99,9 @@ const MapView = () => {
       setPublicReviews(rows);
       // Optionally center on average of public reviews AFTER geolocation attempt
       if (!centerInitialized.current && geolocationAttempted.current && rows.length > 0) {
-        const valid = rows.filter((r): r is PublicReview & { lat: number; lng: number } =>
-          typeof r.lat === 'number' && typeof r.lng === 'number'
+        const valid = rows.filter(
+          (r): r is PublicReview & { lat: number; lng: number } =>
+            typeof r.lat === 'number' && typeof r.lng === 'number'
         );
         if (valid.length > 0) {
           const lat = valid.reduce((s, r) => s + r.lat, 0) / valid.length;
@@ -117,7 +118,7 @@ const MapView = () => {
     if (centerInitialized.current) return; // avoid re-running
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => {
+        pos => {
           const { latitude, longitude } = pos.coords;
           setCenter([latitude, longitude]);
           setZoom(16);
@@ -151,126 +152,134 @@ const MapView = () => {
         <h1 className="text-left text-3xl font-semibold mb-4">Mapa de opiniones</h1>
         <div className="shadow-lg rounded-xl p-4 bg-gray-50">
           <div className="grid md:grid-cols-[360px_1fr] gap-4">
-        {/* Sidebar (desktop) */}
-        <aside className="hidden md:flex md:flex-col">
-          <div className="h-[80vh]">
-            <ReviewsPanel
-              reviews={visiblePublic.map((r) => ({
-                id: r.id,
-                lat: r.lat ?? undefined,
-                lng: r.lng ?? undefined,
-                texto: r.full_address ?? '—',
-                comment: r.owner_opinion ?? undefined,
-              }))}
-              hoveredId={hoveredId}
-              setHoveredId={setHoveredId}
-              onSelect={(r) => {
-                const match = publicReviews.find((x) => String(x.id) === String(r.id));
-                if (match) setSelectedReview(match);
-              }}
-            />
-          </div>
-        </aside>
-
-        {/* Map container */}
-        <div className="relative">
-          {/* Floating centered Search Bar */}
-          <div className="absolute left-1/2 top-6 md:top-8 z-[10] w-[min(640px,92vw)] -translate-x-1/2">
-            <SearchBar
-              value={searchValue}
-              onSelect={(result: AddressResult) => {
-                setSearchValue(result.formatted || '');
-                setError(null);
-                const lat = result.geometry?.lat;
-                const lng = result.geometry?.lng;
-                if (typeof lat === 'number' && typeof lng === 'number') {
-                  setCenter([lat, lng]);
-                  setZoom(17);
-                  mapRef.current?.setView([lat, lng], 17, { animate: true });
-                }
-              }}
-              onLocate={() => {
-                if (!navigator.geolocation) return;
-                navigator.geolocation.getCurrentPosition(
-                  (pos) => {
-                    const { latitude, longitude } = pos.coords;
-                    setCurrentLocation({ lat: latitude, lng: longitude });
-                    setCenter([latitude, longitude]);
-                    setZoom(16);
-                    mapRef.current?.setView([latitude, longitude], 16, { animate: true });
-                    // Reverse geocode to fill the search field with current address
-                    geocodingService
-                      .reverseGeocode(latitude, longitude)
-                      .then((addr) => {
-                        if (addr?.formatted) setSearchValue(addr.formatted);
-                      })
-                      .catch(() => {});
-                  },
-                  () => {
-                    // ignore errors silently; user may have denied permissions
-                  }
-                );
-              }}
-              onUserInput={(v) => setSearchValue(v)}
-              allowBroadResults
-            />
-          </div>
-
-          {/* Map */}
-          <div className="relative z-0 w-full h-[80vh] rounded-3xl border border-gray-200 overflow-hidden shadow-md bg-white/10">
-            <MapContainer
-              center={center}
-              zoom={zoom}
-              style={{ height: '100%', width: '100%' }}
-              scrollWheelZoom
-            >
-              <CaptureMapRef onReady={(m) => { mapRef.current = m; setMapReady(true); }} />
-              <CloseOnMove onMove={() => {
-                setSelectedReview(null);
-                setHoveredId(null);
-                setSearchValue('');
-              }} />
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                maxZoom={19}
-              />
-
-              {currentLocation && (
-                <Marker
-                  position={[currentLocation.lat, currentLocation.lng]}
-                  icon={currentIcon}
-                  zIndexOffset={300}
+            {/* Sidebar (desktop) */}
+            <aside className="hidden md:flex md:flex-col">
+              <div className="h-[80vh]">
+                <ReviewsPanel
+                  reviews={visiblePublic.map(r => ({
+                    id: r.id,
+                    lat: r.lat ?? undefined,
+                    lng: r.lng ?? undefined,
+                    texto: r.full_address ?? '—',
+                    comment: r.owner_opinion ?? undefined,
+                    rating: r.would_recommend ?? undefined,
+                  }))}
+                  hoveredId={hoveredId}
+                  setHoveredId={setHoveredId}
+                  onSelect={r => {
+                    const match = publicReviews.find(x => String(x.id) === String(r.id));
+                    if (match) setSelectedReview(match);
+                  }}
                 />
+              </div>
+            </aside>
+
+            {/* Map container */}
+            <div className="relative">
+              {/* Floating centered Search Bar */}
+              <div className="absolute left-1/2 top-6 md:top-8 z-[10] w-[min(640px,92vw)] -translate-x-1/2">
+                <SearchBar
+                  value={searchValue}
+                  onSelect={(result: AddressResult) => {
+                    setSearchValue(result.formatted || '');
+                    setError(null);
+                    const lat = result.geometry?.lat;
+                    const lng = result.geometry?.lng;
+                    if (typeof lat === 'number' && typeof lng === 'number') {
+                      setCenter([lat, lng]);
+                      setZoom(17);
+                      mapRef.current?.setView([lat, lng], 17, { animate: true });
+                    }
+                  }}
+                  onLocate={() => {
+                    if (!navigator.geolocation) return;
+                    navigator.geolocation.getCurrentPosition(
+                      pos => {
+                        const { latitude, longitude } = pos.coords;
+                        setCurrentLocation({ lat: latitude, lng: longitude });
+                        setCenter([latitude, longitude]);
+                        setZoom(16);
+                        mapRef.current?.setView([latitude, longitude], 16, { animate: true });
+                        // Reverse geocode to fill the search field with current address
+                        geocodingService
+                          .reverseGeocode(latitude, longitude)
+                          .then(addr => {
+                            if (addr?.formatted) setSearchValue(addr.formatted);
+                          })
+                          .catch(() => {});
+                      },
+                      () => {
+                        // ignore errors silently; user may have denied permissions
+                      }
+                    );
+                  }}
+                  onUserInput={v => setSearchValue(v)}
+                  allowBroadResults
+                />
+              </div>
+
+              {/* Map */}
+              <div className="relative z-0 w-full h-[80vh] rounded-3xl border border-gray-200 overflow-hidden shadow-md bg-white/10">
+                <MapContainer
+                  center={center}
+                  zoom={zoom}
+                  style={{ height: '100%', width: '100%' }}
+                  scrollWheelZoom
+                >
+                  <CaptureMapRef
+                    onReady={m => {
+                      mapRef.current = m;
+                      setMapReady(true);
+                    }}
+                  />
+                  <CloseOnMove
+                    onMove={() => {
+                      setSelectedReview(null);
+                      setHoveredId(null);
+                      setSearchValue('');
+                    }}
+                  />
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    maxZoom={19}
+                  />
+
+                  {currentLocation && (
+                    <Marker
+                      position={[currentLocation.lat, currentLocation.lng]}
+                      icon={currentIcon}
+                      zIndexOffset={300}
+                    />
+                  )}
+
+                  <PublicReviewsLayer
+                    reviews={publicReviews}
+                    selectedId={selectedReview?.id ?? null}
+                    onSelect={(rev: PublicReview) => {
+                      setSelectedReview(rev);
+                    }}
+                  />
+                  <MapBoundsWatcher items={publicReviews} onChange={setVisiblePublic} />
+                </MapContainer>
+              </div>
+
+              {/* Right-side details panel overlay (inside map, mid-height, padded from edges) */}
+              {selectedReview && (
+                <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[380px] max-w-[86vw]">
+                  <div className="rounded-2xl bg-white shadow-xl border overflow-hidden max-h-[70vh]">
+                    <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
+                  </div>
+                </div>
               )}
 
-              <PublicReviewsLayer
-                reviews={publicReviews}
-                selectedId={selectedReview?.id ?? null}
-                onSelect={(rev: PublicReview) => {
-                  setSelectedReview(rev);
-                }}
-              />
-              <MapBoundsWatcher items={publicReviews} onChange={setVisiblePublic} />
-            </MapContainer>
-          </div>
-
-          {/* Right-side details panel overlay (inside map, mid-height, padded from edges) */}
-          {selectedReview && (
-            <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[380px] max-w-[86vw]">
-              <div className="rounded-2xl bg-white shadow-xl border overflow-hidden max-h-[70vh]">
-                <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
-              </div>
+              {/* Error toast */}
+              {error && (
+                <div className="absolute left-1/2 top-[92px] -translate-x-1/2 z-[1000] rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 shadow">
+                  {error}
+                </div>
+              )}
             </div>
-          )}
-
-          {/* Error toast */}
-          {error && (
-            <div className="absolute left-1/2 top-[92px] -translate-x-1/2 z-[1000] rounded-md bg-red-50 px-3 py-2 text-sm text-red-700 shadow">
-              {error}
-            </div>
-          )}
-        </div>
           </div>
         </div>
       </div>

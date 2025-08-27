@@ -6,6 +6,7 @@ export type PublicReview = {
   lat: number | null;
   lng: number | null;
   owner_opinion: string | null;
+  would_recommend: number | null;
 };
 
 export async function getPublicReviews(): Promise<PublicReview[]> {
@@ -14,7 +15,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   const { data, error } = await client
     .from('public_reviews')
-    .select('id, address_details, owner_opinion')
+    .select('id, address_details, owner_opinion, would_recommend')
     .eq('is_public', true);
 
   if (error || !data) return [];
@@ -24,27 +25,36 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     coordinates?: { lat?: number | string | null; lng?: number | string | null } | null;
   } | null;
 
-  type Row = { id: string | number; address_details?: AddressDetails; owner_opinion?: string | null };
+  type Row = {
+    id: string | number;
+    address_details?: AddressDetails;
+    owner_opinion?: string | null;
+    would_recommend?: number | string | null;
+  };
 
   const rows = data as unknown as Row[];
 
-  const mapped = rows.map((review) => {
+  const mapped = rows.map(review => {
     const details: AddressDetails = review.address_details ?? null;
     const coords = details?.coordinates ?? null;
     const lat = coords?.lat != null ? Number(coords.lat) : null;
     const lng = coords?.lng != null ? Number(coords.lng) : null;
     const fullAddress = (details?.fullAddress ?? null) as string | null;
+    const wouldRecommend = review.would_recommend != null ? Number(review.would_recommend) : null;
+
     return {
       id: review.id,
       full_address: fullAddress,
       lat,
       lng,
       owner_opinion: review.owner_opinion ?? null,
+      would_recommend: wouldRecommend,
     } satisfies PublicReview;
   });
 
   // Keep only entries with valid numeric coordinates
-  return mapped.filter((r): r is PublicReview & { lat: number; lng: number } =>
-    typeof r.lat === 'number' && typeof r.lng === 'number'
+  return mapped.filter(
+    (r): r is PublicReview & { lat: number; lng: number } =>
+      typeof r.lat === 'number' && typeof r.lng === 'number'
   );
 }

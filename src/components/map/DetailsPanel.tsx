@@ -6,10 +6,13 @@ type Props = {
 };
 
 export default function DetailsPanel({ review, onClose }: Props) {
+  const recommended = (review?.would_recommend ?? 0) >= 4;
+  const headerClass = recommended ? 'bg-green-600' : 'bg-red-600';
+
   return (
     <div className="flex flex-col max-h-[70vh]">
-      {/* Header verde */}
-      <div className="bg-green-600 text-white px-4 py-3 flex items-start justify-between">
+      {/* Header colored based on recommendation */}
+      <div className={`${headerClass} text-white px-4 py-3 flex items-start justify-between`}>
         <h3 className="text-sm font-semibold">Detalles del piso</h3>
         {review && (
           <button
@@ -30,8 +33,12 @@ export default function DetailsPanel({ review, onClose }: Props) {
             {/* Sección: Dirección */}
             {review.full_address && (
               <section>
-                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Dirección</h4>
-                <p className="mt-1 text-sm text-gray-800 whitespace-normal break-words">{review.full_address}</p>
+                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                  Dirección
+                </h4>
+                <p className="mt-1 text-sm text-gray-800 whitespace-normal break-words">
+                  {review.full_address}
+                </p>
               </section>
             )}
 
@@ -40,13 +47,19 @@ export default function DetailsPanel({ review, onClose }: Props) {
             {/* Sección: Opinión del propietario */}
             {review.owner_opinion && (
               <section>
-                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Opinión del propietario</h4>
-                <p className="mt-1 text-sm text-gray-800 whitespace-pre-line break-words">{review.owner_opinion}</p>
+                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
+                  Opinión del propietario
+                </h4>
+                <p className="mt-1 text-sm text-gray-800 whitespace-pre-line break-words">
+                  {review.owner_opinion}
+                </p>
               </section>
             )}
           </>
         ) : (
-          <p className="text-sm text-gray-500">Selecciona un punto del mapa o un item de la lista.</p>
+          <p className="text-sm text-gray-500">
+            Selecciona un punto del mapa o un item de la lista.
+          </p>
         )}
       </div>
     </div>
