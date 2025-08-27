@@ -60,6 +60,7 @@ const MapView = () => {
   const mapRef = useRef<LeafletMap | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [currentLocation, setCurrentLocation] = useState<{ lat: number; lng: number } | null>(null);
+  const LAST_VIEW_KEY = 'map:lastView';
 
   const currentIcon = L.divIcon({
     className: '',
@@ -93,6 +94,55 @@ const MapView = () => {
       setSearchValue(qParam);
     }
   }, [searchParams, mapReady]);
+
+  // Restore last saved view from localStorage if no query params already set the view
+  useEffect(() => {
+    if (!mapReady || centerInitialized.current) return;
+    try {
+      const raw = localStorage.getItem(LAST_VIEW_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { lat: number; lng: number; zoom: number } | null;
+      if (
+        parsed &&
+        typeof parsed.lat === 'number' &&
+        typeof parsed.lng === 'number' &&
+        typeof parsed.zoom === 'number'
+      ) {
+        setCenter([parsed.lat, parsed.lng]);
+        setZoom(parsed.zoom);
+        mapRef.current?.setView([parsed.lat, parsed.lng], parsed.zoom, { animate: false });
+        centerInitialized.current = true;
+      }
+    } catch (err) {
+      // ignore malformed storage
+      void err;
+    }
+  }, [mapReady]);
+
+  // Persist view on move/zoom
+  useEffect(() => {
+    if (!mapReady || !mapRef.current) return;
+    const m = mapRef.current;
+    const save = () => {
+      const c = m.getCenter();
+      const z = m.getZoom();
+      try {
+        localStorage.setItem(
+          LAST_VIEW_KEY,
+          JSON.stringify({ lat: c.lat, lng: c.lng, zoom: z })
+        );
+      } catch (err) {
+        // ignore storage quota/access errors
+        void err;
+      }
+    };
+    m.on('moveend', save);
+    m.on('zoomend', save);
+    return () => {
+      m.off('moveend', save);
+      m.off('zoomend', save);
+    };
+  }, [mapReady]);
 
   useEffect(() => {
     (async () => {
