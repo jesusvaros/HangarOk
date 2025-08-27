@@ -9,7 +9,6 @@ import BenefitsSection from './components/BenefitsSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
 import HowItWorksSection from './components/HowItWorksSection';
-import StatsSection from './components/StatsSection';
 import TestimonialsSection from './components/TestimonialsSection';
 import FAQSection from './components/FAQSection';
 import FinalCTASection from './components/FinalCTASection';
@@ -81,7 +80,7 @@ function App() {
                 <HeroSection />
                 <InputSection />
                 <HowItWorksSection />
-                <StatsSection />
+                {/* <StatsSection /> */}
                 <BenefitsSection />
                 <ChromeStoreSection />
                 <PictureSection />
