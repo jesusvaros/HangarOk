@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 // Import our components
 import Header from './components/Header';
 import InputSection from './components/InputSection';
+import BenefitsSection from './components/BenefitsSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
 import MapView from './components/MapView';
@@ -72,6 +73,7 @@ function App() {
             element={
               <>
                 <InputSection />
+                <BenefitsSection />
                 <ChromeStoreSection />
                 <PictureSection />
               </>
