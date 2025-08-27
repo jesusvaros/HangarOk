@@ -7,7 +7,6 @@ export type ReviewListItem = {
   would_recommend?: number;
   texto?: string;
   comment?: string;
-  created_at?: string;
 };
 
 interface ReviewsPanelProps {
@@ -15,6 +14,7 @@ interface ReviewsPanelProps {
   hoveredId: string | number | null;
   setHoveredId: (id: string | number | null) => void;
   onSelect: (r: ReviewListItem) => void;
+  selectedId?: string | number | null;
 }
 
 const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
@@ -22,9 +22,27 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
   hoveredId,
   setHoveredId,
   onSelect,
+  selectedId,
 }) => {
+  console.log(reviews);
+
+  const definecolor = (recommendation: number) => {
+    if (!recommendation) {
+      return 'bg-gray-600';
+    }
+    if (recommendation > 3) {
+      return 'bg-green-600';
+    } 
+    if (recommendation < 3 ) {
+      return 'bg-red-600';
+    }
+    return 'bg-gray-600';
+  };
+
+  
+
   return (
-    <div className="rounded-2xl bg-white p-3 shadow-sm border h-full flex flex-col">
+    <div className="h-full flex flex-col p-1">
       {reviews.length === 0 ? (
         <div className="flex-1 flex items-center justify-center text-center px-4">
           <div>
@@ -36,28 +54,25 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
         </div>
       ) : (
         <>
-          <ul className="space-y-2 overflow-auto pr-1 flex-1">
+          <ul className="space-y-2 pr-1 flex-1">  
             {reviews.map(r => {
               const id = r.id ?? `${r.lat}-${r.lng}`;
               const address = r.texto ?? '—';
               const opinion = r.comment ?? 'Sin comentario';
-              const createdAt = r.created_at ? new Date(r.created_at).toLocaleDateString() : '';
-              const recommended = (r.would_recommend ?? 0) >= 1;
-              const headerClass = recommended ? 'bg-green-600' : 'bg-red-600';
+              const headerClass = definecolor(r.would_recommend ?? 0);
+              const isSelected = String(selectedId ?? '') === String(id);
               return (
                 <li
                   key={id}
                   onMouseEnter={() => setHoveredId(id)}
                   onMouseLeave={() => setHoveredId(null)}
                   onClick={() => onSelect(r)}
-                  className={`cursor-pointer rounded-xl overflow-hidden border transition ${hoveredId === id ? 'ring-1 ring-amber-200' : ''}`}
+                  className={`cursor-pointer rounded-xl overflow-hidden border transition ${hoveredId === id ? 'ring-1 ring-amber-200' : ''} ${isSelected ? 'ring-2 ring-green-600 bg-emerald-50' : ''}`}
                 >
                   {/* Header */}
                   <div
                     className={`${headerClass} text-white px-3 py-2 text-sm font-semibold flex items-center justify-between`}
                   >
-                    <span>Opinión</span>
-                    {createdAt && <span className="text-xs opacity-90">{createdAt}</span>}
                   </div>
                   {/* Body */}
                   <div className="px-3 py-3 bg-white">
@@ -65,7 +80,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                       {address}
                     </p>
                     <hr className="my-3 border-t" />
-                    <p className="text-gray-700 text-sm whitespace-pre-line break-words">
+                    <p className="text-gray-700 text-sm whitespace-pre-line break-words max-h-[100px] overflow-y-auto">
                       {opinion}
                     </p>
                   </div>

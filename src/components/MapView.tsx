@@ -167,6 +167,7 @@ const MapView = () => {
                   }))}
                   hoveredId={hoveredId}
                   setHoveredId={setHoveredId}
+                  selectedId={selectedReview?.id ?? null}
                   onSelect={r => {
                     const match = publicReviews.find(x => String(x.id) === String(r.id));
                     if (match) setSelectedReview(match);
@@ -321,6 +322,7 @@ const MapView = () => {
                         }))}
                         hoveredId={hoveredId}
                         setHoveredId={setHoveredId}
+                        selectedId={selectedReview?.id ?? null}
                         onSelect={r => {
                           const match = publicReviews.find(x => String(x.id) === String(r.id));
                           if (match) setSelectedReview(match);

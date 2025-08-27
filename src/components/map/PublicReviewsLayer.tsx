@@ -38,6 +38,7 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
           const size = isSelected ? 52 : 42;
           const would_recommend = r.would_recommend ?? 3;
           const icon = buildIcon(isSelected ? selectedColor : color, size, would_recommend);
+          const zIndexOffset = isSelected ? 1200 : 400; // keep selected above others
 
           return (
             <Marker
@@ -48,6 +49,7 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
                 click: () => onSelect?.(r),
               }}
               riseOnHover
+              zIndexOffset={zIndexOffset}
             />
           );
         })}
