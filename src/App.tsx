@@ -5,6 +5,7 @@ import { Toaster } from 'react-hot-toast';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import InputSection from './components/InputSection';
+import BenefitsSection from './components/BenefitsSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
 import TestimonialsSection from './components/TestimonialsSection';
@@ -77,6 +78,7 @@ function App() {
               <>
                 <HeroSection />
                 <InputSection />
+                <BenefitsSection />
                 <ChromeStoreSection />
                 <PictureSection />
                 <TestimonialsSection />
