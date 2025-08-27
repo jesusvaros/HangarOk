@@ -3,9 +3,15 @@ import { Toaster } from 'react-hot-toast';
 
 // Import our components
 import Header from './components/Header';
+import HeroSection from './components/HeroSection';
 import InputSection from './components/InputSection';
+import BenefitsSection from './components/BenefitsSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
+import HowItWorksSection from './components/HowItWorksSection';
+import LatestReviewsSection from './components/LatestReviewsSection';
+import FAQSection from './components/FAQSection';
+import FinalCTASection from './components/FinalCTASection';
 import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
 import AuthCallback from './components/AuthCallback';
@@ -67,17 +73,25 @@ function App() {
               </FormMessagesProvider>
             }
           />
-          <Route
+              <Route
             path="/"
             element={
               <>
+                <HeroSection />
                 <InputSection />
+                <HowItWorksSection />
+                {/* <StatsSection /> */}
+                <BenefitsSection />
                 <ChromeStoreSection />
-                <PictureSection />
-              </>
-            }
-          />
+                  <PictureSection />
+                  <LatestReviewsSection />
+                  <FAQSection />
+                </>
+              }
+            />
         </Routes>
+
+        <FinalCTASection />
 
         <footer className="mx-auto mt-8 max-w-6xl py-6 text-center text-sm text-gray-500">
           <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
@@ -93,10 +107,11 @@ function App() {
             <span className="text-gray-400">•</span>
             <Link className="hover:text-gray-700" to="/buenas-practicas">Buenas Prácticas</Link>
           </nav>
-          <p>
-            © {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas
-          </p>
-        </footer>
+            <p>
+              © {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas y reflejan experiencias
+              personales, no declaraciones de hechos ni asesoramiento legal.
+            </p>
+          </footer>
         </div>
       </FormProvider>
     </AuthProvider>
