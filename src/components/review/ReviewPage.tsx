@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabaseWrapper } from '../../services/supabase/client';
 import { useAuth } from '../../store/auth/hooks';
@@ -16,6 +16,15 @@ import CommunitySection from './CommunitySection';
 import OpinionSection from './OpinionSection';
 
 // Definición de tipos para los datos de cada paso
+type ReviewMeta = {
+  user_id: string | null;
+  validated: boolean | number | string | null;
+  step1_completed?: boolean;
+  step2_completed?: boolean;
+  step3_completed?: boolean;
+  step4_completed?: boolean;
+  step5_completed?: boolean;
+} | null;
 interface Step1Data {
   address_details: {
     street?: string;
@@ -67,6 +76,7 @@ const ReviewPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isUserReview, setIsUserReview] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
+  const fetchedRef = useRef<string | null>(null);
   
   // Use the auth context
   const { user } = useAuth();
@@ -95,7 +105,10 @@ const ReviewPage = () => {
   useEffect(() => {
     // Skip if no ID provided
     if (!id) return;
+    // Avoid multiple fetches for same id (StrictMode double-invoke, re-renders)
+    if (fetchedRef.current === id) return;
     const fetchAllData = async () => {
+      fetchedRef.current = id;
       if (!id) {
         setError('ID de sesión no proporcionado');
         setLoading(false);
@@ -110,33 +123,34 @@ const ReviewPage = () => {
           return;
         }
 
-        // Use user from auth context instead of fetching again
-        const currentUserId = user?.id;
-
-        // Check if this review belongs to the current user and its validation status
-        const { data: reviewSession, error: reviewError } = await client
+        // Single meta fetch by session_id (includes owner and validated)
+        const { data: meta, error: metaErr } = await client
           .from('review_sessions')
-          .select('*')
+          .select('user_id, validated, step1_completed, step2_completed, step3_completed, step4_completed, step5_completed')
           .eq('id', id)
-          .single();
+          .maybeSingle();
 
-        if (reviewError) {
-          console.error('Error fetching review session:', reviewError);
-          setError('Error al cargar la información de la revisión');
-          setLoading(false);
-          navigate('/map');
-          return;
+          console.log(meta);
+        if (metaErr) {
+          console.error('Error obteniendo meta de review_sessions:', metaErr);
         }
+        const reviewSession: ReviewMeta = meta ?? null;
+        const ownerUserId = reviewSession?.user_id ?? null;
+        const validatedRaw = reviewSession?.validated ?? null;
 
-        // Set validation status
-        setIsValidated(reviewSession.validated === true);
-        
-        // Check if this is the user's own review
-        const isOwnReview = currentUserId && reviewSession.user_id === currentUserId;
-        setIsUserReview(isOwnReview || false);
+        // Normalize validated status (kept for UI only)
+        const validatedKnown = validatedRaw !== null;
+        const validated = validatedKnown && (validatedRaw === true || validatedRaw === 'true' || validatedRaw === 1);
+        setIsValidated(validatedKnown ? validated : false);
 
-        // If not user's review and not validated, redirect to map
-        if (!isOwnReview && !reviewSession.validated) {
+        // Is user's own review?
+        const currentUserId = user?.id ?? null;
+        const isOwnReview = !!currentUserId && !!ownerUserId && String(ownerUserId) === String(currentUserId);
+        setIsUserReview(isOwnReview);
+
+        // Redirect rule (ONLY ownership):
+        // If we know the owner and current user is not the owner (or not logged), redirect.
+        if (!!ownerUserId && !isOwnReview) {
           navigate('/map');
           return;
         }
@@ -203,7 +217,7 @@ const ReviewPage = () => {
     };
 
     fetchAllData();
-  }, [id, navigate, user?.id]);
+  }, [id, navigate, user]);
 
   // Componente para la vista móvil
   const MobileView = () => (
