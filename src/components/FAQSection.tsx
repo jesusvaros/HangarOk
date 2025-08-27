@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 
 interface FAQItemProps {
   question: string;
@@ -10,57 +11,70 @@ const faqs = [
   {
     question: '¿Qué es Casero Verificado?',
     answer:
-      'Casero Verificado es una plataforma donde los inquilinos pueden compartir reseñas anónimas sobre sus experiencias con propietarios.',
+      'Casero Verificado es una plataforma donde los inquilinos comparten de forma anónima sus experiencias con propietarios para ayudar a otros a tomar decisiones informadas.',
   },
   {
-    question: '¿Cómo puedo dejar una reseña?',
+    question: '¿Se publican datos personales de los caseros?',
     answer:
-      'Busca la dirección del inmueble, inicia sesión si lo deseas y completa el formulario con tu experiencia.',
+      'No. Nunca mostramos nombres, teléfonos ni correos. Solo guardamos un hash anónimo para poder agrupar opiniones del mismo propietario.',
   },
   {
-    question: '¿Mis datos son anónimos?',
+    question: '¿Las opiniones tienen validez legal?',
     answer:
-      'Sí, todas las reseñas se publican de forma anónima para proteger tu identidad.',
+      'Las reseñas son experiencias subjetivas de los inquilinos y están protegidas por la libertad de expresión. No constituyen denuncias ni declaraciones legales.',
+  },
+  {
+    question: '¿Cómo dejo mi opinión?',
+    answer:
+      'Busca la dirección del inmueble y rellena el formulario. También puedes usar la extensión del navegador que detecta automáticamente los datos del anuncio.',
+  },
+  {
+    question: '¿Qué pasa si veo contenido inapropiado?',
+    answer:
+      'Contamos con moderación y términos de uso que prohíben contenido difamatorio o ilegal. Si encuentras algo así, puedes reportarlo y lo revisaremos.',
   },
 ];
 
-const FAQItem = ({ question, answer, index }: FAQItemProps) => {
-  const [open, setOpen] = useState(false);
-  const toggle = () => setOpen(prev => !prev);
-  const panelId = `faq-panel-${index}`;
-  const buttonId = `faq-button-${index}`;
+  const FAQItem = ({ question, answer, index }: FAQItemProps) => {
+    const [open, setOpen] = useState(false);
+    const toggle = () => setOpen((prev) => !prev);
+    const panelId = `faq-panel-${index}`;
+    const buttonId = `faq-button-${index}`;
 
-  return (
-    <div className="rounded border">
-      <h3>
-        <button
-          id={buttonId}
-          type="button"
-          aria-expanded={open}
-          aria-controls={panelId}
-          onClick={toggle}
-          className="flex w-full items-center justify-between p-4 text-left font-medium focus:outline-none"
-        >
-          {question}
-          <span
-            className={`ml-2 transform transition-transform ${open ? 'rotate-180' : 'rotate-0'}`}
+    return (
+      <div className="border-b">
+        <h3>
+          <button
+            id={buttonId}
+            type="button"
+            aria-expanded={open}
+            aria-controls={panelId}
+            onClick={toggle}
+            className="flex w-full items-center justify-between py-4 text-left font-medium focus:outline-none"
           >
-            ▼
-          </span>
-        </button>
-      </h3>
-      <div
-        id={panelId}
-        role="region"
-        aria-labelledby={buttonId}
-        hidden={!open}
-        className="px-4 pb-4"
-      >
-        <p className="text-gray-600">{answer}</p>
+            {question}
+            <span
+              className={`ml-2 transition-transform ${open ? 'rotate-45' : 'rotate-0'}`}
+            >
+              +
+            </span>
+          </button>
+        </h3>
+        <motion.div
+          id={panelId}
+          role="region"
+          aria-labelledby={buttonId}
+          initial={false}
+          animate={{ height: open ? 'auto' : 0, opacity: open ? 1 : 0 }}
+          className="overflow-hidden"
+        >
+          <div className="pb-4">
+            <p className="text-gray-600">{answer}</p>
+          </div>
+        </motion.div>
       </div>
-    </div>
-  );
-};
+    );
+  };
 
 const FAQSection = () => {
   return (

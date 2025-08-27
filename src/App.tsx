@@ -9,7 +9,7 @@ import BenefitsSection from './components/BenefitsSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
 import HowItWorksSection from './components/HowItWorksSection';
-import TestimonialsSection from './components/TestimonialsSection';
+import LatestReviewsSection from './components/LatestReviewsSection';
 import FAQSection from './components/FAQSection';
 import FinalCTASection from './components/FinalCTASection';
 import MapView from './components/MapView';
@@ -83,12 +83,12 @@ function App() {
                 {/* <StatsSection /> */}
                 <BenefitsSection />
                 <ChromeStoreSection />
-                <PictureSection />
-                <TestimonialsSection />
-                <FAQSection />
-              </>
-            }
-          />
+                  <PictureSection />
+                  <LatestReviewsSection />
+                  <FAQSection />
+                </>
+              }
+            />
         </Routes>
 
         <FinalCTASection />
@@ -107,10 +107,11 @@ function App() {
             <span className="text-gray-400">•</span>
             <Link className="hover:text-gray-700" to="/buenas-practicas">Buenas Prácticas</Link>
           </nav>
-          <p>
-            © {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas
-          </p>
-        </footer>
+            <p>
+              © {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas y reflejan experiencias
+              personales, no declaraciones de hechos ni asesoramiento legal.
+            </p>
+          </footer>
         </div>
       </FormProvider>
     </AuthProvider>
