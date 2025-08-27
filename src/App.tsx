@@ -6,6 +6,8 @@ import Header from './components/Header';
 import InputSection from './components/InputSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
+import HowItWorksSection from './components/HowItWorksSection';
+import StatsSection from './components/StatsSection';
 import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
 import AuthCallback from './components/AuthCallback';
@@ -67,11 +69,13 @@ function App() {
               </FormMessagesProvider>
             }
           />
-          <Route
+              <Route
             path="/"
             element={
               <>
                 <InputSection />
+                <HowItWorksSection />
+                <StatsSection />
                 <ChromeStoreSection />
                 <PictureSection />
               </>
