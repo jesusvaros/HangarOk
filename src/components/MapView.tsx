@@ -73,51 +73,81 @@ const MapView = () => {
     iconAnchor: [8, 8],
   });
 
-  // Initialize from query params (?lat=..&lng=..&q=..)
+  // Initialize map center on mount with priority: query params -> localStorage -> geolocation -> default
   useEffect(() => {
+    if (!mapReady || centerInitialized.current) return;
+
+    // 1) Query params (?lat=..&lng=..&q=..)
     const latParam = searchParams.get('lat');
     const lngParam = searchParams.get('lng');
     const qParam = searchParams.get('q');
     const lat = latParam ? parseFloat(latParam) : NaN;
     const lng = lngParam ? parseFloat(lngParam) : NaN;
-
     if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
       setCenter([lat, lng]);
       setZoom(17);
-      if (mapReady) {
-        mapRef.current?.setView([lat, lng], 17, { animate: true });
-      }
+      mapRef.current?.setView([lat, lng], 17, { animate: true });
       centerInitialized.current = true;
       geolocationAttempted.current = true;
       if (qParam) setSearchValue(qParam);
+      return;
     } else if (qParam && !centerInitialized.current) {
       setSearchValue(qParam);
     }
-  }, [searchParams, mapReady]);
 
-  // Restore last saved view from localStorage if no query params already set the view
-  useEffect(() => {
-    if (!mapReady || centerInitialized.current) return;
+    // 2) Local storage
     try {
       const raw = localStorage.getItem(LAST_VIEW_KEY);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as { lat: number; lng: number; zoom: number } | null;
-      if (
-        parsed &&
-        typeof parsed.lat === 'number' &&
-        typeof parsed.lng === 'number' &&
-        typeof parsed.zoom === 'number'
-      ) {
-        setCenter([parsed.lat, parsed.lng]);
-        setZoom(parsed.zoom);
-        mapRef.current?.setView([parsed.lat, parsed.lng], parsed.zoom, { animate: false });
-        centerInitialized.current = true;
+      if (raw) {
+        const parsed = JSON.parse(raw) as { lat: number; lng: number; zoom: number } | null;
+        if (
+          parsed &&
+          typeof parsed.lat === 'number' &&
+          typeof parsed.lng === 'number' &&
+          typeof parsed.zoom === 'number'
+        ) {
+          setCenter([parsed.lat, parsed.lng]);
+          setZoom(parsed.zoom);
+          mapRef.current?.setView([parsed.lat, parsed.lng], parsed.zoom, { animate: false });
+          centerInitialized.current = true;
+          return;
+        }
       }
     } catch (err) {
       // ignore malformed storage
       void err;
     }
-  }, [mapReady]);
+
+    // 3) Geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          const { latitude, longitude } = pos.coords;
+          setCenter([latitude, longitude]);
+          setZoom(16);
+          mapRef.current?.setView([latitude, longitude], 16, { animate: true });
+          setCurrentLocation({ lat: latitude, lng: longitude });
+          centerInitialized.current = true;
+          geolocationAttempted.current = true;
+        },
+        () => {
+          // 4) Default fallback: Madrid
+          setCenter([40.416775, -3.70379]);
+          setZoom(14);
+          mapRef.current?.setView([40.416775, -3.70379], 14, { animate: false });
+          centerInitialized.current = true;
+          geolocationAttempted.current = true;
+        }
+      );
+    } else {
+      // 4) Default fallback: Madrid
+      setCenter([40.416775, -3.70379]);
+      setZoom(14);
+      mapRef.current?.setView([40.416775, -3.70379], 14, { animate: false });
+      centerInitialized.current = true;
+      geolocationAttempted.current = true;
+    }
+  }, [mapReady, searchParams]);
 
   // Persist view on move/zoom
   useEffect(() => {
@@ -148,7 +178,6 @@ const MapView = () => {
     (async () => {
       const rows = await getPublicReviews();
       setPublicReviews(rows);
-      // Optionally center on average of public reviews AFTER geolocation attempt
       if (!centerInitialized.current && geolocationAttempted.current && rows.length > 0) {
         const valid = rows.filter(
           (r): r is PublicReview & { lat: number; lng: number } =>
@@ -164,38 +193,7 @@ const MapView = () => {
     })();
   }, []);
 
-  // Try to center on user's current location on first mount (priority)
-  useEffect(() => {
-    if (centerInitialized.current) return; // avoid re-running
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        pos => {
-          const { latitude, longitude } = pos.coords;
-          setCenter([latitude, longitude]);
-          setZoom(16);
-          // ensure the live map recenters on mount
-          mapRef.current?.setView([latitude, longitude], 16, { animate: true });
-          setCurrentLocation({ lat: latitude, lng: longitude });
-          centerInitialized.current = true;
-          geolocationAttempted.current = true;
-        },
-        () => {
-          // keep Madrid fallback
-          setCenter([40.416775, -3.70379]);
-          setZoom(14);
-          mapRef.current?.setView([40.416775, -3.70379], 14, { animate: false });
-          centerInitialized.current = true;
-          geolocationAttempted.current = true;
-        }
-      );
-    } else {
-      setCenter([40.416775, -3.70379]);
-      setZoom(14);
-      mapRef.current?.setView([40.416775, -3.70379], 14, { animate: false });
-      centerInitialized.current = true;
-      geolocationAttempted.current = true;
-    }
-  }, []);
+  
 
   return (
     <div className="w-full px-6 md:px-8 pt-24 md:pt-28 pb-8">

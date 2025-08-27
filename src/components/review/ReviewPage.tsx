@@ -321,7 +321,6 @@ const ReviewPage = () => {
       {/* Columna derecha con el resto de secciones */}
       <div className="w-2/3 space-y-6">
         <div className="rounded-lg bg-white p-8 shadow">
-          <h2 className="mb-4 text-[20px] font-bold">Opinión</h2>
           <OpinionSection 
             propertyOpinion={step3Data?.property_opinion}
             communityOpinion={step4Data?.community_opinion}
