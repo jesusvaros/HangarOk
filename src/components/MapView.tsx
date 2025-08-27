@@ -50,6 +50,7 @@ const MapView = () => {
   const [publicReviews, setPublicReviews] = useState<PublicReview[]>([]);
   const [visiblePublic, setVisiblePublic] = useState<PublicReview[]>([]);
   const [selectedReview, setSelectedReview] = useState<PublicReview | null>(null);
+  const [mobileListOpen, setMobileListOpen] = useState(false);
 
   // Center/zoom state used with SetViewOnChange to avoid remounts
   const [center, setCenter] = useState<[number, number]>([40.416775, -3.70379]); // Madrid
@@ -162,7 +163,8 @@ const MapView = () => {
                     lng: r.lng ?? undefined,
                     texto: r.full_address ?? '—',
                     comment: r.owner_opinion ?? undefined,
-                    rating: r.would_recommend ?? undefined,
+                    rating: r.rating ?? undefined,
+                    would_recommend: r.would_recommend ?? undefined,
                   }))}
                   hoveredId={hoveredId}
                   setHoveredId={setHoveredId}
@@ -237,6 +239,7 @@ const MapView = () => {
                       setSelectedReview(null);
                       setHoveredId(null);
                       setSearchValue('');
+                      setMobileListOpen(false);
                     }}
                   />
                   <TileLayer
@@ -258,17 +261,75 @@ const MapView = () => {
                     selectedId={selectedReview?.id ?? null}
                     onSelect={(rev: PublicReview) => {
                       setSelectedReview(rev);
+                      setMobileListOpen(false);
                     }}
                   />
                   <MapBoundsWatcher items={publicReviews} onChange={setVisiblePublic} />
                 </MapContainer>
               </div>
 
-              {/* Right-side details panel overlay (inside map, mid-height, padded from edges) */}
+              {/* Mobile toggle button for reviews list */}
+              <button
+                type="button"
+                className="md:hidden absolute left-4 bottom-4 z-[1000] rounded-full bg-white/90 px-4 py-2 text-sm font-medium shadow"
+                onClick={() => setMobileListOpen(true)}
+              >
+                Opiniones
+              </button>
+
+              {/* Right-side details panel overlay (desktop) */}
               {selectedReview && (
-                <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[380px] max-w-[86vw]">
-                  <div className="rounded-2xl bg-white shadow-xl border overflow-hidden max-h-[70vh]">
-                    <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
+                <>
+                  <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[380px] max-w-[86vw]">
+                    <div className="rounded-2xl bg-white shadow-xl border overflow-hidden max-h-[70vh]">
+                      <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
+                    </div>
+                  </div>
+
+                  {/* Mobile details overlay */}
+                  <div className="md:hidden fixed inset-0 z-[1200] bg-black/40">
+                    <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] rounded-t-2xl bg-white shadow-xl">
+                      <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Mobile reviews list overlay */}
+              {mobileListOpen && (
+                <div className="md:hidden fixed inset-0 z-[1150] bg-black/40">
+                  <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] rounded-t-2xl bg-white shadow-xl p-4 flex flex-col">
+                    <div className="flex items-center justify-between mb-2">
+                      <h2 className="text-base font-semibold">Opiniones</h2>
+                      <button
+                        type="button"
+                        className="text-xl"
+                        aria-label="Cerrar"
+                        onClick={() => setMobileListOpen(false)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                    <div className="flex-1 overflow-auto">
+                      <ReviewsPanel
+                        reviews={visiblePublic.map(r => ({
+                          id: r.id,
+                          lat: r.lat ?? undefined,
+                          lng: r.lng ?? undefined,
+                          texto: r.full_address ?? '—',
+                          comment: r.owner_opinion ?? undefined,
+                          rating: r.rating ?? undefined,
+                          would_recommend: r.would_recommend ?? undefined,
+                        }))}
+                        hoveredId={hoveredId}
+                        setHoveredId={setHoveredId}
+                        onSelect={r => {
+                          const match = publicReviews.find(x => String(x.id) === String(r.id));
+                          if (match) setSelectedReview(match);
+                          setMobileListOpen(false);
+                        }}
+                      />
+                    </div>
                   </div>
                 </div>
               )}

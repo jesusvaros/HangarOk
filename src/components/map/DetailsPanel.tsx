@@ -6,7 +6,7 @@ type Props = {
 };
 
 export default function DetailsPanel({ review, onClose }: Props) {
-  const recommended = (review?.would_recommend ?? 0) >= 4;
+  const recommended = (review?.would_recommend ?? 0) >= 1;
   const headerClass = recommended ? 'bg-green-600' : 'bg-red-600';
 
   return (

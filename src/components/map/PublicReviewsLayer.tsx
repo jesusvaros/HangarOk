@@ -2,7 +2,7 @@ import { Marker } from 'react-leaflet';
 import type { PublicReview } from '../../services/supabase/publicReviews';
 
 import { svgToIcon } from './svgIcon';
-import { chatBubbleSVG } from './heroPin';
+import { faceBubbleSVG } from './heroPin';
 
 interface Props {
   reviews: PublicReview[];
@@ -10,10 +10,11 @@ interface Props {
   onSelect?: (review: PublicReview) => void;
 }
 
-// Helper to create colored icons depending on recommendation and selection
-function buildIcon(color: string, size: number, includeCheck = false) {
+// Helper to create icons based on rating and recommendation
+function buildIcon(color: string, size: number, rating: number) {
+  const face = rating <= 2 ? 'sad' : rating === 3 ? 'neutral' : 'happy';
   return svgToIcon(
-    chatBubbleSVG({ fill: color, stroke: 'none', size, includeCheck, checkStroke: '#FFFFFF' }),
+    faceBubbleSVG({ fill: color, stroke: 'none', size, face }),
     [size, size],
     [size / 2, size]
   );
@@ -31,11 +32,12 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
         )
         .map(r => {
           const isSelected = String(r.id) === String(selectedId ?? '');
-          const recommended = (r.would_recommend ?? 0) >= 4;
+          const recommended = (r.would_recommend ?? 0) >= 1;
           const color = recommended ? '#22C55E' : '#EF4444'; // green-500 / red-500
           const selectedColor = recommended ? '#15803D' : '#B91C1C'; // darker when selected
           const size = isSelected ? 52 : 42;
-          const icon = buildIcon(isSelected ? selectedColor : color, size, recommended);
+          const rating = r.rating ?? 3;
+          const icon = buildIcon(isSelected ? selectedColor : color, size, rating);
 
           return (
             <Marker

@@ -5,6 +5,7 @@ export type ReviewListItem = {
   lat?: number;
   lng?: number;
   rating?: number;
+  would_recommend?: number;
   texto?: string;
   comment?: string;
   created_at?: string;
@@ -42,7 +43,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
               const address = r.texto ?? '—';
               const opinion = r.comment ?? 'Sin comentario';
               const createdAt = r.created_at ? new Date(r.created_at).toLocaleDateString() : '';
-              const recommended = (r.rating ?? 0) >= 4;
+              const recommended = (r.would_recommend ?? 0) >= 1;
               const headerClass = recommended ? 'bg-green-600' : 'bg-red-600';
               return (
                 <li
