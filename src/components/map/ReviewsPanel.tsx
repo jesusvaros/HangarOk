@@ -4,7 +4,6 @@ export type ReviewListItem = {
   id: string | number;
   lat?: number;
   lng?: number;
-  rating?: number;
   would_recommend?: number;
   texto?: string;
   comment?: string;

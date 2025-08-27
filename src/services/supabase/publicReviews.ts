@@ -7,7 +7,6 @@ export type PublicReview = {
   lng: number | null;
   owner_opinion: string | null;
   would_recommend: number | null;
-  rating: number | null;
 };
 
 export async function getPublicReviews(): Promise<PublicReview[]> {
@@ -16,7 +15,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   const { data, error } = await client
     .from('public_reviews')
-    .select('id, address_details, owner_opinion, would_recommend, rating')
+    .select('id, address_details, owner_opinion, would_recommend')
     .eq('is_public', true);
 
   if (error || !data) return [];
@@ -31,7 +30,6 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     address_details?: AddressDetails;
     owner_opinion?: string | null;
     would_recommend?: number | string | null;
-    rating?: number | string | null;
   };
 
   const rows = data as unknown as Row[];
@@ -44,7 +42,6 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     const fullAddress = (details?.fullAddress ?? null) as string | null;
     const wouldRecommend =
       review.would_recommend != null ? Number(review.would_recommend) : null;
-    const rating = review.rating != null ? Number(review.rating) : null;
 
     return {
       id: review.id,
@@ -53,7 +50,6 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
       lng,
       owner_opinion: review.owner_opinion ?? null,
       would_recommend: wouldRecommend,
-      rating,
     } satisfies PublicReview;
   });
 

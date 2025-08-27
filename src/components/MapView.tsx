@@ -163,7 +163,6 @@ const MapView = () => {
                     lng: r.lng ?? undefined,
                     texto: r.full_address ?? '—',
                     comment: r.owner_opinion ?? undefined,
-                    rating: r.rating ?? undefined,
                     would_recommend: r.would_recommend ?? undefined,
                   }))}
                   hoveredId={hoveredId}
@@ -318,7 +317,6 @@ const MapView = () => {
                           lng: r.lng ?? undefined,
                           texto: r.full_address ?? '—',
                           comment: r.owner_opinion ?? undefined,
-                          rating: r.rating ?? undefined,
                           would_recommend: r.would_recommend ?? undefined,
                         }))}
                         hoveredId={hoveredId}
