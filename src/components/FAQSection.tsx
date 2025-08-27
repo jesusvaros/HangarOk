@@ -76,17 +76,19 @@ const faqs = [
     );
   };
 
-const FAQSection = () => {
-  return (
-    <section className="mx-auto max-w-3xl px-4 py-12">
-      <h2 className="mb-8 text-left text-3xl font-bold">Preguntas frecuentes</h2>
-      <div className="space-y-4">
-        {faqs.map((item, idx) => (
-          <FAQItem key={item.question} index={idx} {...item} />
-        ))}
-      </div>
-    </section>
-  );
-};
+  const FAQSection = () => {
+    return (
+      <section className="w-full bg-gray-50 py-12">
+        <div className="mx-auto max-w-3xl px-4">
+          <h2 className="mb-8 text-left text-3xl font-bold">Preguntas frecuentes</h2>
+          <div className="space-y-4">
+            {faqs.map((item, idx) => (
+              <FAQItem key={item.question} index={idx} {...item} />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  };
 
 export default FAQSection;

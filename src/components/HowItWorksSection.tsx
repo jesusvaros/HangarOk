@@ -25,7 +25,7 @@ const steps = [
 
 const HowItWorksSection: React.FC = () => {
   return (
-    <section className="w-full bg-gradient-to-b from-white to-gray-50 py-16">
+    <section className="w-full bg-white py-16">
       <div className="mx-auto max-w-6xl px-4">
         <h2 className="mb-10 text-center text-3xl font-bold">Cómo funciona</h2>
         <div className="grid gap-8 text-center md:grid-cols-3">
