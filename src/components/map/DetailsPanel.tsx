@@ -8,11 +8,17 @@ type Props = {
 };
 
 export default function DetailsPanel({ review, onClose }: Props) {
-  const recommended = (review?.would_recommend ?? 0) >= 1;
-  const headerClass = recommended ? 'bg-green-600' : 'bg-red-600';
+  const wr = typeof review?.would_recommend === 'number' ? review.would_recommend : undefined;
+  const headerClass = wr === undefined
+    ? 'bg-gray-600'
+    : wr > 3
+      ? 'bg-green-600'
+      : wr < 3
+        ? 'bg-red-600'
+        : 'bg-gray-600';
   const wouldRecommendStr =
-    typeof review?.would_recommend === 'number' && review.would_recommend >= 1
-      ? (String(Math.min(5, Math.max(1, review.would_recommend))) as '1' | '2' | '3' | '4' | '5')
+    typeof wr === 'number'
+      ? (String(Math.min(5, Math.max(1, wr))) as '1' | '2' | '3' | '4' | '5')
       : undefined;
 
   // Trim very long opinions for compact panel; full text is in the review page
@@ -32,7 +38,7 @@ export default function DetailsPanel({ review, onClose }: Props) {
           <h3 className="text-sm font-semibold">Detalles del piso</h3>
           {review && (
             <span className="ml-2 inline-flex items-center rounded-full bg-white/15 px-2 py-0.5 text-[11px] font-medium">
-              {recommended ? 'Recomendado' : 'No recomendado'}
+              {wr === undefined ? 'Sin valoración' : wr > 3 ? 'Recomendado' : wr < 3 ? 'No recomendado' : 'Neutral'}
             </span>
           )}
         </div>

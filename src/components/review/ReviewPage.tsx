@@ -349,13 +349,13 @@ const ReviewPage = () => {
           type="button"
           aria-label="Volver al mapa"
           onClick={() => navigate('/map')}
-          className="absolute left-4 top-4 mt-2 inline-flex items-center gap-1 focus:outline-none hover:underline"
+          className="absolute left-4 top-4 mt-2 inline-flex items-center gap-4 focus:outline-none hover:underline"
           style={{ color: 'rgb(74,94,50)' }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgb(74,94,50)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-          <span className="text-[14px] font-medium">Mapa</span>
+          <span className="text-xl font-medium">Mapa</span>
         </button>
       )}
       {/* Título principal con la dirección */}

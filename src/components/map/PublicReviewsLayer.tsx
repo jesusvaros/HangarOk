@@ -32,11 +32,23 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
         )
         .map(r => {
           const isSelected = String(r.id) === String(selectedId ?? '');
-          const recommended = (r.would_recommend ?? 0) >= 1;
-          const color = recommended ? '#22C55E' : '#EF4444'; // green-500 / red-500
-          const selectedColor = recommended ? '#15803D' : '#B91C1C'; // darker when selected
+          const wr = typeof r.would_recommend === 'number' ? r.would_recommend : undefined;
+          const color = wr === undefined
+            ? '#4B5563' // gray-600
+            : wr > 3
+              ? '#22C55E' // green-500
+              : wr < 3
+                ? '#EF4444' // red-500
+                : '#4B5563'; // gray-600
+          const selectedColor = wr === undefined
+            ? '#374151' // gray-700
+            : wr > 3
+              ? '#15803D' // green-700
+              : wr < 3
+                ? '#B91C1C' // red-700
+                : '#374151'; // gray-700
           const size = isSelected ? 52 : 42;
-          const would_recommend = r.would_recommend ?? 3;
+          const would_recommend = typeof wr === 'number' ? wr : 3;
           const icon = buildIcon(isSelected ? selectedColor : color, size, would_recommend);
           const zIndexOffset = isSelected ? 1200 : 400; // keep selected above others
 
