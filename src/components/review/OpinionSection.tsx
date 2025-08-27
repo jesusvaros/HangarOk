@@ -25,7 +25,7 @@ const OpinionSection: React.FC<OpinionSectionProps> = ({
     <div className="space-y-6 text-[16px]">
       <div className="flex items-center gap-2 mb-2">
         <ChatBubbleLeftRightIcon className="h-5 w-5 text-green-700" />
-        <h3 className="text-[18px] font-semibold">Opiniones del inquilino</h3>
+        <h3 className="text-[18px] font-semibold">Opiniones </h3>
         {wouldRecommend && (
           <div className="ml-3 flex items-center" aria-label={`Recomendación ${wouldRecommend} de 5`}>
             {[1,2,3,4,5].map((i) => (

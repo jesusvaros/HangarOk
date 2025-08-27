@@ -6,7 +6,7 @@ export const opinionSchema = z.object({
     .string()
     .min(10, 'La opinión debe tener al menos 10 caracteres')
     .max(500, 'La opinión no puede exceder los 500 caracteres'),
-  rating: z.number().min(1).max(5),
+  would_recommend: z.number().min(1).max(5),
 });
 
 export type OpinionFormData = z.infer<typeof opinionSchema>;

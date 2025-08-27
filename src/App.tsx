@@ -9,7 +9,7 @@ import BenefitsSection from './components/BenefitsSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
 import HowItWorksSection from './components/HowItWorksSection';
-import LatestReviewsSection from './components/LatestReviewsSection';
+//import LatestReviewsSection from './components/LatestReviewsSection';
 import FAQSection from './components/FAQSection';
 import FinalCTASection from './components/FinalCTASection';
 import MapView from './components/MapView';
@@ -84,7 +84,7 @@ function App() {
                 <BenefitsSection />
                 <ChromeStoreSection />
                   <PictureSection />
-                  <LatestReviewsSection />
+                  {/* <LatestReviewsSection /> */}
                   <FAQSection />
                 </>
               }

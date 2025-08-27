@@ -12,6 +12,8 @@ export async function initializeSession(userId?: string): Promise<{
   // Always have a stable sessionId per user
   let sessionId = localStorage.getItem(SESSION_ID_KEY_FRONT);
 
+  console.log(sessionId);
+
   if (!sessionId) {
     sessionId = crypto.randomUUID();
     localStorage.setItem(SESSION_ID_KEY_FRONT, sessionId);

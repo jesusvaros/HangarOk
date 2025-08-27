@@ -66,6 +66,7 @@ const ReviewPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isUserReview, setIsUserReview] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
+  const [isPublicReview, setIsPublicReview] = useState(false);
   
   // Use the auth context
   const { user, isLoading } = useAuth();
@@ -101,6 +102,67 @@ const ReviewPage = () => {
             setError('Error de configuración de Supabase');
             return;
           }
+
+          const { data: publicReview, error: publicError } = await client
+            .from('public_reviews')
+            .select('*')
+            .eq('id', id)
+            .maybeSingle();
+
+            if (publicError) {
+              console.error('Error fetching public review:', publicError);
+            }
+            if (publicReview) {
+              // Public review found. Populate UI from public data and skip session checks.
+              setIsUserReview(false);
+              setIsValidated(!!publicReview.validated_at || !!publicReview.is_public);
+              setIsPublicReview(true);
+
+              // Step 1
+              setStep1Data({
+                address_details: publicReview.address_details,
+              });
+
+              // Step 2
+              setStep2Data({
+                start_year: publicReview.start_year,
+                end_year: publicReview.end_year,
+                price: publicReview.price,
+                included_services: publicReview.included_services ?? [],
+                would_recommend: publicReview.would_recommend ?? undefined,
+                deposit_returned: publicReview.deposit_returned ?? undefined,
+              });
+
+              // Step 3
+              setStep3Data({
+                summer_temperature: publicReview.summer_temperature,
+                winter_temperature: publicReview.winter_temperature,
+                noise_level: publicReview.noise_level,
+                light_level: publicReview.light_level,
+                maintenance_status: publicReview.maintenance_status,
+                property_opinion: publicReview.property_opinion,
+              });
+
+              // Step 4
+              setStep4Data({
+                neighbor_types: publicReview.neighbor_types ?? [],
+                tourist_apartments: publicReview.tourist_apartments,
+                building_cleanliness: publicReview.building_cleanliness,
+                community_environment: publicReview.community_environment ?? [],
+                community_security: publicReview.community_security,
+                community_opinion: publicReview.community_opinion,
+              });
+
+              // Step 5
+              setStep5Data({
+                owner_type: publicReview.owner_type,
+                owner_opinion: publicReview.owner_opinion,
+              });
+
+              setLoading(false);
+              return;
+            }
+
   
           const { data: reviewSession, error: reviewError } = await client
             .from('review_sessions')
@@ -110,7 +172,7 @@ const ReviewPage = () => {
   
           if (reviewError || !reviewSession) {
             console.error('Error fetching review session:', reviewError);
-            navigate('/map');
+            //navigate('/map');
             return;
           }
   
@@ -259,7 +321,6 @@ const ReviewPage = () => {
       {/* Columna derecha con el resto de secciones */}
       <div className="w-2/3 space-y-6">
         <div className="rounded-lg bg-white p-8 shadow">
-          <h2 className="mb-4 text-[20px] font-bold">Opinión</h2>
           <OpinionSection 
             propertyOpinion={step3Data?.property_opinion}
             communityOpinion={step4Data?.community_opinion}
@@ -282,7 +343,21 @@ const ReviewPage = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8 mt-16 text-[16px] bg-gray-100">
+    <div className="container mx-auto px-4 py-8 mt-16 text-[16px] bg-gray-100 relative">
+      {isPublicReview && (
+        <button
+          type="button"
+          aria-label="Volver al mapa"
+          onClick={() => navigate('/map')}
+          className="absolute left-4 top-4 mt-2 inline-flex items-center gap-4 focus:outline-none hover:underline"
+          style={{ color: 'rgb(74,94,50)' }}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgb(74,94,50)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
+            <path d="M15 18l-6-6 6-6" />
+          </svg>
+          <span className="text-xl font-medium">Mapa</span>
+        </button>
+      )}
       {/* Título principal con la dirección */}
       <div className="flex flex-col items-center mb-8">
         <h1 className="text-center text-2xl font-bold md:text-3xl lg:text-4xl mt-8">
