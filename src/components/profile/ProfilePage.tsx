@@ -75,13 +75,14 @@ const ProfilePage: React.FC = () => {
             .from('review_sessions')
             .select('*')
             .eq('user_id', user.id)
+            .eq('step1_completed', true)
         ]);
 
         if (sessionsResponse.error) {
           throw sessionsResponse.error;
         }
 
-        const sessions = sessionsResponse.data || [];
+        const sessions: UserReview[] = (sessionsResponse.data || []) as UserReview[];
 
         if (sessions.length === 0) {
           // No reviews found
