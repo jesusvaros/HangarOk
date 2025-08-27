@@ -3,10 +3,12 @@ import { Toaster } from 'react-hot-toast';
 
 // Import our components
 import Header from './components/Header';
+import HeroSection from './components/HeroSection';
 import InputSection from './components/InputSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
 import FAQSection from './components/FAQSection';
+import FinalCTASection from './components/FinalCTASection';
 import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
 import AuthCallback from './components/AuthCallback';
@@ -72,6 +74,7 @@ function App() {
             path="/"
             element={
               <>
+                <HeroSection />
                 <InputSection />
                 <ChromeStoreSection />
                 <PictureSection />
@@ -80,6 +83,8 @@ function App() {
             }
           />
         </Routes>
+
+        <FinalCTASection />
 
         <footer className="mx-auto mt-8 max-w-6xl py-6 text-center text-sm text-gray-500">
           <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
