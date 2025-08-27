@@ -22,16 +22,23 @@ const features = [
 
 const ChromeStoreSection: React.FC = () => {
   return (
-    <section className="w-full bg-white py-16">
-      <div className="mx-auto flex max-w-6xl flex-col items-center gap-12 px-4 md:flex-row-reverse">
-        <div className="text-center md:w-1/2 md:text-right">
+    <section className="w-full bg-gradient-to-b from-white to-green-50 py-16">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-12 px-4 md:flex-row">
+        <div className="md:w-1/2">
+          <img
+            src="/chrome-extension-placeholder.svg"
+            alt="Vista previa de la extensión"
+            className="w-full rounded-xl border border-gray-200 shadow-xl"
+          />
+        </div>
+        <div className="md:w-1/2 text-left">
           <h2 className="mb-6 text-3xl font-bold md:text-4xl">Instala nuestra extensión</h2>
           <p className="mb-8 text-lg text-gray-700">
             Verifica caseros directamente mientras navegas por portales de alquiler. Nuestra extensión detecta al propietario y te muestra opiniones sin salir de la página.
           </p>
           <ul className="mb-8 space-y-4">
             {features.map(({ Icon, text }) => (
-              <li key={text} className="flex items-start justify-center md:justify-end">
+              <li key={text} className="flex items-start">
                 <Icon className="mr-3 h-6 w-6 flex-shrink-0 text-[#4A5E32]" />
                 <span className="text-gray-700">{text}</span>
               </li>
@@ -59,13 +66,6 @@ const ChromeStoreSection: React.FC = () => {
             </svg>
             Instalar desde Chrome Web Store
           </a>
-        </div>
-        <div className="md:w-1/2">
-          <img
-            src="/chrome-extension-placeholder.svg"
-            alt="Vista previa de la extensión"
-            className="w-full rounded-xl border border-gray-200 shadow-xl"
-          />
         </div>
       </div>
     </section>
