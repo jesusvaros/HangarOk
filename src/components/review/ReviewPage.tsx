@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabaseWrapper } from '../../services/supabase/client';
 import { useAuth } from '../../store/auth/hooks';
@@ -15,16 +15,6 @@ import PropertySection from './PropertySection';
 import CommunitySection from './CommunitySection';
 import OpinionSection from './OpinionSection';
 
-// Definición de tipos para los datos de cada paso
-type ReviewMeta = {
-  user_id: string | null;
-  validated: boolean | number | string | null;
-  step1_completed?: boolean;
-  step2_completed?: boolean;
-  step3_completed?: boolean;
-  step4_completed?: boolean;
-  step5_completed?: boolean;
-} | null;
 interface Step1Data {
   address_details: {
     street?: string;
@@ -76,103 +66,73 @@ const ReviewPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isUserReview, setIsUserReview] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
-  const fetchedRef = useRef<string | null>(null);
   
   // Use the auth context
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
 
-  // Estados para cada paso
-  const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
-  const [step2Data, setStep2Data] = useState<Step2Data | null>(null);
-  const [step3Data, setStep3Data] = useState<Step3Data | null>(null);
-  const [step4Data, setStep4Data] = useState<Step4Data | null>(null);
-  const [step5Data, setStep5Data] = useState<Step5Data | null>(null);
-
-  // Función para formatear la dirección como título
-  const getAddressTitle = () => {
-    if (!step1Data?.address_details) return 'Review de la propiedad';
-
-    const { street, number, city } = step1Data.address_details;
-    let title = '';
-
-    if (street) title += street;
-    if (number) title += ` ${number}`;
-    if (city) title += `, ${city}`;
-
-    return title || 'Review de la propiedad';
-  };
-
-  useEffect(() => {
-    // Skip if no ID provided
-    if (!id) return;
-    // Avoid multiple fetches for same id (StrictMode double-invoke, re-renders)
-    if (fetchedRef.current === id) return;
-    const fetchAllData = async () => {
-      fetchedRef.current = id;
-      if (!id) {
-        setError('ID de sesión no proporcionado');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const client = supabaseWrapper.getClient();
-        if (!client) {
-          setError('Error de configuración de Supabase');
-          setLoading(false);
-          return;
-        }
-
-        // Single meta fetch by session_id (includes owner and validated)
-        const { data: meta, error: metaErr } = await client
-          .from('review_sessions')
-          .select('user_id, validated, step1_completed, step2_completed, step3_completed, step4_completed, step5_completed')
-          .eq('id', id)
-          .maybeSingle();
-
-          console.log(meta);
-        if (metaErr) {
-          console.error('Error obteniendo meta de review_sessions:', metaErr);
-        }
-        const reviewSession: ReviewMeta = meta ?? null;
-        const ownerUserId = reviewSession?.user_id ?? null;
-        const validatedRaw = reviewSession?.validated ?? null;
-
-        // Normalize validated status (kept for UI only)
-        const validatedKnown = validatedRaw !== null;
-        const validated = validatedKnown && (validatedRaw === true || validatedRaw === 'true' || validatedRaw === 1);
-        setIsValidated(validatedKnown ? validated : false);
-
-        // Is user's own review?
-        const currentUserId = user?.id ?? null;
-        const isOwnReview = !!currentUserId && !!ownerUserId && String(ownerUserId) === String(currentUserId);
-        setIsUserReview(isOwnReview);
-
-        // Redirect rule (ONLY ownership):
-        // If we know the owner and current user is not the owner (or not logged), redirect.
-        if (!!ownerUserId && !isOwnReview) {
-          navigate('/map');
-          return;
-        }
-        
-        // Check if all steps are completed for user's own review
-        if (isOwnReview) {
-          // Get the current session status to check steps completion
-          const { data: sessionData, error: sessionError } = await client.rpc('get_review_session', {
-            p_session_id: id,
-          });
-          
-          if (sessionError) {
-            console.error('Error checking review completion:', sessionError);
-          } else if (sessionData && sessionData.length > 0) {
-            const sessionStatus = sessionData[0];
-            
-            // Check which steps are completed
-            const { step1_completed, step2_completed, step3_completed, step4_completed, step5_completed } = sessionStatus;
-            
-            // If not all steps are completed, redirect to the form at the last incomplete step
+    // Estados para cada paso
+    const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
+    const [step2Data, setStep2Data] = useState<Step2Data | null>(null);
+    const [step3Data, setStep3Data] = useState<Step3Data | null>(null);
+    const [step4Data, setStep4Data] = useState<Step4Data | null>(null);
+    const [step5Data, setStep5Data] = useState<Step5Data | null>(null);
+  
+    // Función para formatear la dirección como título
+    const getAddressTitle = () => {
+      if (!step1Data?.address_details) return 'Review de la propiedad';
+  
+      const { street, number, city } = step1Data.address_details;
+      let title = '';
+  
+      if (street) title += street;
+      if (number) title += ` ${number}`;
+      if (city) title += `, ${city}`;
+  
+      return title || 'Review de la propiedad';
+    };
+  
+    useEffect(() => {
+      if (!id || isLoading) return;
+  
+      const fetchAllData = async () => {
+        try {
+          const client = supabaseWrapper.getClient();
+          if (!client) {
+            setError('Error de configuración de Supabase');
+            return;
+          }
+  
+          const { data: reviewSession, error: reviewError } = await client
+            .from('review_sessions')
+            .select('user_id, validated, step1_completed, step2_completed, step3_completed, step4_completed, step5_completed')
+            .eq('id', id)
+            .maybeSingle();
+  
+          if (reviewError || !reviewSession) {
+            console.error('Error fetching review session:', reviewError);
+            navigate('/map');
+            return;
+          }
+  
+          const isOwnReview = !!user?.id && reviewSession.user_id === user?.id;
+          setIsUserReview(isOwnReview);
+          setIsValidated(reviewSession.validated);
+  
+          if (!reviewSession.validated && !isOwnReview) {
+            navigate('/map');
+            return;
+          }
+  
+          if (isOwnReview) {
+            const {
+              step1_completed,
+              step2_completed,
+              step3_completed,
+              step4_completed,
+              step5_completed,
+            } = reviewSession;
+  
             if (!(step1_completed && step2_completed && step3_completed && step4_completed && step5_completed)) {
-              // Determine which step to continue from
               if (!step1_completed) {
                 navigate(`/add-review?step=1`);
                 return;
@@ -191,35 +151,31 @@ const ReviewPage = () => {
               }
             }
           }
+  
+          const [step1, step2, step3, step4, step5] = await Promise.all([
+            getAddressStep1Data(id),
+            getSessionStep2Data(id),
+            getSessionStep3Data(id),
+            getSessionStep4Data(id),
+            getSessionStep5Data(id),
+          ]);
+  
+          setStep1Data(step1);
+          setStep2Data(step2);
+          setStep3Data(step3);
+          setStep4Data(step4);
+          setStep5Data(step5);
+        } catch (err) {
+          console.error('Error al cargar los datos:', err);
+          setError('Error al cargar los datos de la revisión');
+        } finally {
+          setLoading(false);
         }
-
-        // Cargar datos de todos los pasos en paralelo
-        const [step1, step2, step3, step4, step5] = await Promise.all([
-          getAddressStep1Data(id),
-          getSessionStep2Data(id),
-          getSessionStep3Data(id),
-          getSessionStep4Data(id),
-          getSessionStep5Data(id),
-        ]);
-
-        // Actualizar estados con los datos obtenidos
-        setStep1Data(step1);
-        setStep2Data(step2);
-        setStep3Data(step3);
-        setStep4Data(step4);
-        setStep5Data(step5);
-      } catch (err) {
-        console.error('Error al cargar los datos:', err);
-        setError('Error al cargar los datos de la revisión');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchAllData();
-  }, [id, navigate, user]);
-
-  // Componente para la vista móvil
+      };
+  
+      fetchAllData();
+    }, [id, navigate, user?.id,isLoading]);
+  
   const MobileView = () => (
     <div className="space-y-6">
       <div className="rounded-lg bg-white p-6 shadow">
