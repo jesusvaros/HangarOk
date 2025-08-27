@@ -7,6 +7,7 @@ import HeroSection from './components/HeroSection';
 import InputSection from './components/InputSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
+import TestimonialsSection from './components/TestimonialsSection';
 import FAQSection from './components/FAQSection';
 import FinalCTASection from './components/FinalCTASection';
 import MapView from './components/MapView';
@@ -78,6 +79,7 @@ function App() {
                 <InputSection />
                 <ChromeStoreSection />
                 <PictureSection />
+                <TestimonialsSection />
                 <FAQSection />
               </>
             }
