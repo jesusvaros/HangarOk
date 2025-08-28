@@ -18,6 +18,8 @@ import { getSessionStep2Data } from '../services/supabase/GetSubmitStep2';
 import { getSessionStep3Data } from '../services/supabase/GetSubmitStep3';
 import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
 import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
+import useMediaQuery from '../hooks/useMediaQuery';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export interface SessionStatus {
   step1_completed?: boolean;
@@ -290,6 +292,7 @@ const AddReviewForm: React.FC = () => {
   };
 
   const steps = ['Dirección', 'Estancia', 'Piso', 'Comunidad', 'Gestión'];
+  const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const handleStepClick = async (step: number) => {
     if (step >= currentStep + 1) {
@@ -330,9 +333,9 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
-  // Render the appropriate step component based on currentStep
-  const renderStep = () => {
-    switch (currentStep) {
+  // Render the appropriate step component for a given step
+  const renderStepFor = (stepNum: number) => {
+    switch (stepNum) {
       case 1:
         return (
           <Step1ObjectiveData
@@ -381,6 +384,9 @@ const AddReviewForm: React.FC = () => {
         return <Step1ObjectiveData onNext={handleNext} />;
     }
   };
+  // Backward compatible alias removed to avoid unused variable
+
+  // No direction needed for vertical slide (bottom to top)
 
   const onloginComplete = (sessionId: string, userId: string) => {
     try {
@@ -401,49 +407,75 @@ const AddReviewForm: React.FC = () => {
 
   return (
     <div className="w-full py-8 pt-24">
-      {/* Mobile Stepper - Only visible on smaller screens (up to 950px) */}
-      <div className="mb-6 w-full px-4 lg:hidden">
-        <StepperBar
-          currentStep={currentStep}
-          steps={steps}
-          onStepClick={handleStepClick}
-          orientation="horizontal"
-          sessionStatus={sessionStatus}
-        />
-        {/* Container for form messages on mobile and tablet */}
-        <div className="mt-50 mb-4">
-          <StaticFormMessagesContainer step={currentStep} isMobile={true} />
+      {/* Render only one layout based on viewport to avoid duplicate animations */}
+      {!isDesktop ? (
+        // Mobile / Tablet layout
+        <div className="mb-6 w-full px-4">
+          <StepperBar
+            currentStep={currentStep}
+            steps={steps}
+            onStepClick={handleStepClick}
+            orientation="horizontal"
+            sessionStatus={sessionStatus}
+          />
+          {/* Container for form messages on mobile and tablet */}
+          <div className="mt-50 mb-4">
+            <StaticFormMessagesContainer step={currentStep} isMobile={true} />
+          </div>
+          {/* Form content for mobile: animate the whole box bottom -> top */}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={currentStep}
+              className="rounded-lg bg-white p-6 shadow-md"
+              initial={{ y: 32, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -32, opacity: 0 }}
+              transition={{ duration: 0.28, ease: 'easeOut' }}
+            >
+              {renderStepFor(currentStep)}
+            </motion.div>
+          </AnimatePresence>
         </div>
-        {/* Form content for mobile */}
-        <div className="rounded-lg bg-white p-6 shadow-md">{renderStep()}</div>
-      </div>
-      {/* Desktop layout - Three columns: Stepper | Form | Messages */}
-      <div className="mx-auto hidden max-w-[1300px] justify-center space-x-6 px-4 lg:flex">
-        {/* Stepper - Left column */}
-        <div className="flex-shrink-0">
-          <div className="sticky" style={{ top: '6rem' }}>
-            <StepperBar
-              currentStep={currentStep}
-              steps={steps}
-              onStepClick={handleStepClick}
-              orientation="vertical"
-              sessionStatus={sessionStatus}
-            />
+      ) : (
+        // Desktop layout - Three columns: Stepper | Form | Messages
+        <div className="mx-auto max-w-[1300px] justify-center space-x-6 px-4 lg:flex">
+          {/* Stepper - Left column */}
+          <div className="flex-shrink-0">
+            <div className="sticky" style={{ top: '6rem' }}>
+              <StepperBar
+                currentStep={currentStep}
+                steps={steps}
+                onStepClick={handleStepClick}
+                orientation="vertical"
+                sessionStatus={sessionStatus}
+              />
+            </div>
+          </div>
+
+          {/* Form content - Center column - Fixed width (wider on laptop) */}
+          <div className="flex-shrink-0 md:w-[500px] lg:w-[700px]">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={currentStep}
+                className="rounded-lg bg-white p-6 shadow-md"
+                initial={{ y: 32, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: -32, opacity: 0 }}
+                transition={{ duration: 0.28, ease: 'easeOut' }}
+              >
+                {renderStepFor(currentStep)}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          {/* Space for message boxes - Right column - 24px gap */}
+          <div className="flex-shrink-0 w-[200px] xl:w-[300px]">
+            <div className="sticky" style={{ top: '6rem' }}>
+              <StaticFormMessagesContainer step={currentStep} isMobile={false} />
+            </div>
           </div>
         </div>
-
-        {/* Form content - Center column - Fixed width (wider on laptop) */}
-        <div className="flex-shrink-0 rounded-lg bg-white p-6 shadow-md md:w-[500px] lg:w-[700px]">
-          {renderStep()}
-        </div>
-
-        {/* Space for message boxes - Right column - 24px gap */}
-        <div className="hidden flex-shrink-0 w-[200px] xl:w-[300px] lg:block">
-          <div className="sticky" style={{ top: '6rem' }}>
-            <StaticFormMessagesContainer step={currentStep} isMobile={false} />
-          </div>
-        </div>
-      </div>
+      )}
       {isModalOpen && (
         <ContactModal
           onClose={handleCloseModal}
