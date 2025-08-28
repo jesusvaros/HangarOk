@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Work Sans variable fonts */
+@font-face {
+  font-family: 'Work Sans Variable';
+  src: url('./assets/Work_Sans/WorkSans-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Work Sans Variable';
+  src: url('./assets/Work_Sans/WorkSans-Italic-VariableFont_wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Apply Work Sans across the app */
+body {
+  @apply font-sans;
+}
