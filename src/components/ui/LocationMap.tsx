@@ -2,6 +2,8 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { svgToIcon } from '../map/svgIcon';
+import { faceBubbleSVG } from '../map/heroPin';
 
 // Fix for default marker icons in React-Leaflet
 // This is needed because the default icons reference assets that might not be available
@@ -50,12 +52,14 @@ interface LocationMapProps {
   };
   className?: string;
   onLocationSelect?: (lat: number, lng: number) => void;
+  wouldRecommend?: '1'|'2'|'3'|'4'|'5';
 }
 
 const LocationMap: React.FC<LocationMapProps> = ({
   coordinates,
   className = '',
   onLocationSelect,
+  wouldRecommend,
 }) => {
   // Default to Madrid if no coordinates are provided
   const position: [number, number] = coordinates
@@ -97,6 +101,21 @@ const LocationMap: React.FC<LocationMapProps> = ({
         {/* Always show the marker, use markerPosition state */}
         <Marker
           position={markerPosition}
+          icon={(function(){
+            // Build a face bubble icon similar to PublicReviewsLayer when wouldRecommend is provided
+            if (!wouldRecommend) return defaultIcon;
+            const wrNum = Number(wouldRecommend);
+            const color = isNaN(wrNum)
+              ? '#4B5563'
+              : wrNum > 3
+                ? '#22C55E'
+                : wrNum < 3
+                  ? '#EF4444'
+                  : '#4B5563';
+            const face = isNaN(wrNum) ? 'neutral' : wrNum <= 2 ? 'sad' : wrNum === 3 ? 'neutral' : 'happy';
+            const size = 42;
+            return svgToIcon(faceBubbleSVG({ fill: color, stroke: 'none', size, face: face as any }), [size, size], [size/2, size]);
+          })()}
           draggable={!!onLocationSelect}
           eventHandlers={{
             dragend: e => {

@@ -7,6 +7,7 @@ interface OpinionSectionProps {
   communityOpinion?: string;
   ownerOpinion?: string;
   wouldRecommend?: '1'|'2'|'3'|'4'|'5';
+  showHeader?: boolean;
 }
 
 const OpinionSection: React.FC<OpinionSectionProps> = ({
@@ -14,6 +15,7 @@ const OpinionSection: React.FC<OpinionSectionProps> = ({
   communityOpinion,
   ownerOpinion,
   wouldRecommend,
+  showHeader = true,
 }) => {
   const hasOpinions = propertyOpinion || communityOpinion || ownerOpinion;
 
@@ -23,23 +25,25 @@ const OpinionSection: React.FC<OpinionSectionProps> = ({
 
   return (
     <div className="space-y-6 text-[16px]">
-      <div className="flex items-center gap-2 mb-2">
-        <ChatBubbleLeftRightIcon className="h-5 w-5 text-green-700" />
-        <h3 className="text-[18px] font-semibold">Opiniones </h3>
-        {wouldRecommend && (
-          <div className="ml-3 flex items-center" aria-label={`Recomendación ${wouldRecommend} de 5`}>
-            {[1,2,3,4,5].map((i) => (
-              <span key={i} className="mr-0.5">
-                {i <= Number(wouldRecommend) ? (
-                  <StarIconSolid className="h-5 w-5 text-yellow-500" />
-                ) : (
-                  <StarIconOutline className="h-5 w-5 text-gray-300" />
-                )}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
+      {showHeader && (
+        <div className="flex items-center gap-2 mb-2">
+          <ChatBubbleLeftRightIcon className="h-5 w-5 text-green-700" />
+          <h3 className="text-[18px] font-semibold">Opiniones </h3>
+          {wouldRecommend && (
+            <div className="ml-3 flex items-center" aria-label={`Recomendación ${wouldRecommend} de 5`}>
+              {[1,2,3,4,5].map((i) => (
+                <span key={i} className="mr-0.5">
+                  {i <= Number(wouldRecommend) ? (
+                    <StarIconSolid className="h-5 w-5 text-yellow-500" />
+                  ) : (
+                    <StarIconOutline className="h-5 w-5 text-gray-300" />
+                  )}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {propertyOpinion && (
         <div className="border-l-4 border-green-200 pl-4">

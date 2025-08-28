@@ -1,6 +1,8 @@
 import type { PublicReview } from '../../services/supabase/publicReviews';
 import { Link } from 'react-router-dom';
 import OpinionSection from '../review/OpinionSection';
+import { ChatBubbleLeftRightIcon, StarIcon as StarIconOutline, MapPinIcon } from '@heroicons/react/24/outline';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 
 type Props = {
   review: PublicReview | null;
@@ -30,16 +32,24 @@ export default function DetailsPanel({ review, onClose }: Props) {
   };
 
   return (
-    <div className="flex flex-col max-h-[70vh] bg-white">
-      {/* Header */}
-      <div className={`${headerClass} text-white px-4 py-3 flex items-center justify-between`}>
+    <div className="flex flex-col max-h-full bg-white">
+      {/* Header replaced: show opinions + stars to save space */}
+      <div className={`${headerClass} text-white px-4 py-2.5 flex items-center justify-between`}>
         <div className="flex items-center gap-2">
-          <span className="text-lg">🏠</span>
-          <h3 className="text-sm font-semibold">Detalles del piso</h3>
-          {review && (
-            <span className="ml-2 inline-flex items-center rounded-full bg-white/15 px-2 py-0.5 text-[11px] font-medium">
-              {wr === undefined ? 'Sin valoración' : wr > 3 ? 'Recomendado' : wr < 3 ? 'No recomendado' : 'Neutral'}
-            </span>
+          <ChatBubbleLeftRightIcon className="h-5 w-5 text-white" />
+          <h3 className="text-sm font-semibold">Opiniones</h3>
+          {review && wouldRecommendStr && (
+            <div className="ml-1 flex items-center" aria-label={`Recomendación ${wouldRecommendStr} de 5`}>
+              {[1,2,3,4,5].map((i) => (
+                <span key={i} className="mr-0.5">
+                  {i <= Number(wouldRecommendStr) ? (
+                    <StarIconSolid className="h-4 w-4 text-yellow-300" />
+                  ) : (
+                    <StarIconOutline className="h-4 w-4 text-white/60" />
+                  )}
+                </span>
+              ))}
+            </div>
           )}
         </div>
         {review && (
@@ -60,27 +70,40 @@ export default function DetailsPanel({ review, onClose }: Props) {
           <>
             {/* Dirección */}
             {review.full_address && (
-              <section className="space-y-1">
-                <h4 className="text-xs font-semibold text-gray-700 uppercase tracking-wide">
-                  Dirección
-                </h4>
-                <p className="text-sm text-gray-800 whitespace-normal break-words">
-                  {review.full_address}
-                </p>
+              <section>
+                <div className="flex items-start gap-2">
+                  <MapPinIcon className="h-5 w-5 text-green-600 flex-shrink-0" />
+                  <p
+                    className="text-sm text-gray-800 break-words"
+                    style={{
+                      display: '-webkit-box',
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                    title={review.full_address}
+                  >
+                    {review.full_address}
+                  </p>
+                </div>
               </section>
             )}
 
             {/* Opiniones (reutiliza estilo de la página de review) */}
-            <OpinionSection
-              propertyOpinion={undefined}
-              communityOpinion={undefined}
-              ownerOpinion={truncate(review.owner_opinion)}
-              wouldRecommend={wouldRecommendStr}
-            />
+            {/* On mobile, cap the visible opinion height to keep the footer link visible */}
+            <div className="max-h-[26vh] overflow-auto md:max-h-none md:overflow-visible">
+              <OpinionSection
+                propertyOpinion={undefined}
+                communityOpinion={undefined}
+                ownerOpinion={truncate(review.owner_opinion, 200)}
+                wouldRecommend={wouldRecommendStr}
+                showHeader={false}
+              />
+            </div>
 
-            {/* Enlace a la ficha completa */}
+            {/* Enlace a la ficha completa (sticky en mobile para que siempre se vea) */}
             {review?.id && (
-              <div className="pt-2">
+              <div className="sticky bottom-0 left-0 right-0 -mx-4 border-t bg-white/95 px-4 py-3 backdrop-blur md:static md:m-0 md:border-0 md:bg-transparent md:px-0 md:py-0 md:backdrop-blur-0">
                 <Link
                   to={`/review/${review.id}`}
                   className="inline-flex items-center gap-1 text-[rgb(74,94,50)] hover:underline"

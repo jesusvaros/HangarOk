@@ -254,6 +254,7 @@ const ReviewPage = () => {
               <LocationMap
                 coordinates={step1Data.address_details.coordinates}
                 className="h-full w-full rounded-lg"
+                wouldRecommend={step2Data?.would_recommend}
               />
             </div>
           ) : (
@@ -306,6 +307,7 @@ const ReviewPage = () => {
                   <LocationMap
                     coordinates={step1Data.address_details.coordinates}
                     className="h-full w-full rounded-lg"
+                    wouldRecommend={step2Data?.would_recommend}
                   />
                 </div>
               ) : (

@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
 import { useSearchParams } from 'react-router-dom';
 import type { Map as LeafletMap } from 'leaflet';
@@ -196,10 +197,10 @@ const MapView = () => {
   
 
   return (
-    <div className="w-full px-6 md:px-8 pt-24 md:pt-28 pb-8">
+    <div className="w-full px-0 md:px-8 pt-24 md:pt-28 pb-0 md:pb-8">
       <div className="mx-auto max-w-[1800px]">
-        <h1 className="text-left text-3xl font-semibold mb-4">Mapa de opiniones</h1>
-        <div className="shadow-lg rounded-xl p-4 bg-gray-50">
+        <h1 className="hidden md:block text-left text-3xl font-semibold mb-4">Mapa de opiniones</h1>
+        <div className="rounded-none md:rounded-xl md:shadow-lg md:p-4 bg-transparent md:bg-gray-50">
           <div className="grid md:grid-cols-[360px_1fr] gap-4">
             {/* Sidebar (desktop) */}
             <aside className="hidden md:flex md:flex-col">
@@ -226,9 +227,11 @@ const MapView = () => {
 
             {/* Map container */}
             <div className="relative">
-              {/* Floating centered Search Bar */}
-              <div className="absolute left-1/2 top-6 md:top-8 z-[10] w-[min(640px,92vw)] -translate-x-1/2">
-                <SearchBar
+              {/* Map */}
+              <div className="relative z-0 w-full h-[calc(100vh-140px)] md:h-[80vh] md:rounded-3xl md:border md:border-gray-200 overflow-hidden md:shadow-md bg-white/10">
+                {/* Floating centered Search Bar - inside map to avoid overflow */}
+                <div className="absolute left-1/2 top-3 md:top-6 z-[10] w-[min(640px,92vw)] -translate-x-1/2">
+                  <SearchBar
                   value={searchValue}
                   onSelect={(result: AddressResult) => {
                     setSearchValue(result.formatted || '');
@@ -265,11 +268,8 @@ const MapView = () => {
                   }}
                   onUserInput={v => setSearchValue(v)}
                   allowBroadResults
-                />
-              </div>
-
-              {/* Map */}
-              <div className="relative z-0 w-full h-[80vh] rounded-3xl border border-gray-200 overflow-hidden shadow-md bg-white/10">
+                  />
+                </div>
                 <MapContainer
                   center={center}
                   zoom={zoom}
@@ -316,71 +316,91 @@ const MapView = () => {
                 </MapContainer>
               </div>
 
-              {/* Mobile toggle button for reviews list */}
-              <button
-                type="button"
-                className="md:hidden absolute left-4 bottom-4 z-[1000] rounded-full bg-white/90 px-4 py-2 text-sm font-medium shadow"
-                onClick={() => setMobileListOpen(true)}
-              >
-                Opiniones
-              </button>
+              {/* Mobile bottom sheet handle to open reviews list */}
+              {!mobileListOpen && (
+                <button
+                  type="button"
+                  className="md:hidden absolute left-1/2 bottom-3 z-[1000] -translate-x-1/2 rounded-full bg-white/90 px-4 py-1 text-xs font-medium shadow border"
+                  onClick={() => setMobileListOpen(true)}
+                  aria-label="Abrir opiniones"
+                >
+                  <span className="block h-1.5 w-8 rounded-full bg-gray-400" />
+                </button>
+              )}
 
               {/* Right-side details panel overlay (desktop) */}
               {selectedReview && (
                 <>
-                  <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[380px] max-w-[86vw]">
-                    <div className="rounded-2xl bg-white shadow-xl border overflow-hidden max-h-[70vh]">
+                  <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[320px] max-w-[80vw]">
+                    <div className="rounded-2xl bg-white shadow-xl border overflow-hidden max-h-[60vh]">
                       <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
                     </div>
                   </div>
 
-                  {/* Mobile details overlay */}
-                  <div className="md:hidden fixed inset-0 z-[1200] bg-black/40">
-                    <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] rounded-t-2xl bg-white shadow-xl">
-                      <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
+                  {/* Mobile details overlay with animation, keep map visible (no heavy dim) */}
+                  <AnimatePresence>
+                    <div className="md:hidden fixed inset-0 z-[1200] pointer-events-none">
+                      <motion.div
+                        initial={{ y: '100%' }}
+                        animate={{ y: 0 }}
+                        exit={{ y: '100%' }}
+                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                        className="absolute bottom-0 left-0 right-0 max-h-[40vh] rounded-t-2xl bg-white shadow-xl pointer-events-auto"
+                      >
+                        <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
+                      </motion.div>
                     </div>
-                  </div>
+                  </AnimatePresence>
                 </>
               )}
 
               {/* Mobile reviews list overlay */}
-              {mobileListOpen && (
-                <div className="md:hidden fixed inset-0 z-[1150] bg-black/40">
-                  <div className="absolute bottom-0 left-0 right-0 max-h-[80vh] rounded-t-2xl bg-white shadow-xl p-4 flex flex-col">
-                    <div className="flex items-center justify-between mb-2">
-                      <h2 className="text-base font-semibold">Opiniones</h2>
-                      <button
-                        type="button"
-                        className="text-xl"
-                        aria-label="Cerrar"
-                        onClick={() => setMobileListOpen(false)}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                    <div className="flex-1 overflow-auto">
-                      <ReviewsPanel
-                        reviews={visiblePublic.map(r => ({
-                          id: r.id,
-                          lat: r.lat ?? undefined,
-                          lng: r.lng ?? undefined,
-                          texto: r.full_address ?? '—',
-                          comment: r.owner_opinion ?? undefined,
-                          would_recommend: r.would_recommend ?? undefined,
-                        }))}
-                        hoveredId={hoveredId}
-                        setHoveredId={setHoveredId}
-                        selectedId={selectedReview?.id ?? null}
-                        onSelect={r => {
-                          const match = publicReviews.find(x => String(x.id) === String(r.id));
-                          if (match) setSelectedReview(match);
-                          setMobileListOpen(false);
-                        }}
-                      />
-                    </div>
+              <AnimatePresence>
+                {mobileListOpen && (
+                  <div className="md:hidden fixed inset-0 z-[1150] pointer-events-none">
+                    <motion.div
+                      initial={{ y: '100%' }}
+                      animate={{ y: 0 }}
+                      exit={{ y: '100%' }}
+                      transition={{ duration: 0.25, ease: 'easeOut' }}
+                      className="absolute bottom-0 left-0 right-0 max-h-[40vh] rounded-t-2xl bg-white shadow-xl p-4 flex flex-col pointer-events-auto"
+                    >
+                      <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-gray-300" />
+                      <div className="flex items-center justify-between mb-2">
+                        <h2 className="text-base font-semibold">Opiniones</h2>
+                        <button
+                          type="button"
+                          className="text-xl"
+                          aria-label="Cerrar"
+                          onClick={() => setMobileListOpen(false)}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                      <div className="flex-1 overflow-auto">
+                        <ReviewsPanel
+                          reviews={visiblePublic.map(r => ({
+                            id: r.id,
+                            lat: r.lat ?? undefined,
+                            lng: r.lng ?? undefined,
+                            texto: r.full_address ?? '—',
+                            comment: r.owner_opinion ?? undefined,
+                            would_recommend: r.would_recommend ?? undefined,
+                          }))}
+                          hoveredId={hoveredId}
+                          setHoveredId={setHoveredId}
+                          selectedId={selectedReview?.id ?? null}
+                          onSelect={r => {
+                            const match = publicReviews.find(x => String(x.id) === String(r.id));
+                            if (match) setSelectedReview(match);
+                            setMobileListOpen(false);
+                          }}
+                        />
+                      </div>
+                    </motion.div>
                   </div>
-                </div>
-              )}
+                )}
+              </AnimatePresence>
 
               {/* Error toast */}
               {error && (
