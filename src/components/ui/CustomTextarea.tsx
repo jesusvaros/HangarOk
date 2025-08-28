@@ -26,7 +26,7 @@ const CustomTextarea: React.FC<CustomTextareaProps> = ({
   return (
     <div className={`mb-4 ${className}`}>
       {label && (
-        <label htmlFor={id} className="mb-2 block text-base font-medium text-black">
+        <label htmlFor={id} className="mb-2 block text-lg font-medium text-black">
           {label}
         </label>
       )}
@@ -35,7 +35,7 @@ const CustomTextarea: React.FC<CustomTextareaProps> = ({
           id={id}
           value={value}
           onChange={onChange}
-          className="w-full rounded-lg border p-3 pr-12 focus:outline-none focus:ring-2 focus:ring-green-400"
+          className="w-full rounded-lg border p-3 pr-12 text-lg font-medium text-black focus:outline-none focus:ring-2 focus:ring-green-400"
           placeholder={placeholder}
           rows={rows}
           maxLength={maxLength}

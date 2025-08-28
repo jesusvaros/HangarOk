@@ -84,16 +84,15 @@ const StepperBar: React.FC<StepperBarProps> = ({
                       />
                     </svg>
                   ) : (
-                    <span className="text-sm font-medium">{index + 1}</span>
+                    <span className="text-base font-semibold">{index + 1}</span>
                   )}
                 </div>
                 {/* Etiqueta */}
                 <span
-                  className={`${isVertical ? 'ml-3' : 'mt-2'} text-sm ${isVertical ? 'text-left' : 'text-center'} block whitespace-nowrap rounded-md px-3 py-2`}
+                  className={`${isVertical ? 'ml-3' : 'mt-2'} text-base md:text-lg text-black ${isVertical ? 'text-left' : 'text-center'} block whitespace-nowrap rounded-md px-3 py-2`}
                   style={{
                     backgroundColor: isActive ? lightGreenColor : 'transparent',
                     fontWeight: isActive ? 'bold' : 'normal',
-                    height: '36px',
                     width: isVertical ? 'auto' : '100%',
                   }}
                 >
@@ -103,7 +102,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
               {index < steps.length - 1 ? (
                 <div
                   key={`connector-${index}`}
-                  className={` absolute ${isVertical ? `  top-[30px]  ml-4 h-[50px] w-0.5` : 'left-[50px] top-[15px] ml-0 h-0.5 w-[100%] md:left-[60px] md:w-[190%]'}`}
+                  className={` absolute ${isVertical ? `  top-[35px]  ml-4 h-[55px] w-0.5` : 'left-[50px] top-[15px] ml-0 h-0.5 w-[100%] md:left-[60px] md:w-[190%]'}`}
                   style={{ backgroundColor: isCompleted ? greenColor : '#d1d5db' }}
                 />
               ) : null}

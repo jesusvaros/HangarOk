@@ -29,7 +29,10 @@ const CustomCheckbox: React.FC<CustomCheckboxProps> = ({
           className="w-4 h-4 accent-[rgb(74,94,50)] border-gray-300 rounded"
         />
       </div>
-      <label htmlFor={id} className={`ml-2 text-sm text-gray-700 ${error ? 'text-red-500' : ''}`}>
+      <label
+        htmlFor={id}
+        className={`ml-2 text-lg font-medium ${error ? 'text-red-500' : 'text-black'}`}
+      >
         {label}
       </label>
     </div>

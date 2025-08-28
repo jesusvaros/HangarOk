@@ -418,9 +418,9 @@ const AddReviewForm: React.FC = () => {
         <div className="rounded-lg bg-white p-6 shadow-md">{renderStep()}</div>
       </div>
       {/* Desktop layout - Three columns: Stepper | Form | Messages */}
-      <div className="mx-auto hidden max-w-[1100px] justify-center space-x-6 px-4 lg:flex">
+      <div className="mx-auto hidden max-w-[1300px] justify-center space-x-6 px-4 lg:flex">
         {/* Stepper - Left column */}
-        <div className="flex-shrink-0" style={{ width: '150px' }}>
+        <div className="flex-shrink-0">
           <div className="sticky" style={{ top: '6rem' }}>
             <StepperBar
               currentStep={currentStep}
@@ -438,7 +438,7 @@ const AddReviewForm: React.FC = () => {
         </div>
 
         {/* Space for message boxes - Right column - 24px gap */}
-        <div className="hidden flex-shrink-0 lg:block" style={{ width: '200px' }}>
+        <div className="hidden flex-shrink-0 w-[200px] xl:w-[300px] lg:block">
           <div className="sticky" style={{ top: '6rem' }}>
             <StaticFormMessagesContainer step={currentStep} isMobile={false} />
           </div>

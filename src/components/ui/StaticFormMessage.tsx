@@ -32,12 +32,12 @@ const StaticFormMessage: React.FC<StaticFormMessageProps> = ({
       <div className="flex items-start gap-2">
         <div>
           {title && (
-            <h4 className="mb-1 text-base font-bold flex items-center gap-2">
+            <h4 className="mb-1 text-lg md:text-xl font-bold flex items-center gap-2">
               {title}
               {icon && <div className="mt-0.5 text-current">{icon}</div>}
             </h4>
           )}
-          <p className="text-sm">{message}</p>
+          <p className="text-base md:text-lg leading-relaxed">{message}</p>
         </div>
       </div>
     </div>
