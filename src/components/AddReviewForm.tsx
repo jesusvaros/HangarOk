@@ -406,7 +406,7 @@ const AddReviewForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full py-8 pt-24">
+    <div className="w-full pt-[80px] pb-0 min-h-[calc(100vh-80px)]">
       {/* Render only one layout based on viewport to avoid duplicate animations */}
       {!isDesktop ? (
         // Mobile / Tablet layout
@@ -426,7 +426,7 @@ const AddReviewForm: React.FC = () => {
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
               key={currentStep}
-              className="rounded-lg bg-white p-6 shadow-md"
+              className="rounded-lg bg-white p-7 md:p-8 shadow-md"
               initial={{ y: 32, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: -32, opacity: 0 }}
@@ -440,7 +440,7 @@ const AddReviewForm: React.FC = () => {
         // Desktop layout - Three columns: Stepper | Form | Messages
         <div className="mx-auto max-w-[1300px] justify-center space-x-6 px-4 lg:flex">
           {/* Stepper - Left column */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 w-[200px]">
             <div className="sticky" style={{ top: '6rem' }}>
               <StepperBar
                 currentStep={currentStep}
@@ -457,7 +457,7 @@ const AddReviewForm: React.FC = () => {
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={currentStep}
-                className="rounded-lg bg-white p-6 shadow-md"
+                className="rounded-lg bg-white p-7 md:p-8 shadow-md"
                 initial={{ y: 32, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 exit={{ y: -32, opacity: 0 }}
@@ -471,7 +471,7 @@ const AddReviewForm: React.FC = () => {
           {/* Space for message boxes - Right column - 24px gap */}
           <div className="flex-shrink-0 w-[200px] xl:w-[300px]">
             <div className="sticky" style={{ top: '6rem' }}>
-              <StaticFormMessagesContainer step={currentStep} isMobile={false} />
+            <StaticFormMessagesContainer step={currentStep} isMobile={false} />
             </div>
           </div>
         </div>

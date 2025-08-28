@@ -89,11 +89,13 @@ const StepperBar: React.FC<StepperBarProps> = ({
                 </div>
                 {/* Etiqueta */}
                 <span
-                  className={`${isVertical ? 'ml-3' : 'mt-2'} text-base md:text-lg text-black ${isVertical ? 'text-left' : 'text-center'} block whitespace-nowrap rounded-md px-3 py-2`}
+                  title={step}
+                  className={`${isVertical ? 'ml-3' : 'mt-2'} text-base md:text-lg text-black ${isVertical ? 'text-left' : 'text-center'} block whitespace-nowrap truncate rounded-md px-3 py-2`}
                   style={{
                     backgroundColor: isActive ? lightGreenColor : 'transparent',
                     fontWeight: isActive ? 'bold' : 'normal',
-                    width: isVertical ? 'auto' : '100%',
+                    // Wider fixed width on vertical so labels don't truncate too early
+                    width: isVertical ? '160px' : '100%',
                   }}
                 >
                   {step}

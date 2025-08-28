@@ -9,8 +9,18 @@ const Header: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Hide input on specific routes
+  const isAddReviewPage = location.pathname === '/add-review';
+  const isHomePage = location.pathname === '/';
+
   // Handle scroll event to change header appearance
   useEffect(() => {
+    // On the add-review form page, keep header static and skip scroll listener
+    if (isAddReviewPage) {
+      if (scrolled) setScrolled(false);
+      return;
+    }
+
     const handleScroll = () => {
       const isScrolled = window.scrollY > 330; // Change this value as needed
       if (isScrolled !== scrolled) {
@@ -20,7 +30,7 @@ const Header: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled]);
+  }, [scrolled, isAddReviewPage]);
 
   const handleStart = () => {
     if (address.trim()) {
@@ -28,16 +38,15 @@ const Header: React.FC = () => {
     }
   };
 
-  // Hide input on specific routes
-  const isAddReviewPage = location.pathname === '/add-review';
-  const isHomePage = location.pathname === '/';
-
   return (
     <header
-      className={`duration-400 fixed left-0 right-0 top-0 z-50 transition-all ${scrolled && !isAddReviewPage ? 'py-2' : 'py-3'}`}
+      className={`duration-400 fixed left-0 right-0 top-0 z-[1000] transition-all ${scrolled && !isAddReviewPage ? 'py-2' : 'py-3'}`}
       style={{
-        backgroundColor:
-          (scrolled && !isAddReviewPage) || !isHomePage ? 'rgb(225, 245, 110)' : 'transparent',
+        backgroundColor: isAddReviewPage
+          ? 'rgb(225, 245, 110)'
+          : (scrolled || !isHomePage)
+            ? 'rgb(225, 245, 110)'
+            : 'transparent',
       }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
