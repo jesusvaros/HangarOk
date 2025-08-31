@@ -82,8 +82,8 @@ const Header: React.FC = () => {
       <div className="flex w-full items-center justify-between">
         {showLogo ? (
           <Link to="/" className="flex items-center" aria-label="CaseroOk - Inicio">
-            <img src={logoUrl} alt="CaseroOk" className="h-16 w-16 mr-[-10px]" />
-            <img src={wordmarkUrl} alt="CaseroOk" className="hidden md:inline-block h-10 mt-6" />
+            <img src={logoUrl} alt="CaseroOk" className="h-10 w-10 md:h-14 md:w-14" />
+            <img src={wordmarkUrl} alt="CaseroOk" className="hidden md:inline-block ml-2 h-6 md:h-7" />
           </Link>
         ) : (
           <span />

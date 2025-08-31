@@ -1,4 +1,5 @@
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
+import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from 'react-hot-toast';
 
 // Import our components
@@ -33,11 +34,13 @@ import { AuthProvider } from './store/auth';
 function App() {
   const location = useLocation();
   const isGrayPage = location.pathname === '/add-review' || location.pathname.includes('/review/') || location.pathname === '/profile' || location.pathname === '/map';
-  // Note: Footer is now visible on all pages
+
   return (
     <AuthProvider>
       <FormProvider>
         <div className={`min-h-screen ${isGrayPage ? 'bg-gray-100' : 'bg-white'}`}>
+        {/* Vercel Analytics */}
+        <Analytics />
         <Toaster
           position="bottom-left"
           gutter={8}
