@@ -24,7 +24,6 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
   onSelect,
   selectedId,
 }) => {
-  console.log(reviews);
 
   const definecolor = (recommendation: number) => {
     if (!recommendation) {
@@ -42,7 +41,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
   
 
   return (
-    <div className="h-full flex flex-col p-1">
+    <div className="h-full min-h-0 flex flex-col p-1">
       {reviews.length === 0 ? (
         <div className="flex-1 flex items-center justify-center text-center px-4">
           <div>
@@ -54,7 +53,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
         </div>
       ) : (
         <>
-          <ul className="space-y-2 pr-1 flex-1">  
+          <ul className="space-y-2 pr-1 flex-1 overflow-auto">  
             {reviews.map(r => {
               const id = r.id ?? `${r.lat}-${r.lng}`;
               const address = r.texto ?? '—';

@@ -1,9 +1,11 @@
 import React from 'react';
+import chromeLogo from '../assets/google-chrome.svg';
 import {
   MagnifyingGlassIcon,
   ChatBubbleLeftRightIcon,
   PencilSquareIcon
 } from '@heroicons/react/24/outline';
+import { Link } from 'react-router-dom';
 
 const features = [
   {
@@ -22,7 +24,22 @@ const features = [
 
 const ChromeStoreSection: React.FC = () => {
   return (
-    <section className="w-full bg-gradient-to-b from-white to-green-50 py-16">
+    <section className="relative w-full bg-gradient-to-b from-white to-green-50 py-16 overflow-hidden">
+      {/* Diagonal WIP tape overlay */}
+      <div
+        className="pointer-events-none select-none absolute left-1/2 top-52 z-[5] -translate-x-1/2 rotate-12"
+        style={{ width: '120%' }}
+        aria-hidden
+      >
+        <div
+          className="w-full rounded-md shadow-md"
+          style={{ backgroundColor: 'rgb(225, 245, 110)' }}
+        >
+          <p className="px-6 py-2 text-center text-base font-extrabold tracking-widest text-black max-h-9 overflow-hidden">
+            EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLOEN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO EN DESARROLLO
+          </p>
+        </div>
+      </div>
       <div className="mx-auto flex max-w-6xl flex-col items-center gap-12 px-4 md:flex-row">
         <div className="md:w-1/2">
           <img
@@ -44,28 +61,19 @@ const ChromeStoreSection: React.FC = () => {
               </li>
             ))}
           </ul>
-          <a
-            href="https://chrome.google.com/webstore/category/extensions"
-            target="_blank"
+          <Link
+            to="https://chrome.google.com/webstore/category/extensions"
+            target="_self"
             rel="noopener noreferrer"
-            className="inline-flex items-center rounded-lg bg-[#4A5E32] px-8 py-3 text-lg font-medium text-white shadow-md transition-colors hover:bg-[#3B4C28]"
+            aria-disabled
+            onClick={e => { e.preventDefault(); e.stopPropagation(); }}
+            tabIndex={-1}
+            className="inline-flex items-center rounded-lg bg-[#4A5E32] px-8 py-3 text-lg font-medium text-white opacity-60 cursor-not-allowed shadow-md"
+            title="Próximamente"
           >
-            <svg
-              className="mr-2 h-6 w-6"
-              viewBox="0 0 48 48"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <circle cx="24" cy="24" r="21" fill="white" />
-              <path d="M24 4v16h19.16A20 20 0 0024 4z" fill="#EA4335" />
-              <path d="M24 44c8.08 0 15.06-4.77 18.3-11.7H24V44z" fill="#34A853" />
-              <path d="M5.7 32.3A20 20 0 014 24a20 20 0 016-14.2l9.7 16.5-14 6z" fill="#FBBC05" />
-              <path d="M43.16 20H24L14.3 3.8A20 20 0 0143.16 20z" fill="#4285F4" />
-              <circle cx="24" cy="24" r="7" fill="white" />
-              <circle cx="24" cy="24" r="5" fill="#4285F4" />
-            </svg>
-            Instalar desde Chrome Web Store
-          </a>
+            <img src={chromeLogo} alt="Google Chrome" className="mr-3 h-6 w-6" />
+            Instalar extensión
+          </Link>
         </div>
       </div>
     </section>
