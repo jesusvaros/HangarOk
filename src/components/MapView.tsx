@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MapContainer, TileLayer, Marker, ZoomControl } from 'react-leaflet';
+import { MapContainer, Marker, ZoomControl } from 'react-leaflet';
+import MapLibreLayer from './map/MapLibreLayer';
 import { useSearchParams } from 'react-router-dom';
 import type { Map as LeafletMap } from 'leaflet';
 import L from 'leaflet';
@@ -292,11 +293,7 @@ const MapView = () => {
                       setMobileListOpen(false);
                     }}
                   />
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    maxZoom={19}
-                  />
+                  <MapLibreLayer />
 
                   {currentLocation && (
                     <Marker

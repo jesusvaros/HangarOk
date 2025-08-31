@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet';
+import { MapContainer, Marker, useMap, useMapEvents } from 'react-leaflet';
+import MapLibreLayer from '../map/MapLibreLayer';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { svgToIcon } from '../map/svgIcon';
@@ -94,10 +95,7 @@ const LocationMap: React.FC<LocationMapProps> = ({
         zoom={coordinates ? 16 : 13}
         style={{ height: '100%', width: '100%', zIndex: 1 }}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+        <MapLibreLayer />
         {/* Always show the marker, use markerPosition state */}
         <Marker
           position={markerPosition}
@@ -114,7 +112,7 @@ const LocationMap: React.FC<LocationMapProps> = ({
                   : '#4B5563';
             const face = isNaN(wrNum) ? 'neutral' : wrNum <= 2 ? 'sad' : wrNum === 3 ? 'neutral' : 'happy';
             const size = 42;
-            return svgToIcon(faceBubbleSVG({ fill: color, stroke: 'none', size, face: face as any }), [size, size], [size/2, size]);
+            return svgToIcon(faceBubbleSVG({ fill: color, stroke: 'none', size, face }), [size, size], [size/2, size]);
           })()}
           draggable={!!onLocationSelect}
           eventHandlers={{
