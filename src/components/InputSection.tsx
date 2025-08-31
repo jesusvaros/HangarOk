@@ -259,12 +259,12 @@ const InputSection: React.FC = () => {
   return (
     <section
       id="home-address-section"
-      className="relative flex h-[calc(100vh-180px)] flex-col items-center justify-center"
+      className="relative flex h-[calc(90vh-180px)] flex-col items-center justify-center max-h-[800px]"
       style={{ backgroundColor: '#e1f56e' }}
     >
       <div className="container relative mx-auto max-w-5xl px-4">
         <div>
-          <div className="absolute left-[10%] top-[-100px] max-w-[200px] md:left-[9%] lg:left-[10%]">
+          <div className="absolute left-[15%] top-[-100px] max-w-[200px] md:left-[9%] lg:left-[6%]">
             <div className="relative rounded-lg bg-white p-3 shadow-md">
               <p className="text-lg font-medium text-gray-700">
                 Todas las reviews son <span className="font-bold">Anónimas</span>
@@ -273,7 +273,7 @@ const InputSection: React.FC = () => {
             </div>
           </div>
 
-          <div className="absolute right-[10%] top-[-130px] max-w-[250px] md:right-[6%] lg:right-[12%]">
+          <div className="absolute right-[15%] top-[-80px] max-w-[250px] md:right-[-2%] lg:right-[3%]">
             <div className="relative rounded-lg bg-white p-3 shadow-md">
               <p className="text-lg text-gray-700">
                 Tus opiniones ayudan a crear un mercado de alquiler más
