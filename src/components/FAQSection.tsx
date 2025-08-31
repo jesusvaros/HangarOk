@@ -9,9 +9,9 @@ interface FAQItemProps {
 
 const faqs = [
   {
-    question: '¿Qué es Casero Verificado?',
+    question: '¿Qué es CaseroOk?',
     answer:
-      'Casero Verificado es una plataforma donde los inquilinos comparten de forma anónima sus experiencias con propietarios para ayudar a otros a tomar decisiones informadas.',
+      'CaseroOk es una plataforma donde los inquilinos comparten de forma anónima sus experiencias con propietarios para ayudar a otros a tomar decisiones informadas.',
   },
   {
     question: '¿Se publican datos personales de los caseros?',

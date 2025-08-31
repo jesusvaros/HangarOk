@@ -155,6 +155,7 @@ const InputSection: React.FC = () => {
   if (isMobile) {
     return (
       <section
+        id="home-address-section"
         className="relative flex h-[calc(100vh-240px)] flex-col items-center pt-24"
         style={{ backgroundColor: '#e1f56e' }}
       >
@@ -257,6 +258,7 @@ const InputSection: React.FC = () => {
 
   return (
     <section
+      id="home-address-section"
       className="relative flex h-[calc(100vh-180px)] flex-col items-center justify-center"
       style={{ backgroundColor: '#e1f56e' }}
     >

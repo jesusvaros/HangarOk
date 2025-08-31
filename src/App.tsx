@@ -107,7 +107,7 @@ function App() {
             <Link className="hover:text-gray-700" to="/buenas-practicas">Buenas Prácticas</Link>
           </nav>
             <p>
-              © {new Date().getFullYear()} Casero Verificado - Todas las opiniones son anónimas y reflejan experiencias
+              © {new Date().getFullYear()} CaseroOk - Todas las opiniones son anónimas y reflejan experiencias
               personales, no declaraciones de hechos ni asesoramiento legal.
             </p>
           </footer>

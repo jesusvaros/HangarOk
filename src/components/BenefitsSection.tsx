@@ -28,7 +28,7 @@ const BenefitsSection: React.FC = () => {
   return (
     <section className="w-full bg-gradient-to-b from-green-50 to-white py-16">
       <div className="mx-auto max-w-6xl px-4">
-        <h2 className="mb-10 text-left text-3xl font-bold">¿Por qué usar Casero Verificado?</h2>
+        <h2 className="mb-10 text-left text-3xl font-bold">¿Por qué usar CaseroOk?</h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {benefits.map(({ Icon, title, text }) => (
             <div

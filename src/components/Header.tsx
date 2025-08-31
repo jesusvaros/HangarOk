@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../store/auth/hooks';
 import LoginContent from './ui/LoginContent';
+import logoUrl from '../assets/logo_coloreado.svg';
+import wordmarkUrl from '../assets/caserook_letras.svg';
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -38,9 +40,37 @@ const Header: React.FC = () => {
     }
   };
 
+  // Show logo only after scrolling first section on home, or on non-home pages
+  const showLogo = !isHomePage || scrolled || isAddReviewPage;
+
+  // Detect if the home input section is visible to avoid showing header input
+  const [homeInputVisible, setHomeInputVisible] = useState<boolean>(true);
+  useEffect(() => {
+    if (!isHomePage) {
+      setHomeInputVisible(false);
+      return;
+    }
+    const el = document.getElementById('home-address-section');
+    if (!el) {
+      setHomeInputVisible(false);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        setHomeInputVisible(entry.isIntersecting);
+      },
+      { threshold: 0.2 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [isHomePage]);
+
+  const showHeaderSearch = !isAddReviewPage && (!isHomePage || !homeInputVisible);
+
   return (
     <header
-      className={`duration-400 fixed left-0 right-0 top-0 z-[1000] transition-all ${scrolled && !isAddReviewPage ? 'py-2' : 'py-3'}`}
+      className={`duration-400 fixed left-0 right-0 top-0 z-[1000] transition-all ${scrolled && !isAddReviewPage ? 'py-2' : 'py-3'} px-6`}
       style={{
         backgroundColor: isAddReviewPage
           ? 'rgb(225, 245, 110)'
@@ -49,16 +79,19 @@ const Header: React.FC = () => {
             : 'transparent',
       }}
     >
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4">
-        <Link to="/" className="flex items-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] font-bold text-white">
-            CV
-          </div>
-        </Link>
+      <div className="flex w-full items-center justify-between">
+        {showLogo ? (
+          <Link to="/" className="flex items-center" aria-label="CaseroOk - Inicio">
+            <img src={logoUrl} alt="CaseroOk" className="h-16 w-16 mr-[-10px]" />
+            <img src={wordmarkUrl} alt="CaseroOk" className="hidden md:inline-block h-10 mt-6" />
+          </Link>
+        ) : (
+          <span />
+        )}
 
         {/* Input field on desktop, 'Add a review' button on mobile */}
         <div className="flex flex-1 justify-center">
-          {(scrolled || !isHomePage) && !isAddReviewPage && (
+          {showHeaderSearch && (
             <>
               {/* Desktop input and button */}
               <div className="hidden w-full max-w-xl md:flex">
@@ -90,28 +123,28 @@ const Header: React.FC = () => {
           )}
         </div>
 
-        {/* Map icon on the right */}
-        <Link to="/map" className="ml-4 flex items-center">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#4A5E32]">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-              />
-            </svg>
-          </div>
-        </Link>
-        
-        {/* Login Dropdown Component */}
-        <LoginDropdown />
+        {/* Right side: map + login with small gap and slight right margin */}
+        <div className="flex items-center gap-2 md:gap-3">
+          <Link to="/map" className="flex items-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#4A5E32]">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                />
+              </svg>
+            </div>
+          </Link>
+          <LoginDropdown />
+        </div>
       </div>
     </header>
   );
@@ -149,7 +182,7 @@ const LoginDropdown: React.FC = () => {
   };
 
   return (
-    <div className="relative ml-4" ref={dropdownRef}>
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
         className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#5A6E42]"

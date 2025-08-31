@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { MapContainer, TileLayer, Marker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, ZoomControl } from 'react-leaflet';
 import { useSearchParams } from 'react-router-dom';
 import type { Map as LeafletMap } from 'leaflet';
 import L from 'leaflet';
@@ -229,53 +229,55 @@ const MapView = () => {
             <div className="relative">
               {/* Map */}
               <div className="relative z-0 w-full h-[calc(100vh-140px)] md:h-[80vh] md:rounded-3xl md:border md:border-gray-200 overflow-hidden md:shadow-md bg-white/10">
-                {/* Floating centered Search Bar - inside map to avoid overflow */}
-                <div className="absolute left-1/2 top-3 md:top-6 z-[10] w-[min(640px,92vw)] -translate-x-1/2">
+                {/* Floating centered Search Bar (all breakpoints) - inside map perimeter */}
+                <div className="absolute top-3 md:top-6 left-3 right-3 md:left-6 md:right-6 z-[1001] max-w-[640px] mx-auto">
                   <SearchBar
-                  value={searchValue}
-                  onSelect={(result: AddressResult) => {
-                    setSearchValue(result.formatted || '');
-                    setError(null);
-                    const lat = result.geometry?.lat;
-                    const lng = result.geometry?.lng;
-                    if (typeof lat === 'number' && typeof lng === 'number') {
-                      setCenter([lat, lng]);
-                      setZoom(17);
-                      mapRef.current?.setView([lat, lng], 17, { animate: true });
-                    }
-                  }}
-                  onLocate={() => {
-                    if (!navigator.geolocation) return;
-                    navigator.geolocation.getCurrentPosition(
-                      pos => {
-                        const { latitude, longitude } = pos.coords;
-                        setCurrentLocation({ lat: latitude, lng: longitude });
-                        setCenter([latitude, longitude]);
-                        setZoom(16);
-                        mapRef.current?.setView([latitude, longitude], 16, { animate: true });
-                        // Reverse geocode to fill the search field with current address
-                        geocodingService
-                          .reverseGeocode(latitude, longitude)
-                          .then(addr => {
-                            if (addr?.formatted) setSearchValue(addr.formatted);
-                          })
-                          .catch(() => {});
-                      },
-                      () => {
-                        // ignore errors silently; user may have denied permissions
+                    value={searchValue}
+                    onSelect={(result: AddressResult) => {
+                      setSearchValue(result.formatted || '');
+                      setError(null);
+                      const lat = result.geometry?.lat;
+                      const lng = result.geometry?.lng;
+                      if (typeof lat === 'number' && typeof lng === 'number') {
+                        setCenter([lat, lng]);
+                        setZoom(17);
+                        mapRef.current?.setView([lat, lng], 17, { animate: true });
                       }
-                    );
-                  }}
-                  onUserInput={v => setSearchValue(v)}
-                  allowBroadResults
+                    }}
+                    onLocate={() => {
+                      if (!navigator.geolocation) return;
+                      navigator.geolocation.getCurrentPosition(
+                        pos => {
+                          const { latitude, longitude } = pos.coords;
+                          setCurrentLocation({ lat: latitude, lng: longitude });
+                          setCenter([latitude, longitude]);
+                          setZoom(16);
+                          mapRef.current?.setView([latitude, longitude], 16, { animate: true });
+                          // Reverse geocode to fill the search field with current address
+                          geocodingService
+                            .reverseGeocode(latitude, longitude)
+                            .then(addr => {
+                              if (addr?.formatted) setSearchValue(addr.formatted);
+                            })
+                            .catch(() => {});
+                        },
+                        () => {
+                          // ignore errors silently; user may have denied permissions
+                        }
+                      );
+                    }}
+                    onUserInput={v => setSearchValue(v)}
+                    allowBroadResults
                   />
                 </div>
                 <MapContainer
                   center={center}
                   zoom={zoom}
                   style={{ height: '100%', width: '100%' }}
+                  zoomControl={false}
                   scrollWheelZoom
                 >
+                  <ZoomControl position="bottomright" />
                   <CaptureMapRef
                     onReady={m => {
                       mapRef.current = m;
@@ -337,15 +339,15 @@ const MapView = () => {
                     </div>
                   </div>
 
-                  {/* Mobile details overlay with animation, keep map visible (no heavy dim) */}
+                  {/* Mobile details overlay with animation, positioned over the map (absolute) */}
                   <AnimatePresence>
-                    <div className="md:hidden fixed inset-0 z-[1200] pointer-events-none">
+                    <div className="md:hidden absolute inset-x-0 bottom-0 z-[1200] pointer-events-none">
                       <motion.div
                         initial={{ y: '100%' }}
                         animate={{ y: 0 }}
                         exit={{ y: '100%' }}
                         transition={{ duration: 0.25, ease: 'easeOut' }}
-                        className="absolute bottom-0 left-0 right-0 max-h-[40vh] rounded-t-2xl bg-white shadow-xl pointer-events-auto"
+                        className="absolute bottom-0 left-0 right-0 max-h-[35vh] rounded-t-2xl bg-white shadow-xl pointer-events-auto"
                       >
                         <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
                       </motion.div>
@@ -357,7 +359,7 @@ const MapView = () => {
               {/* Mobile reviews list overlay */}
               <AnimatePresence>
                 {mobileListOpen && (
-                  <div className="md:hidden fixed inset-0 z-[1150] pointer-events-none">
+                  <div className="md:hidden absolute inset-x-0 bottom-0 z-[1150] pointer-events-none">
                     <motion.div
                       initial={{ y: '100%' }}
                       animate={{ y: 0 }}
