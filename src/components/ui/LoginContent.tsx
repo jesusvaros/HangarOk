@@ -10,12 +10,14 @@ interface LoginContentProps {
   onClose?: () => void;
   showTitle?: boolean;
   onLoginComplete?: (sessionId: string, userId: string) => void;
+  showInfo?: boolean;
 }
 
 const LoginContent: React.FC<LoginContentProps> = ({ 
   onClose, 
   showTitle = true,
   onLoginComplete,
+  showInfo = true,
 }) => {
   const { formData, updateFormData } = useFormContext();
   const navigate = useNavigate();
@@ -105,25 +107,27 @@ const LoginContent: React.FC<LoginContentProps> = ({
   return (
     <>
       {showTitle && (
-        <h2 className="mb-4 text-2xl font-bold text-gray-800">Guardar y validar tu opinión</h2>
+        <h2 className="mb-3 text-3xl font-bold text-gray-800">Guardar y validar tu opinión</h2>
       )}
 
-      <div className="mb-4">
-        <p className="mb-2">Esta información:</p>
-        <ul className="mb-4 space-y-1 pl-5 list-disc">
-          <li>Solo será usada para validar la review</li>
-          <li>Siempre será anónima</li>
-          <li>Te permitirá editarla si fuera necesario</li>
-        </ul>
-      </div>
+      {showInfo && (
+        <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-base text-amber-800">
+          <p className="mb-1 font-semibold">Esta información:</p>
+          <ul className="ml-4 list-disc space-y-1">
+            <li>Solo será usada para validar la review</li>
+            <li>Siempre será anónima</li>
+            <li>Te permitirá editarla si fuera necesario</li>
+          </ul>
+        </div>
+      )}
 
       {status === 'idle' || status === 'error' ? (
         <>
-          <form onSubmit={handleEmailLogin} className="mb-4">
+          <form onSubmit={handleEmailLogin} className="mb-3">
             <div className="mb-4">
               <label 
                 htmlFor="contactEmail" 
-                className="mb-1 block text-sm font-medium text-gray-700"
+                className="mb-1 block text-base font-medium text-gray-700"
               >
                 Correo electrónico
               </label>
@@ -133,29 +137,29 @@ const LoginContent: React.FC<LoginContentProps> = ({
                 value={formData.contactEmail || ''}
                 onChange={e => updateFormData({ contactEmail: e.target.value })}
                 required
-                className="w-full rounded-lg border p-3 focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
+                className="w-full rounded-lg border p-3 text-base focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
                 placeholder="tu@email.com"
               />
             </div>
 
             {status === 'error' && (
-              <p className="mb-2 text-sm text-red-600">
+              <p className="mb-2 text-base text-red-600">
                 {errorMessage || 'Error al enviar el link'}
               </p>
             )}
 
             <button
               type="submit"
-              className="mb-3 w-full rounded-lg bg-[rgb(74,94,50)] py-2 text-white hover:bg-[rgb(60,76,40)]"
+              className="mb-2 w-full rounded-lg bg-[rgb(74,94,50)] py-2.5 text-base text-white hover:bg-[rgb(60,76,40)]"
             >
               Validar por correo
             </button>
           </form>
         </>
       ) : status === 'loading' ? (
-        <p className="text-center text-sm text-gray-600">Enviando enlace de login...</p>
+        <p className="text-center text-base text-gray-600">Enviando enlace de login...</p>
       ) : (
-        <div className="mb-4 rounded-md bg-gray-50 p-4 text-sm text-gray-700">
+        <div className="mb-3 rounded-md bg-gray-50 p-4 text-base text-gray-700">
           {isEditingEmail ? (
             <form
               onSubmit={e => {
@@ -167,34 +171,34 @@ const LoginContent: React.FC<LoginContentProps> = ({
             >
               <input
                 type="email"
-                className="w-full rounded-lg border p-2 text-sm"
+                className="w-full rounded-lg border p-2.5 text-base"
                 value={formData.contactEmail}
                 onChange={e => updateFormData({ contactEmail: e.target.value })}
               />
               <button
                 type="submit"
-                className="w-full rounded bg-[rgb(74,94,50)] py-2 text-white hover:bg-[rgb(60,76,40)]"
+                className="w-full rounded bg-[rgb(74,94,50)] py-2.5 text-base text-white hover:bg-[rgb(60,76,40)]"
               >
                 Enviar nuevo enlace
               </button>
             </form>
           ) : (
             <>
-              <p className="mb-2">
+              <p className="mb-2 text-base">
                 📩 Hemos enviado un enlace a{' '}
                 <span className="font-semibold">{formData.contactEmail}</span>.
               </p>
               <div className="flex items-center justify-between">
                 <button
                   onClick={() => setIsEditingEmail(true)}
-                  className="text-sm text-blue-600 underline hover:text-blue-800"
+                  className="text-base text-blue-600 underline hover:text-blue-800"
                 >
                   Cambiar email
                 </button>
                 <button
                   onClick={() => handleEmailLogin({ preventDefault: () => {} } as React.FormEvent)}
                   disabled={!canResend}
-                  className={`text-sm ${canResend ? 'text-blue-600 hover:text-blue-800' : 'text-gray-400 cursor-not-allowed'}`}
+                  className={`text-base ${canResend ? 'text-blue-600 hover:text-blue-800' : 'text-gray-400 cursor-not-allowed'}`}
                 >
                   {canResend ? 'Reenviar enlace' : `Reenviar en ${resendTimer}s`}
                 </button>

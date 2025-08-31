@@ -226,7 +226,7 @@ const LoginDropdown: React.FC = () => {
             </div>
           ) : (
             <div className="p-2">
-              <LoginContent onClose={() => setIsDropdownOpen(false)} showTitle={false} />
+              <LoginContent onClose={() => setIsDropdownOpen(false)} showTitle={false} showInfo={false} />
             </div>
           )}
         </div>
