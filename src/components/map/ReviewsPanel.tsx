@@ -53,7 +53,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
         </div>
       ) : (
         <>
-          <ul className="space-y-2 pr-1 flex-1 overflow-auto">  
+          <ul className="space-y-2 flex-1 overflow-auto p-1 ">  
             {reviews.map(r => {
               const id = r.id ?? `${r.lat}-${r.lng}`;
               const address = r.texto ?? '—';
