@@ -227,9 +227,9 @@ const MapView = () => {
             </aside>
 
             {/* Map container */}
-            <div className="relative">
+            <div className="relative mt-[-35px] md:mt-0">
               {/* Map */}
-              <div className="relative z-0 w-full h-[calc(100vh-140px)] md:h-[80vh] md:rounded-3xl md:border md:border-gray-200 overflow-hidden md:shadow-md bg-white/10">
+              <div className="relative  z-0 w-full h-[calc(100vh-60px)] md:h-[80vh] md:rounded-3xl md:border md:border-gray-200 overflow-hidden md:shadow-md bg-white/10">
                 {/* Floating centered Search Bar (all breakpoints) - inside map perimeter */}
                 <div className="absolute top-3 md:top-6 left-3 right-3 md:left-6 md:right-6 z-[1001] max-w-[640px] mx-auto">
                   <SearchBar
