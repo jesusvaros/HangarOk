@@ -43,7 +43,9 @@ export const validateStep2 = (context: FormDataType): ValidationResult => {
       fieldErrors: { ...fieldErrors, wouldRecommend: true },
     };
   }
-  if(!depositReturned && !endYear){
+  console.log(depositReturned);
+  console.log(endYear);
+  if(!depositReturned && endYear){
     return {
       isValid: false,
       message: 'Si marcas que no vives en el piso, debes indicar si la fianza fue devuelta',

@@ -62,17 +62,8 @@ const ModerationPage = () => {
       }
 
       // Obtener todas las reviews con información adicional
-      const { data, error } = await client
-      .from('review_sessions_with_steps')
-      .select('*')
-      .eq('step1_completed', true)
-      .eq('step2_completed', true)
-      .eq('step3_completed', true)
-      .eq('step4_completed', true)
-      .eq('step5_completed', true)
-      .eq('validated', false)
-      .not('user_id', 'is', null)
-      .order('created_at', { ascending: false });
+      const { data, error } = await client.rpc('get_review_sessions_for_moderation');
+
     
       console.log(data);
     
