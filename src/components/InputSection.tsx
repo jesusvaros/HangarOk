@@ -318,7 +318,7 @@ const InputSection: React.FC = () => {
           <button
             onClick={mode === 'form' ? handleStart : handleGoToMap}
             disabled={isLoading}
-            className="mt-[1px] flex h-14 items-center justify-center rounded-r-lg bg-[#F97316] px-8 py-4 text-lg font-semibold text-white hover:bg-[#EA580C] focus:outline-none"
+            className="flex h-14 items-center justify-center rounded-r-lg bg-[#F97316] px-8 py-4 text-lg font-semibold text-white hover:bg-[#EA580C] focus:outline-none"
           >
             {mode === 'form' ? 'Empezar' : 'Buscar'}
           </button>
