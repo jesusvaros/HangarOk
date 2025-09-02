@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /admin/
 
-# Replace YOUR_DOMAIN with your production domain (including protocol)
 Sitemap: https://caserook.com/sitemap.xml
-

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="CaseroOk — Opiniones anónimas sobre viviendas y caseros">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0ea5e9"/>
+      <stop offset="100%" stop-color="#0369a1"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#g)"/>
+  <g fill="#ffffff">
+    <text x="60" y="260" font-family="'Work Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="120" font-weight="800" letter-spacing="1">CaseroOk</text>
+    <text x="60" y="340" font-family="'Work Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="40" opacity="0.9">Opiniones anónimas sobre viviendas y caseros</text>
+    <text x="60" y="410" font-family="'Work Sans', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="28" opacity="0.9">España · Transparencia · Comunidad</text>
+  </g>
+</svg>
+
