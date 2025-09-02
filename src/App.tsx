@@ -4,6 +4,7 @@ import { Toaster } from 'react-hot-toast';
 
 // Import our components
 import Header from './components/Header';
+import PageSEO from './seo/PageSEO';
 import HeroSection from './components/HeroSection';
 import InputSection from './components/InputSection';
 import BenefitsSection from './components/BenefitsSection';
@@ -55,23 +56,44 @@ function App() {
         <Header />
 
         <Routes>
-          <Route path="/auth/callback" element={<AuthCallback />} />
-          <Route path="/review/:id" element={<ReviewPage />} />
-          <Route path="/map" element={<MapView />} />
-          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/auth/callback" element={
+            <>
+              <PageSEO title="Autenticación | CaseroOk" description="Procesando autenticación segura." noindex />
+              <AuthCallback />
+            </>
+          } />
+          <Route path="/review/:id" element={
+            <>
+              <PageSEO title="Opinión | CaseroOk" description="Lee opiniones anónimas de inquilinos sobre viviendas y caseros." />
+              <ReviewPage />
+            </>
+          } />
+          <Route path="/map" element={
+            <>
+              <PageSEO title="Mapa de Opiniones | CaseroOk" description="Explora en el mapa las opiniones anónimas sobre viviendas y caseros." />
+              <MapView />
+            </>
+          } />
+          <Route path="/profile" element={
+            <>
+              <PageSEO title="Perfil | CaseroOk" description="Gestiona tu perfil en CaseroOk." noindex />
+              <ProfilePage />
+            </>
+          } />
           <Route path="/admin/moderate" element={<ModerationPage />} />
           {/* Legal routes */}
-          <Route path="/aviso-legal" element={<AvisoLegal />} />
-          <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
-          <Route path="/cookies" element={<PoliticaCookies />} />
-          <Route path="/condiciones-uso" element={<CondicionesUso />} />
-          <Route path="/buenas-practicas" element={<BuenasPracticas />} />
-          <Route path="/terminosycondiciones" element={<LegalHub />} />
-          <Route path="/terminosCondiciones" element={<LegalHub />} />
+          <Route path="/aviso-legal" element={<><PageSEO title="Aviso Legal | CaseroOk" description="Información legal de CaseroOk." /><AvisoLegal /></>} />
+          <Route path="/politica-privacidad" element={<><PageSEO title="Política de Privacidad | CaseroOk" description="Cómo tratamos tus datos personales." /><PoliticaPrivacidad /></>} />
+          <Route path="/cookies" element={<><PageSEO title="Política de Cookies | CaseroOk" description="Información sobre el uso de cookies." /><PoliticaCookies /></>} />
+          <Route path="/condiciones-uso" element={<><PageSEO title="Condiciones de Uso | CaseroOk" description="Términos y condiciones de uso de CaseroOk." /><CondicionesUso /></>} />
+          <Route path="/buenas-practicas" element={<><PageSEO title="Buenas Prácticas | CaseroOk" description="Recomendaciones para publicar opiniones responsables." /><BuenasPracticas /></>} />
+          <Route path="/terminosycondiciones" element={<><PageSEO title="Términos y Condiciones | CaseroOk" description="Términos y Condiciones de CaseroOk." /><LegalHub /></>} />
+          <Route path="/terminosCondiciones" element={<><PageSEO title="Términos y Condiciones | CaseroOk" description="Términos y Condiciones de CaseroOk." /><LegalHub /></>} />
           <Route
             path="/add-review"
             element={
               <FormMessagesProvider>
+                <PageSEO title="Añadir Opinión | CaseroOk" description="Comparte una opinión anónima sobre tu vivienda o casero." noindex />
                 <AddReviewForm />
               </FormMessagesProvider>
             }
@@ -80,6 +102,7 @@ function App() {
             path="/"
             element={
               <>
+                <PageSEO title="CaseroOk — Opiniones anónimas sobre viviendas y caseros" description="Descubre y comparte opiniones anónimas sobre viviendas y caseros en España." />
                 <HeroSection />
                 <InputSection />
                 <HowItWorksSection />
