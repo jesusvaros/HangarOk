@@ -1,9 +1,12 @@
+import { getSessionIdBack } from '../sessionManager';
 import { supabaseWrapper } from '../supabase/client';
 
 export type LoginStatus = 'idle' | 'loading' | 'link-sent' | 'error';
 
 export const sendEmailOtp = async (email: string) => {
   const client = supabaseWrapper.getClient();
+  const sessionId = await getSessionIdBack(); 
+
   if (!client || !email) {
     return { 
       success: false, 
@@ -16,7 +19,7 @@ export const sendEmailOtp = async (email: string) => {
       email,
       options: {
         shouldCreateUser: true,
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${window.location.origin}/auth/callback?sessionId=${sessionId}`,
       },
     });
 
@@ -43,6 +46,7 @@ export const sendEmailOtp = async (email: string) => {
  */
 export const signInWithGoogle = async () => {
   const client = supabaseWrapper.getClient();
+  const sessionId = await getSessionIdBack(); 
   if (!client) {
     return { 
       success: false, 
@@ -54,7 +58,7 @@ export const signInWithGoogle = async () => {
     const result = await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback`,
+        redirectTo: `${window.location.origin}/auth/callback?sessionId=${sessionId}`,
       },
     });
     if (result.error) {
