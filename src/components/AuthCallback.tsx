@@ -55,6 +55,8 @@ const AuthCallback = () => {
 
       // Get session ID if it exists
       const sessionId = await getSessionIdBack();
+
+      console.log('aqui llega? ', sessionId)
       
       // If we have a user and a session ID, update the review_sessions table and check steps completion
       if (user && sessionId) {
@@ -110,6 +112,7 @@ const AuthCallback = () => {
         }
       } else {
         // Regular login (no session ID) or no user
+        console.log('Regular login (no session ID) or no user');
         if (!user) {
           toast.error('No se pudo validar la sesión.');
         } else {

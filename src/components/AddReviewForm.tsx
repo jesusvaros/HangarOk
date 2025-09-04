@@ -19,6 +19,7 @@ import { getSessionStep3Data } from '../services/supabase/GetSubmitStep3';
 import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
 import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
 import useMediaQuery from '../hooks/useMediaQuery';
+import { notifyReviewCompleted } from '../services/telegram';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export interface SessionStatus {
@@ -263,10 +264,10 @@ const AddReviewForm: React.FC = () => {
           if (!user) {
             setIsModalOpen(true);
           }else{
-                  const sessionId = await getSessionIdBack();
-                  if (sessionId) {
-                    onloginComplete(sessionId, user.id);
-                  }
+            const sessionId = await getSessionIdBack();
+            if (sessionId) {
+              onloginComplete(sessionId, user.id);
+            }
           }
         }
       }
@@ -281,14 +282,6 @@ const AddReviewForm: React.FC = () => {
       updateStep(currentStep - 1);
       window.scrollTo(0, 0);
     }
-  };
-
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
   };
 
   const steps = ['Dirección', 'Estancia', 'Piso', 'Comunidad', 'Gestión'];
@@ -316,7 +309,7 @@ const AddReviewForm: React.FC = () => {
         // Avanzar si la validación es exitosa
         if (result.isValid) {
           if (step === 6) {
-            handleOpenModal();
+            setIsModalOpen(true);
           } else {
             updateStep(step);
             window.scrollTo(0, 0);
@@ -390,13 +383,18 @@ const AddReviewForm: React.FC = () => {
 
   const onloginComplete = (sessionId: string, userId: string) => {
     try {
+      void notifyReviewCompleted(sessionId, userId, formData);
+    } catch (e) {
+      console.warn('Failed to trigger Telegram notification', e);
+    }
+
+    try {
       localStorage.removeItem('reviewSessionId');
       localStorage.removeItem('reviewSessionIdBack');
       localStorage.setItem(`reviewUserId:${sessionId}`, userId);
     } catch {
       // noop - storage may be unavailable
     }
-    // Close modal and navigate to the review page
     setIsModalOpen(false);
     navigate(`/review/${sessionId}`);
     resetForm();
@@ -478,7 +476,7 @@ const AddReviewForm: React.FC = () => {
       )}
       {isModalOpen && (
         <ContactModal
-          onClose={handleCloseModal}
+          onClose={() => setIsModalOpen(false)}
           onLoginComplete={onloginComplete}
         />
       )}
