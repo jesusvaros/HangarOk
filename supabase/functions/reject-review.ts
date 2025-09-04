@@ -25,18 +25,19 @@ serve(async (req) => {
       return new Response("Missing review_session_id or rejection_reason", { status: 400, headers: corsHeaders });
     }
 
-    // Obtener email del usuario (via FK a auth.users)
-    const { data: session, error } = await supabase
-      .from("review_sessions")
-      .select("user_id, rejection_reason, status, auth_user:auth.users(email)")
-      .eq("id", review_session_id)
-      .single();
+   
 
-    if (error || !session?.auth_user?.email) {
+    const { data: session, error } = await supabase
+      .rpc('get_review_session_admin', { p_id: review_session_id });
+
+    if (error) throw error;
+
+
+    if (error || !session?.[0]?.email) {
       return new Response("User not found", { status: 404, headers: corsHeaders });
     }
 
-    const email = session.auth_user.email as string;
+    const email = session?.[0]?.email;
 
     // Actualizar estado a rejected
     const { error: updateError } = await supabase
