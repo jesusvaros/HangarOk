@@ -13,7 +13,7 @@ export const sendEmailOtp = async (email: string) => {
       error: 'Introduce un correo electrónico válido.' 
     };
   }
-
+console.log('Session ID:', sessionId,window.location.origin);
   try {
     const result = await client.auth.signInWithOtp({
       email,
