@@ -54,9 +54,14 @@ const AuthCallback = () => {
       }
 
       // Get session ID if it exists
-      const sessionId = await getSessionIdBack();
+      const sessionIdBack = await getSessionIdBack();
 
-      console.log('aqui llega? ', sessionId)
+      const url = new URL(window.location.href);
+      const sessionIdUrl = url.searchParams.get("sessionId") ?? undefined;
+
+      const sessionId = sessionIdUrl || sessionIdBack;
+
+      console.log('aqui llega? ', sessionIdUrl, sessionIdBack, sessionId)
       
       // If we have a user and a session ID, update the review_sessions table and check steps completion
       if (user && sessionId) {
