@@ -64,8 +64,9 @@ const ModerationPage = () => {
       // Obtener todas las reviews con información adicional
       const { data, error } = await client.rpc('get_review_sessions_for_moderation');
 
-    
-      console.log(data);
+      const { data: session, error: sessionError } = await client.rpc('get_review_session_admin', { p_id: data[0].review_session_id });
+
+    console.log(session, sessionError);
     
       if (error) {
         console.error('Error fetching reviews:', error);

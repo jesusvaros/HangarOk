@@ -30,6 +30,7 @@ serve(async (req) => {
     const { data: session, error } = await supabase
       .rpc('get_review_session_admin', { p_id: review_session_id });
 
+      console.log(session);
     if (error) throw error;
 
 
