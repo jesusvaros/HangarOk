@@ -61,7 +61,7 @@ const AuthCallback = () => {
 
       const sessionId = sessionIdUrl || sessionIdBack;
 
-      console.log('aqui llega? ', sessionIdUrl, sessionIdBack, sessionId)
+      console.log('aqui llega? ', sessionIdUrl, sessionIdBack, sessionId, user)
       
       // If we have a user and a session ID, update the review_sessions table and check steps completion
       if (user && sessionId) {
@@ -72,9 +72,9 @@ const AuthCallback = () => {
             .update({ user_id: user.id })
             .eq('id', sessionId);
           
-          // Get the current session status to check steps completion
-          const { data: sessionData, error: sessionError } = await client.rpc('get_review_session', {
-            p_session_id: sessionId,
+         
+          const { data: sessionData, error: sessionError } = await client.rpc('get_review_session_by_id', {
+            p_id: sessionId, // uuid de la fila
           });
           
           if (sessionError) {
