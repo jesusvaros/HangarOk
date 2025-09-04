@@ -116,7 +116,7 @@ const Header: React.FC = () => {
                   to="/add-review"
                   className="mx-2 flex min-w-[160px] items-center justify-center rounded-lg bg-[#F97316] px-6 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-gray-700"
                 >
-                  Add a review
+                  Opina
                 </Link>
               </div>
             </>
