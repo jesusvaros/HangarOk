@@ -26,19 +26,23 @@ serve(async (req) => {
     }
 
    
+  // Obtener la sesión de review
+  const { data: session, error } = await supabase
+  .from("review_sessions")
+  .select("user_id, rejection_reason, status")
+  .eq("id", review_session_id)
+  .single();
 
-    const { data: session, error } = await supabase
-      .rpc('get_review_session_admin', { p_id: review_session_id });
+if (error || !session?.user_id) {
+  return new Response("User not found", { status: 404, headers: corsHeaders });
+}
 
-      console.log(session);
-    if (error) throw error;
-
-
-    if (error || !session?.[0]?.email) {
-      return new Response("User not found", { status: 404, headers: corsHeaders });
-    }
-
-    const email = session?.[0]?.email;
+// Usar Admin API para obtener el email del usuario
+const { data: userRes, error: userErr } = await supabase.auth.admin.getUserById(session.user_id as string);
+if (userErr || !userRes?.user?.email) {
+  return new Response("User not found", { status: 404, headers: corsHeaders });
+}
+const email = userRes.user.email as string;
 
     // Actualizar estado a rejected
     const { error: updateError } = await supabase
