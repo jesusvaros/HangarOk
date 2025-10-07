@@ -9,7 +9,11 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "generate:blog": "node scripts/generate-blog-post.mjs"
+    "generate:blog": "node scripts/generate-blog-post.mjs",
+    "scrape:news": "node scripts/scrape-cronista-news.mjs",
+    "update:posts": "node scripts/auto-generate-posts-index.mjs",
+    "download:images": "node scripts/auto-download-images.mjs",
+    "daily:blog": "node scripts/daily-blog-automation.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

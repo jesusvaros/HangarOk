@@ -280,6 +280,21 @@ async function run() {
   });
 
   console.log(`Artículo creado en ${postFile}. Revisa el archivo para hacer ajustes finales.`);
+  
+  // Auto-update posts index and download image
+  try {
+    console.log('🔄 Actualizando índice de posts y descargando imagen...');
+    
+    const { generatePostsIndex } = await import('./auto-generate-posts-index.mjs');
+    const { ensureImagesExist } = await import('./auto-download-images.mjs');
+    
+    await generatePostsIndex();
+    await ensureImagesExist();
+    
+    console.log('✅ Índice y imagen actualizados automáticamente');
+  } catch (error) {
+    console.error('❌ Error en auto-actualización:', error.message);
+  }
 }
 
 run().catch(error => {
