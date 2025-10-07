@@ -125,6 +125,12 @@ const Header: React.FC = () => {
 
         {/* Right side: map + login with small gap and slight right margin */}
         <div className="flex items-center gap-2 md:gap-3">
+          <Link
+            to="/blog"
+            className="hidden items-center rounded-full border border-[#4A5E32] px-4 py-2 text-sm font-semibold text-[#4A5E32] transition hover:bg-[#4A5E32] hover:text-white md:inline-flex"
+          >
+            Blog
+          </Link>
           <Link to="/map" className="flex items-center">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#4A5E32]">
               <svg
@@ -142,6 +148,12 @@ const Header: React.FC = () => {
                 />
               </svg>
             </div>
+          </Link>
+          <Link
+            to="/blog"
+            className="inline-flex items-center rounded-full border border-[#4A5E32] px-3 py-2 text-sm font-semibold text-[#4A5E32] transition hover:bg-[#4A5E32] hover:text-white md:hidden"
+          >
+            Blog
           </Link>
           <LoginDropdown />
         </div>
