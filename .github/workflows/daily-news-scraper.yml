@@ -57,36 +57,46 @@ jobs:
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
       
-      - name: Commit and push changes
+      - name: Create Pull Request with changes
         if: steps.verify-changed-files.outputs.changed == 'true'
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          # Ensure we're on main and up to date
-          git checkout main
-          git fetch origin main
+          # Create a unique branch name
+          BRANCH_NAME="auto-blog-posts-$(date +'%Y%m%d-%H%M%S')"
           
-          # Stash any changes temporarily
-          git stash push -m "temp-stash-$(date +%s)"
+          # Create and switch to new branch
+          git checkout -b "$BRANCH_NAME"
           
-          # Pull latest changes
-          git pull origin main
-          
-          # Apply stashed changes back
-          git stash pop || echo "No stash to pop"
-          
-          # Add and commit
+          # Add and commit changes
           git add .
-          git commit -m "🤖 Auto-generated blog posts and updated sitemap $(date +'%Y-%m-%d')" || echo "Nothing to commit"
+          git commit -m "🤖 Auto-generated blog posts and updated sitemap $(date +'%Y-%m-%d')"
           
-          # Force push with lease (safer than force push)
-          git push --force-with-lease origin main
+          # Push the branch
+          git push origin "$BRANCH_NAME"
+          
+          # Create Pull Request using GitHub CLI
+          gh pr create \
+            --title "🤖 Daily Blog Posts $(date +'%Y-%m-%d')" \
+            --body "Automatically generated blog posts from daily news scraping.
+          
+          **Generated Posts:**
+          $(git diff --name-only HEAD~1 | grep 'src/blog/posts' | sed 's/src\/blog\/posts\///g' | sed 's/\.ts$//g' | sed 's/^/- /g')
+          
+          **Sources processed:** El Cronista, La Sexta, Diario de Sevilla, 20minutos
+          
+          Please review the content before merging." \
+            --head "$BRANCH_NAME" \
+            --base main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Summary
         run: |
           if [ "${{ steps.verify-changed-files.outputs.changed }}" == "true" ]; then
-            echo "✅ New blog posts generated and committed"
+            echo "✅ New blog posts generated and Pull Request created"
+            echo "📋 Check GitHub for the PR to review and merge"
           else
             echo "ℹ️ No new articles found to process"
           fi
