@@ -31,31 +31,32 @@ import post14 from './posts/como-ahorrar-y-proteger-tu-alquiler-en-tiempos-de-of
 import post15 from './posts/como-evaluar-un-contrato-de-alquiler.js';
 import post16 from './posts/como-proteger-tus-derechos-y-ahorrar-en-el-alquiler-en-tiempos-dificiles.js';
 import post17 from './posts/comprar-o-alquilar-vivienda-en-espana-analisis-practico-para-inquilinos.js';
-import post18 from './posts/deducciones-en-andalucia-un-respiro-para-inquilinos-vulnerables.js';
-import post19 from './posts/deducciones-irpf-2026-ahorra-y-protege-tu-alquiler-en-andalucia.js';
-import post20 from './posts/deducciones-por-alquiler-en-andalucia-como-ahorrar-y-proteger-tus-derechos.js';
-import post21 from './posts/derecho-a-la-vivienda-como-protegerte-y-ahorrar-siendo-inquilino.js';
-import post22 from './posts/desahucios-en-sevilla-protege-tu-hogar-y-tus-derechos-hoy.js';
-import post23 from './posts/indice-referencia-alquiler-2025.js';
-import post24 from './posts/inquilinos-como-proteger-tu-hogar-frente-a-pisos-turisticos.js';
-import post25 from './posts/inquilinos-en-espana-protege-tus-derechos-y-ahorra-en-alquiler.js';
-import post26 from './posts/inquilinos-en-espana-protege-tus-derechos-y-ahorra-en-el-alquiler.js';
-import post27 from './posts/inquilinos-vulnerables-como-protegerte-y-ahorrar-en-un-mercado-dificil.js';
-import post28 from './posts/la-crisis-del-alquiler-en-espana-jovenes-enfrentan-una-oferta-de-vivienda-cada-v.js';
-import post29 from './posts/la-crisis-del-alquiler-en-espana-por-que-los-jovenes-estan-durmiendo-en-la-calle.js';
-import post30 from './posts/la-donacion-de-viviendas-una-alternativa-creciente-para-que-los-jovenes-accedan-.js';
-import post31 from './posts/mairena-del-aljarafe-cuando-y-como-proteger-tu-alquiler.js';
-import post32 from './posts/novedades-en-la-ley-de-arrendamientos-urbanos-que-implica-alquilar-sin-contrato-.js';
-import post33 from './posts/nueva-ley-de-alquileres-en-espana-seguridad-para-inquilinos-ante-la-no-renovacio.js';
-import post34 from './posts/nueva-ley-de-vivienda-en-espana-que-significa-para-los-inquilinos-y-propietarios.js';
-import post35 from './posts/nuevas-obligaciones-para-propietarios-en-alquileres-tras-la-venta-de-viviendas-e.js';
-import post36 from './posts/precios-al-alza-en-sevilla-guia-para-inquilinos-en-apuros.js';
-import post37 from './posts/ruido-en-comunidades-de-vecinos-derechos-y-obligaciones-segun-la-ley-de-propieda.js';
-import post38 from './posts/vecinos-contra-pisos-turisticos-protege-tu-hogar-y-tu-bolsillo.js';
-import post39 from './posts/vivienda-protegida-en-andalucia-que-significa-para-inquilinos-vulnerables.js';
-import post40 from './posts/vivienda-publica-y-alquiler-protege-tus-derechos-y-ahorra-hoy.js';
-import post41 from './posts/vivienda-rural-una-oportunidad-para-inquilinos-que-sufren-alquileres-altos.js';
-import post42 from './posts/viviendas-protegidas-caras-que-significa-para-inquilinos-vulnerables.js';
+import post18 from './posts/declaracion-de-la-renta-2024-una-oportunidad-para-inquilinos-vulnerables.js';
+import post19 from './posts/deducciones-en-andalucia-un-respiro-para-inquilinos-vulnerables.js';
+import post20 from './posts/deducciones-irpf-2026-ahorra-y-protege-tu-alquiler-en-andalucia.js';
+import post21 from './posts/deducciones-por-alquiler-en-andalucia-como-ahorrar-y-proteger-tus-derechos.js';
+import post22 from './posts/derecho-a-la-vivienda-como-protegerte-y-ahorrar-siendo-inquilino.js';
+import post23 from './posts/desahucios-en-sevilla-protege-tu-hogar-y-tus-derechos-hoy.js';
+import post24 from './posts/indice-referencia-alquiler-2025.js';
+import post25 from './posts/inquilinos-como-proteger-tu-hogar-frente-a-pisos-turisticos.js';
+import post26 from './posts/inquilinos-en-espana-protege-tus-derechos-y-ahorra-en-alquiler.js';
+import post27 from './posts/inquilinos-en-espana-protege-tus-derechos-y-ahorra-en-el-alquiler.js';
+import post28 from './posts/inquilinos-vulnerables-como-protegerte-y-ahorrar-en-un-mercado-dificil.js';
+import post29 from './posts/la-crisis-del-alquiler-en-espana-jovenes-enfrentan-una-oferta-de-vivienda-cada-v.js';
+import post30 from './posts/la-crisis-del-alquiler-en-espana-por-que-los-jovenes-estan-durmiendo-en-la-calle.js';
+import post31 from './posts/la-donacion-de-viviendas-una-alternativa-creciente-para-que-los-jovenes-accedan-.js';
+import post32 from './posts/mairena-del-aljarafe-cuando-y-como-proteger-tu-alquiler.js';
+import post33 from './posts/novedades-en-la-ley-de-arrendamientos-urbanos-que-implica-alquilar-sin-contrato-.js';
+import post34 from './posts/nueva-ley-de-alquileres-en-espana-seguridad-para-inquilinos-ante-la-no-renovacio.js';
+import post35 from './posts/nueva-ley-de-vivienda-en-espana-que-significa-para-los-inquilinos-y-propietarios.js';
+import post36 from './posts/nuevas-obligaciones-para-propietarios-en-alquileres-tras-la-venta-de-viviendas-e.js';
+import post37 from './posts/precios-al-alza-en-sevilla-guia-para-inquilinos-en-apuros.js';
+import post38 from './posts/ruido-en-comunidades-de-vecinos-derechos-y-obligaciones-segun-la-ley-de-propieda.js';
+import post39 from './posts/vecinos-contra-pisos-turisticos-protege-tu-hogar-y-tu-bolsillo.js';
+import post40 from './posts/vivienda-protegida-en-andalucia-que-significa-para-inquilinos-vulnerables.js';
+import post41 from './posts/vivienda-publica-y-alquiler-protege-tus-derechos-y-ahorra-hoy.js';
+import post42 from './posts/vivienda-rural-una-oportunidad-para-inquilinos-que-sufren-alquileres-altos.js';
+import post43 from './posts/viviendas-protegidas-caras-que-significa-para-inquilinos-vulnerables.js';
 
 const rawPosts: StaticBlogPost[] = [
   post1,
@@ -100,6 +101,7 @@ const rawPosts: StaticBlogPost[] = [
   post40,
   post41,
   post42,
+  post43,
 ];
 
 export const blogPosts = [...rawPosts].sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
