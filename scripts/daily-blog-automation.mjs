@@ -196,7 +196,7 @@ function filterRelevantUrls(urls, keywords) {
     'inquilino', 'propietario', 'renta', 'hipoteca', 'inmobiliario',
     'mercado-inmobiliario', 'habitacional', 'ley-de-alquileres',
     'precio', 'compra', 'venta', 'inversión', 'construcción',
-    'urbanismo', 'residencial', 'habitación', 'apartamento'
+    'urbanismo', 'residencial', 'habitación', 'apartamento','desahucio'
   ];
 
   return urls.filter(url => {
@@ -232,8 +232,8 @@ async function generateBlogPost(articleUrl) {
       const process = spawn('node', [
         'scripts/generate-blog-post.mjs',
         articleUrl,
-        '--tone=empático',
-        '--keywords=inquilinos, derechos, ahorro, protección, consejos prácticos',
+        '--tone=informativo',
+        '--keywords=inquilinos, derechos, desahucio, ahorro, protección, consejos prácticos, vivienda, alquiler, inmobiliario, ',
         `--date=${new Date().toISOString().slice(0, 10)}`
       ], {
         cwd: path.resolve(__dirname, '..'),
