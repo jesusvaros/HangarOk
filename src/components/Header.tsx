@@ -82,7 +82,7 @@ const Header: React.FC = () => {
       <div className="flex w-full items-center justify-between">
         {showLogo ? (
           <Link to="/" className="flex items-center" aria-label="CaseroOk - Inicio">
-            <img src={logoUrl} alt="CaseroOk" className="h-10 w-10 md:h-14 md:w-14" />
+            <img src={logoUrl} alt="CaseroOk" className="h-12 w-12 md:h-14 md:w-14" />
             <img src={wordmarkUrl} alt="CaseroOk" className="hidden md:inline-block ml-2 h-6 md:h-7" />
           </Link>
         ) : (
@@ -114,8 +114,11 @@ const Header: React.FC = () => {
               <div className="md:hidden">
                 <Link
                   to="/add-review"
-                  className="mx-2 flex min-w-[160px] items-center justify-center rounded-lg bg-[#F97316] px-6 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-gray-700"
+                  className="mx-2 flex min-w-[120px] items-center justify-center gap-2 rounded-lg bg-[#F97316] px-4 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-gray-700"
                 >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                  </svg>
                   Opina
                 </Link>
               </div>
@@ -123,14 +126,28 @@ const Header: React.FC = () => {
           )}
         </div>
 
-        {/* Right side: map + login with small gap and slight right margin */}
+        {/* Right side: blog + map + login with small gap and slight right margin */}
         <div className="flex items-center gap-2 md:gap-3">
+          {/* Blog - Desktop version */}
           <Link
             to="/blog"
             className="hidden items-center rounded-full border border-[#4A5E32] px-4 py-2 text-sm font-semibold text-[#4A5E32] transition hover:bg-[#4A5E32] hover:text-white md:inline-flex"
           >
             Blog
           </Link>
+          
+          {/* Blog - Mobile version with icon */}
+          <Link
+            to="/blog"
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-[#4A5E32] text-[#4A5E32] transition hover:bg-[#4A5E32] hover:text-white md:hidden"
+            aria-label="Blog"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C20.832 18.477 19.247 18 17.5 18c-1.746 0-3.332.477-4.5 1.253" />
+            </svg>
+          </Link>
+
+          {/* Map */}
           <Link to="/map" className="flex items-center">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#4A5E32]">
               <svg
@@ -149,12 +166,8 @@ const Header: React.FC = () => {
               </svg>
             </div>
           </Link>
-          <Link
-            to="/blog"
-            className="inline-flex items-center rounded-full border border-[#4A5E32] px-3 py-2 text-sm font-semibold text-[#4A5E32] transition hover:bg-[#4A5E32] hover:text-white md:hidden"
-          >
-            Blog
-          </Link>
+
+          {/* Login */}
           <LoginDropdown />
         </div>
       </div>

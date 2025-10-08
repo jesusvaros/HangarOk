@@ -37,6 +37,12 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: npm run daily:blog
       
+      - name: Generate updated sitemap
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        run: npm run generate:sitemap
+      
       - name: Check for changes
         id: verify-changed-files
         run: |
@@ -52,7 +58,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git commit -m "🤖 Auto-generated blog posts from El Cronista $(date +'%Y-%m-%d')"
+          git commit -m "🤖 Auto-generated blog posts and updated sitemap $(date +'%Y-%m-%d')"
           git push
       
       - name: Summary

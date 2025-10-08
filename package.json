@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "node scripts/generate-sitemap.mjs",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
@@ -13,7 +14,8 @@
     "scrape:news": "node scripts/scrape-cronista-news.mjs",
     "update:posts": "node scripts/auto-generate-posts-index.mjs",
     "download:images": "node scripts/auto-download-images.mjs",
-    "daily:blog": "node scripts/daily-blog-automation.mjs"
+    "daily:blog": "node scripts/daily-blog-automation.mjs",
+    "generate:sitemap": "node scripts/generate-sitemap.mjs"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
