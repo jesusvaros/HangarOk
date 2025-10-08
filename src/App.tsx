@@ -28,6 +28,8 @@ import PoliticaPrivacidad from './pages/PoliticaPrivacidad';
 import PoliticaCookies from './pages/PoliticaCookies';
 import CondicionesUso from './pages/CondicionesUso';
 import BuenasPracticas from './pages/BuenasPracticas';
+import CityReviewsIndexPage from './pages/CityReviewsIndexPage';
+import CityReviewsPage from './pages/CityReviewsPage';
 
 // Import Providers
 import { FormProvider } from './store/FormContext';
@@ -76,6 +78,8 @@ function App() {
               <MapView />
             </>
           } />
+          <Route path="/opiniones" element={<CityReviewsIndexPage />} />
+          <Route path="/opiniones/:citySlug" element={<CityReviewsPage />} />
           <Route path="/blog" element={<BlogListPage />} />
           <Route path="/blog/:slug" element={<BlogPostPage />} />
           <Route path="/profile" element={
@@ -125,6 +129,8 @@ function App() {
         <footer className="mx-auto mt-8 max-w-6xl py-6 text-center text-sm text-gray-500">
           <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             <Link className="hover:text-gray-700" to="/blog">Blog</Link>
+            <span className="text-gray-400">•</span>
+            <Link className="hover:text-gray-700" to="/opiniones">Opiniones por ciudad</Link>
             <span className="text-gray-400">•</span>
             <Link className="hover:text-gray-700" to="/terminosycondiciones">Términos y Condiciones</Link>
             <span className="text-gray-400">•</span>

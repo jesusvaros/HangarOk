@@ -16,6 +16,18 @@ import MapBoundsWatcher from './map/MapBoundsWatcher';
 import DetailsPanel from './map/DetailsPanel';
 import { useMap } from 'react-leaflet';
 
+type MapViewProps = {
+  title?: string;
+  subtitle?: string;
+  initialViewOverride?: {
+    center: [number, number];
+    zoom?: number;
+    searchLabel?: string;
+  };
+  reviews?: PublicReview[];
+  autoFetch?: boolean;
+};
+
 // Helper to capture the Leaflet map instance from inside MapContainer
 const CaptureMapRef = ({ onReady }: { onReady: (m: LeafletMap) => void }) => {
   const map = useMap();
@@ -43,20 +55,28 @@ const CloseOnMove = ({ onMove }: { onMove: () => void }) => {
   return null;
 };
 
-const MapView = () => {
+const MapView = ({
+  title = 'Mapa de opiniones',
+  subtitle,
+  initialViewOverride,
+  reviews,
+  autoFetch = reviews === undefined,
+}: MapViewProps = {}) => {
   const [searchParams] = useSearchParams();
   const [error, setError] = useState<string | null>(null);
-  const [searchValue, setSearchValue] = useState('');
+  const [searchValue, setSearchValue] = useState(initialViewOverride?.searchLabel ?? '');
   // Removed map re-centering selection state to avoid automatic centering
   const [hoveredId, setHoveredId] = useState<string | number | null>(null);
-  const [publicReviews, setPublicReviews] = useState<PublicReview[]>([]);
-  const [visiblePublic, setVisiblePublic] = useState<PublicReview[]>([]);
+  const [publicReviews, setPublicReviews] = useState<PublicReview[]>(reviews ?? []);
+  const [visiblePublic, setVisiblePublic] = useState<PublicReview[]>(reviews ?? []);
   const [selectedReview, setSelectedReview] = useState<PublicReview | null>(null);
   const [mobileListOpen, setMobileListOpen] = useState(false);
 
   // Center/zoom state used with SetViewOnChange to avoid remounts
-  const [center, setCenter] = useState<[number, number]>([40.416775, -3.70379]); // Madrid
-  const [zoom, setZoom] = useState<number>(14);
+  const [center, setCenter] = useState<[number, number]>(
+    initialViewOverride?.center ?? [40.416775, -3.70379]
+  ); // Madrid
+  const [zoom, setZoom] = useState<number>(initialViewOverride?.zoom ?? 14);
   const centerInitialized = useRef(false);
   const geolocationAttempted = useRef(false);
   const mapRef = useRef<LeafletMap | null>(null);
@@ -75,9 +95,27 @@ const MapView = () => {
     iconAnchor: [8, 8],
   });
 
-  // Initialize map center on mount with priority: query params -> localStorage -> geolocation -> default
+  // Initialize map center on mount with priority: override -> query params -> localStorage -> geolocation -> default
   useEffect(() => {
-    if (!mapReady || centerInitialized.current) return;
+    if (!mapReady) return;
+
+    if (initialViewOverride) {
+      const nextCenter = initialViewOverride.center;
+      const nextZoom = initialViewOverride.zoom ?? 14;
+      setCenter(nextCenter);
+      setZoom(nextZoom);
+      mapRef.current?.setView(nextCenter, nextZoom, { animate: false });
+      if (initialViewOverride.searchLabel) {
+        setSearchValue(initialViewOverride.searchLabel);
+      }
+      geolocationAttempted.current = true;
+      if (!centerInitialized.current) {
+        centerInitialized.current = true;
+      }
+      return;
+    }
+
+    if (centerInitialized.current) return;
 
     // 1) Query params (?lat=..&lng=..&q=..)
     const latParam = searchParams.get('lat');
@@ -149,7 +187,7 @@ const MapView = () => {
       centerInitialized.current = true;
       geolocationAttempted.current = true;
     }
-  }, [mapReady, searchParams]);
+  }, [mapReady, searchParams, initialViewOverride]);
 
   // Persist view on move/zoom
   useEffect(() => {
@@ -177,9 +215,17 @@ const MapView = () => {
   }, [mapReady]);
 
   useEffect(() => {
+    if (reviews !== undefined) {
+      setPublicReviews(reviews);
+      setVisiblePublic(reviews);
+      return;
+    }
+    if (!autoFetch) return;
+
     (async () => {
       const rows = await getPublicReviews();
       setPublicReviews(rows);
+      setVisiblePublic(rows);
       if (!centerInitialized.current && geolocationAttempted.current && rows.length > 0) {
         const valid = rows.filter(
           (r): r is PublicReview & { lat: number; lng: number } =>
@@ -193,14 +239,25 @@ const MapView = () => {
         }
       }
     })();
-  }, []);
+  }, [autoFetch, reviews]);
+
+  useEffect(() => {
+    if (initialViewOverride?.searchLabel) {
+      setSearchValue(initialViewOverride.searchLabel);
+    }
+  }, [initialViewOverride]);
 
   
 
   return (
     <div className="w-full px-0 md:px-8 pt-24 md:pt-28 pb-0 md:pb-8">
       <div className="mx-auto max-w-[1800px]">
-        <h1 className="hidden md:block text-left text-3xl font-semibold mb-4">Mapa de opiniones</h1>
+        {title ? (
+          <div className="hidden md:block mb-4">
+            <h1 className="text-left text-3xl font-semibold text-gray-900">{title}</h1>
+            {subtitle ? <p className="mt-1 text-base text-gray-600">{subtitle}</p> : null}
+          </div>
+        ) : null}
         <div className="rounded-none md:rounded-xl md:shadow-lg md:p-4 bg-transparent md:bg-gray-50">
           <div className="grid md:grid-cols-[360px_1fr] gap-4">
             {/* Sidebar (desktop) */}

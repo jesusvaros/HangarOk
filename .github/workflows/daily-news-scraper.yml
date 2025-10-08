@@ -2,8 +2,8 @@ name: Daily News Scraper
 
 on:
   schedule:
-    # Run every day at 8:30 AM UTC (10:30 AM CET)
-    - cron: '30 8 * * *'
+    # Run every day at 9:00 AM UTC (11:00 AM CET)
+    - cron: '0 9 * * *'
   workflow_dispatch: # Allow manual triggering
   push:
     branches: [ main ]

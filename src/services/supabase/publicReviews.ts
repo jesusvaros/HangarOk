@@ -1,4 +1,5 @@
 import { supabaseWrapper } from './client';
+import { slugify } from '../../utils/slugify';
 
 export type PublicReview = {
   id: string | number;
@@ -7,6 +8,11 @@ export type PublicReview = {
   lng: number | null;
   owner_opinion: string | null;
   would_recommend: number | null;
+  city: string | null;
+  city_slug: string | null;
+  state: string | null;
+  postal_code: string | null;
+  street: string | null;
 };
 
 export async function getPublicReviews(): Promise<PublicReview[]> {
@@ -20,9 +26,30 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   if (error || !data) return [];
 
+  type AddressCoordinates = {
+    lat?: number | string | null;
+    lng?: number | string | null;
+  } | null;
+
+  type AddressComponents = {
+    city?: string | null;
+    state?: string | null;
+    postcode?: string | null;
+    road?: string | null;
+    country?: string | null;
+  } | null;
+
   type AddressDetails = {
     fullAddress?: string | null;
-    coordinates?: { lat?: number | string | null; lng?: number | string | null } | null;
+    coordinates?: AddressCoordinates;
+    city?: string | null;
+    state?: string | null;
+    postalCode?: string | null;
+    street?: string | null;
+    number?: string | null;
+    door?: string | null;
+    floor?: string | null;
+    components?: AddressComponents;
   } | null;
 
   type Row = {
@@ -40,6 +67,31 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     const lat = coords?.lat != null ? Number(coords.lat) : null;
     const lng = coords?.lng != null ? Number(coords.lng) : null;
     const fullAddress = (details?.fullAddress ?? null) as string | null;
+    const city =
+      typeof details?.city === 'string'
+        ? details.city
+        : typeof details?.components?.city === 'string'
+          ? details.components.city
+          : null;
+    const state =
+      typeof details?.state === 'string'
+        ? details.state
+        : typeof details?.components?.state === 'string'
+          ? details.components.state
+          : null;
+    const postalCode =
+      typeof details?.postalCode === 'string'
+        ? details.postalCode
+        : typeof details?.components?.postcode === 'string'
+          ? details.components.postcode
+          : null;
+    const street =
+      typeof details?.street === 'string'
+        ? details.street
+        : typeof details?.components?.road === 'string'
+          ? details.components.road
+          : null;
+    const citySlug = city ? slugify(city) : null;
     const wouldRecommend =
       review.would_recommend != null ? Number(review.would_recommend) : null;
 
@@ -50,6 +102,11 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
       lng,
       owner_opinion: review.owner_opinion ?? null,
       would_recommend: wouldRecommend,
+      city: city ?? null,
+      city_slug: citySlug,
+      state: state ?? null,
+      postal_code: postalCode ?? null,
+      street: street ?? null,
     } satisfies PublicReview;
   });
 

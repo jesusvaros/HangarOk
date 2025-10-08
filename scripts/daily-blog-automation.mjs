@@ -46,6 +46,18 @@ const NEWS_SOURCES = [
     url: 'https://www.lasexta.com/buscador-site/index.html?q=vivienda',
     type: 'lasexta',
     keywords: ['vivienda', 'alquiler', 'piso', 'casa', 'inmobiliario']
+  },
+  {
+    name: 'El Confidencial - Vivienda',
+    url: 'https://www.elconfidencial.com/tags/temas/vivienda-15421/',
+    type: 'elconfidencial',
+    keywords: ['vivienda', 'alquiler', 'inmueble', 'piso', 'casa', 'inmobiliario', 'mercado-inmobiliario']
+  },
+  {
+    name: '20minutos - Inquilinos',
+    url: 'https://www.20minutos.es/tags/temas/inquilinos.html',
+    type: '20minutos',
+    keywords: ['inquilinos', 'alquiler', 'vivienda', 'piso', 'casa', 'inmobiliario', 'arrendamiento']
   }
   // 📝 Aquí puedes añadir más fuentes fácilmente:
   // {
@@ -115,6 +127,46 @@ async function extractUrlsFromLaSexta(sourceUrl) {
   const html = await response.text();
   // La Sexta URLs pattern
   const linkPattern = /https:\/\/www\.lasexta\.com\/[^"'\s)]+/g;
+  const matches = html.match(linkPattern) || [];
+  
+  return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
+}
+
+async function extractUrlsFromElConfidencial(sourceUrl) {
+  const response = await fetch(sourceUrl, {
+    headers: {
+      'User-Agent': 'CaseroOkBot/1.0 (+https://caserook.com)',
+      'Accept-Language': 'es-ES,es;q=0.9',
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Error fetching ${sourceUrl}: ${response.status}`);
+  }
+  
+  const html = await response.text();
+  // El Confidencial URLs pattern
+  const linkPattern = /https:\/\/www\.elconfidencial\.com\/[^"'\s)]+/g;
+  const matches = html.match(linkPattern) || [];
+  
+  return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
+}
+
+async function extractUrlsFrom20Minutos(sourceUrl) {
+  const response = await fetch(sourceUrl, {
+    headers: {
+      'User-Agent': 'CaseroOkBot/1.0 (+https://caserook.com)',
+      'Accept-Language': 'es-ES,es;q=0.9',
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Error fetching ${sourceUrl}: ${response.status}`);
+  }
+  
+  const html = await response.text();
+  // 20minutos URLs pattern
+  const linkPattern = /https:\/\/www\.20minutos\.es\/[^"'\s)]+/g;
   const matches = html.match(linkPattern) || [];
   
   return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
@@ -232,6 +284,12 @@ async function runDailyAutomation() {
           break;
         case 'lasexta':
           urls = await extractUrlsFromLaSexta(source.url);
+          break;
+        case 'elconfidencial':
+          urls = await extractUrlsFromElConfidencial(source.url);
+          break;
+        case '20minutos':
+          urls = await extractUrlsFrom20Minutos(source.url);
           break;
         default:
           console.log(`⚠️  Tipo de fuente no soportado: ${source.type}`);
