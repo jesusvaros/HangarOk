@@ -6,6 +6,7 @@ import LocationMap from '../ui/LocationMap';
 import { useMapLocationHandler } from './location/mapLocationHandler';
 import { geocodingService } from '../ui/address/geocodingService';
 import type { FormDataType } from '../../store/formTypes';
+import { umamiEventProps } from '../../utils/analytics';
 
 interface Step1Props {
   onNext: () => void;
@@ -149,6 +150,7 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
           onClick={onNext}
           disabled={isSubmitting}
           className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)] disabled:opacity-50"
+          {...umamiEventProps('review:step1-next')}
         >
           {isSubmitting ? 'Enviando...' : 'Siguiente'}
         </button>

@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import SelectableTag from '../ui/SelectableTag';
 import CustomTextarea from '../ui/CustomTextarea';
+import { umamiEventProps } from '../../utils/analytics';
 
 interface Step4CommunityProps {
   onNext: () => void;
@@ -169,7 +170,12 @@ const Step4Community: React.FC<Step4CommunityProps> = ({
 
       {/* Navigation buttons */}
       <div className="mt-4 flex justify-between">
-        <button type="button" onClick={onPrevious} className="text-black hover:text-gray-800">
+        <button
+          type="button"
+          onClick={onPrevious}
+          className="text-black hover:text-gray-800"
+          {...umamiEventProps('review:step4-previous')}
+        >
           Anterior
         </button>
         <button
@@ -177,6 +183,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({
           onClick={onNext}
           disabled={isSubmitting}
           className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
+          {...umamiEventProps('review:step4-next')}
         >
           {isSubmitting ? 'Enviando...' : 'Siguiente'}
         </button>

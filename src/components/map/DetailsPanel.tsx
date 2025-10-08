@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import OpinionSection from '../review/OpinionSection';
 import { ChatBubbleLeftRightIcon, StarIcon as StarIconOutline, MapPinIcon } from '@heroicons/react/24/outline';
 import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+import { umamiEventProps } from '../../utils/analytics';
 
 type Props = {
   review: PublicReview | null;
@@ -58,6 +59,7 @@ export default function DetailsPanel({ review, onClose }: Props) {
             aria-label="Cerrar detalles"
             className="shrink-0 inline-flex h-7 w-7 items-center justify-center rounded-md text-white/90 hover:text-white hover:bg-white/10"
             onClick={onClose}
+            {...umamiEventProps('map:details-close')}
           >
             ✕
           </button>
@@ -107,6 +109,7 @@ export default function DetailsPanel({ review, onClose }: Props) {
                 <Link
                   to={`/review/${review.id}`}
                   className="inline-flex items-center gap-1 text-[rgb(74,94,50)] hover:underline"
+                  {...umamiEventProps('map:details-view-review', { hasOpinion: Boolean(review.owner_opinion) })}
                 >
                   Ver detalles completos
                   <span aria-hidden>→</span>

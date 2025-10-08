@@ -5,6 +5,7 @@ import { useAuth } from '../../store/auth/hooks';
 import { getSessionIdBack } from '../../services/sessionManager';
 import { sendEmailOtp, signInWithGoogle } from '../../services/auth/loginService';
 import type { LoginStatus } from '../../services/auth/loginService';
+import { trackUmamiEvent } from '../../utils/analytics';
 
 interface LoginContentProps {
   onClose?: () => void;
@@ -80,7 +81,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
 
   const handleEmailLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.contactEmail) {
       setStatus('error');
       setErrorMessage('Introduce un correo electrónico válido.');
@@ -88,6 +89,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
     }
 
     setStatus('loading');
+    trackUmamiEvent('login:email-submit');
     const result = await sendEmailOtp(formData.contactEmail);
     
     if (!result.success) {
@@ -101,6 +103,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
   };
 
   const handleGoogleLogin = async () => {
+    trackUmamiEvent('login:google');
     await signInWithGoogle();
   };
 
@@ -190,13 +193,19 @@ const LoginContent: React.FC<LoginContentProps> = ({
               </p>
               <div className="flex items-center justify-between">
                 <button
-                  onClick={() => setIsEditingEmail(true)}
+                  onClick={() => {
+                    trackUmamiEvent('login:change-email');
+                    setIsEditingEmail(true);
+                  }}
                   className="text-base text-blue-600 underline hover:text-blue-800"
                 >
                   Cambiar email
                 </button>
                 <button
-                  onClick={() => handleEmailLogin({ preventDefault: () => {} } as React.FormEvent)}
+                  onClick={() => {
+                    trackUmamiEvent('login:resend-link');
+                    handleEmailLogin({ preventDefault: () => {} } as React.FormEvent);
+                  }}
                   disabled={!canResend}
                   className={`text-base ${canResend ? 'text-blue-600 hover:text-blue-800' : 'text-gray-400 cursor-not-allowed'}`}
                 >

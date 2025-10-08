@@ -15,6 +15,7 @@ import PublicReviewsLayer from './map/PublicReviewsLayer';
 import MapBoundsWatcher from './map/MapBoundsWatcher';
 import DetailsPanel from './map/DetailsPanel';
 import { useMap } from 'react-leaflet';
+import { trackUmamiEvent } from '../utils/analytics';
 
 type MapViewProps = {
   title?: string;
@@ -277,7 +278,10 @@ const MapView = ({
                   selectedId={selectedReview?.id ?? null}
                   onSelect={r => {
                     const match = publicReviews.find(x => String(x.id) === String(r.id));
-                    if (match) setSelectedReview(match);
+                    if (match) {
+                      trackUmamiEvent('map:list-select', { hasOpinion: Boolean(match.owner_opinion) });
+                      setSelectedReview(match);
+                    }
                   }}
                 />
               </div>
@@ -364,6 +368,7 @@ const MapView = ({
                     reviews={publicReviews}
                     selectedId={selectedReview?.id ?? null}
                     onSelect={(rev: PublicReview) => {
+                      trackUmamiEvent('map:marker-select', { hasOpinion: Boolean(rev.owner_opinion) });
                       setSelectedReview(rev);
                       setMobileListOpen(false);
                     }}
@@ -377,7 +382,10 @@ const MapView = ({
                 <button
                   type="button"
                   className="md:hidden absolute left-1/2 bottom-3 z-[1000] -translate-x-1/2 rounded-full bg-white/90 px-4 py-1 text-xs font-medium shadow border"
-                  onClick={() => setMobileListOpen(true)}
+                  onClick={() => {
+                    trackUmamiEvent('map:mobile-open-list');
+                    setMobileListOpen(true);
+                  }}
                   aria-label="Abrir opiniones"
                 >
                   <span className="block h-1.5 w-8 rounded-full bg-gray-400" />
@@ -389,7 +397,12 @@ const MapView = ({
                 <>
                   <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[320px] max-w-[80vw]">
                     <div className="rounded-2xl bg-white shadow-xl border overflow-hidden max-h-[60vh]">
-                      <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
+                      <DetailsPanel
+                        review={selectedReview}
+                        onClose={() => {
+                          setSelectedReview(null);
+                        }}
+                      />
                     </div>
                   </div>
 
@@ -403,7 +416,12 @@ const MapView = ({
                         transition={{ duration: 0.25, ease: 'easeOut' }}
                         className="absolute bottom-0 left-0 right-0 max-h-[35vh] rounded-t-2xl bg-white shadow-xl pointer-events-auto"
                       >
-                        <DetailsPanel review={selectedReview} onClose={() => setSelectedReview(null)} />
+                        <DetailsPanel
+                          review={selectedReview}
+                          onClose={() => {
+                            setSelectedReview(null);
+                          }}
+                        />
                       </motion.div>
                     </div>
                   </AnimatePresence>
@@ -428,7 +446,10 @@ const MapView = ({
                           type="button"
                           className="text-xl"
                           aria-label="Cerrar"
-                          onClick={() => setMobileListOpen(false)}
+                          onClick={() => {
+                            trackUmamiEvent('map:mobile-close-list');
+                            setMobileListOpen(false);
+                          }}
                         >
                           ✕
                         </button>
@@ -448,7 +469,10 @@ const MapView = ({
                           selectedId={selectedReview?.id ?? null}
                           onSelect={r => {
                             const match = publicReviews.find(x => String(x.id) === String(r.id));
-                            if (match) setSelectedReview(match);
+                            if (match) {
+                              trackUmamiEvent('map:list-select', { hasOpinion: Boolean(match.owner_opinion) });
+                              setSelectedReview(match);
+                            }
                             setMobileListOpen(false);
                           }}
                         />

@@ -3,6 +3,7 @@ import { MapPinIcon } from '@heroicons/react/24/outline';
 import CustomInput from '../CustomInput';
 import type { AddressResult } from './types';
 import { AddressDropdown } from './AddressDropdown';
+import { umamiEventProps } from '../../../utils/analytics';
 
 interface AddressInputProps {
   id: string;
@@ -71,6 +72,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
             disabled={actionDisabled}
             aria-label="Ubicarme"
             className="text-[rgb(74,94,50)] hover:text-[rgb(54,74,30)] disabled:opacity-50 disabled:cursor-not-allowed"
+            {...umamiEventProps('map:locate')}
           >
             <Icon className="h-5 w-5" />
           </button>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { LockClosedIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import CustomInput from './CustomInput';
 import { hashValue as hashValueSupabase } from '../../services/supabase/hashValues.ts';
+import { trackUmamiEvent } from '../../utils/analytics';
 
 export interface HashedContactInputProps {
   id: string;
@@ -62,10 +63,14 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
           aria-label="Información de privacidad"
           role="button"
           tabIndex={0}
-          onClick={() => setShowModal(true)}
+          onClick={() => {
+            trackUmamiEvent('review:privacy-info-open');
+            setShowModal(true);
+          }}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
+              trackUmamiEvent('review:privacy-info-open');
               setShowModal(true);
             }
           }}
@@ -85,7 +90,10 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
               <button
                 aria-label="Cerrar"
                 className="rounded p-1 hover:bg-gray-100"
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  trackUmamiEvent('review:privacy-info-close');
+                  setShowModal(false);
+                }}
               >
                 <XMarkIcon className="h-5 w-5" />
               </button>
@@ -99,7 +107,10 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
             <div className="mt-4 flex justify-end">
               <button
                 className="rounded bg-[rgb(74,94,50)] px-4 py-2 text-white hover:bg-[rgb(60,76,40)]"
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  trackUmamiEvent('review:privacy-info-close');
+                  setShowModal(false);
+                }}
               >
                 Cerrar
               </button>

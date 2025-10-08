@@ -2,6 +2,7 @@ import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import SelectableTag from '../ui/SelectableTag';
 import CustomTextarea from '../ui/CustomTextarea';
+import { umamiEventProps } from '../../utils/analytics';
 
 interface Step3Props {
   onNext: () => void;
@@ -144,7 +145,12 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
       </div>
 
       <div className="mt-4 flex justify-between">
-        <button type="button" onClick={onPrevious} className="text-black hover:text-gray-800">
+        <button
+          type="button"
+          onClick={onPrevious}
+          className="text-black hover:text-gray-800"
+          {...umamiEventProps('review:step3-previous')}
+        >
           Anterior
         </button>
         <button
@@ -152,6 +158,7 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
           onClick={onNext}
           disabled={isSubmitting}
           className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
+          {...umamiEventProps('review:step3-next')}
         >
           {isSubmitting ? 'Enviando...' : 'Siguiente'}
         </button>

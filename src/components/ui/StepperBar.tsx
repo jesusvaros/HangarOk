@@ -1,5 +1,6 @@
 import React from 'react';
 import type { SessionStatus } from '../AddReviewForm';
+import { umamiEventProps } from '../../utils/analytics';
 
 interface StepperBarProps {
   currentStep: number;
@@ -53,6 +54,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
                     : 'flex flex-col items-center w-[100px]'
                 } `}
                 onClick={() => onStepClick(index + 1)}
+                {...umamiEventProps('review:stepper-click', { step: index + 1 })}
               >
                 {/* Círculo */}
                 <div
