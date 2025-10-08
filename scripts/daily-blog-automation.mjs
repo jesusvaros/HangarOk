@@ -48,10 +48,10 @@ const NEWS_SOURCES = [
     keywords: ['vivienda', 'alquiler', 'piso', 'casa', 'inmobiliario']
   },
   {
-    name: 'El Confidencial - Vivienda',
-    url: 'https://www.elconfidencial.com/tags/temas/vivienda-15421/',
-    type: 'elconfidencial',
-    keywords: ['vivienda', 'alquiler', 'inmueble', 'piso', 'casa', 'inmobiliario', 'mercado-inmobiliario']
+    name: 'Diario de Sevilla - Alquiler',
+    url: 'https://www.diariodesevilla.es/tag/alquiler-de-vivienda/',
+    type: 'diariodesevilla',
+    keywords: ['alquiler', 'vivienda', 'inmueble', 'piso', 'casa', 'inmobiliario', 'arrendamiento']
   },
   {
     name: '20minutos - Inquilinos',
@@ -132,7 +132,7 @@ async function extractUrlsFromLaSexta(sourceUrl) {
   return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
 }
 
-async function extractUrlsFromElConfidencial(sourceUrl) {
+async function extractUrlsFromDiarioDeSevilla(sourceUrl) {
   const response = await fetch(sourceUrl, {
     headers: {
       'User-Agent': 'CaseroOkBot/1.0 (+https://caserook.com)',
@@ -145,8 +145,8 @@ async function extractUrlsFromElConfidencial(sourceUrl) {
   }
   
   const html = await response.text();
-  // El Confidencial URLs pattern
-  const linkPattern = /https:\/\/www\.elconfidencial\.com\/[^"'\s)]+/g;
+  // Diario de Sevilla URLs pattern
+  const linkPattern = /https:\/\/www\.diariodesevilla\.es\/[^"'\s)]+/g;
   const matches = html.match(linkPattern) || [];
   
   return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
@@ -285,8 +285,8 @@ async function runDailyAutomation() {
         case 'lasexta':
           urls = await extractUrlsFromLaSexta(source.url);
           break;
-        case 'elconfidencial':
-          urls = await extractUrlsFromElConfidencial(source.url);
+        case 'diariodesevilla':
+          urls = await extractUrlsFromDiarioDeSevilla(source.url);
           break;
         case '20minutos':
           urls = await extractUrlsFrom20Minutos(source.url);
