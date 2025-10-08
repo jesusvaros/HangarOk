@@ -232,8 +232,8 @@ async function generateBlogPost(articleUrl) {
       const process = spawn('node', [
         'scripts/generate-blog-post.mjs',
         articleUrl,
-        '--tone=informativo',
-        '--keywords=vivienda, alquiler, inmobiliario',
+        '--tone=empático',
+        '--keywords=inquilinos, derechos, ahorro, protección, consejos prácticos',
         `--date=${new Date().toISOString().slice(0, 10)}`
       ], {
         cwd: path.resolve(__dirname, '..'),

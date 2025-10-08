@@ -115,13 +115,12 @@ function extractArticle(html) {
 
 function estimateReadingMinutes(text) {
   const words = text.split(/\s+/).filter(Boolean).length;
-  if (words === 0) return null;
   return Math.max(1, Math.round(words / 220));
 }
 
 function buildPrompts(article) {
   const tipsInstruction = includeTips
-    ? "Incluye al final una sección titulada 'Consejos prácticos' con 3 recomendaciones accionables en formato lista."
+    ? "Incluye al final una sección titulada 'Consejos prácticos para inquilinos' con 4-5 recomendaciones accionables que ayuden a proteger sus derechos y ahorrar dinero."
     : 'No incluyas secciones con viñetas salvo que sean imprescindibles.';
 
   const keywordsInstruction = keywords ? `Optimiza el contenido para las palabras clave: ${keywords}.` : '';
@@ -129,15 +128,41 @@ function buildPrompts(article) {
   const toneInstruction = (() => {
     switch (tone) {
       case 'historia':
-        return 'Adopta un tono cercano, resaltando testimonios y ejemplos reales de inquilinos.';
+        return 'Adopta un tono cercano y empático, resaltando testimonios y ejemplos reales de inquilinos que enfrentan dificultades económicas.';
       case 'practico':
-        return 'Adopta un tono práctico orientado a explicar el contexto legal y ofrecer recomendaciones accionables.';
+        return 'Adopta un tono directo y práctico, enfocándote en acciones concretas que puede tomar el inquilino para protegerse y ahorrar dinero.';
+      case 'empático':
+        return 'Adopta un tono empático y comprensivo, reconociendo las dificultades económicas de los inquilinos que pagan hasta el 90% de sus ingresos en alquiler. Enfócate en soluciones prácticas y derechos que pueden ejercer.';
       default:
-        return 'Adopta un tono informativo claro y neutral para inquilinos en España.';
+        return 'Adopta un tono informativo pero empático, reconociendo la situación vulnerable de muchos inquilinos.';
     }
   })();
 
-  const systemPrompt = 'Eres redactor senior de CaseroOk. Reescribes noticias del sector vivienda en España en artículos originales, rigurosos y útiles para inquilinos.';
+  const systemPrompt = `Eres un experto en vivienda y defensor de los derechos de inquilinos en España. Tu audiencia son inquilinos en situación vulnerable que destinan gran parte de sus ingresos al alquiler (hasta el 90%) y necesitan información práctica para protegerse y mejorar su situación.
+
+CONTEXTO IMPORTANTE: Los inquilinos españoles enfrentan:
+- Alquileres que consumen 70-90% de sus ingresos
+- Dificultad extrema para ahorrar y acceder a la compra
+- Vulnerabilidad ante abusos y subidas de precio
+- Falta de información sobre sus derechos
+
+Genera un artículo de blog en español que:
+- Sea original y no plagie el contenido fuerte
+- Tenga entre 900-1300 palabras
+- Use un lenguaje claro, empático y accesible
+- Incluya información práctica que REALMENTE ayude al inquilino
+- Explique derechos específicos y cómo ejercerlos
+- Ofrezca consejos de ahorro y protección
+- Tenga estructura clara con subtítulos (##)
+- Genere engagement emocional sin ser sensacionalista
+
+Devuelve un JSON con:
+- title: Título atractivo que conecte emocionalmente (máx 60 caracteres)
+- summary: Resumen que destaque el beneficio para el inquilino (máx 160 caracteres)  
+- seo_title: Título SEO orientado a inquilinos (máx 60 caracteres)
+- seo_description: Meta descripción que prometa soluciones prácticas (máx 160 caracteres)
+- markdown: Contenido completo en markdown con enfoque en soluciones`;
+
   const userPrompt = `Resumen original de la noticia:
 URL: ${rawUrl}
 Título detectado: ${article.title ?? 'No encontrado'}
@@ -151,7 +176,14 @@ ${toneInstruction}
 ${tipsInstruction}
 ${keywordsInstruction}
 
-Genera un artículo completamente nuevo evitando plagio. Explica por qué la noticia es relevante para el inquilino español.`;
+INSTRUCCIONES ESPECÍFICAS:
+1. Conecta la noticia con la realidad del inquilino vulnerable
+2. Explica cómo esta información puede ayudarle a ahorrar dinero o proteger sus derechos
+3. Incluye datos sobre el mercado de alquiler español cuando sea relevante
+4. Ofrece alternativas y soluciones prácticas
+5. Usa un lenguaje que genere confianza y esperanza, no desesperanza
+
+Genera un artículo completamente nuevo evitando plagio. Enfócate en cómo esta noticia impacta DIRECTAMENTE la vida del inquilino español y qué puede hacer al respecto.`;
 
   return { systemPrompt, userPrompt };
 }
