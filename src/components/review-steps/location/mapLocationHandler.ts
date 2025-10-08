@@ -12,12 +12,31 @@ export const useMapLocationHandler = (handleAddressSelect: (result: AddressResul
   return useCallback(
     async (lat: number, lng: number) => {
       try {
-        const apiKey = import.meta.env.VITE_HERE_API_KEY;
-        // Perform reverse geocoding with HERE API
-        const url = `https://revgeocode.search.hereapi.com/v1/revgeocode?at=${lat},${lng}&lang=es-ES&apiKey=${apiKey}`;
+        // Use server-side proxy for cost control
+        const response = await fetch('/api/geocode-proxy', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            endpoint: 'revgeocode',
+            params: {
+              at: `${lat},${lng}`,
+              lang: 'es-ES'
+            }
+          })
+        });
 
-        const response = await fetch(url);
         const data = await response.json();
+
+        // Handle usage limits or errors
+        if (!response.ok) {
+          if (data.fallback) {
+            console.warn('HERE API reverse geocode limit reached');
+            return;
+          }
+          throw new Error(data.error || 'Reverse geocoding request failed');
+        }
 
         if (data.items && data.items.length > 0) {
           const location = data.items[0];

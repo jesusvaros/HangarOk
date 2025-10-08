@@ -16,15 +16,33 @@ export const geocodingService = {
     }
 
     try {
-      const apiKey = import.meta.env.VITE_HERE_API_KEY;
+      // Use server-side proxy for cost control
+      const response = await fetch('/api/geocode-proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          endpoint: 'geocode',
+          params: {
+            q: searchText,
+            in: 'countryCode:ESP',
+            lang: 'es-ES',
+            limit: '10'
+          }
+        })
+      });
 
-      // HERE Geocoding search confined to Spain for street suggestions
-      const url = `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(
-        searchText
-      )}&in=countryCode:ESP&lang=es-ES&limit=10&apiKey=${apiKey}`;
-
-      const response = await fetch(url);
       const data = await response.json();
+
+      // Handle usage limits or errors
+      if (!response.ok) {
+        if (data.fallback) {
+          console.warn('HERE API limit reached, using fallback behavior');
+          return []; // Return empty results as fallback
+        }
+        throw new Error(data.error || 'Geocoding request failed');
+      }
 
       if (!data.items) {
         console.error('HERE API error or empty response', data);
@@ -83,14 +101,36 @@ export const geocodingService = {
 
     const fullAddressQuery = `${street} ${newNumber}, ${city}, España`;
 
-    const apiKey = import.meta.env.VITE_HERE_API_KEY;
-    const response = await fetch(
-      `https://geocode.search.hereapi.com/v1/geocode?q=${encodeURIComponent(
-        fullAddressQuery
-      )}&in=countryCode:ESP&lang=es-ES&limit=1&apiKey=${apiKey}`
-    );
+    // Use server-side proxy for cost control
+    const response = await fetch('/api/geocode-proxy', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        endpoint: 'geocode',
+        params: {
+          q: fullAddressQuery,
+          in: 'countryCode:ESP',
+          lang: 'es-ES',
+          limit: '1'
+        }
+      })
+    });
 
     const data = await response.json();
+
+    // Handle usage limits or errors
+    if (!response.ok) {
+      if (data.fallback) {
+        console.warn('HERE API limit reached for address coordinates');
+        return {
+          ...currentDetails,
+          number: newNumber,
+        };
+      }
+      throw new Error(data.error || 'Geocoding request failed');
+    }
 
     if (data.items && data.items.length > 0) {
       const item = data.items[0];
@@ -129,10 +169,32 @@ export const geocodingService = {
    */
   async reverseGeocode(lat: number, lng: number): Promise<AddressResult | null> {
     try {
-      const apiKey = import.meta.env.VITE_HERE_API_KEY;
-      const url = `https://reverse.geocode.search.hereapi.com/v1/revgeocode?at=${lat},${lng}&lang=es-ES&limit=1&apiKey=${apiKey}`;
-      const response = await fetch(url);
+      // Use server-side proxy for cost control
+      const response = await fetch('/api/geocode-proxy', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          endpoint: 'revgeocode',
+          params: {
+            at: `${lat},${lng}`,
+            lang: 'es-ES',
+            limit: '1'
+          }
+        })
+      });
+
       const data = await response.json();
+
+      // Handle usage limits or errors
+      if (!response.ok) {
+        if (data.fallback) {
+          console.warn('HERE API reverse geocode limit reached');
+          return null;
+        }
+        throw new Error(data.error || 'Reverse geocoding request failed');
+      }
       const item: HereGeocodeItem | undefined = data.items?.[0];
       if (!item) return null;
       const addr: Partial<HereGeocodeItem['address']> = item.address ?? {};
