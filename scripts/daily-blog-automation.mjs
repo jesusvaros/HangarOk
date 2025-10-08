@@ -131,7 +131,11 @@ function filterRelevantUrls(urls, keywords) {
     'deporte', 'fútbol', 'baloncesto', 'tenis', 'olimpiadas',
     'celebridad', 'famoso', 'actor', 'cantante', 'artista',
     'salud', 'hospital', 'médico', 'enfermedad', 'covid',
-    'tecnología', 'smartphone', 'software', 'aplicación', 'internet'
+    'tecnología', 'smartphone', 'software', 'aplicación', 'internet',
+    'imserso', 'viajes', 'turismo', 'vacaciones', 'pensionistas',
+    'jubilados', 'tercera-edad', 'mayores', 'pensión', 'seguridad-social',
+    'restaurante', 'comida', 'gastronomía', 'cocina', 'chef',
+    'moda', 'ropa', 'fashion', 'belleza', 'cosmética'
   ];
 
   // Palabras que REQUIEREN para ser relevante (mercado inmobiliario)
