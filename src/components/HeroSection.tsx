@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import wordmarkUrl from '../assets/caserook_letras.svg';
 import logoUrl from '../assets/logo_coloreado.svg';
+import { umamiEventProps } from '../utils/analytics';
 
 const HeroSection = () => {
   return (
@@ -26,6 +27,7 @@ const HeroSection = () => {
           <Link
             to="/add-review"
             className="w-fit self-center whitespace-nowrap inline-block rounded-lg bg-[#4A5E32] px-8 py-3 text-lg font-semibold text-white transition-colors hover:bg-[#3B4C28]"
+            {...umamiEventProps('hero:cta-add-review')}
           >
             Escribir review
           </Link>

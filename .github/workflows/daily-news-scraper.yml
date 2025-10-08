@@ -23,6 +23,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           fetch-depth: 0
+          ref: main
       
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -61,9 +62,15 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
+          
+          # Pull latest changes to avoid conflicts
+          git pull --rebase origin main || true
+          
           git add .
           git commit -m "🤖 Auto-generated blog posts and updated sitemap $(date +'%Y-%m-%d')"
-          git push
+          
+          # Try to push, if it fails, pull and try again
+          git push || (git pull --rebase origin main && git push)
       
       - name: Summary
         run: |

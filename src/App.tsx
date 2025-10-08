@@ -30,11 +30,13 @@ import CondicionesUso from './pages/CondicionesUso';
 import BuenasPracticas from './pages/BuenasPracticas';
 import CityReviewsIndexPage from './pages/CityReviewsIndexPage';
 import CityReviewsPage from './pages/CityReviewsPage';
+import UmamiTracker from './components/analytics/UmamiTracker';
 
 // Import Providers
 import { FormProvider } from './store/FormContext';
 import { FormMessagesProvider } from './store/FormMessagesProvider';
 import { AuthProvider } from './store/auth';
+import { umamiEventProps } from './utils/analytics';
 
 function App() {
   const location = useLocation();
@@ -46,6 +48,7 @@ function App() {
         <div className={`min-h-screen ${isGrayPage ? 'bg-gray-100' : 'bg-white'}`}>
         {/* Vercel Analytics */}
         <Analytics />
+        <UmamiTracker />
         <Toaster
           position="bottom-left"
           gutter={8}
@@ -128,21 +131,21 @@ function App() {
 
         <footer className="mx-auto mt-8 max-w-6xl py-6 text-center text-sm text-gray-500">
           <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-            <Link className="hover:text-gray-700" to="/blog">Blog</Link>
+            <Link className="hover:text-gray-700" to="/blog" {...umamiEventProps('footer:blog')}>Blog</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/opiniones">Opiniones por ciudad</Link>
+            <Link className="hover:text-gray-700" to="/opiniones" {...umamiEventProps('footer:opiniones')}>Opiniones por ciudad</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/terminosycondiciones">Términos y Condiciones</Link>
+            <Link className="hover:text-gray-700" to="/terminosycondiciones" {...umamiEventProps('footer:terminos-condiciones')}>Términos y Condiciones</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/aviso-legal">Aviso Legal</Link>
+            <Link className="hover:text-gray-700" to="/aviso-legal" {...umamiEventProps('footer:aviso-legal')}>Aviso Legal</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/politica-privacidad">Política de Privacidad</Link>
+            <Link className="hover:text-gray-700" to="/politica-privacidad" {...umamiEventProps('footer:privacidad')}>Política de Privacidad</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/cookies">Política de Cookies</Link>
+            <Link className="hover:text-gray-700" to="/cookies" {...umamiEventProps('footer:cookies')}>Política de Cookies</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/condiciones-uso">Condiciones de Uso</Link>
+            <Link className="hover:text-gray-700" to="/condiciones-uso" {...umamiEventProps('footer:condiciones-uso')}>Condiciones de Uso</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/buenas-practicas">Buenas Prácticas</Link>
+            <Link className="hover:text-gray-700" to="/buenas-practicas" {...umamiEventProps('footer:buenas-practicas')}>Buenas Prácticas</Link>
           </nav>
             <p>
               © {new Date().getFullYear()} CaseroOk - Todas las opiniones son anónimas y reflejan experiencias
