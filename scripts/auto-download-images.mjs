@@ -11,34 +11,48 @@ const IMAGES_DIR = path.resolve(__dirname, '../public/images/blog');
 
 // Large pool of unique images for different topics - NEVER repeat the same image
 const IMAGE_POOLS = {
-  // Housing/rental related - 15 unique images
+  // Housing/rental related - 10 unique images
   'alquiler': [
     'https://images.unsplash.com/photo-1568605114967-8130f3a36994?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1582407947304-fd86f028f716?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1560184897-8e9e7b6a3a05?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1560184897-8e9e7b6a3a05?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1628744448840-55bdb2497bd4?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1633505322744-e1b9b8b7b1b1?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1583608205776-bfd35f0d9f83?auto=format&fit=crop&w=1350&q=80'
   ],
   'vivienda': [
     'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1350&q=80'
   ],
   'casa': [
     'https://images.unsplash.com/photo-1518780664697-55e3ad937233?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600566752355-35792bedcfea?auto=format&fit=crop&w=1350&q=80'
   ],
   'piso': [
     'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1615873968403-89e068629265?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1631679706909-1844bbd07221?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1600607688960-e095c8e6c4c3?auto=format&fit=crop&w=1350&q=80'
   ],
   
   // Legal/contract related - 10 unique images
@@ -53,22 +67,22 @@ const IMAGE_POOLS = {
     'https://images.unsplash.com/photo-1554224154-26032fced8bd?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1586953208448-b95a79798f07?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1590736969955-71cc94901144?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1350&q=80'
   ],
   
   // Economic/financial - 8 unique images
   'precio': [
-    'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=1350&q=80'
   ],
   'mercado': [
     'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1590283603385-17ffb3a7f29f?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1350&q=80'
   ],
   
   // Social issues - 8 unique images
@@ -80,21 +94,21 @@ const IMAGE_POOLS = {
   ],
   'crisis': [
     'https://images.unsplash.com/photo-1551836022-deb4988cc6c0?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1584464491033-06628f3a6b7b?auto=format&fit=crop&w=1350&q=80',
     'https://images.unsplash.com/photo-1590736969955-71cc94901144?auto=format&fit=crop&w=1350&q=80'
   ],
   
   // Community/neighbors - 6 unique images
   'ruido': [
     'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1600298881974-6be191ceeda1?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1600298881974-6be191ceeda1?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=1350&q=80'
   ],
   'vecinos': [
     'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=1350&q=80',
-    'https://images.unsplash.com/photo-1600298881974-6be191ceeda1?auto=format&fit=crop&w=1350&q=80'
+    'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?auto=format&fit=crop&w=1350&q=80',
+    'https://images.unsplash.com/photo-1554224154-26032fced8bd?auto=format&fit=crop&w=1350&q=80'
   ],
   
   // Default fallback pool - 10 unique images

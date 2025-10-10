@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import PageSEO from '../../seo/PageSEO';
 import { blogPosts, computeReadingMinutes as estimateReadingMinutes, type StaticBlogPost } from '../../blog/posts';
 
@@ -34,19 +34,37 @@ function buildExcerpt(post: StaticBlogPost) {
   return `${words.slice(0, 35).join(' ')}...`;
 }
 
+const POSTS_PER_PAGE = 9;
+
 export default function BlogListPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page') || '1', 10);
+  
   const fallbackImageUrl = '/og-casero.svg';
   const heroPost = blogPosts[0] ?? null;
-  const secondaryPosts = blogPosts.slice(1);
+  
+  // Calculate pagination for secondary posts (excluding hero post)
+  const allSecondaryPosts = blogPosts.slice(1);
+  const totalSecondaryPosts = allSecondaryPosts.length;
+  const totalPages = Math.ceil(totalSecondaryPosts / POSTS_PER_PAGE);
+  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+  const endIndex = startIndex + POSTS_PER_PAGE;
+  const secondaryPosts = allSecondaryPosts.slice(startIndex, endIndex);
+  
   const heroReadingMinutes = heroPost ? computeReadingMinutes(heroPost) : null;
   const heroExcerpt = heroPost ? buildExcerpt(heroPost) : null;
+
+  const handlePageChange = (page: number) => {
+    setSearchParams({ page: page.toString() });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <>
       <PageSEO
-        title="Blog de CaseroOk"
+        title={currentPage > 1 ? `Blog de CaseroOk - Página ${currentPage}` : "Blog de CaseroOk"}
         description="Guías y novedades sobre alquiler seguro, viviendas y experiencias de inquilinos en España."
-        canonicalPath="/blog"
+        canonicalPath={currentPage > 1 ? `/blog?page=${currentPage}` : "/blog"}
       />
       <main className="mx-auto mt-28 max-w-6xl px-6 pb-24">
         <header className="mb-12 text-center">
@@ -111,7 +129,14 @@ export default function BlogListPage() {
 
         {secondaryPosts.length > 0 && (
           <section>
-            <h2 className="mb-6 text-2xl font-semibold text-gray-900">Artículos recientes</h2>
+            <h2 className="mb-6 text-2xl font-semibold text-gray-900">
+              Artículos recientes
+              {totalPages > 1 && (
+                <span className="ml-2 text-base font-normal text-gray-500">
+                  (Página {currentPage} de {totalPages})
+                </span>
+              )}
+            </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {secondaryPosts.map(post => {
                 const readingMinutes = computeReadingMinutes(post);
@@ -154,6 +179,52 @@ export default function BlogListPage() {
                 );
               })}
             </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex justify-center">
+                <nav className="flex items-center gap-2">
+                  {/* Previous button */}
+                  <button
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                    </svg>
+                    Anterior
+                  </button>
+
+                  {/* Page numbers */}
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <button
+                      key={page}
+                      onClick={() => handlePageChange(page)}
+                      className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
+                        page === currentPage
+                          ? 'bg-emerald-600 text-white'
+                          : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ))}
+
+                  {/* Next button */}
+                  <button
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    Siguiente
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </nav>
+              </div>
+            )}
           </section>
         )}
       </main>

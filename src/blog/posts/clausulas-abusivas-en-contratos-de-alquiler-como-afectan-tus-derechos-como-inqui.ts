@@ -3,7 +3,7 @@ export const post = {
   title: 'Cláusulas abusivas en contratos de alquiler: cómo afectan tus derechos como inquilino en España',
   summary: 'La desaparición de ciertas protecciones legales en los contratos de alquiler ha abierto la puerta a cláusulas que permiten a los propietarios desalojar a los inquilinos sin previo aviso ni defensa judicial. Este artículo explica en qué consisten estas cláusulas, sus implicaciones y cómo proteger tus derechos como arrendatario.',
   publishedAt: '2025-01-09',
-  heroImageUrl: '/images/blog/clausulas-abusivas-alquiler.jpg',
+  heroImageUrl: '/images/blog/clausulas-abusivas-en-contratos-de-alquiler-como-afectan-tus-derechos-como-inqui.jpg',
   seoTitle: 'Alquileres en España: protege tus derechos ante cláusulas abusivas en contratos',
   seoDescription: 'Conoce las cláusulas abusivas que permiten desahucios exprés en contratos de alquiler y aprende cómo defender tus derechos como inquilino en España.',
   sourceUrl: 'https://www.cronista.com/espana/economia-finanzas/se-termina-la-ley-de-alquileres-los-propietarios-podran-echar-a-los-inquilinos-en-cualquier-momento-si-su-contrato-incluye-esta-clausula/',

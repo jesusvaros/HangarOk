@@ -3,7 +3,7 @@ export const post = {
   title: 'Qué cambia con el índice de referencia del alquiler en 2025',
   summary: 'El nuevo índice de referencia limitará los precios en zonas tensionadas. Te contamos cómo afectará a caseros e inquilinos.',
   publishedAt: '2024-12-18',
-  heroImageUrl: '/images/blog/indice-referencia-alquiler.jpg',
+  heroImageUrl: '/images/blog/indice-referencia-alquiler-2025.jpg',
   readingMinutes: 5,
   seoTitle: 'Índice de referencia del alquiler 2025: claves para inquilinos',
   seoDescription: 'Resumen práctico del índice de referencia del alquiler 2025 y cómo puedes usarlo para negociar tu renta.',

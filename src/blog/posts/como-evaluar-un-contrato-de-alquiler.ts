@@ -3,7 +3,7 @@ export const post = {
   title: 'Cómo evaluar un contrato de alquiler antes de firmarlo',
   summary: 'Checklist esencial para detectar cláusulas dudosas, gastos inesperados y puntos que conviene negociar con tu casero.',
   publishedAt: '2025-01-07',
-  heroImageUrl: '/images/blog/evaluar-contrato-alquiler.jpg',
+  heroImageUrl: '/images/blog/como-evaluar-un-contrato-de-alquiler.jpg',
   readingMinutes: 6,
   seoTitle: 'Checklist para revisar un contrato de alquiler | CaseroOk',
   seoDescription: 'Aprende qué revisar en un contrato de alquiler para evitar sorpresas: cláusulas abusivas, gastos extra y garantías.',
