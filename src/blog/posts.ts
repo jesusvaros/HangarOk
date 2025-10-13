@@ -52,12 +52,13 @@ import post35 from './posts/nueva-ley-de-alquileres-en-espana-seguridad-para-inq
 import post36 from './posts/nueva-ley-de-vivienda-en-espana-que-significa-para-los-inquilinos-y-propietarios.js';
 import post37 from './posts/nuevas-obligaciones-para-propietarios-en-alquileres-tras-la-venta-de-viviendas-e.js';
 import post38 from './posts/precios-al-alza-en-sevilla-guia-para-inquilinos-en-apuros.js';
-import post39 from './posts/ruido-en-comunidades-de-vecinos-derechos-y-obligaciones-segun-la-ley-de-propieda.js';
-import post40 from './posts/vecinos-contra-pisos-turisticos-protege-tu-hogar-y-tu-bolsillo.js';
-import post41 from './posts/vivienda-protegida-en-andalucia-que-significa-para-inquilinos-vulnerables.js';
-import post42 from './posts/vivienda-publica-y-alquiler-protege-tus-derechos-y-ahorra-hoy.js';
-import post43 from './posts/vivienda-rural-una-oportunidad-para-inquilinos-que-sufren-alquileres-altos.js';
-import post44 from './posts/viviendas-protegidas-caras-que-significa-para-inquilinos-vulnerables.js';
+import post39 from './posts/psoe-lidera-intencion-de-voto-que-significa-para-inquilinos-vulnerables.js';
+import post40 from './posts/ruido-en-comunidades-de-vecinos-derechos-y-obligaciones-segun-la-ley-de-propieda.js';
+import post41 from './posts/vecinos-contra-pisos-turisticos-protege-tu-hogar-y-tu-bolsillo.js';
+import post42 from './posts/vivienda-protegida-en-andalucia-que-significa-para-inquilinos-vulnerables.js';
+import post43 from './posts/vivienda-publica-y-alquiler-protege-tus-derechos-y-ahorra-hoy.js';
+import post44 from './posts/vivienda-rural-una-oportunidad-para-inquilinos-que-sufren-alquileres-altos.js';
+import post45 from './posts/viviendas-protegidas-caras-que-significa-para-inquilinos-vulnerables.js';
 
 const rawPosts: StaticBlogPost[] = [
   post1,
@@ -104,6 +105,7 @@ const rawPosts: StaticBlogPost[] = [
   post42,
   post43,
   post44,
+  post45,
 ];
 
 export const blogPosts = [...rawPosts].sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
