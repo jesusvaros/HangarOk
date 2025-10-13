@@ -59,12 +59,14 @@ jobs:
       
       - name: Create Pull Request with changes
         if: steps.verify-changed-files.outputs.changed == 'true'
+        id: create-pr
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
           # Create a unique branch name
           BRANCH_NAME="auto-blog-posts-$(date +'%Y%m%d-%H%M%S')"
+          echo "branch_name=$BRANCH_NAME" >> $GITHUB_OUTPUT
           
           # Create and switch to new branch
           git checkout -b "$BRANCH_NAME"
@@ -76,8 +78,8 @@ jobs:
           # Push the branch
           git push origin "$BRANCH_NAME"
           
-          # Create Pull Request using GitHub CLI
-          gh pr create \
+          # Create Pull Request using GitHub CLI and capture PR number
+          PR_URL=$(gh pr create \
             --title "🤖 Daily Blog Posts $(date +'%Y-%m-%d')" \
             --body "Automatically generated blog posts from daily news scraping.
           
@@ -86,17 +88,41 @@ jobs:
           
           **Sources processed:** El Cronista, La Sexta, Diario de Sevilla, 20minutos
           
-          Please review the content before merging." \
+          ✅ **Auto-merged**: This PR will be automatically merged as it contains only generated content." \
             --head "$BRANCH_NAME" \
-            --base main
+            --base main)
+          
+          # Extract PR number from URL
+          PR_NUMBER=$(echo "$PR_URL" | grep -o '[0-9]\+$')
+          echo "pr_number=$PR_NUMBER" >> $GITHUB_OUTPUT
+          echo "pr_url=$PR_URL" >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Auto-merge Pull Request
+        if: steps.verify-changed-files.outputs.changed == 'true' && steps.create-pr.outputs.pr_number
+        run: |
+          # Wait a moment for PR to be fully created
+          sleep 5
+          
+          # Auto-merge the PR
+          gh pr merge ${{ steps.create-pr.outputs.pr_number }} \
+            --merge \
+            --delete-branch \
+            --subject "🤖 Auto-merge: Daily blog posts $(date +'%Y-%m-%d')"
+          
+          echo "✅ Pull Request #${{ steps.create-pr.outputs.pr_number }} merged automatically"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Summary
         run: |
           if [ "${{ steps.verify-changed-files.outputs.changed }}" == "true" ]; then
-            echo "✅ New blog posts generated and Pull Request created"
-            echo "📋 Check GitHub for the PR to review and merge"
+            echo "✅ New blog posts generated and automatically merged to main"
+            echo "🚀 Changes are now live on the main branch"
+            if [ -n "${{ steps.create-pr.outputs.pr_url }}" ]; then
+              echo "📋 PR Details: ${{ steps.create-pr.outputs.pr_url }}"
+            fi
           else
             echo "ℹ️ No new articles found to process"
           fi
