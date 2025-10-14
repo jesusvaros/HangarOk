@@ -37,10 +37,23 @@ jobs:
       - name: Create data directory
         run: mkdir -p data
       
+      - name: Check OpenAI API Key
+        run: |
+          if [ -z "${{ secrets.OPENAI_API_KEY }}" ]; then
+            echo "❌ OPENAI_API_KEY secret is not configured"
+            echo "Please add OPENAI_API_KEY to GitHub Secrets"
+            exit 1
+          else
+            echo "✅ OPENAI_API_KEY is configured"
+          fi
+      
       - name: Run daily blog automation
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: npm run daily:blog
+        run: |
+          echo "🚀 Starting daily blog automation..."
+          npm run daily:blog
+          echo "✅ Daily blog automation completed"
       
       - name: Generate updated sitemap
         env:
@@ -51,9 +64,22 @@ jobs:
       - name: Check for changes
         id: verify-changed-files
         run: |
+          echo "📋 Checking for changes..."
+          git status --porcelain
+          
           if [ -n "$(git status --porcelain)" ]; then
+            echo "✅ Changes detected"
             echo "changed=true" >> $GITHUB_OUTPUT
+            
+            # Show what files changed
+            echo "📁 Changed files:"
+            git status --porcelain
+            
+            # Count new blog posts
+            NEW_POSTS=$(git status --porcelain | grep "src/blog/posts/" | wc -l)
+            echo "📝 New blog posts: $NEW_POSTS"
           else
+            echo "ℹ️ No changes detected"
             echo "changed=false" >> $GITHUB_OUTPUT
           fi
       

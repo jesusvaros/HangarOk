@@ -1,0 +1,81 @@
+name: Test Blog Automation
+
+on:
+  workflow_dispatch: # Manual trigger only
+
+jobs:
+  test-automation:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          ref: main
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+      
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Create data directory
+        run: mkdir -p data
+      
+      - name: Check environment
+        run: |
+          echo "🔍 Environment check:"
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          echo "Working directory: $(pwd)"
+          echo "Directory contents:"
+          ls -la
+          
+      - name: Check OpenAI API Key
+        run: |
+          if [ -z "${{ secrets.OPENAI_API_KEY }}" ]; then
+            echo "❌ OPENAI_API_KEY secret is not configured"
+            echo "Please add OPENAI_API_KEY to GitHub Secrets"
+            exit 1
+          else
+            echo "✅ OPENAI_API_KEY is configured (length: ${#OPENAI_API_KEY})"
+          fi
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      
+      - name: Clear processed URLs for testing
+        run: |
+          echo "🧹 Clearing processed URLs for testing..."
+          echo "[]" > data/processed-urls.json
+          echo "✅ Processed URLs cleared"
+      
+      - name: Run daily blog automation (TEST)
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          echo "🚀 Starting test blog automation..."
+          npm run daily:blog
+          echo "✅ Test blog automation completed"
+      
+      - name: Check results
+        run: |
+          echo "📊 Results check:"
+          echo "Generated files:"
+          find src/blog/posts -name "*.ts" -newer data/processed-urls.json || echo "No new posts generated"
+          
+          echo "Data files:"
+          ls -la data/
+          
+          echo "Processed URLs count:"
+          cat data/processed-urls.json | jq length || echo "Error reading processed URLs"
+          
+          echo "Git status:"
+          git status --porcelain
