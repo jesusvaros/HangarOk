@@ -58,14 +58,25 @@ const NEWS_SOURCES = [
     url: 'https://www.20minutos.es/tags/temas/inquilinos.html',
     type: '20minutos',
     keywords: ['inquilinos', 'alquiler', 'vivienda', 'piso', 'casa', 'inmobiliario', 'arrendamiento']
+  },
+  {
+    name: 'El País - Vivienda',
+    url: 'https://elpais.com/tag/vivienda/',
+    type: 'elpais',
+    keywords: ['vivienda', 'alquiler', 'inmobiliario', 'piso', 'casa', 'inquilino', 'propietario']
+  },
+  {
+    name: 'ABC - Vivienda',
+    url: 'https://www.abc.es/economia/vivienda/',
+    type: 'abc',
+    keywords: ['vivienda', 'alquiler', 'inmobiliario', 'piso', 'casa', 'inquilino', 'propietario']
+  },
+  {
+    name: 'Idealista News',
+    url: 'https://www.idealista.com/news/',
+    type: 'idealista',
+    keywords: ['vivienda', 'alquiler', 'inmobiliario', 'piso', 'casa', 'mercado', 'precio']
   }
-  // 📝 Aquí puedes añadir más fuentes fácilmente:
-  // {
-  //   name: 'El País - Vivienda',
-  //   url: 'https://elpais.com/tag/vivienda/',
-  //   type: 'elpais',
-  //   keywords: ['vivienda', 'alquiler']
-  // }
 ];
 
 // Ensure data directory exists
@@ -167,6 +178,63 @@ async function extractUrlsFrom20Minutos(sourceUrl) {
   const html = await response.text();
   // 20minutos URLs pattern
   const linkPattern = /https:\/\/www\.20minutos\.es\/[^"'\s)]+/g;
+  const matches = html.match(linkPattern) || [];
+  
+  return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
+}
+
+async function extractUrlsFromElPais(sourceUrl) {
+  const response = await fetch(sourceUrl, {
+    headers: {
+      'User-Agent': 'CaseroOkBot/1.0 (+https://caserook.com)',
+      'Accept-Language': 'es-ES,es;q=0.9',
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Error fetching ${sourceUrl}: ${response.status}`);
+  }
+  
+  const html = await response.text();
+  const linkPattern = /https:\/\/elpais\.com\/[^"'\s)]+/g;
+  const matches = html.match(linkPattern) || [];
+  
+  return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
+}
+
+async function extractUrlsFromABC(sourceUrl) {
+  const response = await fetch(sourceUrl, {
+    headers: {
+      'User-Agent': 'CaseroOkBot/1.0 (+https://caserook.com)',
+      'Accept-Language': 'es-ES,es;q=0.9',
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Error fetching ${sourceUrl}: ${response.status}`);
+  }
+  
+  const html = await response.text();
+  const linkPattern = /https:\/\/www\.abc\.es\/[^"'\s)]+/g;
+  const matches = html.match(linkPattern) || [];
+  
+  return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
+}
+
+async function extractUrlsFromIdealista(sourceUrl) {
+  const response = await fetch(sourceUrl, {
+    headers: {
+      'User-Agent': 'CaseroOkBot/1.0 (+https://caserook.com)',
+      'Accept-Language': 'es-ES,es;q=0.9',
+    },
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Error fetching ${sourceUrl}: ${response.status}`);
+  }
+  
+  const html = await response.text();
+  const linkPattern = /https:\/\/www\.idealista\.com\/news\/[^"'\s)]+/g;
   const matches = html.match(linkPattern) || [];
   
   return [...new Set(matches.map(url => url.replace(/[)}\]"']+$/, '')))];
@@ -290,6 +358,15 @@ async function runDailyAutomation() {
           break;
         case '20minutos':
           urls = await extractUrlsFrom20Minutos(source.url);
+          break;
+        case 'elpais':
+          urls = await extractUrlsFromElPais(source.url);
+          break;
+        case 'abc':
+          urls = await extractUrlsFromABC(source.url);
+          break;
+        case 'idealista':
+          urls = await extractUrlsFromIdealista(source.url);
           break;
         default:
           console.log(`⚠️  Tipo de fuente no soportado: ${source.type}`);
