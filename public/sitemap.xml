@@ -2,69 +2,93 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://caserook.com/</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://caserook.com/map</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://caserook.com/opiniones</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://caserook.com/blog</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://caserook.com/add-review</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://caserook.com/aviso-legal</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://caserook.com/politica-privacidad</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://caserook.com/cookies</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://caserook.com/condiciones-uso</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://caserook.com/buenas-practicas</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
   <url>
     <loc>https://caserook.com/terminosycondiciones</loc>
-    <lastmod>2025-10-17</lastmod>
+    <lastmod>2025-10-18</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
+  </url>
+  <url>
+    <loc>https://caserook.com/blog/alquiler-en-espana-como-proteger-tus-derechos-y-ahorrar-hoy</loc>
+    <lastmod>2025-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://caserook.com/blog/alquiler-protegido-una-esperanza-para-inquilinos-vulnerables</loc>
+    <lastmod>2025-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://caserook.com/blog/herencias-millonarias-y-alquiler-que-debes-saber-para-protegerte</loc>
+    <lastmod>2025-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://caserook.com/blog/vivienda-y-justicia-social-lo-que-el-ecopopulismo-britanico-ensena-a-inquilinos</loc>
+    <lastmod>2025-10-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
   <url>
     <loc>https://caserook.com/blog/378-pisos-asequibles-en-madrid-una-oportunidad-para-inquilinos-vulnerables</loc>
