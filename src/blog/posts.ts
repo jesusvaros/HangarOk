@@ -114,64 +114,68 @@ import post97 from './posts/la-crisis-del-alquiler-en-espana-jovenes-enfrentan-u
 import post98 from './posts/la-crisis-del-alquiler-en-espana-por-que-los-jovenes-estan-durmiendo-en-la-calle.js';
 import post99 from './posts/la-donacion-de-viviendas-una-alternativa-creciente-para-que-los-jovenes-accedan-.js';
 import post100 from './posts/luz-para-inquilinos-como-la-vivienda-publica-puede-protegerte-hoy.js';
-import post101 from './posts/mairena-del-aljarafe-cuando-y-como-proteger-tu-alquiler.js';
-import post102 from './posts/mas-viviendas-asequibles-una-luz-para-inquilinos-vulnerables.js';
-import post103 from './posts/mascotas-y-alquiler-como-proteger-tus-derechos-y-ahorrar-en-vivienda.js';
-import post104 from './posts/novedades-en-la-ley-de-arrendamientos-urbanos-que-implica-alquilar-sin-contrato-.js';
-import post105 from './posts/nueva-empresa-estatal-una-luz-para-inquilinos-vulnerables-en-2026.js';
-import post106 from './posts/nueva-ley-de-alquileres-en-espana-seguridad-para-inquilinos-ante-la-no-renovacio.js';
-import post107 from './posts/nueva-ley-de-vivienda-en-espana-que-significa-para-los-inquilinos-y-propietarios.js';
-import post108 from './posts/nueva-vida-para-carabanchel-esperanza-para-inquilinos-vulnerables.js';
-import post109 from './posts/nuevas-deducciones-irpf-2026-alivio-para-inquilinos-vulnerables.js';
-import post110 from './posts/nuevas-obligaciones-para-propietarios-en-alquileres-tras-la-venta-de-viviendas-e.js';
-import post111 from './posts/nuevas-viviendas-en-sevilla-una-esperanza-real-para-inquilinos-vulnerables.js';
-import post112 from './posts/nuevo-decreto-para-proteger-inquilinos-lo-que-debes-saber.js';
-import post113 from './posts/nuevos-pisos-en-cataluna-que-significa-para-inquilinos-vulnerables.js';
-import post114 from './posts/oferta-de-alquiler-cae-50-como-proteger-tus-derechos-y-ahorrar.js';
-import post115 from './posts/okupan-tu-casa-guia-para-proteger-tus-derechos-y-tu-bolsillo.js';
-import post116 from './posts/palma-limita-alquiler-turistico-que-significa-para-inquilinos-vulnerables.js';
-import post117 from './posts/pisos-turisticos-en-tu-comunidad-protege-tu-hogar-y-tu-bolsillo.js';
-import post118 from './posts/plan-vivienda-castilla-la-mancha-oportunidad-para-inquilinos-vulnerables.js';
-import post119 from './posts/por-que-sube-tanto-el-precio-de-la-vivienda-y-como-protegerte.js';
-import post120 from './posts/por-que-tardan-anos-en-entregarte-la-vivienda-claves-para-inquilinos.js';
-import post121 from './posts/precios-al-alza-en-sevilla-guia-para-inquilinos-en-apuros.js';
-import post122 from './posts/protege-tu-alquiler-claves-para-inquilinos-en-crisis-de-vivienda.js';
-import post123 from './posts/protege-tu-alquiler-nuevas-medidas-para-inquilinos-vulnerables.js';
-import post124 from './posts/protege-tu-alquiler-y-ahorra-consejos-para-inquilinos-vulnerables.js';
-import post125 from './posts/protege-tu-hogar-derechos-y-consejos-para-inquilinos-vulnerables.js';
-import post126 from './posts/protege-tu-hogar-que-hacer-tras-un-incendio-por-rayo-en-alquiler.js';
-import post127 from './posts/psoe-lidera-intencion-de-voto-que-significa-para-inquilinos-vulnerables.js';
-import post128 from './posts/puede-prohibirse-comprar-pisos-para-especular-protege-tu-alquiler.js';
-import post129 from './posts/que-significa-el-plan-de-illa-para-los-inquilinos-vulnerables.js';
-import post130 from './posts/que-significa-la-caida-de-la-compra-de-casas-para-ti-como-inquilino.js';
-import post131 from './posts/quien-paga-la-tasa-de-basuras-en-alquiler-guia-para-inquilinos.js';
-import post132 from './posts/reformas-en-casa-como-ahorrar-y-proteger-tus-derechos-como-inquilino.js';
-import post133 from './posts/ruido-en-comunidades-de-vecinos-derechos-y-obligaciones-segun-la-ley-de-propieda.js';
-import post134 from './posts/sabes-que-aun-no-multan-a-inmobiliarias-por-subir-alquileres-protege-tu-hogar.js';
-import post135 from './posts/seguro-de-alquiler-protege-tu-vivienda-y-tus-derechos-hoy.js';
-import post136 from './posts/sube-el-alquiler-como-proteger-tu-bolsillo-y-tus-derechos-hoy.js';
-import post137 from './posts/subida-del-precio-en-sevilla-como-proteger-tu-alquiler-hoy.js';
-import post138 from './posts/telefono-047-tu-nueva-herramienta-para-defender-tus-derechos-como-inquilino.js';
-import post139 from './posts/transformar-edificios-en-desuso-una-oportunidad-para-inquilinos-vulnerables.js';
-import post140 from './posts/tu-derecho-a-la-vivienda-como-protegerte-y-ahorrar-ante-la-crisis-del-alquiler.js';
-import post141 from './posts/vecinos-contra-pisos-turisticos-protege-tu-hogar-y-tu-bolsillo.js';
-import post142 from './posts/vivienda-en-andalucia-que-significa-para-ti-como-inquilino.js';
-import post143 from './posts/vivienda-propia-guia-para-inquilinos-que-luchan-con-el-alquiler.js';
-import post144 from './posts/vivienda-protegida-en-andalucia-que-significa-para-inquilinos-vulnerables.js';
-import post145 from './posts/vivienda-protegida-en-andalucia-que-significa-para-ti-como-inquilino.js';
-import post146 from './posts/vivienda-protegida-una-esperanza-real-para-inquilinos-vulnerables.js';
-import post147 from './posts/vivienda-publica-clave-para-proteger-a-inquilinos-vulnerables.js';
-import post148 from './posts/vivienda-publica-y-alquiler-claves-para-protegerte-y-ahorrar.js';
-import post149 from './posts/vivienda-publica-y-alquiler-protege-tus-derechos-y-ahorra-hoy.js';
-import post150 from './posts/vivienda-rural-una-oportunidad-para-inquilinos-que-sufren-alquileres-altos.js';
-import post151 from './posts/vivienda-y-alquiler-como-proteger-tus-derechos-y-ahorrar-en-tiempos-dificiles.js';
-import post152 from './posts/vivienda-y-alquiler-como-proteger-tus-derechos-y-ahorrar-hoy.js';
-import post153 from './posts/vivienda-y-alquiler-derechos-y-consejos-para-inquilinos-vulnerables.js';
-import post154 from './posts/vivienda-y-justicia-social-lo-que-el-ecopopulismo-britanico-ensena-a-inquilinos.js';
-import post155 from './posts/viviendas-protegidas-caras-como-afecta-al-inquilino-vulnerable.js';
-import post156 from './posts/viviendas-protegidas-caras-que-significa-para-inquilinos-vulnerables.js';
-import post157 from './posts/viviendo-con-dignidad-derechos-y-proteccion-para-inquilinos-vulnerables.js';
-import post158 from './posts/vivir-con-menos-puede-una-casa-prefabricada-ser-tu-solucion.js';
+import post101 from './posts/madrid-sortea-378-viviendas-asequibles-una-oportunidad-para-inquilinos-vulnerabl.js';
+import post102 from './posts/mairena-del-aljarafe-cuando-y-como-proteger-tu-alquiler.js';
+import post103 from './posts/mas-viviendas-asequibles-una-luz-para-inquilinos-vulnerables.js';
+import post104 from './posts/mascotas-y-alquiler-como-proteger-tus-derechos-y-ahorrar-en-vivienda.js';
+import post105 from './posts/novedades-en-la-ley-de-arrendamientos-urbanos-que-implica-alquilar-sin-contrato-.js';
+import post106 from './posts/nueva-empresa-estatal-una-luz-para-inquilinos-vulnerables-en-2026.js';
+import post107 from './posts/nueva-ley-de-alquileres-en-espana-seguridad-para-inquilinos-ante-la-no-renovacio.js';
+import post108 from './posts/nueva-ley-de-vivienda-en-espana-que-significa-para-los-inquilinos-y-propietarios.js';
+import post109 from './posts/nueva-vida-para-carabanchel-esperanza-para-inquilinos-vulnerables.js';
+import post110 from './posts/nuevas-deducciones-irpf-2026-alivio-para-inquilinos-vulnerables.js';
+import post111 from './posts/nuevas-obligaciones-para-propietarios-en-alquileres-tras-la-venta-de-viviendas-e.js';
+import post112 from './posts/nuevas-viviendas-en-sevilla-una-esperanza-real-para-inquilinos-vulnerables.js';
+import post113 from './posts/nuevo-decreto-para-proteger-inquilinos-lo-que-debes-saber.js';
+import post114 from './posts/nuevos-pisos-en-cataluna-que-significa-para-inquilinos-vulnerables.js';
+import post115 from './posts/oferta-de-alquiler-cae-50-como-proteger-tus-derechos-y-ahorrar.js';
+import post116 from './posts/okupan-tu-casa-guia-para-proteger-tus-derechos-y-tu-bolsillo.js';
+import post117 from './posts/palma-limita-alquiler-turistico-que-significa-para-inquilinos-vulnerables.js';
+import post118 from './posts/pisos-turisticos-en-tu-comunidad-protege-tu-hogar-y-tu-bolsillo.js';
+import post119 from './posts/plan-vivienda-castilla-la-mancha-oportunidad-para-inquilinos-vulnerables.js';
+import post120 from './posts/por-que-la-vivienda-puede-bajar-y-como-protegerte-como-inquilino.js';
+import post121 from './posts/por-que-sube-tanto-el-precio-de-la-vivienda-y-como-protegerte.js';
+import post122 from './posts/por-que-tardan-anos-en-entregarte-la-vivienda-claves-para-inquilinos.js';
+import post123 from './posts/precios-al-alza-en-sevilla-guia-para-inquilinos-en-apuros.js';
+import post124 from './posts/protege-tu-alquiler-claves-para-inquilinos-en-crisis-de-vivienda.js';
+import post125 from './posts/protege-tu-alquiler-nuevas-medidas-para-inquilinos-vulnerables.js';
+import post126 from './posts/protege-tu-alquiler-y-ahorra-consejos-para-inquilinos-vulnerables.js';
+import post127 from './posts/protege-tu-hogar-derechos-y-consejos-para-inquilinos-vulnerables.js';
+import post128 from './posts/protege-tu-hogar-que-hacer-tras-un-incendio-por-rayo-en-alquiler.js';
+import post129 from './posts/psoe-lidera-intencion-de-voto-que-significa-para-inquilinos-vulnerables.js';
+import post130 from './posts/puede-prohibirse-comprar-pisos-para-especular-protege-tu-alquiler.js';
+import post131 from './posts/que-significa-el-plan-de-illa-para-los-inquilinos-vulnerables.js';
+import post132 from './posts/que-significa-la-caida-de-la-compra-de-casas-para-ti-como-inquilino.js';
+import post133 from './posts/quien-paga-la-tasa-de-basuras-en-alquiler-guia-para-inquilinos.js';
+import post134 from './posts/reformas-en-casa-como-ahorrar-y-proteger-tus-derechos-como-inquilino.js';
+import post135 from './posts/ruido-en-comunidades-de-vecinos-derechos-y-obligaciones-segun-la-ley-de-propieda.js';
+import post136 from './posts/sabes-que-aun-no-multan-a-inmobiliarias-por-subir-alquileres-protege-tu-hogar.js';
+import post137 from './posts/seguridad-en-casa-protege-tu-vivienda-y-tus-derechos-como-inquilino.js';
+import post138 from './posts/seguro-de-alquiler-protege-tu-vivienda-y-tus-derechos-hoy.js';
+import post139 from './posts/sube-el-alquiler-como-proteger-tu-bolsillo-y-tus-derechos-hoy.js';
+import post140 from './posts/subida-del-precio-en-sevilla-como-proteger-tu-alquiler-hoy.js';
+import post141 from './posts/telefono-047-tu-nueva-herramienta-para-defender-tus-derechos-como-inquilino.js';
+import post142 from './posts/transformar-edificios-en-desuso-una-oportunidad-para-inquilinos-vulnerables.js';
+import post143 from './posts/tu-derecho-a-la-vivienda-como-protegerte-y-ahorrar-ante-la-crisis-del-alquiler.js';
+import post144 from './posts/vecinos-contra-pisos-turisticos-protege-tu-hogar-y-tu-bolsillo.js';
+import post145 from './posts/vivienda-en-andalucia-que-significa-para-ti-como-inquilino.js';
+import post146 from './posts/vivienda-propia-guia-para-inquilinos-que-luchan-con-el-alquiler.js';
+import post147 from './posts/vivienda-protegida-en-andalucia-que-significa-para-inquilinos-vulnerables.js';
+import post148 from './posts/vivienda-protegida-en-andalucia-que-significa-para-ti-como-inquilino.js';
+import post149 from './posts/vivienda-protegida-una-esperanza-real-para-inquilinos-vulnerables.js';
+import post150 from './posts/vivienda-publica-clave-para-proteger-a-inquilinos-vulnerables.js';
+import post151 from './posts/vivienda-publica-y-alquiler-claves-para-protegerte-y-ahorrar.js';
+import post152 from './posts/vivienda-publica-y-alquiler-protege-tus-derechos-y-ahorra-hoy.js';
+import post153 from './posts/vivienda-rural-una-oportunidad-para-inquilinos-que-sufren-alquileres-altos.js';
+import post154 from './posts/vivienda-y-alquiler-como-proteger-tus-derechos-y-ahorrar-en-tiempos-dificiles.js';
+import post155 from './posts/vivienda-y-alquiler-como-proteger-tus-derechos-y-ahorrar-hoy.js';
+import post156 from './posts/vivienda-y-alquiler-derechos-y-consejos-para-inquilinos-vulnerables.js';
+import post157 from './posts/vivienda-y-justicia-social-lo-que-el-ecopopulismo-britanico-ensena-a-inquilinos.js';
+import post158 from './posts/viviendas-protegidas-caras-como-afecta-al-inquilino-vulnerable.js';
+import post159 from './posts/viviendas-protegidas-caras-que-significa-para-inquilinos-vulnerables.js';
+import post160 from './posts/viviendo-con-dignidad-derechos-y-proteccion-para-inquilinos-vulnerables.js';
+import post161 from './posts/vivir-con-menos-puede-una-casa-prefabricada-ser-tu-solucion.js';
+import post162 from './posts/vivir-en-barcelona-claves-para-protegerte-y-ahorrar-en-tu-alquiler.js';
 
 const rawPosts: StaticBlogPost[] = [
   post1,
@@ -332,6 +336,10 @@ const rawPosts: StaticBlogPost[] = [
   post156,
   post157,
   post158,
+  post159,
+  post160,
+  post161,
+  post162,
 ];
 
 export const blogPosts = [...rawPosts].sort((a, b) => (a.publishedAt > b.publishedAt ? -1 : 1));
