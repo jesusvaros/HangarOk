@@ -1,7 +1,5 @@
 import React from 'react';
-import Slider from '@mui/material/Slider';
 import { useFormContext } from '../../store/useFormContext';
-import CustomInput from '../ui/CustomInput';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
 import { umamiEventProps } from '../../utils/analytics';
 
@@ -21,207 +19,117 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
   isSubmitting,
 }) => {
   const { formData, updateFormData } = useFormContext();
-  
+
+  const tagOptions = [
+    { value: 'blends_in', label: '✅ Blends in fine' },
+    { value: 'out_of_place', label: '🤔 Looks a bit out of place' },
+    { value: 'takes_space', label: '🚗 Takes space from parked cars' },
+    { value: 'people_moan', label: '😤 People moan about it' },
+    { value: 'cyclists_unwelcome', label: '🚴 Cyclists don\'t feel welcome here' },
+    { value: 'more_like_this', label: '👍 Should be more like this' },
+    { value: 'people_mock', label: '😂 People laugh or mock it' },
+  ];
+
 
   return (
-    <div>
-      <div className="mb-8">
-        {/* Rango de años con dos manejadores */}
-        <div className="mb-6">
-          {(() => {
-            const currentYear = new Date().getFullYear();
-            const minYear = currentYear - 20;
-            const maxYear = currentYear;
-
-            // Normaliza valores por si vienen fuera de rango
-            const start = Math.min(
-              Math.max(formData.startYear ?? maxYear, minYear),
-              maxYear
-            );
-            const endRaw = Math.min(
-              Math.max((formData.endYear ?? maxYear), minYear),
-              maxYear
-            );
-            const isLiving = formData.endYear === undefined;
-            const endForUI = isLiving ? maxYear : endRaw;
-
-            
-
-            return (
-              <div>
-                <label className="mb-2 block text-lg font-medium text-black">
-                  ¿Cuántos años has estado en este piso?
-                </label>
-                <div className="relative pt-6 pb-6 select-none mx-8">
-                  <Slider
-                    value={[start, endForUI]}
-                    min={minYear}
-                    max={maxYear}
-                    step={1}
-                    disableSwap
-                    onChange={(_e: Event, val: number | number[], activeThumb: number) => {
-                      const [s, e] = val as number[];
-                      if (activeThumb === 0) {
-                        // mover inicio, no superar fin
-                        const newStart = Math.min(s, isLiving ? endForUI : endRaw);
-                        if (!isLiving && newStart > endRaw) {
-                          updateFormData({ startYear: newStart, endYear: newStart });
-                        } else {
-                          updateFormData({ startYear: newStart });
-                        }
-                      } else if (activeThumb === 1) {
-                        if (isLiving) return; // no mover fin cuando vive actualmente
-                        const newEnd = Math.max(e, start);
-                        updateFormData({ endYear: newEnd });
-                      }
-                    }}
-                    valueLabelDisplay="on"
-                    valueLabelFormat={(v: number) => `${v}`}
-                    sx={{
-                      pointerEvents: 'none',
-                      color: 'rgb(74,94,50)',
-                      height: 10,
-                      '& .MuiSlider-rail': { backgroundColor: '#D1D5DB', opacity: 1, pointerEvents: 'none' },
-                      '& .MuiSlider-track': { border: 'none', pointerEvents: 'none' },
-                      '& .MuiSlider-thumb': {
-                        pointerEvents: 'auto',
-                        bgcolor: '#fff',
-                        border: '1px solid #D1D5DB',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                        width: 56,
-                        height: 32,
-                        borderRadius: 8,
-                        '&:hover, &.Mui-focusVisible': { boxShadow: '0 0 0 8px rgba(74,94,50,0.08)' },
-                      },
-                      '& .MuiSlider-valueLabel': {
-                        background: '#fff',
-                        color: '#000',
-                        border: '1px solid #D1D5DB',
-                        borderRadius: 8,
-                        top: '110%',
-                        left: '-10%',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                        padding: '6px 10px',
-                        fontSize: '1.125rem',
-                        fontWeight: 500,
-                        '&:before': { display: 'none' },
-                        pointerEvents: 'none',
-                      },
-                    }}
-                  />
-                </div>
-                {(fieldErrors?.startYear || fieldErrors?.endYear) && (
-                  <p className="mt-2 text-sm text-red-600">Revisa el período seleccionado.</p>
-                )}
-
-                {/* Aún vivo aquí + Fianza (en fila en desktop) */}
-                <div className="mt-3 md:flex md:items-start md:gap-6">
-                  <div className="md:flex-1">
-                    <SelectableTagGroup
-                      label="¿Aún vives en el piso?"
-                      options={['Sí', 'No']}
-                      selectedOptions={[isLiving ? 'Sí' : 'No']}
-                      onChange={(selected) => {
-                        const choice = selected[0];
-                        if (choice === 'Sí') {
-                          // Volvemos a 'vive aquí': fin indefinido y limpiamos respuesta de fianza
-                          updateFormData({ endYear: undefined, depositReturned: undefined });
-                        } else if (choice === 'No') {
-                          // Cambia a 'No': fijar fin si no había
-                          updateFormData({ endYear: endRaw || maxYear });
-                        }
-                      }}
-                      multiSelect={false}
-                    />
-                  </div>
-
-                  {/* Caja deslizante de fianza cuando NO vive */}
-                  <div
-                    className={`md:flex-1 transition-all duration-300 ease-in origin-right ${
-                      isLiving
-                        ? 'max-h-0 md:max-h-0 opacity-0 md:opacity-0 translate-x-2 md:translate-x-2 pointer-events-none'
-                        : 'max-h-40 md:max-h-none opacity-100 translate-x-0'
-                    }`}
-                  >
-                    {!isLiving && (
-                        <SelectableTagGroup
-                          label="¿Te devolvieron la fianza?"
-                          options={['Sí', 'No']}
-                          selectedOptions={
-                            formData.depositReturned === true
-                              ? ['Sí']
-                              : formData.depositReturned === false
-                                ? ['No']
-                                : []
-                          }
-                          onChange={(selected) => {
-                            const choice = selected[0] as 'Sí' | 'No' | undefined;
-                            const value = choice === 'Sí' ? true : choice === 'No' ? false : undefined;
-                            updateFormData({ depositReturned: value });
-                          }}
-                          multiSelect={false}
-                        />
-                    )}
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
-        </div>
+    <div className="w-full space-y-8">
+      {/* Title */}
+      <div>
+        <h2 className="text-2xl font-semibold text-[rgb(74,94,50)]">
+          Does it feel like it belongs here?
+        </h2>
       </div>
 
-      {/* Sección: Precio del alquiler */}
-      <div className="mb-8">
-        <CustomInput
-          id="price"
-          label="Cuanto pagas al mes de alquiler?(€)"
-          type="number"
-          value={formData.price || ''}
-          onChange={e => updateFormData({ price: parseFloat(e.target.value) || 0 })}
-          placeholder="Ej: 800"
-          error={fieldErrors?.monthlyPrice}
-        />
-
-        <div className="mt-6">
-          <SelectableTagGroup
-            label="Incluye:"
-            options={['Luz', 'Agua', 'Comunidad', 'Gas', 'Garaje']}
-            selectedOptions={formData.includedServices || []}
-            onChange={selected => updateFormData({ includedServices: selected })}
-            multiSelect={true}
-          />
-        </div>
-      </div>
-
-      {/* Sección: ¿Recomendarías este piso? (1-5, no numérico) */}
-      <div className="mb-8">
+      {/* Question 1: How well does this hangar belong here? */}
+      <div>
         <SelectableTagGroup
-          label="¿Recomendarías este piso?"
+          label="How well does this hangar belong here?"
           options={['1', '2', '3', '4', '5']}
-          selectedOptions={formData.wouldRecommend ? [formData.wouldRecommend] : []}
-          onChange={(selected) => updateFormData({ wouldRecommend: (selected[0] as '1'|'2'|'3'|'4'|'5'|undefined) })}
+          selectedOptions={formData.belongsRating ? [String(formData.belongsRating)] : []}
+          onChange={(selected) => updateFormData({ belongsRating: Number(selected[0]) as 1|2|3|4|5 })}
           multiSelect={false}
-          error={fieldErrors?.wouldRecommend}
+          error={fieldErrors?.belongsRating}
         />
       </div>
 
-      <div className="mt-4 flex justify-between">
+      {/* Question 2: Is it a fair use of space on this street? */}
+      <div>
+        <SelectableTagGroup
+          label="Is it a fair use of space on this street?"
+          options={['1', '2', '3', '4', '5']}
+          selectedOptions={formData.fairUseRating ? [String(formData.fairUseRating)] : []}
+          onChange={(selected) => updateFormData({ fairUseRating: Number(selected[0]) as 1|2|3|4|5 })}
+          multiSelect={false}
+          error={fieldErrors?.fairUseRating}
+        />
+      </div>
+
+      {/* Question 3: How does it look on your street? */}
+      <div>
+        <SelectableTagGroup
+          label="How does it look on your street?"
+          options={['1', '2', '3', '4', '5']}
+          selectedOptions={formData.appearanceRating ? [String(formData.appearanceRating)] : []}
+          onChange={(selected) => updateFormData({ appearanceRating: Number(selected[0]) as 1|2|3|4|5 })}
+          multiSelect={false}
+          error={fieldErrors?.appearanceRating}
+        />
+      </div>
+
+      {/* Quick-select tags */}
+      <div>
+        <SelectableTagGroup
+          label="Select all that apply"
+          options={tagOptions.map(t => t.label)}
+          selectedOptions={(formData.perceptionTags || []).map(value => {
+            const option = tagOptions.find(t => t.value === value);
+            return option ? option.label : value;
+          })}
+          onChange={(selectedLabels) => {
+            const selectedValues = selectedLabels.map(label => {
+              const option = tagOptions.find(t => t.label === label);
+              return option ? option.value : label;
+            });
+            updateFormData({ perceptionTags: selectedValues });
+          }}
+          multiSelect={true}
+        />
+      </div>
+
+      {/* Optional: What do people around here say about it? */}
+      <div>
+        <label htmlFor="communityFeedback" className="mb-2 block text-lg font-medium text-gray-800">
+          What do people around here say about it? <span className="text-sm text-gray-500">(Optional)</span>
+        </label>
+        <textarea
+          id="communityFeedback"
+          value={formData.communityFeedback || ''}
+          onChange={(e) => updateFormData({ communityFeedback: e.target.value })}
+          placeholder="Share what you've heard from neighbors, cyclists, or people on your street..."
+          rows={4}
+          className="w-full rounded-lg border border-gray-300 p-3 focus:border-[rgb(74,94,50)] focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)] focus:ring-opacity-20"
+          {...umamiEventProps('review:step2-feedback')}
+        />
+      </div>
+
+      {/* Navigation buttons */}
+      <div className="flex justify-between">
         <button
           type="button"
           onClick={onPrevious}
           className="text-black hover:text-gray-800"
           {...umamiEventProps('review:step2-previous')}
         >
-          Anterior
+          Previous
         </button>
         <button
           type="button"
           onClick={onNext}
           disabled={isSubmitting}
-          className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)]"
+          className="rounded bg-[rgb(74,94,50)] px-6 py-2 text-white hover:bg-[rgb(60,76,40)] disabled:opacity-50"
           {...umamiEventProps('review:step2-next')}
         >
-          {isSubmitting ? 'Enviando...' : 'Siguiente'}
+          {isSubmitting ? 'Saving...' : 'Next'}
         </button>
       </div>
     </div>

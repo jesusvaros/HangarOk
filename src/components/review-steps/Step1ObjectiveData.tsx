@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import AddressAutocomplete, { type AddressResult } from '../ui/AddressAutocomplete';
 import LocationMap from '../ui/LocationMap';
+import SelectableTagGroup from '../ui/SelectableTagGroup';
 import { useMapLocationHandler } from './location/mapLocationHandler';
 import { geocodingService } from '../ui/address/geocodingService';
 import type { FormDataType } from '../../store/formTypes';
@@ -81,12 +82,12 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
     <div className="w-full space-y-8">
       {/* Section 1: Hangar Location */}
       <div>
-        <h2 className="mb-2 text-2xl font-semibold text-[rgb(74,94,50)]">
-          Where's the hangar (or where do you wish you could park)?
-        </h2>
-        <p className="mb-4 text-sm text-gray-600">
-          Search for street or hangar number, then pick it on the map
+        <h2 className="mb-4 text-2xl font-semibold text-[rgb(74,94,50)] flex items-center">
+          Where's the hangar   <p className="mt-1 text-sm text-gray-600 ml-2">
+         (or where do you wish you could park)?
         </p>
+        </h2>
+       
         
         <AddressAutocomplete
           value={hangarLocation?.street || ''}
@@ -111,104 +112,79 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
 
       {/* Section 2: Do you use this hangar? */}
       <div>
-        <h3 className="mb-3 text-lg font-semibold text-gray-800">
-          Do you use this hangar right now?
-        </h3>
-        <div className="space-y-2">
-          <label className="flex cursor-pointer items-center rounded-lg border-2 border-gray-200 p-4 transition-all hover:border-[rgb(74,94,50)] hover:bg-green-50">
-            <input
-              type="radio"
-              name="usesHangar"
-              checked={formData.usesHangar === true}
-              onChange={() => updateFormData({ usesHangar: true })}
-              className="mr-3 h-5 w-5 text-[rgb(74,94,50)] focus:ring-[rgb(74,94,50)]"
-              {...umamiEventProps('review:step1-uses-hangar-yes')}
-            />
-            <span className="font-medium">✅ Yes — I have a space</span>
-          </label>
-          
-          <label className="flex cursor-pointer items-center rounded-lg border-2 border-gray-200 p-4 transition-all hover:border-[rgb(74,94,50)] hover:bg-green-50">
-            <input
-              type="radio"
-              name="usesHangar"
-              checked={formData.usesHangar === false}
-              onChange={() => updateFormData({ usesHangar: false })}
-              className="mr-3 h-5 w-5 text-[rgb(74,94,50)] focus:ring-[rgb(74,94,50)]"
-              {...umamiEventProps('review:step1-uses-hangar-no')}
-            />
-            <span className="font-medium">❌ No — Not yet / Waiting / Nearby rider</span>
-          </label>
-        </div>
-        {fieldErrors?.usesHangar && (
-          <p className="mt-2 text-sm text-red-600">Please select an option</p>
-        )}
+        <SelectableTagGroup
+          label="Do you use this hangar right now?"
+          options={['✅ Yes — I have a space', '❌ No — Not yet / Waiting / Nearby rider']}
+          selectedOptions={
+            formData.usesHangar === true
+              ? ['✅ Yes — I have a space']
+              : formData.usesHangar === false
+              ? ['❌ No — Not yet / Waiting / Nearby rider']
+              : []
+          }
+          onChange={(selected) => {
+            const value = selected[0] === '✅ Yes — I have a space' ? true : false;
+            updateFormData({ usesHangar: value });
+          }}
+          multiSelect={false}
+          error={fieldErrors?.usesHangar}
+        />
       </div>
 
       {/* Section 3: Your home type */}
       <div>
-        <h3 className="mb-3 text-lg font-semibold text-gray-800">
-          Where do you live?
-        </h3>
-        <div className="grid grid-cols-2 gap-2">
-          {[
-            { value: 'flat', label: 'Flat' },
-            { value: 'house', label: 'House' },
-            { value: 'shared', label: 'Shared housing' },
-            { value: 'other', label: 'Something else' },
-          ].map(option => (
-            <label
-              key={option.value}
-              className="flex cursor-pointer items-center rounded-lg border-2 border-gray-200 p-3 transition-all hover:border-[rgb(74,94,50)] hover:bg-green-50"
-            >
-              <input
-                type="radio"
-                name="homeType"
-                value={option.value}
-                checked={formData.homeType === option.value}
-                onChange={e => updateFormData({ homeType: e.target.value as FormDataType['homeType'] })}
-                className="mr-2 h-4 w-4 text-[rgb(74,94,50)] focus:ring-[rgb(74,94,50)]"
-              />
-              <span className="text-sm font-medium">{option.label}</span>
-            </label>
-          ))}
-        </div>
-        {fieldErrors?.homeType && (
-          <p className="mt-2 text-sm text-red-600">Please select your home type</p>
-        )}
+        <SelectableTagGroup
+          label="Where do you live?"
+          options={['Flat', 'House', 'Shared housing', 'Something else']}
+          selectedOptions={
+            formData.homeType === 'flat'
+              ? ['Flat']
+              : formData.homeType === 'house'
+              ? ['House']
+              : formData.homeType === 'shared'
+              ? ['Shared housing']
+              : formData.homeType === 'other'
+              ? ['Something else']
+              : []
+          }
+          onChange={(selected) => {
+            const value = 
+              selected[0] === 'Flat' ? 'flat' :
+              selected[0] === 'House' ? 'house' :
+              selected[0] === 'Shared housing' ? 'shared' : 'other';
+            updateFormData({ homeType: value as FormDataType['homeType'] });
+          }}
+          multiSelect={false}
+          error={fieldErrors?.homeType}
+        />
       </div>
 
       {/* Section 4: Your connection to this hangar */}
       <div>
-        <h3 className="mb-3 text-lg font-semibold text-gray-800">
-          How do you use this hangar?
-        </h3>
-        <div className="space-y-2">
-          {[
-            { value: 'rent_space', label: 'I rent a space' },
-            { value: 'used_to', label: 'I used to' },
-            { value: 'live_near', label: 'I live near it' },
-            { value: 'park_sometimes', label: 'I park here sometimes' },
-          ].map(option => (
-            <label
-              key={option.value}
-              className="flex cursor-pointer items-center rounded-lg border-2 border-gray-200 p-4 transition-all hover:border-[rgb(74,94,50)] hover:bg-green-50"
-            >
-              <input
-                type="radio"
-                name="connectionType"
-                value={option.value}
-                checked={formData.connectionType === option.value}
-                onChange={e => updateFormData({ connectionType: e.target.value as FormDataType['connectionType'] })}
-                className="mr-3 h-5 w-5 text-[rgb(74,94,50)] focus:ring-[rgb(74,94,50)]"
-                {...umamiEventProps(`review:step1-connection-${option.value}`)}
-              />
-              <span className="font-medium">{option.label}</span>
-            </label>
-          ))}
-        </div>
-        {fieldErrors?.connectionType && (
-          <p className="mt-2 text-sm text-red-600">Please select how you use this hangar</p>
-        )}
+        <SelectableTagGroup
+          label="How do you use this hangar?"
+          options={['I rent a space', 'I used to', 'I live near it', 'I park here sometimes']}
+          selectedOptions={
+            formData.connectionType === 'rent_space'
+              ? ['I rent a space']
+              : formData.connectionType === 'used_to'
+              ? ['I used to']
+              : formData.connectionType === 'live_near'
+              ? ['I live near it']
+              : formData.connectionType === 'park_sometimes'
+              ? ['I park here sometimes']
+              : []
+          }
+          onChange={(selected) => {
+            const value = 
+              selected[0] === 'I rent a space' ? 'rent_space' :
+              selected[0] === 'I used to' ? 'used_to' :
+              selected[0] === 'I live near it' ? 'live_near' : 'park_sometimes';
+            updateFormData({ connectionType: value as FormDataType['connectionType'] });
+          }}
+          multiSelect={false}
+          error={fieldErrors?.connectionType}
+        />
       </div>
 
 

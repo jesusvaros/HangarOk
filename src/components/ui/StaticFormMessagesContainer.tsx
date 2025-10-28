@@ -28,10 +28,9 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
       case 2:
         return [
           {
-            id: 'step2-rental',
-            title: 'Período de Alquiler',
-            message:
-              'Indica el período en el que has vivido o estás viviendo en la propiedad para contextualizar tu opinión.',
+            id: 'step2-honest',
+            title: "Be honest — every answer helps improve your street 🌱",
+            message: '',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
             icon: undefined,

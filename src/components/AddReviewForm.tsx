@@ -14,7 +14,7 @@ import { getSessionIdBack, initializeSession } from '../services/sessionManager'
 import { validateAndSubmitStep } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
 import { getAddressStep1Data } from '../services/supabase/GetSubmitStep1';
-import { getSessionStep2Data } from '../services/supabase/GetSubmitStep2';
+import { getHangarStep2Data } from '../services/supabase/GetSubmitStep2';
 import { getSessionStep3Data } from '../services/supabase/GetSubmitStep3';
 import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
 import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
@@ -75,7 +75,7 @@ const AddReviewForm: React.FC = () => {
 
   const errorsDefault = {
     1: { fields: { hangarLocation: false, usesHangar: false, homeType: false, connectionType: false } },
-    2: { fields: { startDate: false, endDate: false, monthlyPrice: false } },
+    2: { fields: { belongsRating: false, fairUseRating: false, appearanceRating: false } },
     3: {
       fields: {
         summerTemperature: false,
@@ -109,16 +109,18 @@ const AddReviewForm: React.FC = () => {
 
   //fetch step 2 data
   const fetchStep2Data = useCallback(async () => {
-    const estanciaData = await getSessionStep2Data();
+    const sessionId = await getSessionIdBack();
+    if (!sessionId) return;
+    
+    const hangarData = await getHangarStep2Data(sessionId);
 
-    if (estanciaData) {
+    if (hangarData) {
       updateFormData({
-        startYear: estanciaData.start_year,
-        endYear: estanciaData.end_year,
-        price: estanciaData.price,
-        includedServices: estanciaData.included_services,
-        wouldRecommend: estanciaData.would_recommend,
-        depositReturned: estanciaData.deposit_returned === 'true',
+        belongsRating: hangarData.belongs_rating as 1|2|3|4|5,
+        fairUseRating: hangarData.fair_use_rating as 1|2|3|4|5,
+        appearanceRating: hangarData.appearance_rating as 1|2|3|4|5,
+        perceptionTags: hangarData.tags,
+        communityFeedback: hangarData.community_feedback || '',
       });
     }
   }, [updateFormData]);
@@ -292,7 +294,7 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
-  const steps = ['Location', 'Step 2', 'Step 3', 'Step 4', 'Step 5'];
+  const steps = ['Location', 'Community', 'Step 3', 'Step 4', 'Step 5'];
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const handleStepClick = async (step: number) => {

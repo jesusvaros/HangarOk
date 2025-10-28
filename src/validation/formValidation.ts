@@ -24,6 +24,13 @@ export interface FormContext {
   homeType?: FormDataType['homeType'];
   connectionType?: FormDataType['connectionType'];
   
+  // Step 2: Community Perception
+  belongsRating?: FormDataType['belongsRating'];
+  fairUseRating?: FormDataType['fairUseRating'];
+  appearanceRating?: FormDataType['appearanceRating'];
+  perceptionTags?: FormDataType['perceptionTags'];
+  communityFeedback?: FormDataType['communityFeedback'];
+  
   // Other steps will be added here as needed
   [key: string]: unknown;
 }

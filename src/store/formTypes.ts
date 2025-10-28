@@ -36,15 +36,12 @@ export type FormDataType = {
   homeType?: 'flat' | 'house' | 'shared' | 'other'; // Flat / House / Shared housing / Something else
   connectionType?: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes'; // How you use this hangar
 
-  // Step 2: Rental Period
-  startYear?: number;
-  endYear?: number | null;
-  price?: number;
-  includedServices?: string[];
-  // Would you recommend this flat? 1-5 stored as string tags
-  wouldRecommend?: '1' | '2' | '3' | '4' | '5';
-  // Deposit returned when tenant no longer lives there
-  depositReturned?: boolean;
+  // Step 2: Community Perception
+  belongsRating?: 1 | 2 | 3 | 4 | 5; // How well does this hangar belong here?
+  fairUseRating?: 1 | 2 | 3 | 4 | 5; // Is it a fair use of space on this street?
+  appearanceRating?: 1 | 2 | 3 | 4 | 5; // How does it look on your street?
+  perceptionTags?: string[]; // Quick-select tags
+  communityFeedback?: string; // What do people around here say about it?
 
   // Step 3: Property Condition
   summerTemperature?: 'Bien aislado' | 'Correcto' | 'Caluroso';
@@ -91,13 +88,12 @@ export const initialFormData: FormDataType = {
   homeType: undefined,
   connectionType: undefined,
 
-  // Step 2: Rental Period
-  price: undefined,
-  includedServices: [],
-  startYear: 2025,
-  endYear: undefined,
-  wouldRecommend: undefined,
-  depositReturned: undefined,
+  // Step 2: Community Perception
+  belongsRating: undefined,
+  fairUseRating: undefined,
+  appearanceRating: undefined,
+  perceptionTags: [],
+  communityFeedback: '',
 
   // Step 3: Property Condition
   summerTemperature: undefined,
