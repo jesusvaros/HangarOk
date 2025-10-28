@@ -1,6 +1,6 @@
 export const post = {
   slug: 'el-impacto-real-del-boom-hipotecario-en-el-alquiler-y-tus-derechos',
-  title: 'El impacto real del 'boom' hipotecario en el alquiler y tus derechos',
+  title: 'El impacto real del \'boom\' hipotecario en el alquiler y tus derechos',
   summary: 'Descubre cómo el aumento de hipotecas afecta tu alquiler y qué hacer para proteger tus derechos y ahorrar dinero.',
   publishedAt: '2025-10-24',
   heroImageUrl: '/images/blog/el-impacto-real-del-boom-hipotecario-en-el-alquiler-y-tus-derechos.jpg',
@@ -68,7 +68,7 @@ Ante la dificultad para comprar y el encarecimiento del alquiler, existen opcion
 
 ## Conclusión
 
-El "boom" hipotecario y el encarecimiento de la vivienda impactan directamente en los alquileres, afectando especialmente a los inquilinos vulnerables que dedican gran parte de sus ingresos a pagar el alquiler. Sin embargo, conocer tus derechos y actuar con información y apoyo puede marcar la diferencia para proteger tu vivienda y mejorar tu calidad de vida. No estás solo, existen recursos y alternativas para ayudarte a superar esta situación.
+El 'boom' hipotecario y el encarecimiento de la vivienda impactan directamente en los alquileres, afectando especialmente a los inquilinos vulnerables que dedican gran parte de sus ingresos a pagar el alquiler. Sin embargo, conocer tus derechos y actuar con información y apoyo puede marcar la diferencia para proteger tu vivienda y mejorar tu calidad de vida. No estás solo, existen recursos y alternativas para ayudarte a superar esta situación.
 
 Recuerda que la vivienda es un derecho, y defenderlo es clave para construir un futuro más justo y seguro para ti y tu familia.`,
 };
