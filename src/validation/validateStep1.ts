@@ -1,5 +1,5 @@
 import type { FormDataType } from '../store/formTypes';
-import { submitAddressStep1 } from '../services/supabase';
+import { submitAddressStep1 } from '../services/supabase/GetSubmitStep1';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -10,57 +10,70 @@ export interface ValidationResult {
 }
 
 export interface FormContext {
-  addressDetails?: FormDataType['addressDetails'];
+  hangarLocation?: FormDataType['hangarLocation'];
+  usesHangar?: FormDataType['usesHangar'];
+  homeType?: FormDataType['homeType'];
+  connectionType?: FormDataType['connectionType'];
 }
 
 export const validateStep1 = (context: FormContext): ValidationResult => {
-  const { addressDetails } = context;
-  const fieldErrors = { street: false, number: false };
+  const { hangarLocation, usesHangar, homeType, connectionType } = context;
+  const fieldErrors = { 
+    hangarLocation: false, 
+    usesHangar: false, 
+    homeType: false, 
+    connectionType: false 
+  };
 
-  if (!addressDetails) {
+  // Validate hangar location
+  if (!hangarLocation) {
     return {
       isValid: false,
-      message: 'No se ha proporcionado información de dirección',
-      fieldErrors,
+      message: 'Please provide the hangar location',
+      fieldErrors: { ...fieldErrors, hangarLocation: true },
     };
   }
 
-  if (!addressDetails.street || !addressDetails.street.trim()) {
+  if (!hangarLocation.street || !hangarLocation.street.trim()) {
     return {
       isValid: false,
-      message: 'La dirección es obligatoria',
-      fieldErrors: { ...fieldErrors, street: true },
+      message: 'The hangar street address is required',
+      fieldErrors: { ...fieldErrors, hangarLocation: true },
     };
   }
 
-  if (
-    !addressDetails.number &&
-    (!addressDetails.components?.house_number || addressDetails.components.house_number === '')
-  ) {
+  if (!hangarLocation.coordinates || !hangarLocation.coordinates.lat || !hangarLocation.coordinates.lng) {
     return {
       isValid: false,
-      message: 'El número de la dirección es obligatorio',
-      fieldErrors: { ...fieldErrors, number: true },
-    };
-  }
-  if (addressDetails.components?.house_number !== addressDetails.number) {
-    return {
-      isValid: false,
-      message: 'Revisa el número de la dirección',
-      fieldErrors: { ...fieldErrors, number: true },
+      message: 'Could not get coordinates for the hangar location',
+      fieldErrors: { ...fieldErrors, hangarLocation: true },
     };
   }
 
-  // Validate coordinates
-  if (
-    !addressDetails.coordinates ||
-    !addressDetails.coordinates.lat ||
-    !addressDetails.coordinates.lng
-  ) {
+  // Validate uses hangar selection
+  if (usesHangar === undefined) {
     return {
       isValid: false,
-      message: 'No se han podido obtener las coordenadas de la dirección',
-      fieldErrors: { ...fieldErrors, street: true },
+      message: 'Please select whether you use this hangar',
+      fieldErrors: { ...fieldErrors, usesHangar: true },
+    };
+  }
+
+  // Validate home type
+  if (!homeType) {
+    return {
+      isValid: false,
+      message: 'Please select your home type',
+      fieldErrors: { ...fieldErrors, homeType: true },
+    };
+  }
+
+  // Validate connection type
+  if (!connectionType) {
+    return {
+      isValid: false,
+      message: 'Please select how you use this hangar',
+      fieldErrors: { ...fieldErrors, connectionType: true },
     };
   }
 
@@ -75,11 +88,11 @@ export const submitStep1 = async (
   context: FormContext
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { addressDetails } = context;
+    const { hangarLocation, usesHangar, homeType, connectionType } = context;
 
     // Basic check - validation should have already happened
-    if (!addressDetails?.coordinates) {
-      return { success: false, message: 'Datos de dirección incompletos' };
+    if (!hangarLocation?.coordinates || usesHangar === undefined || !homeType || !connectionType) {
+      return { success: false, message: 'Incomplete hangar data' };
     }
 
     // Get the reviewSessionId from localStorage
@@ -88,23 +101,26 @@ export const submitStep1 = async (
     // If no sessionId exists, we can't proceed with submission
     if (!sessionId || sessionId === 'PENDING') {
       console.error('No valid review session ID found');
-      return { success: false, message: 'No se ha encontrado una sesión válida' };
+      return { success: false, message: 'No valid session found' };
     }
 
-    // Submit data using our Supabase client function with simplified payload
+    // Submit data using our Supabase client function
     const success = await submitAddressStep1({
-      addressDetails,
+      hangarLocation,
+      usesHangar,
+      homeType,
+      connectionType,
     });
 
     return {
       success,
-      message: success ? null : 'Error al guardar los datos en la base de datos',
+      message: success ? null : 'Error saving data to database',
     };
   } catch (error) {
-    console.error('Error submitting address data:', error);
+    console.error('Error submitting hangar step 1 data:', error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Error al guardar los datos',
+      message: error instanceof Error ? error.message : 'Error saving data',
     };
   }
 };

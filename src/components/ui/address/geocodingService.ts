@@ -1,5 +1,28 @@
-import type { FormDataType } from '../../../store/formTypes';
 import type { AddressResult, HereGeocodeItem } from './types';
+
+// Generic location type that matches hangarLocation and homeLocation
+type LocationDetails = {
+  street?: string;
+  number?: string;
+  city?: string;
+  postalCode?: string;
+  state?: string;
+  fullAddress?: string;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
+  components?: {
+    road?: string;
+    house_number?: string;
+    city?: string;
+    town?: string;
+    village?: string;
+    postcode?: string;
+    state?: string;
+    [key: string]: string | undefined;
+  };
+};
 
 /**
  * Service for handling geocoding operations with the HERE API
@@ -81,15 +104,14 @@ export const geocodingService = {
 
   /**
    * Get coordinates for a specific address with house number
-   * @param street Street name
-   * @param houseNumber House number
-   * @param city City name
+   * @param currentDetails Current location details
+   * @param newNumber House number
    * @returns Promise with the updated address result including coordinates
    */
   async getCoordinatesForAddress(
-    currentDetails: FormDataType['addressDetails'],
+    currentDetails: LocationDetails,
     newNumber: string
-  ): Promise<FormDataType['addressDetails']> {
+  ): Promise<LocationDetails> {
     const street = currentDetails?.street;
     const city = currentDetails?.city || '';
     if (!street || !newNumber.trim()) {

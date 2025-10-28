@@ -62,20 +62,40 @@ const LocationMap: React.FC<LocationMapProps> = ({
   onLocationSelect,
   wouldRecommend,
 }) => {
-  // Default to Madrid if no coordinates are provided
+  // Default to London if no coordinates are provided
+  const LONDON_COORDS: [number, number] = [51.5074, -0.1278];
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  
+  // Try to get user's location on mount
+  useEffect(() => {
+    if (!coordinates && navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation([position.coords.latitude, position.coords.longitude]);
+        },
+        () => {
+          console.log('Geolocation not available, using London as default');
+        }
+      );
+    }
+  }, [coordinates]);
+
+  // Determine the center position: coordinates prop > user location > London
   const position: [number, number] = coordinates
     ? [coordinates.lat, coordinates.lng]
-    : [40.4168, -3.7038]; // Madrid coordinates
+    : userLocation || LONDON_COORDS;
 
   // State for the marker position (can be different from coordinates prop if user clicks on map)
   const [markerPosition, setMarkerPosition] = useState<[number, number]>(position);
 
-  // Update marker position when coordinates prop changes
+  // Update marker position when coordinates prop or user location changes
   useEffect(() => {
     if (coordinates) {
       setMarkerPosition([coordinates.lat, coordinates.lng]);
+    } else if (userLocation) {
+      setMarkerPosition(userLocation);
     }
-  }, [coordinates]);
+  }, [coordinates, userLocation]);
 
   // Handle map click to update marker position
   const handleLocationSelect = useCallback(

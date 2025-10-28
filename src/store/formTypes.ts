@@ -9,12 +9,10 @@ export interface FormContextType {
 }
 
 export type FormDataType = {
-  // Step 1: Housing
-  addressDetails?: {
+  // Step 1: Hangar Location & Usage
+  hangarLocation?: {
     street?: string;
     number?: string;
-    floor?: string;
-    door?: string;
     city?: string;
     postalCode?: string;
     state?: string;
@@ -34,6 +32,9 @@ export type FormDataType = {
       [key: string]: string | undefined;
     };
   };
+  usesHangar?: boolean; // true = "Yes — I have a space", false = "No — Not yet / Waiting / Nearby rider"
+  homeType?: 'flat' | 'house' | 'shared' | 'other'; // Flat / House / Shared housing / Something else
+  connectionType?: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes'; // How you use this hangar
 
   // Step 2: Rental Period
   startYear?: number;
@@ -79,14 +80,16 @@ export type FormDataType = {
 };
 
 export const initialFormData: FormDataType = {
-  addressDetails: {
+  // Step 1: Hangar Location & Usage
+  hangarLocation: {
     street: '',
     number: '',
-    floor: '',
-    door: '',
     city: '',
     postalCode: '',
   },
+  usesHangar: undefined,
+  homeType: undefined,
+  connectionType: undefined,
 
   // Step 2: Rental Period
   price: undefined,

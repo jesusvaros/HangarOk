@@ -18,7 +18,14 @@ export interface ValidationResult {
 }
 
 export interface FormContext {
-  addressDetails?: FormDataType['addressDetails'];
+  // Step 1: Hangar Location & Usage
+  hangarLocation?: FormDataType['hangarLocation'];
+  usesHangar?: FormDataType['usesHangar'];
+  homeType?: FormDataType['homeType'];
+  connectionType?: FormDataType['connectionType'];
+  
+  // Other steps will be added here as needed
+  [key: string]: unknown;
 }
 
 export const validateStep = (step: number, context: FormContext): ValidationResult => {

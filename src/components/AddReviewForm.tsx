@@ -74,7 +74,7 @@ const AddReviewForm: React.FC = () => {
   const { user } = useAuth();
 
   const errorsDefault = {
-    1: { fields: { street: false, number: false } },
+    1: { fields: { hangarLocation: false, usesHangar: false, homeType: false, connectionType: false } },
     2: { fields: { startDate: false, endDate: false, monthlyPrice: false } },
     3: {
       fields: {
@@ -95,11 +95,14 @@ const AddReviewForm: React.FC = () => {
 
   //fetch step 1 data
   const fetchStep1Data = useCallback(async () => {
-    const addressData = await getAddressStep1Data();
+    const hangarData = await getAddressStep1Data();
 
-    if (addressData) {
+    if (hangarData) {
       updateFormData({
-        addressDetails: addressData.address_details,
+        hangarLocation: hangarData.hangar_location,
+        usesHangar: hangarData.uses_hangar,
+        homeType: hangarData.home_type,
+        connectionType: hangarData.connection_type,
       });
     }
   }, [updateFormData]);
@@ -289,7 +292,7 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
-  const steps = ['Dirección', 'Estancia', 'Piso', 'Comunidad', 'Gestión'];
+  const steps = ['Location', 'Step 2', 'Step 3', 'Step 4', 'Step 5'];
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const handleStepClick = async (step: number) => {

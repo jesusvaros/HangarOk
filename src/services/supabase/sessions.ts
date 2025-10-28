@@ -5,9 +5,17 @@ export async function createReviewSession(payload: { session_id: string; user_id
   const client = supabaseWrapper.getClient();
   if (!client) throw new Error('Supabase client not available');
 
-  const { error } = await client.from('review_sessions').insert(payload);
+  // Use RPC function to create or get session
+  const { data, error } = await client.rpc('upsert_review_session', {
+    p_session_token: payload.session_id
+  });
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error creating review session:', error);
+    throw error;
+  }
+  
+  console.log('Review session created/retrieved:', data);
 }
 
 export async function getReviewSessionStatus(
@@ -20,7 +28,12 @@ export async function getReviewSessionStatus(
     p_session_id: sessionId,
   });
 
-  if (error) throw error;
+  if (error) {
+    console.error('Error getting review session status:', error);
+    throw error;
+  }
+  
+  console.log('Review session status:', data);
   if (!data || data.length === 0) return null;
   return data[0] as ReviewSessionStatus;
 }
