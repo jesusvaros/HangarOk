@@ -240,7 +240,11 @@ async function callOpenAI(systemPrompt, userPrompt) {
 }
 
 function escapeTemplateLiteral(value) {
-  return value.replace(/`/g, '\\`').replace(/\$\{/g, '$\\{');
+  return value
+    .replace(/\\/g, '\\\\')   // Escape backslashes first
+    .replace(/'/g, "\\'")     // Escape single quotes
+    .replace(/`/g, '\\`')     // Escape backticks
+    .replace(/\$\{/g, '\\${'); // Escape template literal expressions
 }
 
 async function createPostFile({ slug, title, summary, markdown, seoTitle, seoDescription, heroImageUrl, sourceUrl, readingMinutes }) {
