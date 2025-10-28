@@ -17,7 +17,7 @@ import { showErrorToast } from './ui/toast/toastUtils';
 import { getAddressStep1Data } from '../services/supabase/GetSubmitStep1';
 import { getHangarStep2Data } from '../services/supabase/GetSubmitStep2';
 import { getHangarStep3Data } from '../services/supabase/GetSubmitStep3';
-import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
+import { getHangarStep4Data } from '../services/supabase/GetSubmitStep4';
 import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { notifyReviewCompleted } from '../services/telegram';
@@ -86,7 +86,15 @@ const AddReviewForm: React.FC = () => {
         theftWorryRating: false,
       },
     },
-    4: { fields: { neighborTypes: false, communityEnvironment: false } },
+    4: {
+      fields: {
+        lockEaseRating: false,
+        spaceRating: false,
+        lightingRating: false,
+        maintenanceRating: false,
+        stopsCycling: false,
+      },
+    },
     5: { fields: { owner: false } },
   };
   const [errors, setErrors] =
@@ -147,16 +155,21 @@ const AddReviewForm: React.FC = () => {
 
   //fetch step 4 data
   const fetchStep4Data = useCallback(async () => {
-    const comunidadData = await getSessionStep4Data();
+    const sessionId = await getSessionIdBack();
+    if (!sessionId) return;
+    
+    const hangarData = await getHangarStep4Data(sessionId);
 
-    if (comunidadData) {
+    if (hangarData) {
       updateFormData({
-        neighborTypes: comunidadData.neighbor_types,
-        communityEnvironment: comunidadData.community_environment,
-        touristApartments: comunidadData.tourist_apartments,
-        buildingCleanliness: comunidadData.building_cleanliness,
-        communitySecurity: comunidadData.community_security,
-        communityOpinion: comunidadData.community_opinion,
+        lockEaseRating: hangarData.lock_ease_rating as 1|2|3|4|5 | undefined,
+        spaceRating: hangarData.space_rating as 1|2|3|4|5 | undefined,
+        lightingRating: hangarData.lighting_rating as 1|2|3|4|5 | undefined,
+        maintenanceRating: hangarData.maintenance_rating as 1|2|3|4|5 | undefined,
+        usabilityTags: hangarData.usability_tags,
+        improvementSuggestion: hangarData.improvement_suggestion || '',
+        stopsCycling: hangarData.stops_cycling as FormDataType['stopsCycling'],
+        impactTags: hangarData.impact_tags,
       });
     }
   }, [updateFormData]);
@@ -298,7 +311,7 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
-  const steps = ['Location', 'Community', 'Safety', 'Step 4', 'Step 5'];
+  const steps = ['Location', 'Community', 'Safety', 'Usability', 'Step 5'];
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const handleStepClick = async (step: number) => {

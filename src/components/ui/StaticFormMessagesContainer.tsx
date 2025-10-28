@@ -51,10 +51,10 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
       case 4:
         return [
           {
-            id: 'step4-community',
-            title: 'Comunidad y Barrio',
+            id: 'step4-usability',
+            title: 'Usability & Impact',
             message:
-              'La información sobre la comunidad de vecinos y el barrio es muy valiosa para futuros inquilinos.',
+              'Your feedback helps improve hangar design and shows councils the real impact on cycling.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
             icon: undefined,

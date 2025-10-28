@@ -1,71 +1,69 @@
-import { getSessionIdBack } from '../sessionManager';
 import { supabaseWrapper } from './client';
 
-interface EstanciaStep2Payload {
-  neighbor_types?: string[];
-  tourist_apartments?: 'Sí, tolerable' | 'Sí, molestos' | 'No hay';
-  building_cleanliness?: 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza';
-  community_environment?: string[];
-  community_security?: 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura';
-  community_opinion?: string;
+interface HangarStep4Data {
+  lock_ease_rating: number | null;
+  space_rating: number | null;
+  lighting_rating: number | null;
+  maintenance_rating: number | null;
+  usability_tags: string[];
+  improvement_suggestion: string | null;
+  stops_cycling: string | null;
+  impact_tags: string[];
 }
 
-interface SubmitStep4Payload {
-  neighborTypes?: string[];
-  touristApartments?: 'Sí, tolerable' | 'Sí, molestos' | 'No hay';
-  buildingCleanliness?: 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza';
-  communityEnvironment?: string[];
-  communitySecurity?: 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura';
-  communityOpinion?: string;
-}
-
-export async function getSessionStep4Data(id?: string): Promise<EstanciaStep2Payload | null> {
+export async function getHangarStep4Data(reviewSessionId: string): Promise<HangarStep4Data | null> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
 
-    const sessionId = await getSessionIdBack();
-
-    // Using RPC call to match the insert pattern
-    const { data, error } = await client.rpc('get_comunidad_step4_data', {
-      p_review_session_id: id || sessionId,
+    const { data, error } = await client.rpc('get_hangar_step4_data', {
+      p_review_session_id: reviewSessionId,
     });
 
     if (error) throw error;
 
-    // If no data found, return null
     if (!data || data.length === 0) {
       return null;
     }
 
     return data[0];
   } catch (error) {
-    console.error('Error fetching address data:', error);
+    console.error('Error fetching step 4 data:', error);
     return null;
   }
 }
 
-export async function submitSessionStep4(payload: SubmitStep4Payload): Promise<boolean> {
+export async function submitHangarStep4(payload: {
+  reviewSessionId: string;
+  lockEaseRating: number | null | undefined;
+  spaceRating: number | null | undefined;
+  lightingRating: number | null | undefined;
+  maintenanceRating: number | null | undefined;
+  usabilityTags: string[];
+  improvementSuggestion: string | null;
+  stopsCycling: string | null | undefined;
+  impactTags: string[];
+}): Promise<boolean> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
 
-    const sessionId = await getSessionIdBack();
-
-    const { error } = await client.rpc('upsert_comunidad_step4_and_mark_review_session', {
-      p_review_session_id: sessionId,
-      p_neighbor_types: payload.neighborTypes,
-      p_community_environment: payload.communityEnvironment, //opcional
-      p_tourist_apartments: payload.touristApartments, //opcional
-      p_building_cleanliness: payload.buildingCleanliness, //opcional
-      p_community_security: payload.communitySecurity,
-      p_community_opinion: payload.communityOpinion,
+    const { error } = await client.rpc('upsert_hangar_step4_and_mark_session', {
+      p_review_session_id: payload.reviewSessionId,
+      p_lock_ease_rating: payload.lockEaseRating ?? null,
+      p_space_rating: payload.spaceRating ?? null,
+      p_lighting_rating: payload.lightingRating ?? null,
+      p_maintenance_rating: payload.maintenanceRating ?? null,
+      p_usability_tags: payload.usabilityTags,
+      p_improvement_suggestion: payload.improvementSuggestion,
+      p_stops_cycling: payload.stopsCycling ?? null,
+      p_impact_tags: payload.impactTags,
     });
 
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error('Error submitting address data:', error);
+    console.error('Error submitting step 4 data:', error);
     return false;
   }
 }

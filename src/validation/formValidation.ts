@@ -39,6 +39,16 @@ export interface FormContext {
   theftWorryRating?: FormDataType['theftWorryRating'];
   safetyTags?: FormDataType['safetyTags'];
   
+  // Step 4: Usability and Impact
+  lockEaseRating?: FormDataType['lockEaseRating'];
+  spaceRating?: FormDataType['spaceRating'];
+  lightingRating?: FormDataType['lightingRating'];
+  maintenanceRating?: FormDataType['maintenanceRating'];
+  usabilityTags?: FormDataType['usabilityTags'];
+  improvementSuggestion?: FormDataType['improvementSuggestion'];
+  stopsCycling?: FormDataType['stopsCycling'];
+  impactTags?: FormDataType['impactTags'];
+  
   // Other steps will be added here as needed
   [key: string]: unknown;
 }

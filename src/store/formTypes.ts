@@ -54,13 +54,17 @@ export type FormDataType = {
   // Common
   safetyTags?: string[];
 
-  // Step 4: Community
-  neighborTypes?: string[];
-  touristApartments?: 'Sí, tolerable' | 'Sí, molestos' | 'No hay';
-  buildingCleanliness?: 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza';
-  communityEnvironment?: string[];
-  communitySecurity?: 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura';
-  communityOpinion?: string;
+  // Step 4: Usability and Impact
+  // For users WITH a hangar
+  lockEaseRating?: 1 | 2 | 3 | 4 | 5;
+  spaceRating?: 1 | 2 | 3 | 4 | 5;
+  lightingRating?: 1 | 2 | 3 | 4 | 5;
+  maintenanceRating?: 1 | 2 | 3 | 4 | 5;
+  usabilityTags?: string[];
+  improvementSuggestion?: string;
+  // For users WITHOUT a hangar
+  stopsCycling?: 'yes_lot' | 'yes_bit' | 'not_really' | 'no';
+  impactTags?: string[];
 
   // Step 5: Owner
   ownerType?: 'Particular' | 'Agencia';
@@ -106,13 +110,15 @@ export const initialFormData: FormDataType = {
   theftWorryRating: undefined,
   safetyTags: [],
 
-  // Step 4: Community
-  neighborTypes: [],
-  touristApartments: undefined,
-  buildingCleanliness: undefined,
-  communityEnvironment: [],
-  communitySecurity: undefined,
-  communityOpinion: '',
+  // Step 4: Usability and Impact
+  lockEaseRating: undefined,
+  spaceRating: undefined,
+  lightingRating: undefined,
+  maintenanceRating: undefined,
+  usabilityTags: [],
+  improvementSuggestion: '',
+  stopsCycling: undefined,
+  impactTags: [],
 
   // Step 5: Owner
   ownerType: 'Particular',
