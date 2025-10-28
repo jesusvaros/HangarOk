@@ -1,5 +1,5 @@
 import type { FormDataType } from '../store/formTypes';
-import { submitSessionStep3 } from '../services/supabase/GetSubmitStep3';
+import { submitHangarStep3 } from '../services/supabase/GetSubmitStep3';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -10,54 +10,59 @@ export interface ValidationResult {
 }
 
 export const validateStep3 = (context: FormDataType): ValidationResult => {
-  const { summerTemperature, winterTemperature, noiseLevel, lightLevel, maintenanceStatus } =
-    context;
+  const { usesHangar, daytimeSafetyRating, nighttimeSafetyRating, bikeMessedWith, currentBikeStorage, theftWorryRating } = context;
+  
   const fieldErrors = {
-    summerTemperature: false,
-    winterTemperature: false,
-    noiseLevel: false,
-    lightLevel: false,
-    maintenanceStatus: false,
+    daytimeSafetyRating: false,
+    nighttimeSafetyRating: false,
+    bikeMessedWith: false,
+    currentBikeStorage: false,
+    theftWorryRating: false,
   };
 
-  if (!summerTemperature) {
-    return {
-      isValid: false,
-      message: 'La temperatura en verano es obligatoria',
-      fieldErrors: { ...fieldErrors, summerTemperature: true },
-    };
-  }
+  // If user HAS a hangar, validate hangar-specific fields
+  if (usesHangar === true) {
+    if (!daytimeSafetyRating) {
+      return {
+        isValid: false,
+        message: 'Please rate daytime safety',
+        fieldErrors: { ...fieldErrors, daytimeSafetyRating: true },
+      };
+    }
 
-  if (!winterTemperature) {
-    return {
-      isValid: false,
-      message: 'La temperatura en invierno es obligatoria',
-      fieldErrors: { ...fieldErrors, winterTemperature: true },
-    };
-  }
+    if (!nighttimeSafetyRating) {
+      return {
+        isValid: false,
+        message: 'Please rate nighttime safety',
+        fieldErrors: { ...fieldErrors, nighttimeSafetyRating: true },
+      };
+    }
 
-  if (!noiseLevel) {
-    return {
-      isValid: false,
-      message: 'El nivel de ruido es obligatorio',
-      fieldErrors: { ...fieldErrors, noiseLevel: true },
-    };
+    if (bikeMessedWith === undefined) {
+      return {
+        isValid: false,
+        message: 'Please indicate if your bike has been messed with',
+        fieldErrors: { ...fieldErrors, bikeMessedWith: true },
+      };
+    }
   }
-  if (!lightLevel) {
-    return {
-      isValid: false,
-      message: 'El nivel de luz es obligatorio',
-      fieldErrors: { ...fieldErrors, lightLevel: true },
-    };
-  }
+  // If user does NOT have a hangar, validate non-hangar fields
+  else if (usesHangar === false) {
+    if (!currentBikeStorage) {
+      return {
+        isValid: false,
+        message: 'Please select where you keep your bike',
+        fieldErrors: { ...fieldErrors, currentBikeStorage: true },
+      };
+    }
 
-  // Validate coordinates
-  if (!maintenanceStatus) {
-    return {
-      isValid: false,
-      message: 'El estado de mantenimiento es obligatorio',
-      fieldErrors: { ...fieldErrors, maintenanceStatus: true },
-    };
+    if (!theftWorryRating) {
+      return {
+        isValid: false,
+        message: 'Please rate how worried you are about theft',
+        fieldErrors: { ...fieldErrors, theftWorryRating: true },
+      };
+    }
   }
 
   return {
@@ -72,53 +77,44 @@ export const submitStep3 = async (
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
     const {
-      summerTemperature,
-      winterTemperature,
-      noiseLevel,
-      lightLevel,
-      maintenanceStatus,
-      propertyOpinion,
+      usesHangar,
+      daytimeSafetyRating,
+      nighttimeSafetyRating,
+      bikeMessedWith,
+      currentBikeStorage,
+      theftWorryRating,
+      safetyTags,
     } = context;
 
-    // Basic check - validation should have already happened
-    if (
-      !summerTemperature ||
-      !winterTemperature ||
-      !noiseLevel ||
-      !lightLevel ||
-      !maintenanceStatus
-    ) {
-      return { success: false, message: 'Datos incompletos' };
-    }
-
     // Get the reviewSessionId from localStorage
-    const sessionId = localStorage.getItem('reviewSessionId');
+    const sessionId = localStorage.getItem('reviewSessionIdBack');
 
-    // If no sessionId exists, we can't proceed with submission
-    if (!sessionId || sessionId === 'PENDING') {
+    if (!sessionId) {
       console.error('No valid review session ID found');
-      return { success: false, message: 'No se ha encontrado una sesión válida' };
+      return { success: false, message: 'No valid session found' };
     }
 
-    // Submit data using our Supabase client function with simplified payload
-    const success = await submitSessionStep3({
-      summerTemperature,
-      winterTemperature,
-      noiseLevel,
-      lightLevel,
-      maintenanceStatus,
-      propertyOpinion,
+    // Submit data using our Supabase client function
+    const success = await submitHangarStep3({
+      reviewSessionId: sessionId,
+      daytimeSafetyRating: usesHangar === true ? daytimeSafetyRating : null,
+      nighttimeSafetyRating: usesHangar === true ? nighttimeSafetyRating : null,
+      bikeMessedWith: usesHangar === true ? bikeMessedWith : null,
+      currentBikeStorage: usesHangar === false ? currentBikeStorage : null,
+      theftWorryRating: usesHangar === false ? theftWorryRating : null,
+      safetyTags: safetyTags || [],
+      photoUrl: null,
     });
 
     return {
       success,
-      message: success ? null : 'Error al guardar los datos en la base de datos',
+      message: success ? null : 'Error saving data to database',
     };
   } catch (error) {
-    console.error('Error submitting address data:', error);
+    console.error('Error submitting step 3 data:', error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Error al guardar los datos',
+      message: error instanceof Error ? error.message : 'Error saving data',
     };
   }
 };

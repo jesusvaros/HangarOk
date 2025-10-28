@@ -1,70 +1,66 @@
-import { getSessionIdBack } from '../sessionManager';
 import { supabaseWrapper } from './client';
 
-interface EstanciaStep2Payload {
-  summer_temperature: 'Bien aislado' | 'Correcto' | 'Caluroso';
-  winter_temperature: 'Bien aislado' | 'Correcto' | 'Frío';
-  noise_level: 'Silencioso' | 'Tolerable' | 'Bastante' | 'Se oye todo';
-  light_level: 'Nada de luz' | 'Poca luz' | 'Luminoso' | 'Muy luminoso';
-  maintenance_status: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Poco' | 'Malo';
-  property_opinion?: string;
+interface HangarStep3Data {
+  daytime_safety_rating: number | null;
+  nighttime_safety_rating: number | null;
+  bike_messed_with: boolean | null;
+  current_bike_storage: string | null;
+  theft_worry_rating: number | null;
+  safety_tags: string[];
+  photo_url: string | null;
 }
 
-export async function getSessionStep3Data(id?: string): Promise<EstanciaStep2Payload | null> {
+export async function getHangarStep3Data(reviewSessionId: string): Promise<HangarStep3Data | null> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
 
-    const sessionId = await getSessionIdBack();
-
-    // Using RPC call to match the insert pattern
-    const { data, error } = await client.rpc('get_piso_step3_data', {
-      p_review_session_id: id || sessionId,
+    const { data, error } = await client.rpc('get_hangar_step3_data', {
+      p_review_session_id: reviewSessionId,
     });
 
     if (error) throw error;
 
-    // If no data found, return null
     if (!data || data.length === 0) {
       return null;
     }
 
     return data[0];
   } catch (error) {
-    console.error('Error fetching address data:', error);
+    console.error('Error fetching step 3 data:', error);
     return null;
   }
 }
 
-export async function submitSessionStep3(payload: {
-  summerTemperature: string;
-  winterTemperature: string;
-  noiseLevel: string;
-  lightLevel: string;
-  maintenanceStatus: string;
-  propertyOpinion?: string;
+export async function submitHangarStep3(payload: {
+  reviewSessionId: string;
+  daytimeSafetyRating: number | null | undefined;
+  nighttimeSafetyRating: number | null | undefined;
+  bikeMessedWith: boolean | null | undefined;
+  currentBikeStorage: string | null | undefined;
+  theftWorryRating: number | null | undefined;
+  safetyTags: string[];
+  photoUrl: string | null;
 }): Promise<boolean> {
   try {
-    // Get Supabase client
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
 
-    const sessionId = await getSessionIdBack();
-
-    const { error } = await client.rpc('upsert_piso_step3_and_mark_review_session', {
-      p_review_session_id: sessionId,
-      p_summer_temperature: payload.summerTemperature,
-      p_winter_temperature: payload.winterTemperature,
-      p_noise_level: payload.noiseLevel,
-      p_light_level: payload.lightLevel,
-      p_maintenance_status: payload.maintenanceStatus,
-      p_property_opinion: payload.propertyOpinion,
+    const { error } = await client.rpc('upsert_hangar_step3_and_mark_session', {
+      p_review_session_id: payload.reviewSessionId,
+      p_daytime_safety_rating: payload.daytimeSafetyRating ?? null,
+      p_nighttime_safety_rating: payload.nighttimeSafetyRating ?? null,
+      p_bike_messed_with: payload.bikeMessedWith ?? null,
+      p_current_bike_storage: payload.currentBikeStorage ?? null,
+      p_theft_worry_rating: payload.theftWorryRating ?? null,
+      p_safety_tags: payload.safetyTags,
+      p_photo_url: payload.photoUrl,
     });
 
     if (error) throw error;
     return true;
   } catch (error) {
-    console.error('Error submitting address data:', error);
+    console.error('Error submitting step 3 data:', error);
     return false;
   }
 }

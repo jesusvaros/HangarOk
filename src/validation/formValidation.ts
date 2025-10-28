@@ -31,6 +31,14 @@ export interface FormContext {
   perceptionTags?: FormDataType['perceptionTags'];
   communityFeedback?: FormDataType['communityFeedback'];
   
+  // Step 3: Safety and Security
+  daytimeSafetyRating?: FormDataType['daytimeSafetyRating'];
+  nighttimeSafetyRating?: FormDataType['nighttimeSafetyRating'];
+  bikeMessedWith?: FormDataType['bikeMessedWith'];
+  currentBikeStorage?: FormDataType['currentBikeStorage'];
+  theftWorryRating?: FormDataType['theftWorryRating'];
+  safetyTags?: FormDataType['safetyTags'];
+  
   // Other steps will be added here as needed
   [key: string]: unknown;
 }

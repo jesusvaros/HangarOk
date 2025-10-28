@@ -2,11 +2,12 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabaseWrapper } from '../../services/supabase/client';
 import { useAuth } from '../../store/auth/hooks';
+// TODO: This file is for old rental apartment reviews, needs to be updated for hangars
 import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
-import { getSessionStep2Data } from '../../services/supabase/GetSubmitStep2';
-import { getSessionStep3Data } from '../../services/supabase/GetSubmitStep3';
-import { getSessionStep4Data } from '../../services/supabase/GetSubmitStep4';
-import { getSessionStep5Data } from '../../services/supabase/GetSubmitStep5';
+// import { getSessionStep2Data } from '../../services/supabase/GetSubmitStep2';
+// import { getSessionStep3Data } from '../../services/supabase/GetSubmitStep3';
+// import { getSessionStep4Data } from '../../services/supabase/GetSubmitStep4';
+// import { getSessionStep5Data } from '../../services/supabase/GetSubmitStep5';
 
 // Importar componentes de sección
 import LocationMap from '../ui/LocationMap';
@@ -214,19 +215,21 @@ const ReviewPage = () => {
             }
           }
   
-          const [step1, step2, step3, step4, step5] = await Promise.all([
-            getAddressStep1Data(id),
-            getSessionStep2Data(id),
-            getSessionStep3Data(id),
-            getSessionStep4Data(id),
-            getSessionStep5Data(id),
-          ]);
+          // TODO: Update this to use hangar review functions
+          const step1 = await getAddressStep1Data(id);
+          // const [step1, step2, step3, step4, step5] = await Promise.all([
+          //   getAddressStep1Data(id),
+          //   getSessionStep2Data(id),
+          //   getSessionStep3Data(id),
+          //   getSessionStep4Data(id),
+          //   getSessionStep5Data(id),
+          // ]);
   
           setStep1Data(step1);
-          setStep2Data(step2);
-          setStep3Data(step3);
-          setStep4Data(step4);
-          setStep5Data(step5);
+          // setStep2Data(step2);
+          // setStep3Data(step3);
+          // setStep4Data(step4);
+          // setStep5Data(step5);
         } catch (err) {
           console.error('Error al cargar los datos:', err);
           setError('Error al cargar los datos de la revisión');

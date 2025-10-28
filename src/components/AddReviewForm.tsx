@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useFormContext } from '../store/useFormContext';
 import { useAuth } from '../store/auth/hooks';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import type { FormDataType } from '../store/formTypes';
 import Step1ObjectiveData from './review-steps/Step1ObjectiveData';
 import Step2RentalPeriod from './review-steps/Step2RentalPeriod';
 import Step3PropertyCondition from './review-steps/Step3PropertyCondition';
@@ -15,7 +16,7 @@ import { validateAndSubmitStep } from '../validation/formValidation';
 import { showErrorToast } from './ui/toast/toastUtils';
 import { getAddressStep1Data } from '../services/supabase/GetSubmitStep1';
 import { getHangarStep2Data } from '../services/supabase/GetSubmitStep2';
-import { getSessionStep3Data } from '../services/supabase/GetSubmitStep3';
+import { getHangarStep3Data } from '../services/supabase/GetSubmitStep3';
 import { getSessionStep4Data } from '../services/supabase/GetSubmitStep4';
 import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
 import useMediaQuery from '../hooks/useMediaQuery';
@@ -78,11 +79,11 @@ const AddReviewForm: React.FC = () => {
     2: { fields: { belongsRating: false, fairUseRating: false, appearanceRating: false } },
     3: {
       fields: {
-        summerTemperature: false,
-        winterTemperature: false,
-        noiseLevel: false,
-        lightLevel: false,
-        maintenanceStatus: false,
+        daytimeSafetyRating: false,
+        nighttimeSafetyRating: false,
+        bikeMessedWith: false,
+        currentBikeStorage: false,
+        theftWorryRating: false,
       },
     },
     4: { fields: { neighborTypes: false, communityEnvironment: false } },
@@ -127,16 +128,19 @@ const AddReviewForm: React.FC = () => {
 
   //fetch step 3 data
   const fetchStep3Data = useCallback(async () => {
-    const pisoData = await getSessionStep3Data();
+    const sessionId = await getSessionIdBack();
+    if (!sessionId) return;
+    
+    const hangarData = await getHangarStep3Data(sessionId);
 
-    if (pisoData) {
+    if (hangarData) {
       updateFormData({
-        summerTemperature: pisoData.summer_temperature,
-        winterTemperature: pisoData.winter_temperature,
-        noiseLevel: pisoData.noise_level,
-        lightLevel: pisoData.light_level,
-        maintenanceStatus: pisoData.maintenance_status,
-        propertyOpinion: pisoData.property_opinion,
+        daytimeSafetyRating: hangarData.daytime_safety_rating as 1|2|3|4|5 | undefined,
+        nighttimeSafetyRating: hangarData.nighttime_safety_rating as 1|2|3|4|5 | undefined,
+        bikeMessedWith: hangarData.bike_messed_with ?? undefined,
+        currentBikeStorage: hangarData.current_bike_storage as FormDataType['currentBikeStorage'],
+        theftWorryRating: hangarData.theft_worry_rating as 1|2|3|4|5 | undefined,
+        safetyTags: hangarData.safety_tags,
       });
     }
   }, [updateFormData]);
@@ -294,7 +298,7 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
-  const steps = ['Location', 'Community', 'Step 3', 'Step 4', 'Step 5'];
+  const steps = ['Location', 'Community', 'Safety', 'Step 4', 'Step 5'];
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const handleStepClick = async (step: number) => {

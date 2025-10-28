@@ -39,10 +39,10 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
       case 3:
         return [
           {
-            id: 'step3-condition',
-            title: 'Estado del Piso',
+            id: 'step3-safety',
+            title: 'Safety & Security',
             message:
-              'Evalúa las condiciones del piso para ayudar a futuros inquilinos a tomar decisiones informadas.',
+              'Your experience with bike security helps others decide if this hangar is right for them.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
             icon: undefined,

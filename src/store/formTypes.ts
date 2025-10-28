@@ -43,13 +43,16 @@ export type FormDataType = {
   perceptionTags?: string[]; // Quick-select tags
   communityFeedback?: string; // What do people around here say about it?
 
-  // Step 3: Property Condition
-  summerTemperature?: 'Bien aislado' | 'Correcto' | 'Caluroso';
-  winterTemperature?: 'Bien aislado' | 'Correcto' | 'Frío';
-  noiseLevel?: 'Silencioso' | 'Tolerable' | 'Bastante' | 'Se oye todo';
-  lightLevel?: 'Nada de luz' | 'Poca luz' | 'Luminoso' | 'Muy luminoso';
-  maintenanceStatus?: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Poco' | 'Malo';
-  propertyOpinion?: string;
+  // Step 3: Safety and Security
+  // For users WITH a hangar
+  daytimeSafetyRating?: 1 | 2 | 3 | 4 | 5;
+  nighttimeSafetyRating?: 1 | 2 | 3 | 4 | 5;
+  bikeMessedWith?: boolean;
+  // For users WITHOUT a hangar
+  currentBikeStorage?: 'railings' | 'inside' | 'hallway' | 'nowhere_secure' | 'other';
+  theftWorryRating?: 1 | 2 | 3 | 4 | 5;
+  // Common
+  safetyTags?: string[];
 
   // Step 4: Community
   neighborTypes?: string[];
@@ -95,13 +98,13 @@ export const initialFormData: FormDataType = {
   perceptionTags: [],
   communityFeedback: '',
 
-  // Step 3: Property Condition
-  summerTemperature: undefined,
-  winterTemperature: undefined,
-  noiseLevel: undefined,
-  lightLevel: undefined,
-  maintenanceStatus: undefined,
-  propertyOpinion: '',
+  // Step 3: Safety and Security
+  daytimeSafetyRating: undefined,
+  nighttimeSafetyRating: undefined,
+  bikeMessedWith: undefined,
+  currentBikeStorage: undefined,
+  theftWorryRating: undefined,
+  safetyTags: [],
 
   // Step 4: Community
   neighborTypes: [],
