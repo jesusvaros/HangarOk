@@ -173,7 +173,7 @@ app.get('/api/usage-stats', (req, res) => {
 
 // Proxy to Vite dev server for everything else
 app.use('/', createProxyMiddleware({
-  target: 'http://localhost:5175',
+  target: 'http://localhost:5173',
   changeOrigin: true,
   ws: true
 }));

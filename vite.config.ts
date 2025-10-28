@@ -13,4 +13,12 @@ export default defineConfig({
       globalModulePaths: [/index\.css$/],
     },
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+    },
+  },
 });

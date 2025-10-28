@@ -19,8 +19,8 @@ import AuthCallback from './components/AuthCallback';
 import ReviewPage from './components/review/ReviewPage';
 import ProfilePage from './components/profile/ProfilePage';
 import ModerationPage from './components/admin/ModerationPage';
-import BlogListPage from './components/blog/BlogListPage';
-import BlogPostPage from './components/blog/BlogPostPage';
+// import BlogListPage from './components/blog/BlogListPage';
+// import BlogPostPage from './components/blog/BlogPostPage';
 // Legal pages
 import LegalHub from './pages/LegalHub';
 import AvisoLegal from './pages/AvisoLegal';
@@ -83,8 +83,8 @@ function App() {
           } />
           <Route path="/opiniones" element={<CityReviewsIndexPage />} />
           <Route path="/opiniones/:citySlug" element={<CityReviewsPage />} />
-          <Route path="/blog" element={<BlogListPage />} />
-          <Route path="/blog/:slug" element={<BlogPostPage />} />
+          {/* <Route path="/blog" element={<BlogListPage />} /> */}
+          {/* <Route path="/blog/:slug" element={<BlogPostPage />} /> */}
           <Route path="/profile" element={
             <>
               <PageSEO title="Perfil | CaseroOk" description="Gestiona tu perfil en CaseroOk." noindex />
@@ -131,8 +131,8 @@ function App() {
 
         <footer className="mx-auto mt-8 max-w-6xl py-6 text-center text-sm text-gray-500">
           <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
-            <Link className="hover:text-gray-700" to="/blog" {...umamiEventProps('footer:blog')}>Blog</Link>
-            <span className="text-gray-400">•</span>
+            {/* <Link className="hover:text-gray-700" to="/blog" {...umamiEventProps('footer:blog')}>Blog</Link>
+            <span className="text-gray-400">•</span> */}
             <Link className="hover:text-gray-700" to="/opiniones" {...umamiEventProps('footer:opiniones')}>Opiniones por ciudad</Link>
             <span className="text-gray-400">•</span>
             <Link className="hover:text-gray-700" to="/terminosycondiciones" {...umamiEventProps('footer:terminos-condiciones')}>Términos y Condiciones</Link>

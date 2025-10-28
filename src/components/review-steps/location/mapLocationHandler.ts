@@ -22,7 +22,7 @@ export const useMapLocationHandler = (handleAddressSelect: (result: AddressResul
             endpoint: 'revgeocode',
             params: {
               at: `${lat},${lng}`,
-              lang: 'es-ES'
+              lang: 'en-GB'
             }
           })
         });

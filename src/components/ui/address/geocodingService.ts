@@ -26,8 +26,8 @@ export const geocodingService = {
           endpoint: 'geocode',
           params: {
             q: searchText,
-            in: 'countryCode:ESP',
-            lang: 'es-ES',
+            in: 'countryCode:GBR',
+            lang: 'en-GB',
             limit: '10'
           }
         })
@@ -99,7 +99,7 @@ export const geocodingService = {
       };
     }
 
-    const fullAddressQuery = `${street} ${newNumber}, ${city}, España`;
+    const fullAddressQuery = `${street} ${newNumber}, ${city}, United Kingdom`;
 
     // Use server-side proxy for cost control
     const response = await fetch('/api/geocode-proxy', {
@@ -111,8 +111,8 @@ export const geocodingService = {
         endpoint: 'geocode',
         params: {
           q: fullAddressQuery,
-          in: 'countryCode:ESP',
-          lang: 'es-ES',
+          in: 'countryCode:GBR',
+          lang: 'en-GB',
           limit: '1'
         }
       })
@@ -179,7 +179,7 @@ export const geocodingService = {
           endpoint: 'revgeocode',
           params: {
             at: `${lat},${lng}`,
-            lang: 'es-ES',
+            lang: 'en-GB',
             limit: '1'
           }
         })
