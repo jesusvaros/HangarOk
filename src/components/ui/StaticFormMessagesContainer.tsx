@@ -63,13 +63,13 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
       case 5:
         return [
           {
-            id: 'step5-privacy',
-            title: 'Privacidad',
+            id: 'step5-support',
+            title: 'Just a few more taps — you\'re doing great ✨',
             message:
-              'Los datos personales se procesan mediante hashing irreversible solo para asociar opiniones con propietarios. Nunca se almacenan en texto claro ni se comparten con terceros.',
+              'Your feedback on maintenance and support helps improve hangar services for everyone.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
-            icon: <LockClosedIcon className="h-5 w-5 text-green-700" />,
+            icon: undefined,
           },
         ];
       default:

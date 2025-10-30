@@ -49,6 +49,15 @@ export interface FormContext {
   stopsCycling?: FormDataType['stopsCycling'];
   impactTags?: FormDataType['impactTags'];
   
+  // Step 5: Maintenance and Support
+  reportEaseRating?: FormDataType['reportEaseRating'];
+  fixSpeedRating?: FormDataType['fixSpeedRating'];
+  communicationRating?: FormDataType['communicationRating'];
+  maintenanceTags?: FormDataType['maintenanceTags'];
+  waitlistFairnessRating?: FormDataType['waitlistFairnessRating'];
+  waitlistTags?: FormDataType['waitlistTags'];
+  improvementFeedback?: FormDataType['improvementFeedback'];
+  
   // Other steps will be added here as needed
   [key: string]: unknown;
 }

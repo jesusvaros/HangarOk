@@ -18,7 +18,7 @@ import { getAddressStep1Data } from '../services/supabase/GetSubmitStep1';
 import { getHangarStep2Data } from '../services/supabase/GetSubmitStep2';
 import { getHangarStep3Data } from '../services/supabase/GetSubmitStep3';
 import { getHangarStep4Data } from '../services/supabase/GetSubmitStep4';
-import { getSessionStep5Data } from '../services/supabase/GetSubmitStep5';
+import { getHangarStep5Data } from '../services/supabase/GetSubmitStep5';
 import useMediaQuery from '../hooks/useMediaQuery';
 import { notifyReviewCompleted } from '../services/telegram';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -95,7 +95,15 @@ const AddReviewForm: React.FC = () => {
         stopsCycling: false,
       },
     },
-    5: { fields: { owner: false } },
+    5: {
+      fields: {
+        reportEaseRating: false,
+        fixSpeedRating: false,
+        communicationRating: false,
+        waitlistFairnessRating: false,
+        checkboxReadTerms: false,
+      },
+    },
   };
   const [errors, setErrors] =
     useState<Record<number, { fields: Record<string, boolean> }>>(errorsDefault);
@@ -176,15 +184,20 @@ const AddReviewForm: React.FC = () => {
 
   //fetch step 5 data
   const fetchStep5Data = useCallback(async () => {
-    const gestionData = await getSessionStep5Data();
+    const sessionId = await getSessionIdBack();
+    if (!sessionId) return;
+    
+    const hangarData = await getHangarStep5Data(sessionId);
 
-    if (gestionData) {
+    if (hangarData) {
       updateFormData({
-        ownerType: gestionData.owner_type,
-        ownerNameHash: gestionData.owner_name_hash,
-        ownerPhoneHash: gestionData.owner_phone_hash,
-        ownerEmailHash: gestionData.owner_email_hash,
-        ownerOpinion: gestionData.owner_opinion,
+        reportEaseRating: hangarData.report_ease_rating as 1|2|3|4|5 | undefined,
+        fixSpeedRating: hangarData.fix_speed_rating as 1|2|3|4|5 | undefined,
+        communicationRating: hangarData.communication_rating as 1|2|3|4|5 | undefined,
+        maintenanceTags: hangarData.maintenance_tags,
+        waitlistFairnessRating: hangarData.waitlist_fairness_rating as 1|2|3|4|5 | undefined,
+        waitlistTags: hangarData.waitlist_tags,
+        improvementFeedback: hangarData.improvement_feedback || '',
       });
     }
   }, [updateFormData]);
@@ -311,7 +324,7 @@ const AddReviewForm: React.FC = () => {
     }
   };
 
-  const steps = ['Location', 'Community', 'Safety', 'Usability', 'Step 5'];
+  const steps = ['Location', 'Community', 'Safety', 'Usability', 'Support'];
   const isDesktop = useMediaQuery('(min-width: 1024px)');
 
   const handleStepClick = async (step: number) => {

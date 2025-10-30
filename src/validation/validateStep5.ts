@@ -1,5 +1,5 @@
 import type { FormDataType } from '../store/formTypes';
-import { submitSessionStep5 } from '../services/supabase/GetSubmitStep5';
+import { submitHangarStep5 } from '../services/supabase/GetSubmitStep5';
 
 export interface ValidationResult {
   isValid: boolean;
@@ -10,26 +10,60 @@ export interface ValidationResult {
 }
 
 export const validateStep5 = (context: FormDataType): ValidationResult => {
-  const { ownerType, checkboxReadTerms } = context;
-  const fieldErrors = { ownerType: false, checkboxReadTerms: false };
+  const { usesHangar, reportEaseRating, fixSpeedRating, communicationRating, waitlistFairnessRating, checkboxReadTerms } = context;
+  
+  const fieldErrors = {
+    reportEaseRating: false,
+    fixSpeedRating: false,
+    communicationRating: false,
+    waitlistFairnessRating: false,
+    checkboxReadTerms: false,
+  };
 
-  if (!ownerType) {
-    return {
-      isValid: false,
-      message: 'No se ha proporcionado información de dirección',
-      fieldErrors,
-    };
+  // If user HAS a hangar, validate hangar-specific fields
+  if (usesHangar === true) {
+    if (!reportEaseRating) {
+      return {
+        isValid: false,
+        message: 'Please rate how easy it is to report a problem',
+        fieldErrors: { ...fieldErrors, reportEaseRating: true },
+      };
+    }
+
+    if (!fixSpeedRating) {
+      return {
+        isValid: false,
+        message: 'Please rate how quickly they fix things',
+        fieldErrors: { ...fieldErrors, fixSpeedRating: true },
+      };
+    }
+
+    if (!communicationRating) {
+      return {
+        isValid: false,
+        message: 'Please rate the communication',
+        fieldErrors: { ...fieldErrors, communicationRating: true },
+      };
+    }
+  }
+  // If user does NOT have a hangar, validate waitlist field
+  else if (usesHangar === false) {
+    if (!waitlistFairnessRating) {
+      return {
+        isValid: false,
+        message: 'Please rate if the waiting list feels fair',
+        fieldErrors: { ...fieldErrors, waitlistFairnessRating: true },
+      };
+    }
   }
 
   if (!checkboxReadTerms) {
     return {
       isValid: false,
-      message: 'Acepta los términos y condiciones',
+      message: 'Please accept the terms and conditions',
       fieldErrors: { ...fieldErrors, checkboxReadTerms: true },
     };
   }
-
-  // ai to check the text??
 
   return {
     isValid: true,
@@ -43,51 +77,45 @@ export const submitStep5 = async (
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
     const {
-      ownerType,
-      ownerName,
-      ownerPhone,
-      ownerEmail,
-      ownerOpinion,
-      ownerNameHash,
-      ownerPhoneHash,
-      ownerEmailHash,
+      usesHangar,
+      reportEaseRating,
+      fixSpeedRating,
+      communicationRating,
+      maintenanceTags,
+      waitlistFairnessRating,
+      waitlistTags,
+      improvementFeedback,
     } = context;
 
-    // Basic check - validation should have already happened
-    if (!ownerType) {
-      return { success: false, message: 'Datos de dirección incompletos' };
-    }
-
     // Get the reviewSessionId from localStorage
-    const sessionId = localStorage.getItem('reviewSessionId');
+    const sessionId = localStorage.getItem('reviewSessionIdBack');
 
-    // If no sessionId exists, we can't proceed with submission
-    if (!sessionId || sessionId === 'PENDING') {
+    if (!sessionId) {
       console.error('No valid review session ID found');
-      return { success: false, message: 'No se ha encontrado una sesión válida' };
+      return { success: false, message: 'No valid session found' };
     }
 
-    // Submit data using our Supabase client function with simplified payload
-    const success = await submitSessionStep5({
-      ownerType,
-      ownerName,
-      ownerPhone,
-      ownerEmail,
-      ownerOpinion,
-      ownerNameHash,
-      ownerPhoneHash,
-      ownerEmailHash,
+    // Submit data using our Supabase client function
+    const success = await submitHangarStep5({
+      reviewSessionId: sessionId,
+      reportEaseRating: usesHangar === true ? reportEaseRating : null,
+      fixSpeedRating: usesHangar === true ? fixSpeedRating : null,
+      communicationRating: usesHangar === true ? communicationRating : null,
+      maintenanceTags: usesHangar === true ? (maintenanceTags || []) : [],
+      waitlistFairnessRating: usesHangar === false ? waitlistFairnessRating : null,
+      waitlistTags: usesHangar === false ? (waitlistTags || []) : [],
+      improvementFeedback: improvementFeedback || null,
     });
 
     return {
       success,
-      message: success ? null : 'Error al guardar los datos en la base de datos',
+      message: success ? null : 'Error saving data to database',
     };
   } catch (error) {
-    console.error('Error submitting address data:', error);
+    console.error('Error submitting step 5 data:', error);
     return {
       success: false,
-      message: error instanceof Error ? error.message : 'Error al guardar los datos',
+      message: error instanceof Error ? error.message : 'Error saving data',
     };
   }
 };

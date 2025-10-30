@@ -66,15 +66,17 @@ export type FormDataType = {
   stopsCycling?: 'yes_lot' | 'yes_bit' | 'not_really' | 'no';
   impactTags?: string[];
 
-  // Step 5: Owner
-  ownerType?: 'Particular' | 'Agencia';
-  ownerName?: string;
-  ownerNameHash?: string;
-  ownerPhone?: string;
-  ownerPhoneHash?: string;
-  ownerEmail?: string;
-  ownerEmailHash?: string;
-  ownerOpinion?: string;
+  // Step 5: Maintenance and Support
+  // For users WITH a hangar
+  reportEaseRating?: 1 | 2 | 3 | 4 | 5;
+  fixSpeedRating?: 1 | 2 | 3 | 4 | 5;
+  communicationRating?: 1 | 2 | 3 | 4 | 5;
+  maintenanceTags?: string[];
+  // For users WITHOUT a hangar (waitlist)
+  waitlistFairnessRating?: 1 | 2 | 3 | 4 | 5;
+  waitlistTags?: string[];
+  // Common
+  improvementFeedback?: string;
   checkboxReadTerms?: boolean;
 
   // Contact Information (Modal)
@@ -120,12 +122,14 @@ export const initialFormData: FormDataType = {
   stopsCycling: undefined,
   impactTags: [],
 
-  // Step 5: Owner
-  ownerType: 'Particular',
-  ownerName: '',
-  ownerPhone: '',
-  ownerEmail: '',
-  ownerOpinion: '',
+  // Step 5: Maintenance and Support
+  reportEaseRating: undefined,
+  fixSpeedRating: undefined,
+  communicationRating: undefined,
+  maintenanceTags: [],
+  waitlistFairnessRating: undefined,
+  waitlistTags: [],
+  improvementFeedback: '',
   checkboxReadTerms: false,
 
   // Contact Information (Modal)
