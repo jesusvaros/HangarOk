@@ -69,13 +69,13 @@ const InputSection: React.FC = () => {
 
   const handleStart = async () => {
     try {
-      if (!formData.addressDetails?.coordinates || !address.trim()) {
+      if (!formData.hangarLocation?.coordinates || !address.trim()) {
         showErrorToast('Por favor selecciona una dirección de la lista para continuar');
         return;
       }
 
       updateFormData({
-        addressDetails: formData.addressDetails,
+        hangarLocation: formData.hangarLocation,
         addressAutocompleteResult: formData.addressAutocompleteResult,
       });
 
@@ -94,11 +94,11 @@ const InputSection: React.FC = () => {
   };
 
   const handleGoToMap = () => {
-      if (!formData.addressDetails?.coordinates || !address.trim()) {
+      if (!formData.hangarLocation?.coordinates || !address.trim()) {
         showErrorToast('Por favor selecciona una dirección de la lista para continuar');
         return;
       }
-      const coords = formData.addressDetails.coordinates;
+      const coords = formData.hangarLocation.coordinates;
       const q = address;
       navigate(`/map?lat=${coords.lat}&lng=${coords.lng}&q=${encodeURIComponent(q)}`);
   };
@@ -120,15 +120,7 @@ const InputSection: React.FC = () => {
 
     updateFormData({
       addressAutocompleteResult: result,
-      addressDetails: {
-        street: fullAddress,
-        coordinates,
-        components: result.components,
-      },
-    });
-    updateFormData({
-      addressAutocompleteResult: result,
-      addressDetails: {
+      hangarLocation: {
         street: fullAddress,
         coordinates,
         components: result.components,

@@ -117,7 +117,7 @@ const ProfilePage: React.FC = () => {
           
           return {
             ...session,
-            displayAddress: addressResult?.address_details?.street || 'Dirección no disponible',
+            displayAddress: addressResult?.hangar_location?.street || 'Dirección no disponible',
             validated: session.validated === true,
             completed: allStepsCompleted,
             nextIncompleteStep

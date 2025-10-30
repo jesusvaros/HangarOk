@@ -4,6 +4,7 @@ import { supabaseWrapper } from '../../services/supabase/client';
 import { useAuth } from '../../store/auth/hooks';
 // TODO: This file is for old rental apartment reviews, needs to be updated for hangars
 import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
+import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
 // import { getSessionStep2Data } from '../../services/supabase/GetSubmitStep2';
 // import { getSessionStep3Data } from '../../services/supabase/GetSubmitStep3';
 // import { getSessionStep4Data } from '../../services/supabase/GetSubmitStep4';
@@ -16,24 +17,7 @@ import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
 // import CommunitySection from './CommunitySection';
 // import OpinionSection from './OpinionSection';
 
-// Hangar Review Interfaces
-interface Step1Data {
-  address_details: {
-    street?: string;
-    number?: string;
-    city?: string;
-    postalCode?: string;
-    coordinates?: { lat: number; lng: number };
-  };
-  uses_hangar?: boolean;
-  home_address_details?: {
-    street?: string;
-    city?: string;
-    coordinates?: { lat: number; lng: number };
-  };
-  home_type?: string;
-  connection_type?: string;
-}
+// Hangar Review Interfaces - Step1Data is now imported as AddressStepData
 
 interface Step2Data {
   belongs_rating?: number;
@@ -86,7 +70,7 @@ const ReviewPage = () => {
   const { user, isLoading } = useAuth();
 
     // Estados para cada paso
-    const [step1Data, setStep1Data] = useState<Step1Data | null>(null);
+    const [step1Data, setStep1Data] = useState<AddressStepData | null>(null);
     const [step2Data, setStep2Data] = useState<Step2Data | null>(null);
     const [step3Data, setStep3Data] = useState<Step3Data | null>(null);
     const [step4Data, setStep4Data] = useState<Step4Data | null>(null);
@@ -94,16 +78,16 @@ const ReviewPage = () => {
   
     // Función para formatear la dirección como título
     const getAddressTitle = () => {
-      if (!step1Data?.address_details) return 'Review de la propiedad';
+      if (!step1Data?.hangar_location) return 'Review del hangar';
   
-      const { street, number, city } = step1Data.address_details;
+      const { street, number, city } = step1Data.hangar_location;
       let title = '';
   
       if (street) title += street;
       if (number) title += ` ${number}`;
       if (city) title += `, ${city}`;
   
-      return title || 'Review de la propiedad';
+      return title || 'Review del hangar';
     };
   
     useEffect(() => {
@@ -134,9 +118,8 @@ const ReviewPage = () => {
 
               // Step 1: Location & Usage
               setStep1Data({
-                address_details: publicReview.address_details,
+                hangar_location: publicReview.address_details,
                 uses_hangar: publicReview.uses_hangar,
-                home_address_details: publicReview.home_address_details,
                 home_type: publicReview.home_type,
                 connection_type: publicReview.connection_type,
               });
