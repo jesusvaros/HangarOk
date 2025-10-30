@@ -412,17 +412,54 @@ const ReviewPage = () => {
           <p>{error}</p>
         </div>
       ) : (
-        <>
-          {/* Vista móvil (oculta en pantallas md y superiores) */}
-          <div className="md:hidden">
-            <MobileView />
+        <div className="max-w-4xl mx-auto">
+          {/* Temporary JSON view for hangar reviews */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-bold mb-4 text-gray-800">Review Data (Temporary View)</h2>
+            <div className="space-y-4">
+              {step1Data && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Step 1: Location & Usage</h3>
+                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
+                    {JSON.stringify(step1Data, null, 2)}
+                  </pre>
+                </div>
+              )}
+              {step2Data && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Step 2: Community Perception</h3>
+                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
+                    {JSON.stringify(step2Data, null, 2)}
+                  </pre>
+                </div>
+              )}
+              {step3Data && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Step 3: Safety & Security</h3>
+                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
+                    {JSON.stringify(step3Data, null, 2)}
+                  </pre>
+                </div>
+              )}
+              {step4Data && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Step 4: Usability & Impact</h3>
+                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
+                    {JSON.stringify(step4Data, null, 2)}
+                  </pre>
+                </div>
+              )}
+              {step5Data && (
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Step 5: Maintenance & Support</h3>
+                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
+                    {JSON.stringify(step5Data, null, 2)}
+                  </pre>
+                </div>
+              )}
+            </div>
           </div>
-
-          {/* Vista de escritorio (oculta en pantallas pequeñas) */}
-          <div className="hidden md:block">
-            <DesktopView />
-          </div>
-        </>
+        </div>
       )}
     </div>
   );
