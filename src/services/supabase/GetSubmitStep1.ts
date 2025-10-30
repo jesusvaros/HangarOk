@@ -37,8 +37,7 @@ export interface HangarStep1Payload {
   connectionType: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes';
 }
 
-// Alias for backward compatibility
-export type AddressStep1Payload = HangarStep1Payload;
+// Note: AddressStep1Payload is exported from types.ts for backward compatibility
 
 export async function getAddressStep1Data(sessionIdExternal?: string): Promise<HangarStep1Data | null> {
   try {

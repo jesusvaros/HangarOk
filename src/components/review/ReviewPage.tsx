@@ -9,12 +9,12 @@ import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
 // import { getSessionStep4Data } from '../../services/supabase/GetSubmitStep4';
 // import { getSessionStep5Data } from '../../services/supabase/GetSubmitStep5';
 
-// Importar componentes de sección
-import LocationMap from '../ui/LocationMap';
-import PeriodSection from './PeriodSection';
-import PropertySection from './PropertySection';
-import CommunitySection from './CommunitySection';
-import OpinionSection from './OpinionSection';
+// Old rental review components - removed for hangar reviews
+// import LocationMap from '../ui/LocationMap';
+// import PeriodSection from './PeriodSection';
+// import PropertySection from './PropertySection';
+// import CommunitySection from './CommunitySection';
+// import OpinionSection from './OpinionSection';
 
 // Hangar Review Interfaces
 interface Step1Data {
@@ -263,112 +263,6 @@ const ReviewPage = () => {
   
       fetchAllData();
     }, [id, navigate, user?.id,isLoading]);
-  
-  const MobileView = () => (
-    <div className="space-y-6">
-      <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-[20px] font-bold">Período y precio</h2>
-        
-        {/* Contenido de período */}
-        <PeriodSection periodData={step2Data} />
-        
-        {/* Mapa con la ubicación */}
-        <div className="mt-6">
-          <p className="mb-2 text-[16px] font-medium text-gray-500">Ubicación</p>
-          {step1Data?.address_details?.coordinates ? (
-            <div className="h-48">
-              <LocationMap
-                coordinates={step1Data.address_details.coordinates}
-                className="h-full w-full rounded-lg"
-                wouldRecommend={step2Data?.would_recommend}
-              />
-            </div>
-          ) : (
-            <div className="flex h-48 items-center justify-center rounded-lg bg-gray-100">
-              <p className="text-gray-500">Ubicación no disponible</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-[20px] font-bold">Opinión</h2>
-        <OpinionSection 
-          propertyOpinion={step3Data?.property_opinion}
-          communityOpinion={step4Data?.community_opinion}
-          ownerOpinion={step5Data?.owner_opinion}
-          wouldRecommend={step2Data?.would_recommend}
-        />
-      </div>
-      
-      <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-[20px] font-bold">Características del piso</h2>
-        <PropertySection propertyData={step3Data} />
-      </div>
-
-      <div className="rounded-lg bg-white p-6 shadow">
-        <h2 className="mb-4 text-[20px] font-bold">Comunidad y vecindario</h2>
-        <CommunitySection communityData={step4Data} />
-      </div>
-    </div>
-  );
-
-  // Componente para la vista de escritorio
-  const DesktopView = () => (
-    <div className="flex flex-row gap-6">
-      {/* Columna izquierda con Período y precio + mapa (sticky) */}
-      <div className="w-1/3">
-        <div className="sticky top-24">
-          <div className="rounded-lg bg-white p-6 shadow">
-            <h2 className="mb-4 text-[20px] font-bold">Período y precio</h2>
-            
-            {/* Contenido de período */}
-            <PeriodSection periodData={step2Data} />
-            
-            {/* Mapa */}
-            <div className="mt-6">
-              <p className="mb-2 text-[16px] font-medium text-gray-500">Ubicación</p>
-              {step1Data?.address_details?.coordinates ? (
-                <div className="h-[calc(30vh)]">
-                  <LocationMap
-                    coordinates={step1Data.address_details.coordinates}
-                    className="h-full w-full rounded-lg"
-                    wouldRecommend={step2Data?.would_recommend}
-                  />
-                </div>
-              ) : (
-                <div className="flex h-[calc(30vh)] items-center justify-center rounded-lg bg-gray-100">
-                  <p className="text-gray-500">Ubicación no disponible</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Columna derecha con el resto de secciones */}
-      <div className="w-2/3 space-y-6">
-        <div className="rounded-lg bg-white p-8 shadow">
-          <OpinionSection 
-            propertyOpinion={step3Data?.property_opinion}
-            communityOpinion={step4Data?.community_opinion}
-            ownerOpinion={step5Data?.owner_opinion}
-            wouldRecommend={step2Data?.would_recommend}
-          />
-        </div>
-        
-        <div className="rounded-lg bg-white p-8 shadow">
-          <h2 className="mb-4 text-[20px] font-bold">Características del piso</h2>
-          <PropertySection propertyData={step3Data} />
-        </div>
-
-        <div className="rounded-lg bg-white p-8 shadow">
-          <h2 className="mb-4 text-[20px] font-bold">Comunidad y vecindario</h2>
-          <CommunitySection communityData={step4Data} />
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16 text-[16px] bg-gray-100 relative">

@@ -74,7 +74,7 @@ async function sendViaWebhook(payload: unknown) {
       body: JSON.stringify(payload),
       // Helps the browser keep sending the request during navigation
       // (payload must remain small for keepalive to work reliably)
-      keepalive: true as any,
+      keepalive: true,
     });
     return res.ok;
   } catch (err) {
