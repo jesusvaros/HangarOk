@@ -121,10 +121,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(400).json({ error: 'Missing endpoint or params' });
     }
 
-    // Try both server-side and Vite environment variables
-    const apiKey = process.env.HERE_API_KEY || process.env.VITE_HERE_API_KEY;
+    // Use server-side environment variable (private, not exposed to browser)
+    const apiKey = process.env.HERE_API_KEY || process.env.VITE_HERE_API_KEY; // VITE_ fallback for migration
     if (!apiKey) {
-      return res.status(500).json({ error: 'HERE API key not configured (set HERE_API_KEY or VITE_HERE_API_KEY)' });
+      return res.status(500).json({ error: 'HERE API key not configured (set HERE_API_KEY in environment variables)' });
     }
 
     // Construct the HERE API URL based on endpoint
