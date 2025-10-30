@@ -83,9 +83,10 @@ app.post('/api/geocode-proxy', async (req, res) => {
       return res.status(400).json({ error: 'Missing endpoint or params' });
     }
 
-    const apiKey = process.env.HERE_API_KEY || process.env.VITE_HERE_API_KEY;
+    // Use server-side environment variable (private, not exposed to browser)
+    const apiKey = process.env.HERE_API_KEY || process.env.VITE_HERE_API_KEY; // VITE_ fallback for migration
     if (!apiKey) {
-      return res.status(500).json({ error: 'HERE API key not configured' });
+      return res.status(500).json({ error: 'HERE API key not configured (set HERE_API_KEY in .env)' });
     }
 
     let url;
