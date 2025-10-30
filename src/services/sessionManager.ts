@@ -35,6 +35,7 @@ export async function initializeSession(userId?: string): Promise<{
   const sessionStatus = await getReviewSessionStatus(sessionId);
 
   if (sessionStatus?.id) {
+    // Store the database row ID for foreign key references in step submissions
     localStorage.setItem(SESSION_ID_KEY_BACK, sessionStatus.id);
   }
 

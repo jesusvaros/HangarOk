@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { supabaseWrapper } from '../services/supabase/client';
 import { useAuth } from '../store/auth/hooks';
 import toast from 'react-hot-toast';
-import { getSessionIdBack } from '../services/sessionManager';
+import { getSessionIdBack, getSessionId } from '../services/sessionManager';
 
 /**
  * AuthCallback handles the redirection coming from Supabase OAuth / Magic-Link.
@@ -53,25 +53,32 @@ const AuthCallback = () => {
         localStorage.setItem('cv_session', JSON.stringify(session));
       }
 
-      // Get session ID if it exists
-      const sessionIdBack = await getSessionIdBack();
+      // Get session token (frontend) and session ID (backend)
+      const sessionIdBack = await getSessionIdBack(); // This is the database row ID
+      const sessionToken = await getSessionId(); // This is the session_token
 
       const url = new URL(window.location.href);
       const sessionIdUrl = url.searchParams.get("sessionId") ?? undefined;
 
-      const sessionId = sessionIdUrl || sessionIdBack;
+      // Use session_token for linking user (not the database row ID)
+      const tokenToUse = sessionIdUrl || sessionToken;
 
-      console.log('aqui llega? ', sessionIdUrl, sessionIdBack, sessionId, user)
+      console.log('Session info:', { 
+        sessionIdUrl, 
+        sessionIdBack, 
+        sessionToken: tokenToUse, 
+        user 
+      });
       
-      // If we have a user and a session ID, update the review_sessions table and check steps completion
-      if (user && sessionId) {
+      // If we have a user and a session token, update the review_sessions table and check steps completion
+      if (user && tokenToUse) {
         try {
           console.log('Updating review session with user ID:', user.id);
-          console.log('Session token from localStorage:', sessionId);
+          console.log('Session token:', tokenToUse);
           
-          // Use the new RPC function that searches by session_token
+          // Use the RPC function that searches by session_token
           const { data: sessionData, error: sessionError } = await client.rpc('update_review_session_user_by_token', {
-            p_session_token: sessionId,
+            p_session_token: tokenToUse,
             p_user_id: user.id
           });
           
@@ -83,25 +90,36 @@ const AuthCallback = () => {
             const sessionStatus = sessionData[0];
             console.log('Session status:', sessionStatus);
             
-            // Check which steps are completed
-            const { step1_completed, step2_completed, step3_completed, step4_completed, step5_completed } = sessionStatus;
+            // Update localStorage with the correct session info after linking user
+            localStorage.setItem('reviewSessionId', sessionStatus.session_token);
+            localStorage.setItem('reviewSessionIdBack', sessionStatus.id);
+            
+            // Check which steps are completed (note: fields use underscores from SQL)
+            const { 
+              step_1_completed, 
+              step_2_completed, 
+              step_3_completed, 
+              step_4_completed, 
+              step_5_completed 
+            } = sessionStatus;
             
             // If all steps are completed, navigate to the review page
-            if (step1_completed && step2_completed && step3_completed && step4_completed && step5_completed) {
-              navigate(`/review/${sessionId}`);
+            if (step_1_completed && step_2_completed && step_3_completed && step_4_completed && step_5_completed) {
+              // Use the database row ID for the review page URL
+              navigate(`/review/${sessionStatus.id}`);
               return;
             }
             
             // Otherwise, navigate to the last incomplete step
-            if (!step1_completed) {
+            if (!step_1_completed) {
               navigate(`/add-review?step=1`);
-            } else if (!step2_completed) {
+            } else if (!step_2_completed) {
               navigate(`/add-review?step=2`);
-            } else if (!step3_completed) {
+            } else if (!step_3_completed) {
               navigate(`/add-review?step=3`);
-            } else if (!step4_completed) {
+            } else if (!step_4_completed) {
               navigate(`/add-review?step=4`);
-            } else if (!step5_completed) {
+            } else if (!step_5_completed) {
               navigate(`/add-review?step=5`);
             } 
           } else {

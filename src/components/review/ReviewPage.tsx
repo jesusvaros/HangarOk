@@ -16,48 +16,61 @@ import PropertySection from './PropertySection';
 import CommunitySection from './CommunitySection';
 import OpinionSection from './OpinionSection';
 
+// Hangar Review Interfaces
 interface Step1Data {
   address_details: {
     street?: string;
     number?: string;
-    floor?: string;
-    door?: string;
     city?: string;
     postalCode?: string;
     coordinates?: { lat: number; lng: number };
   };
+  uses_hangar?: boolean;
+  home_address_details?: {
+    street?: string;
+    city?: string;
+    coordinates?: { lat: number; lng: number };
+  };
+  home_type?: string;
+  connection_type?: string;
 }
 
 interface Step2Data {
-  start_year: number;
-  end_year: number | null;
-  price: number;
-  included_services: string[];
-  would_recommend?: '1'|'2'|'3'|'4'|'5';
-  deposit_returned?: string | undefined;
+  belongs_rating?: number;
+  fair_use_rating?: number;
+  appearance_rating?: number;
+  perception_tags?: string[];
+  community_feedback?: string;
 }
 
 interface Step3Data {
-  summer_temperature: 'Bien aislado' | 'Correcto' | 'Caluroso';
-  winter_temperature: 'Bien aislado' | 'Correcto' | 'Frío';
-  noise_level: 'Silencioso' | 'Tolerable' | 'Bastante' | 'Se oye todo';
-  light_level: 'Nada de luz' | 'Poca luz' | 'Luminoso' | 'Muy luminoso';
-  maintenance_status: 'Como nuevo' | 'Bueno' | 'Aceptable' | 'Poco' | 'Malo';
-  property_opinion?: string;
+  daytime_safety_rating?: number;
+  nighttime_safety_rating?: number;
+  bike_messed_with?: boolean;
+  current_bike_storage?: string;
+  theft_worry_rating?: number;
+  safety_tags?: string[];
 }
 
 interface Step4Data {
-  neighbor_types?: string[];
-  tourist_apartments?: 'Sí, tolerable' | 'Sí, molestos' | 'No hay';
-  building_cleanliness?: 'Muy limpio' | 'Buena' | 'Poca' | 'Sin limpieza';
-  community_environment?: string[];
-  community_security?: 'Muy segura' | 'Sin problemas' | 'Mejorable' | 'Poco segura';
-  community_opinion?: string;
+  lock_ease_rating?: number;
+  space_rating?: number;
+  lighting_rating?: number;
+  maintenance_rating?: number;
+  usability_tags?: string[];
+  improvement_suggestion?: string;
+  stops_cycling?: string;
+  impact_tags?: string[];
 }
 
 interface Step5Data {
-  owner_type?: 'Particular' | 'Agencia';
-  owner_opinion?: string;
+  report_ease_rating?: number;
+  fix_speed_rating?: number;
+  communication_rating?: number;
+  maintenance_tags?: string[];
+  waitlist_fairness_rating?: number;
+  waitlist_tags?: string[];
+  improvement_feedback?: string;
 }
 
 const ReviewPage = () => {
@@ -116,48 +129,58 @@ const ReviewPage = () => {
             if (publicReview) {
               // Public review found. Populate UI from public data and skip session checks.
               setIsUserReview(false);
-              setIsValidated(!!publicReview.validated_at || !!publicReview.is_public);
+              setIsValidated(!!publicReview.validated || !!publicReview.is_public);
               setIsPublicReview(true);
 
-              // Step 1
+              // Step 1: Location & Usage
               setStep1Data({
                 address_details: publicReview.address_details,
+                uses_hangar: publicReview.uses_hangar,
+                home_address_details: publicReview.home_address_details,
+                home_type: publicReview.home_type,
+                connection_type: publicReview.connection_type,
               });
 
-              // Step 2
+              // Step 2: Community Perception
               setStep2Data({
-                start_year: publicReview.start_year,
-                end_year: publicReview.end_year,
-                price: publicReview.price,
-                included_services: publicReview.included_services ?? [],
-                would_recommend: publicReview.would_recommend ?? undefined,
-                deposit_returned: publicReview.deposit_returned ?? undefined,
+                belongs_rating: publicReview.belongs_rating,
+                fair_use_rating: publicReview.fair_use_rating,
+                appearance_rating: publicReview.appearance_rating,
+                perception_tags: publicReview.perception_tags ?? [],
+                community_feedback: publicReview.community_feedback,
               });
 
-              // Step 3
+              // Step 3: Safety & Security
               setStep3Data({
-                summer_temperature: publicReview.summer_temperature,
-                winter_temperature: publicReview.winter_temperature,
-                noise_level: publicReview.noise_level,
-                light_level: publicReview.light_level,
-                maintenance_status: publicReview.maintenance_status,
-                property_opinion: publicReview.property_opinion,
+                daytime_safety_rating: publicReview.daytime_safety_rating,
+                nighttime_safety_rating: publicReview.nighttime_safety_rating,
+                bike_messed_with: publicReview.bike_messed_with,
+                current_bike_storage: publicReview.current_bike_storage,
+                theft_worry_rating: publicReview.theft_worry_rating,
+                safety_tags: publicReview.safety_tags ?? [],
               });
 
-              // Step 4
+              // Step 4: Usability & Impact
               setStep4Data({
-                neighbor_types: publicReview.neighbor_types ?? [],
-                tourist_apartments: publicReview.tourist_apartments,
-                building_cleanliness: publicReview.building_cleanliness,
-                community_environment: publicReview.community_environment ?? [],
-                community_security: publicReview.community_security,
-                community_opinion: publicReview.community_opinion,
+                lock_ease_rating: publicReview.lock_ease_rating,
+                space_rating: publicReview.space_rating,
+                lighting_rating: publicReview.lighting_rating,
+                maintenance_rating: publicReview.maintenance_rating,
+                usability_tags: publicReview.usability_tags ?? [],
+                improvement_suggestion: publicReview.improvement_suggestion,
+                stops_cycling: publicReview.stops_cycling,
+                impact_tags: publicReview.impact_tags ?? [],
               });
 
-              // Step 5
+              // Step 5: Maintenance & Support
               setStep5Data({
-                owner_type: publicReview.owner_type,
-                owner_opinion: publicReview.owner_opinion,
+                report_ease_rating: publicReview.report_ease_rating,
+                fix_speed_rating: publicReview.fix_speed_rating,
+                communication_rating: publicReview.communication_rating,
+                maintenance_tags: publicReview.maintenance_tags ?? [],
+                waitlist_fairness_rating: publicReview.waitlist_fairness_rating,
+                waitlist_tags: publicReview.waitlist_tags ?? [],
+                improvement_feedback: publicReview.improvement_feedback,
               });
 
               setLoading(false);

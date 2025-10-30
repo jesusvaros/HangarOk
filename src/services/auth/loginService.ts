@@ -1,11 +1,11 @@
-import { getSessionIdBack } from '../sessionManager';
+import { getSessionId } from '../sessionManager';
 import { supabaseWrapper } from '../supabase/client';
 
 export type LoginStatus = 'idle' | 'loading' | 'link-sent' | 'error';
 
 export const sendEmailOtp = async (email: string) => {
   const client = supabaseWrapper.getClient();
-  const sessionId = await getSessionIdBack(); 
+  const sessionId = await getSessionId(); // Use session_token for login link 
 
   if (!client || !email) {
     return { 
@@ -46,7 +46,7 @@ console.log('Session ID:', sessionId,window.location.origin);
  */
 export const signInWithGoogle = async () => {
   const client = supabaseWrapper.getClient();
-  const sessionId = await getSessionIdBack(); 
+  const sessionId = await getSessionId(); // Use session_token for login link 
   if (!client) {
     return { 
       success: false, 
