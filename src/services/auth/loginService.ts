@@ -13,13 +13,18 @@ export const sendEmailOtp = async (email: string) => {
       error: 'Introduce un correo electrónico válido.' 
     };
   }
-console.log('Session ID:', sessionId,window.location.origin);
+  // Use environment variable for site URL, fallback to window.location.origin
+  const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin;
+  const redirectUrl = `${siteUrl}/auth/callback?sessionId=${sessionId}`;
+  
+  console.log('Magic link redirect URL:', redirectUrl);
+  
   try {
     const result = await client.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
-        emailRedirectTo: `${window.location.origin}/auth/callback?sessionId=${sessionId}`,
+        emailRedirectTo: redirectUrl,
       },
     });
 
@@ -54,11 +59,17 @@ export const signInWithGoogle = async () => {
     };
   }
 
+  // Use environment variable for site URL, fallback to window.location.origin
+  const siteUrl = import.meta.env.VITE_SITE_URL || window.location.origin;
+  const redirectUrl = `${siteUrl}/auth/callback?sessionId=${sessionId}`;
+  
+  console.log('Google OAuth redirect URL:', redirectUrl);
+
   try {
     const result = await client.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?sessionId=${sessionId}`,
+        redirectTo: redirectUrl,
       },
     });
     if (result.error) {
