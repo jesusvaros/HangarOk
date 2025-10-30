@@ -27,6 +27,9 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
     { value: 'hangar_damaged', label: '🔨 The hangar gets damaged' },
     { value: 'visible_neighbours', label: '👁️ Visible to neighbours' },
     { value: 'feels_safe', label: '✅ Feels safe on this street' },
+    { value: 'police_dont_care', label: '🚔 Police don\'t take bike theft seriously' },
+    { value: 'insurance_no_cover', label: '🛡️ Insurance doesn\'t really cover me' },
+    { value: 'cars_too_close', label: '🚗 Cars park too close - feels unsafe' },
   ];
 
   // Determine if user has a hangar based on Step 1

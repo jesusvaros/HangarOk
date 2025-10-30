@@ -28,6 +28,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
     { value: 'cyclists_unwelcome', label: '🚴 Cyclists don\'t feel welcome here' },
     { value: 'more_like_this', label: '👍 Should be more like this' },
     { value: 'people_mock', label: '😂 People laugh or mock it' },
+    { value: 'car_parking_protected', label: '🚙 Car parking seems more protected than bike parking' },
   ];
 
 

@@ -27,6 +27,8 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({
     { value: 'someone_in_space', label: '🚲 Someone in my space' },
     { value: 'vandalism', label: '🔨 Vandalism' },
     { value: 'good_at_fixing', label: '✅ They\'re pretty good at fixing stuff' },
+    { value: 'no_clear_contact', label: '❓ Not clear who to ask when something\'s wrong' },
+    { value: 'no_one_responsible', label: '🤷 No one seems responsible for fixing things' },
   ];
 
   const waitlistTagOptions = [
