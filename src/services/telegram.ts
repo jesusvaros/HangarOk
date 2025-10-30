@@ -11,53 +11,56 @@ const join = (arr?: (string | undefined)[]) =>
   Array.isArray(arr) && arr.length ? arr.filter(Boolean).join(', ') : '-';
 
 export function buildReviewSummary(sessionId: string, userId: string, data: FormDataType) {
-  const addr = data.addressDetails;
+  const addr = data.hangarLocation;
   const addressLine = addr?.fullAddress
-    || [addr?.street, addr?.number, addr?.floor, addr?.door, addr?.city]
+    || [addr?.street, addr?.number, addr?.city]
       .filter(Boolean)
       .join(' ');
 
   const lines = [
-    `✅ Nueva reseña finalizada` ,
+    `🚲 Nueva reseña de hangar finalizada` ,
     `Session: ${sessionId}`,
     `User: ${userId}`,
     '',
-    `Dirección: ${safe(addressLine)}`,
+    `📍 Ubicación del hangar: ${safe(addressLine)}`,
+    `Usa el hangar: ${data.usesHangar ? 'Sí' : 'No'}`,
+    `Tipo de vivienda: ${safe(data.homeType)}`,
+    `Conexión: ${safe(data.connectionType)}`,
     '',
-    '— Estancia —',
-    `Años: ${safe(data.startYear)} - ${safe(data.endYear ?? 'Presente')}`,
-    `Precio: ${safe(data.price)}`,
-    `Servicios incluidos: ${join(data.includedServices)}`,
-    `Recomendaría: ${safe(data.wouldRecommend)}`,
-    `Fianza devuelta: ${safe(data.depositReturned)}`,
+    '— Percepción Comunitaria —',
+    `Pertenencia (1-5): ${safe(data.belongsRating)}`,
+    `Uso justo del espacio (1-5): ${safe(data.fairUseRating)}`,
+    `Apariencia (1-5): ${safe(data.appearanceRating)}`,
+    `Tags: ${join(data.perceptionTags)}`,
+    `Feedback: ${safe(data.communityFeedback)}`,
     '',
-    '— Piso —',
-    `Verano: ${safe(data.summerTemperature)}`,
-    `Invierno: ${safe(data.winterTemperature)}`,
-    `Ruido: ${safe(data.noiseLevel)}`,
-    `Luz: ${safe(data.lightLevel)}`,
-    `Mantenimiento: ${safe(data.maintenanceStatus)}`,
-    `Opinión piso: ${safe(data.propertyOpinion)}`,
+    '— Seguridad —',
+    `Seguridad diurna (1-5): ${safe(data.daytimeSafetyRating)}`,
+    `Seguridad nocturna (1-5): ${safe(data.nighttimeSafetyRating)}`,
+    `Bici manipulada: ${data.bikeMessedWith ? 'Sí' : 'No'}`,
+    `Almacenamiento actual: ${safe(data.currentBikeStorage)}`,
+    `Preocupación por robo (1-5): ${safe(data.theftWorryRating)}`,
+    `Tags seguridad: ${join(data.safetyTags)}`,
     '',
-    '— Comunidad —',
-    `Vecindario: ${join(data.neighborTypes)}`,
-    `Apart. turísticos: ${safe(data.touristApartments)}`,
-    `Limpieza: ${safe(data.buildingCleanliness)}`,
-    `Entorno: ${join(data.communityEnvironment)}`,
-    `Seguridad: ${safe(data.communitySecurity)}`,
-    `Opinión comunidad: ${safe(data.communityOpinion)}`,
+    '— Usabilidad e Impacto —',
+    `Facilidad de cierre (1-5): ${safe(data.lockEaseRating)}`,
+    `Espacio (1-5): ${safe(data.spaceRating)}`,
+    `Iluminación (1-5): ${safe(data.lightingRating)}`,
+    `Mantenimiento (1-5): ${safe(data.maintenanceRating)}`,
+    `Tags usabilidad: ${join(data.usabilityTags)}`,
+    `Sugerencias: ${safe(data.improvementSuggestion)}`,
+    `Impide usar bici: ${safe(data.stopsCycling)}`,
+    `Tags impacto: ${join(data.impactTags)}`,
     '',
-    '— Propietario —',
-    `Tipo: ${safe(data.ownerType)}`,
-    // Prefer hashed identifiers if present
-    `Nombre (hash): ${safe(data.ownerNameHash)}`,
-    `Teléfono (hash): ${safe(data.ownerPhoneHash)}`,
-    `Email (hash): ${safe(data.ownerEmailHash)}`,
-    `Opinión: ${safe(data.ownerOpinion)}`,
+    '— Mantenimiento y Soporte —',
+    `Facilidad reporte (1-5): ${safe(data.reportEaseRating)}`,
+    `Velocidad reparación (1-5): ${safe(data.fixSpeedRating)}`,
+    `Comunicación (1-5): ${safe(data.communicationRating)}`,
+    `Tags mantenimiento: ${join(data.maintenanceTags)}`,
+    `Justicia lista espera (1-5): ${safe(data.waitlistFairnessRating)}`,
+    `Tags lista espera: ${join(data.waitlistTags)}`,
+    `Feedback mejoras: ${safe(data.improvementFeedback)}`,
   ];
-
-  // Optional contact info (commented out to avoid sending PII by default)
-  // lines.push('', '— Contacto —', `Nombre: ${safe(data.contactName)}`, `Email: ${safe(data.contactEmail)}`);
 
   return lines.join('\n');
 }
