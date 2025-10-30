@@ -67,14 +67,12 @@ const AuthCallback = () => {
       if (user && sessionId) {
         try {
           console.log('Updating review session with user ID:', user.id);
-          await client
-            .from('review_sessions')
-            .update({ user_id: user.id })
-            .eq('id', sessionId);
+          console.log('Session token from localStorage:', sessionId);
           
-         
-          const { data: sessionData, error: sessionError } = await client.rpc('get_review_session_by_id', {
-            p_id: sessionId, // uuid de la fila
+          // Use the new RPC function that searches by session_token
+          const { data: sessionData, error: sessionError } = await client.rpc('update_review_session_user_by_token', {
+            p_session_token: sessionId,
+            p_user_id: user.id
           });
           
           if (sessionError) {
