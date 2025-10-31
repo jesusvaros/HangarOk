@@ -22,7 +22,7 @@ export type AddressStepData = HangarStep1Data;
 export interface HangarStep1Payload {
   hangarLocation: {
     street?: string;
-    number?: string;
+    number?: string; // Hidden field (kept for DB compatibility)
     city?: string;
     postalCode?: string;
     state?: string;
@@ -32,6 +32,7 @@ export interface HangarStep1Payload {
       lng: number;
     };
   };
+  hangarNumber?: string; // NEW: Hangar number (independent from address)
   usesHangar: boolean;
   homeType: 'flat' | 'house' | 'shared' | 'other';
   connectionType: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes';
@@ -81,12 +82,13 @@ export async function submitAddressStep1(payload: HangarStep1Payload): Promise<b
       p_review_session_id: sessionId,
       p_hangar_location: {
         street: payload.hangarLocation.street,
-        number: payload.hangarLocation.number,
+        number: payload.hangarLocation.number, // Hidden field (kept for DB compatibility)
         city: payload.hangarLocation.city,
         postalCode: payload.hangarLocation.postalCode,
         fullAddress: payload.hangarLocation.fullAddress,
         coordinates: payload.hangarLocation.coordinates,
       },
+      p_hangar_number: payload.hangarNumber || null,
       p_uses_hangar: payload.usesHangar,
       p_home_type: payload.homeType,
       p_connection_type: payload.connectionType,

@@ -3,8 +3,8 @@ import { useFormContext } from '../../store/useFormContext';
 import AddressAutocomplete, { type AddressResult } from '../ui/AddressAutocomplete';
 import LocationMap from '../ui/LocationMap';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
+import CustomInput from '../ui/CustomInput';
 import { useMapLocationHandler } from './location/mapLocationHandler';
-import { geocodingService } from '../ui/address/geocodingService';
 import type { FormDataType } from '../../store/formTypes';
 import { umamiEventProps } from '../../utils/analytics';
 
@@ -63,18 +63,9 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
     updateFormData({ hangarLocation: converted });
   });
 
-  const handleHangarNumberChange = (number: string) => {
-    const updated = { ...hangarLocation, number };
-    setHangarLocation(updated);
-    updateFormData({ hangarLocation: updated });
-  };
-
-  const handleHangarNumberBlur = async (number: string) => {
-    if (hangarLocation?.street && hangarLocation.street.trim() !== '' && number.trim() !== '') {
-      const updatedResult = await geocodingService.getCoordinatesForAddress(hangarLocation, number);
-      setHangarLocation(updatedResult);
-      updateFormData({ hangarLocation: updatedResult });
-    }
+  // Hangar number handler (independent field, not part of address)
+  const handleHangarNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    updateFormData({ hangarNumber: e.target.value });
   };
 
 
@@ -92,10 +83,10 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
         <AddressAutocomplete
           value={hangarLocation?.street || ''}
           streetNumberValue={hangarLocation?.number || ''}
-          onNumberChange={handleHangarNumberChange}
-          onNumberBlur={handleHangarNumberBlur}
+          onNumberChange={() => {}} // No-op, field is hidden
+          onNumberBlur={() => {}} // No-op, field is hidden
           onSelect={handleHangarSelect}
-          showNumberField={true}
+          showNumberField={false} // Hide the number field
           hasError={fieldErrors?.hangarLocation}
         />
         
@@ -108,6 +99,24 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
           onLocationSelect={handleHangarLocationSelect}
           className="mt-4"
         />
+        
+        {/* NEW: Hangar Number field (independent from address) */}
+        <div className="mt-4">
+          <label htmlFor="hangarNumber" className="mb-2 block text-lg font-medium text-black">
+            Hangar Number (optional)
+          </label>
+          <CustomInput
+            type="text"
+            id="hangarNumber"
+            value={formData.hangarNumber || ''}
+            onChange={handleHangarNumberChange}
+            placeholder="e.g., Cyclehangar_2271, Bikehangar_1451"
+            className="rounded-lg"
+          />
+          <p className="mt-1 text-sm text-gray-500">
+            If you know the hangar's identifier (usually found on the hangar itself), add it here
+          </p>
+        </div>
       </div>
 
       {/* Section 2: Do you use this hangar? */}

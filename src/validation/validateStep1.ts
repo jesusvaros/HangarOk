@@ -11,6 +11,7 @@ export interface ValidationResult {
 
 export interface FormContext {
   hangarLocation?: FormDataType['hangarLocation'];
+  hangarNumber?: FormDataType['hangarNumber'];
   usesHangar?: FormDataType['usesHangar'];
   homeType?: FormDataType['homeType'];
   connectionType?: FormDataType['connectionType'];
@@ -88,7 +89,7 @@ export const submitStep1 = async (
   context: FormContext
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { hangarLocation, usesHangar, homeType, connectionType } = context;
+    const { hangarLocation, hangarNumber, usesHangar, homeType, connectionType } = context;
 
     // Basic check - validation should have already happened
     if (!hangarLocation?.coordinates || usesHangar === undefined || !homeType || !connectionType) {
@@ -107,6 +108,7 @@ export const submitStep1 = async (
     // Submit data using our Supabase client function
     const success = await submitAddressStep1({
       hangarLocation,
+      hangarNumber,
       usesHangar,
       homeType,
       connectionType,
