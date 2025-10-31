@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabaseWrapper } from '../../services/supabase/client';
 import { useAuth } from '../../store/auth/hooks';
 // TODO: This file is for old rental apartment reviews, needs to be updated for hangars
@@ -60,14 +60,26 @@ interface Step5Data {
 const ReviewPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isUserReview, setIsUserReview] = useState(false);
   const [isValidated, setIsValidated] = useState(false);
   const [isPublicReview, setIsPublicReview] = useState(false);
+  const [showSuccessBanner, setShowSuccessBanner] = useState(false);
   
   // Use the auth context
   const { user, isLoading } = useAuth();
+  
+  // Check if user just completed the review
+  useEffect(() => {
+    const completed = searchParams.get('completed');
+    if (completed === 'true') {
+      setShowSuccessBanner(true);
+      // Remove the query param from URL
+      window.history.replaceState({}, '', `/review/${id}`);
+    }
+  }, [searchParams, id]);
 
     // Estados para cada paso
     const [step1Data, setStep1Data] = useState<AddressStepData | null>(null);
@@ -263,6 +275,91 @@ const ReviewPage = () => {
           <span className="text-xl font-medium">Mapa</span>
         </button>
       )}
+      {/* Success Banner */}
+      {showSuccessBanner && isUserReview && (
+        <div className="max-w-3xl mx-auto mb-8 bg-gradient-to-r from-green-50 to-green-100 border-2 border-green-500 rounded-lg p-6 shadow-lg">
+          <div className="flex items-start gap-4">
+            {/* Success Icon */}
+            <div className="flex-shrink-0">
+              <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+            </div>
+            
+            {/* Content */}
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                You just helped cyclists across the UK make safer choices! 🚴
+              </h2>
+              <p className="text-lg text-gray-700 mb-4">Thank you — seriously.</p>
+              
+              {/* Action Buttons */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <button
+                  onClick={() => {
+                    localStorage.removeItem('reviewSessionId');
+                    localStorage.removeItem('reviewSessionIdBack');
+                    navigate('/');
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50 transition-colors font-medium"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  Review another hangar
+                </button>
+                
+                <button
+                  onClick={() => navigate('/map')}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50 transition-colors font-medium"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                  See safest hangars nearby
+                </button>
+                
+                <button
+                  onClick={async () => {
+                    const shareData = {
+                      title: 'HangarOk - Cycle Hangar Reviews',
+                      text: 'I just reviewed a cycle hangar on HangarOk! Help make cycling safer by sharing your experience too.',
+                      url: window.location.origin,
+                    };
+                    try {
+                      if (navigator.share) {
+                        await navigator.share(shareData);
+                      } else {
+                        await navigator.clipboard.writeText(`${shareData.text} ${shareData.url}`);
+                        alert('Link copied to clipboard!');
+                      }
+                    } catch (err) {
+                      console.log('Error sharing:', err);
+                    }
+                  }}
+                  className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-green-600 text-green-700 rounded-lg hover:bg-green-50 transition-colors font-medium"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                  </svg>
+                  Share with a cyclist friend
+                </button>
+              </div>
+              
+              {/* Close button */}
+              <button
+                onClick={() => setShowSuccessBanner(false)}
+                className="mt-4 text-sm text-gray-600 hover:text-gray-800 underline"
+              >
+                Dismiss
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Título principal con la dirección */}
       <div className="flex flex-col items-center mb-8">
         <h1 className="text-center text-2xl font-bold md:text-3xl lg:text-4xl mt-8">

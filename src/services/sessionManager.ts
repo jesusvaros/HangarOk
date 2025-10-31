@@ -14,6 +14,26 @@ export async function initializeSession(userId?: string): Promise<{
 
   console.log('Current sessionId from localStorage:', sessionId);
 
+  // Check if existing session is completed
+  if (sessionId) {
+    const existingStatus = await getReviewSessionStatus(sessionId);
+    
+    // If session is completed (all 5 steps done), create a new session
+    const isCompleted = existingStatus?.step1_completed && 
+                       existingStatus?.step2_completed && 
+                       existingStatus?.step3_completed && 
+                       existingStatus?.step4_completed && 
+                       existingStatus?.step5_completed;
+    
+    if (isCompleted) {
+      console.log('Previous session completed, creating new session');
+      // Clear old session IDs
+      localStorage.removeItem(SESSION_ID_KEY_FRONT);
+      localStorage.removeItem(SESSION_ID_KEY_BACK);
+      sessionId = null;
+    }
+  }
+
   if (!sessionId) {
     sessionId = crypto.randomUUID();
     localStorage.setItem(SESSION_ID_KEY_FRONT, sessionId);

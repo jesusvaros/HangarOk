@@ -103,10 +103,10 @@ const AuthCallback = () => {
               step_5_completed 
             } = sessionStatus;
             
-            // If all steps are completed, navigate to the review page
+            // If all steps are completed, navigate to the review page with success banner
             if (step_1_completed && step_2_completed && step_3_completed && step_4_completed && step_5_completed) {
-              // Use the database row ID for the review page URL
-              navigate(`/review/${sessionStatus.id}`);
+              // Use the database row ID for the review page URL and add completed param
+              navigate(`/review/${sessionStatus.id}?completed=true`);
               return;
             }
             

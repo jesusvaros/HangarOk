@@ -11,33 +11,22 @@ interface UserProfile {
   created_at: string;
 }
 
-interface AddressStep1 {
-  id: string;
-  review_session_id: string;
-  street?: string;
-  number?: string;
-  city?: string;
-  postal_code?: string;
-  province?: string;
-  created_at: string;
-}
-
 interface UserReview {
   id: string;
-  user_id: string;
-  displayAddress?: string;
+  session_token: string;
+  user_id: string | null;
   created_at: string;
-  updated_at?: string;
-  status?: string;
-  address?: AddressStep1[];
+  updated_at: string;
+  validated_at?: string | null;
   validated?: boolean;
   completed?: boolean;
   nextIncompleteStep?: number;
-  step1_completed?: boolean;
-  step2_completed?: boolean;
-  step3_completed?: boolean;
-  step4_completed?: boolean;
-  step5_completed?: boolean;
+  displayAddress?: string;
+  step_1_completed?: boolean;
+  step_2_completed?: boolean;
+  step_3_completed?: boolean;
+  step_4_completed?: boolean;
+  step_5_completed?: boolean;
 }
 
 const ProfilePage: React.FC = () => {
@@ -75,7 +64,7 @@ const ProfilePage: React.FC = () => {
             .from('review_sessions')
             .select('*')
             .eq('user_id', user.id)
-            .eq('step1_completed', true)
+            .eq('step_1_completed', true)
         ]);
 
         if (sessionsResponse.error) {
@@ -102,23 +91,23 @@ const ProfilePage: React.FC = () => {
           const addressResult = addressResults[index];
           
           // Check if all steps are completed
-          const allStepsCompleted = session.step1_completed && 
-                                   session.step2_completed && 
-                                   session.step3_completed && 
-                                   session.step4_completed && 
-                                   session.step5_completed;
+          const allStepsCompleted = session.step_1_completed && 
+                                   session.step_2_completed && 
+                                   session.step_3_completed && 
+                                   session.step_4_completed && 
+                                   session.step_5_completed;
           
           // Determine the next incomplete step (for redirection)
           let nextIncompleteStep = 1;
-          if (session.step1_completed) nextIncompleteStep = 2;
-          if (session.step2_completed) nextIncompleteStep = 3;
-          if (session.step3_completed) nextIncompleteStep = 4;
-          if (session.step4_completed) nextIncompleteStep = 5;
+          if (session.step_1_completed) nextIncompleteStep = 2;
+          if (session.step_2_completed) nextIncompleteStep = 3;
+          if (session.step_3_completed) nextIncompleteStep = 4;
+          if (session.step_4_completed) nextIncompleteStep = 5;
           
           return {
             ...session,
             displayAddress: addressResult?.hangar_location?.street || 'Dirección no disponible',
-            validated: session.validated === true,
+            validated: session.validated_at !== null && session.validated_at !== undefined,
             completed: allStepsCompleted,
             nextIncompleteStep
           };
