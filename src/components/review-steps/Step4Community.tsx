@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
+import StarRating from '../ui/StarRating';
 import { umamiEventProps } from '../../utils/analytics';
 
 interface Step4CommunityProps {
@@ -52,48 +53,40 @@ const Step4Community: React.FC<Step4CommunityProps> = ({
         <>
           {/* Lock ease rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="How easy is it to lock and unlock your bike?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.lockEaseRating ? [String(formData.lockEaseRating)] : []}
-              onChange={(selected) => updateFormData({ lockEaseRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.lockEaseRating}
+              onChange={(value) => updateFormData({ lockEaseRating: value })}
               error={fieldErrors?.lockEaseRating}
             />
           </div>
 
           {/* Space rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="Is there space to get your bike in and out?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.spaceRating ? [String(formData.spaceRating)] : []}
-              onChange={(selected) => updateFormData({ spaceRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.spaceRating}
+              onChange={(value) => updateFormData({ spaceRating: value })}
               error={fieldErrors?.spaceRating}
             />
           </div>
 
           {/* Lighting rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="How's the lighting here?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.lightingRating ? [String(formData.lightingRating)] : []}
-              onChange={(selected) => updateFormData({ lightingRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.lightingRating}
+              onChange={(value) => updateFormData({ lightingRating: value })}
               error={fieldErrors?.lightingRating}
             />
           </div>
 
           {/* Maintenance rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="How well is it looked after?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.maintenanceRating ? [String(formData.maintenanceRating)] : []}
-              onChange={(selected) => updateFormData({ maintenanceRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.maintenanceRating}
+              onChange={(value) => updateFormData({ maintenanceRating: value })}
               error={fieldErrors?.maintenanceRating}
             />
           </div>

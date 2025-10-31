@@ -35,10 +35,10 @@ export async function getHangarStep4Data(reviewSessionId: string): Promise<Hanga
 
 export async function submitHangarStep4(payload: {
   reviewSessionId: string;
-  lockEaseRating: number | null | undefined;
-  spaceRating: number | null | undefined;
-  lightingRating: number | null | undefined;
-  maintenanceRating: number | null | undefined;
+  lockEaseRating: 1 | 2 | 3 | 4 | 5 | null | undefined;
+  spaceRating: 1 | 2 | 3 | 4 | 5 | null | undefined;
+  lightingRating: 1 | 2 | 3 | 4 | 5 | null | undefined;
+  maintenanceRating: 1 | 2 | 3 | 4 | 5 | null | undefined;
   usabilityTags: string[];
   improvementSuggestion: string | null;
   stopsCycling: string | null | undefined;

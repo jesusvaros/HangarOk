@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
+import StarRating from '../ui/StarRating';
 import { umamiEventProps } from '../../utils/analytics';
 
 interface Step2Props {
@@ -43,36 +44,30 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
 
       {/* Question 1: How well does this hangar belong here? */}
       <div>
-        <SelectableTagGroup
+        <StarRating
           label="How well does this hangar belong here?"
-          options={['1', '2', '3', '4', '5']}
-          selectedOptions={formData.belongsRating ? [String(formData.belongsRating)] : []}
-          onChange={(selected) => updateFormData({ belongsRating: Number(selected[0]) as 1|2|3|4|5 })}
-          multiSelect={false}
+          value={formData.belongsRating}
+          onChange={(value) => updateFormData({ belongsRating: value })}
           error={fieldErrors?.belongsRating}
         />
       </div>
 
       {/* Question 2: Is it a fair use of space on this street? */}
       <div>
-        <SelectableTagGroup
+        <StarRating
           label="Is it a fair use of space on this street?"
-          options={['1', '2', '3', '4', '5']}
-          selectedOptions={formData.fairUseRating ? [String(formData.fairUseRating)] : []}
-          onChange={(selected) => updateFormData({ fairUseRating: Number(selected[0]) as 1|2|3|4|5 })}
-          multiSelect={false}
+          value={formData.fairUseRating}
+          onChange={(value) => updateFormData({ fairUseRating: value })}
           error={fieldErrors?.fairUseRating}
         />
       </div>
 
       {/* Question 3: How does it look on your street? */}
       <div>
-        <SelectableTagGroup
+        <StarRating
           label="How does it look on your street?"
-          options={['1', '2', '3', '4', '5']}
-          selectedOptions={formData.appearanceRating ? [String(formData.appearanceRating)] : []}
-          onChange={(selected) => updateFormData({ appearanceRating: Number(selected[0]) as 1|2|3|4|5 })}
-          multiSelect={false}
+          value={formData.appearanceRating}
+          onChange={(value) => updateFormData({ appearanceRating: value })}
           error={fieldErrors?.appearanceRating}
         />
       </div>

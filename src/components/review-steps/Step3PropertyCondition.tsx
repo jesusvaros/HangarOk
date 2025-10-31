@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
+import StarRating from '../ui/StarRating';
 import { umamiEventProps } from '../../utils/analytics';
 
 interface Step3Props {
@@ -50,24 +51,20 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
         <>
           {/* Daytime safety rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="Daytime — how safe?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.daytimeSafetyRating ? [String(formData.daytimeSafetyRating)] : []}
-              onChange={(selected) => updateFormData({ daytimeSafetyRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.daytimeSafetyRating}
+              onChange={(value) => updateFormData({ daytimeSafetyRating: value })}
               error={fieldErrors?.daytimeSafetyRating}
             />
           </div>
 
           {/* Nighttime safety rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="Night-time — how safe?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.nighttimeSafetyRating ? [String(formData.nighttimeSafetyRating)] : []}
-              onChange={(selected) => updateFormData({ nighttimeSafetyRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.nighttimeSafetyRating}
+              onChange={(value) => updateFormData({ nighttimeSafetyRating: value })}
               error={fieldErrors?.nighttimeSafetyRating}
             />
           </div>
@@ -129,12 +126,10 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
 
           {/* How worried about theft */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="How worried about theft are you?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.theftWorryRating ? [String(formData.theftWorryRating)] : []}
-              onChange={(selected) => updateFormData({ theftWorryRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.theftWorryRating}
+              onChange={(value) => updateFormData({ theftWorryRating: value })}
               error={fieldErrors?.theftWorryRating}
             />
           </div>

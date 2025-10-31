@@ -1,6 +1,7 @@
 import React from 'react';
 import { useFormContext } from '../../store/useFormContext';
 import SelectableTagGroup from '../ui/SelectableTagGroup';
+import StarRating from '../ui/StarRating';
 import CustomCheckbox from '../ui/CustomCheckbox';
 import { umamiEventProps } from '../../utils/analytics';
 
@@ -54,36 +55,30 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({
         <>
           {/* Report ease rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="How easy is it to report a problem?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.reportEaseRating ? [String(formData.reportEaseRating)] : []}
-              onChange={(selected) => updateFormData({ reportEaseRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.reportEaseRating}
+              onChange={(value) => updateFormData({ reportEaseRating: value })}
               error={fieldErrors?.reportEaseRating}
             />
           </div>
 
           {/* Fix speed rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="How quickly did they fix things?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.fixSpeedRating ? [String(formData.fixSpeedRating)] : []}
-              onChange={(selected) => updateFormData({ fixSpeedRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.fixSpeedRating}
+              onChange={(value) => updateFormData({ fixSpeedRating: value })}
               error={fieldErrors?.fixSpeedRating}
             />
           </div>
 
           {/* Communication rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="Good communication?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.communicationRating ? [String(formData.communicationRating)] : []}
-              onChange={(selected) => updateFormData({ communicationRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.communicationRating}
+              onChange={(value) => updateFormData({ communicationRating: value })}
               error={fieldErrors?.communicationRating}
             />
           </div>
@@ -113,12 +108,10 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({
         <>
           {/* Waitlist fairness rating */}
           <div>
-            <SelectableTagGroup
+            <StarRating
               label="Does the waiting list feel fair?"
-              options={['1', '2', '3', '4', '5']}
-              selectedOptions={formData.waitlistFairnessRating ? [String(formData.waitlistFairnessRating)] : []}
-              onChange={(selected) => updateFormData({ waitlistFairnessRating: Number(selected[0]) as 1|2|3|4|5 })}
-              multiSelect={false}
+              value={formData.waitlistFairnessRating}
+              onChange={(value) => updateFormData({ waitlistFairnessRating: value })}
               error={fieldErrors?.waitlistFairnessRating}
             />
           </div>
