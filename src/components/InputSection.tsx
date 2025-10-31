@@ -24,10 +24,10 @@ const InputSection: React.FC = () => {
   const { currentMessageIndex, nextMessageIndex, isAnimating, isMobile } = state;
 
   const messages = [
-    'Todas las reviews son Anónimas',
-    'Tus opiniones ayudan a crear un mercado de alquiler más transparente',
-    'Comparte tu experiencia con otros inquilinos',
-    'Ayuda a mejorar el mercado inmobiliario',
+    'All reviews are anonymous',
+    'Your experience helps build safer, fairer streets for everyone',
+    'Share your hangar experience with other riders',
+    'Help improve cycle storage across the UK',
   ];
 
   // Check if the device is mobile
@@ -199,25 +199,25 @@ const InputSection: React.FC = () => {
                 onClick={() => setMode('form')}
                 className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${mode === 'form' ? 'bg-[#4A5E32] text-white' : 'text-[#4A5E32] hover:bg-gray-100'}`}
               >
-                Escribir review
+                Write a review
               </button>
               <button
                 type="button"
                 onClick={() => setMode('map')}
                 className={`ml-1 px-4 py-2 text-sm font-medium rounded-md transition-colors ${mode === 'map' ? 'bg-[#4A5E32] text-white' : 'text-[#4A5E32] hover:bg-gray-100'}`}
               >
-                Buscar en el mapa
+                Search on map
               </button>
             </div>
           </div>
 
           {/* Input and button */}
-          <div className="flex max-w-3xl flex-row items-start justify-center px-4">
+          <div id="home-input-field" className="flex max-w-3xl flex-row items-start justify-center px-4">
             <div className="w-full">
               <AddressAutocomplete
                 onSelect={handleAddressSelect}
                 value={address}
-                placeholder="Dirección del inmueble"
+                placeholder="Find a hangar near your street"
                 hideLabel
               />
             </div>
@@ -259,7 +259,7 @@ const InputSection: React.FC = () => {
           <div className="absolute left-[15%] top-[-100px] max-w-[200px] md:left-[9%] lg:left-[6%]">
             <div className="relative rounded-lg bg-white p-3 shadow-md">
               <p className="text-lg font-medium text-gray-700">
-                Todas las reviews son <span className="font-bold">Anónimas</span>
+                All reviews are <span className="font-bold">anonymous</span>
               </p>
               <div className="absolute -bottom-2 right-1/2 h-4 w-4 rotate-45 transform bg-white" />
             </div>
@@ -268,8 +268,8 @@ const InputSection: React.FC = () => {
           <div className="absolute right-[15%] top-[-80px] max-w-[250px] md:right-[-2%] lg:right-[3%]">
             <div className="relative rounded-lg bg-white p-3 shadow-md">
               <p className="text-lg text-gray-700">
-                Tus opiniones ayudan a crear un mercado de alquiler más
-                <span className="font-bold"> transparente</span>
+                Your experience helps build safer, fairer
+                <span className="font-bold"> streets</span>
               </p>
               <div className="absolute -bottom-2 left-1/2 h-4 w-4 rotate-45 transform bg-white" />
             </div>
@@ -284,24 +284,24 @@ const InputSection: React.FC = () => {
               onClick={() => setMode('form')}
               className={`px-6 py-3 text-base md:text-lg font-semibold rounded-lg transition-colors ${mode === 'form' ? 'bg-[#4A5E32] text-white' : 'text-[#4A5E32] hover:bg-gray-100'}`}
             >
-              Escribir review
+              Write a review
             </button>
             <button
               type="button"
               onClick={() => setMode('map')}
               className={`ml-2 px-6 py-3 text-base md:text-lg font-semibold rounded-lg transition-colors ${mode === 'map' ? 'bg-[#4A5E32] text-white' : 'text-[#4A5E32] hover:bg-gray-100'}`}
             >
-              Buscar en el mapa
+              Search on map
             </button>
           </div>
         </div>
 
-        <div className="mx-auto flex max-w-3xl flex-row items-start justify-center">
+        <div id="home-input-field" className="mx-auto flex max-w-3xl flex-row items-start justify-center">
           <div className="w-full">
             <AddressAutocomplete
               onSelect={handleAddressSelect}
               value={address}
-              placeholder="Dirección del inmueble"
+              placeholder="Find a hangar near your street"
               hideLabel
               inputClassName="[&_input]:h-14 [&_input]:text-lg [&_input]:px-5"
             />
@@ -312,7 +312,7 @@ const InputSection: React.FC = () => {
             disabled={isLoading}
             className="flex h-14 items-center justify-center rounded-r-lg bg-[#F97316] px-8 py-4 text-lg font-semibold text-white hover:bg-[#EA580C] focus:outline-none"
           >
-            {mode === 'form' ? 'Empezar' : 'Buscar'}
+            {mode === 'form' ? 'Begin' : 'Search'}
           </button>
         </div>
       </div>

@@ -41,17 +41,40 @@ const Header: React.FC = () => {
     }
   };
 
-  // Show logo only after scrolling first section on home, or on non-home pages
-  const showLogo = !isHomePage || scrolled || isAddReviewPage;
+  // Detect if hero section is visible (for yellow background)
+  const [heroVisible, setHeroVisible] = useState<boolean>(true);
+  useEffect(() => {
+    if (!isHomePage) {
+      setHeroVisible(false);
+      return;
+    }
+    const heroEl = document.querySelector('section.bg-gray-50');
+    if (!heroEl) {
+      setHeroVisible(false);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        setHeroVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+    obs.observe(heroEl);
+    return () => obs.disconnect();
+  }, [isHomePage]);
 
-  // Detect if the home input section is visible to avoid showing header input
+  // Show logo when hero is not visible
+  const showLogo = !isHomePage || !heroVisible || isAddReviewPage;
+
+  // Detect if the home input field is visible to avoid showing header input
   const [homeInputVisible, setHomeInputVisible] = useState<boolean>(true);
   useEffect(() => {
     if (!isHomePage) {
       setHomeInputVisible(false);
       return;
     }
-    const el = document.getElementById('home-address-section');
+    const el = document.getElementById('home-input-field');
     if (!el) {
       setHomeInputVisible(false);
       return;
@@ -61,21 +84,21 @@ const Header: React.FC = () => {
         const entry = entries[0];
         setHomeInputVisible(entry.isIntersecting);
       },
-      { threshold: 0.2 }
+      { threshold: 0.1 }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, [isHomePage]);
 
-  const showHeaderSearch = !isAddReviewPage && (!isHomePage || !homeInputVisible);
+  const showHeaderSearch = !isAddReviewPage && (!isHomePage || (!homeInputVisible && !heroVisible));
 
   return (
     <header
-      className={`duration-400 fixed left-0 right-0 top-0 z-[1000] transition-all ${scrolled && !isAddReviewPage ? 'py-2' : 'py-3'} px-6`}
+      className={`duration-400 fixed left-0 right-0 top-0 z-[1000] transition-all ${!heroVisible && !isAddReviewPage ? 'py-2' : 'py-3'} px-6`}
       style={{
         backgroundColor: isAddReviewPage
           ? 'rgb(225, 245, 110)'
-          : (scrolled || !isHomePage)
+          : (!heroVisible || !isHomePage)
             ? 'rgb(225, 245, 110)'
             : 'transparent',
       }}
