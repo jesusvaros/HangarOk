@@ -119,8 +119,8 @@ function App() {
                 <HowItWorksSection />
                 {/* <StatsSection /> */}
                 <BenefitsSection />
-                <ChromeStoreSection />
                   <PictureSection />
+                <ChromeStoreSection />
                   {/* <LatestReviewsSection /> */}
                   <FAQSection />
                 </>

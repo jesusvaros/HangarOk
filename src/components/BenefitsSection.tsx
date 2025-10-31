@@ -25,7 +25,7 @@ const benefits = [
 
 const BenefitsSection: React.FC = () => {
   return (
-    <section className="w-full bg-gradient-to-b from-green-50 to-white py-16">
+    <section className="w-full bg-gradient-to-b from-green-50 to-green-50 py-16">
       <div className="mx-auto max-w-6xl px-4">
         <h2 className="mb-10 text-center text-3xl font-bold">Why use HangarOK?</h2>
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

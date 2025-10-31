@@ -78,7 +78,7 @@ const faqs = [
 
   const FAQSection = () => {
     return (
-      <section className="w-full bg-gradient-to-b from-white to-green-50 py-12">
+      <section className="w-full bg-gradient-to-b from-green-50 to-white py-12">
         <div className="mx-auto max-w-3xl px-4">
           <h2 className="mb-8 text-left text-3xl font-bold">Preguntas frecuentes</h2>
           <div className="space-y-4">
