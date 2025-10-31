@@ -17,9 +17,9 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
       case 1:
         return [
           {
-            id: 'step1-helping',
-            title: "Amazing — you're already helping other riders find safe spots 💛",
-            message: '',
+            id: 'step1-anonymous',
+            title: "Your review is totally anonymous",
+            message: 'No names, no tracking - just honest rider feedback. Your street is shown roughly on the map to help others, but your identity stays private.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
             icon: undefined,
@@ -28,9 +28,9 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
       case 2:
         return [
           {
-            id: 'step2-honest',
-            title: "Be honest — every answer helps improve your street 🌱",
-            message: '',
+            id: 'step2-vibe',
+            title: "What's the vibe on your street?",
+            message: 'We\'re not judging - we just want to know how it feels. Does your hangar fit in, or do people side-eye it? Every view helps councils plan better and normalise bike storage on our streets.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
             icon: undefined,
@@ -40,9 +40,9 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
         return [
           {
             id: 'step3-safety',
-            title: 'Safety & Security',
+            title: 'Your safety insight matters',
             message:
-              'Your experience with bike security helps others decide if this hangar is right for them.',
+              'Tell us what it\'s really like. Is it well-lit? Do you worry about theft? Has it been tampered with? Your experience helps make cycling safer for everyone - and keeps hangars honest.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
             icon: undefined,
@@ -52,9 +52,9 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
         return [
           {
             id: 'step4-usability',
-            title: 'Usability & Impact',
+            title: 'Be real about usability',
             message:
-              'Your feedback helps improve hangar design and shows councils the real impact on cycling.',
+              'Heavy doors, jammed locks, missing space - we\'ve all been there. Let us know what works (and what doesn\'t) so others can ride with confidence. Your review shapes real change.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
             icon: undefined,
@@ -64,9 +64,9 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
         return [
           {
             id: 'step5-support',
-            title: 'Just a few more taps — you\'re doing great ✨',
+            title: 'Accountability starts here',
             message:
-              'Your feedback on maintenance and support helps improve hangar services for everyone.',
+              'If something breaks, who fixes it - council, supplier, or no one? Your answers help map where systems fail and where they work. Because good maintenance means more bikes on the street.',
             backgroundColor: 'rgb(225, 245, 110)',
             textColor: '#232C17',
             icon: undefined,
