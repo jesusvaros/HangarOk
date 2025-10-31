@@ -9,29 +9,29 @@ interface FAQItemProps {
 
 const faqs = [
   {
-    question: '¿Qué es CaseroOk?',
+    question: 'What is HangarOK?',
     answer:
-      'CaseroOk es una plataforma donde los inquilinos comparten de forma anónima sus experiencias con propietarios para ayudar a otros a tomar decisiones informadas.',
+      'HangarOK is where riders and residents anonymously share their experiences with on-street cycle hangars — helping others make informed choices and improving local cycling infrastructure.',
   },
   {
-    question: '¿Se publican datos personales de los caseros?',
+    question: 'Are personal details shared?',
     answer:
-      'No. Nunca mostramos nombres, teléfonos ni correos. Solo guardamos un hash anónimo para poder agrupar opiniones del mismo propietario.',
+      'Never. We only display anonymised hangar-level data so councils can see issues without identifying you.',
   },
   {
-    question: '¿Las opiniones tienen validez legal?',
+    question: 'Can my review really make a difference?',
     answer:
-      'Las reseñas son experiencias subjetivas de los inquilinos y están protegidas por la libertad de expresión. No constituyen denuncias ni declaraciones legales.',
+      'Yes. Each review adds to a public map used by planners, insurers, and operators to spot unsafe, unfair, or underused hangars.',
   },
   {
-    question: '¿Cómo dejo mi opinión?',
+    question: 'What if I don\'t have a hangar yet?',
     answer:
-      'Busca la dirección del inmueble y rellena el formulario. También puedes usar la extensión del navegador que detecta automáticamente los datos del anuncio.',
+      'You can still share your experience — about being on a waiting list, lack of nearby hangars, or what would make you cycle more.',
   },
   {
-    question: '¿Qué pasa si veo contenido inapropiado?',
+    question: 'What if I see inaccurate or inappropriate content?',
     answer:
-      'Contamos con moderación y términos de uso que prohíben contenido difamatorio o ilegal. Si encuentras algo así, puedes reportarlo y lo revisaremos.',
+      'We moderate all submissions. If something looks off, report it and we\'ll review it.',
   },
 ];
 
@@ -80,7 +80,7 @@ const faqs = [
     return (
       <section className="w-full bg-gradient-to-b from-green-50 to-white py-12">
         <div className="mx-auto max-w-3xl px-4">
-          <h2 className="mb-8 text-left text-3xl font-bold">Preguntas frecuentes</h2>
+          <h2 className="mb-8 text-center text-3xl font-bold">Frequently Asked Questions</h2>
           <div className="space-y-4">
             {faqs.map((item, idx) => (
               <FAQItem key={item.question} index={idx} {...item} />
