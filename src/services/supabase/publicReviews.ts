@@ -9,6 +9,21 @@ export type PublicReview = {
   // Hangar review fields (replacing owner_opinion and would_recommend)
   overall_safety_rating: number | null;  // Average of daytime and nighttime safety
   overall_usability_rating: number | null;  // Average of usability ratings
+  uses_hangar: boolean | null;  // true = current user, false = waiting list / nearby rider
+  hangar_number: string | null;  // Hangar identifier (e.g., Cyclehangar_2271)
+  // Individual ratings
+  daytime_safety_rating: number | null;
+  nighttime_safety_rating: number | null;
+  lock_ease_rating: number | null;
+  space_rating: number | null;
+  lighting_rating: number | null;
+  maintenance_rating: number | null;
+  // Tags
+  perception_tags: string[] | null;
+  safety_tags: string[] | null;
+  usability_tags: string[] | null;
+  maintenance_tags: string[] | null;
+  // Location
   city: string | null;
   city_slug: string | null;
   state: string | null;
@@ -22,7 +37,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   const { data, error} = await client
     .from('public_reviews')
-    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, lighting_rating, maintenance_rating')
+    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, lighting_rating, maintenance_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags')
     .eq('is_public', true);
 
   if (error || !data) return [];
@@ -62,6 +77,11 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     space_rating?: number | null;
     lighting_rating?: number | null;
     maintenance_rating?: number | null;
+    uses_hangar?: boolean | null;
+    perception_tags?: string[] | null;
+    safety_tags?: string[] | null;
+    usability_tags?: string[] | null;
+    maintenance_tags?: string[] | null;
   };
 
   const rows = data as unknown as Row[];
@@ -125,6 +145,18 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
       lng,
       overall_safety_rating: overallSafetyRating,
       overall_usability_rating: overallUsabilityRating,
+      uses_hangar: review.uses_hangar ?? null,
+      hangar_number: null, // TODO: Add this column to public_reviews table
+      daytime_safety_rating: review.daytime_safety_rating ?? null,
+      nighttime_safety_rating: review.nighttime_safety_rating ?? null,
+      lock_ease_rating: review.lock_ease_rating ?? null,
+      space_rating: review.space_rating ?? null,
+      lighting_rating: review.lighting_rating ?? null,
+      maintenance_rating: review.maintenance_rating ?? null,
+      perception_tags: review.perception_tags ?? null,
+      safety_tags: review.safety_tags ?? null,
+      usability_tags: review.usability_tags ?? null,
+      maintenance_tags: review.maintenance_tags ?? null,
       city: city ?? null,
       city_slug: citySlug,
       state: state ?? null,
@@ -135,7 +167,6 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   // Keep only entries with valid numeric coordinates
   return mapped.filter(
-    (r): r is PublicReview & { lat: number; lng: number } =>
-      typeof r.lat === 'number' && typeof r.lng === 'number'
-  );
+    (r) => typeof r.lat === 'number' && typeof r.lng === 'number'
+  ) as PublicReview[];
 }

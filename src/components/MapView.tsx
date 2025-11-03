@@ -57,7 +57,7 @@ const CloseOnMove = ({ onMove }: { onMove: () => void }) => {
 };
 
 const MapView = ({
-  title = 'Mapa de opiniones',
+  title = 'Hangar Reviews Map',
   subtitle,
   initialViewOverride,
   reviews,
@@ -272,6 +272,9 @@ const MapView = ({
                     texto: r.full_address ?? '—',
                     comment: undefined,
                     would_recommend: r.overall_safety_rating ?? undefined,
+                    usability_rating: r.overall_usability_rating ?? undefined,
+                    uses_hangar: r.uses_hangar ?? null,
+                    hangar_number: r.hangar_number ?? null,
                   }))}
                   hoveredId={hoveredId}
                   setHoveredId={setHoveredId}
@@ -396,14 +399,13 @@ const MapView = ({
               {selectedReview && (
                 <>
                   <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[320px] max-w-[80vw]">
-                    <div className="rounded-2xl bg-white shadow-xl border overflow-hidden max-h-[60vh]">
                       <DetailsPanel
                         review={selectedReview}
                         onClose={() => {
                           setSelectedReview(null);
                         }}
                       />
-                    </div>
+                  
                   </div>
 
                   {/* Mobile details overlay with animation, positioned over the map (absolute) */}
@@ -414,7 +416,7 @@ const MapView = ({
                         animate={{ y: 0 }}
                         exit={{ y: '100%' }}
                         transition={{ duration: 0.25, ease: 'easeOut' }}
-                        className="absolute bottom-0 left-0 right-0 max-h-[35vh] rounded-t-2xl bg-white shadow-xl pointer-events-auto"
+                        className="absolute bottom-0 left-0 right-0 max-h-[45vh] rounded-t-2xl bg-white shadow-xl pointer-events-auto flex flex-col"
                       >
                         <DetailsPanel
                           review={selectedReview}
@@ -463,6 +465,9 @@ const MapView = ({
                             texto: r.full_address ?? '—',
                             comment: undefined,
                             would_recommend: r.overall_safety_rating ?? undefined,
+                            usability_rating: r.overall_usability_rating ?? undefined,
+                            uses_hangar: r.uses_hangar ?? null,
+                            hangar_number: r.hangar_number ?? null,
                           }))}
                           hoveredId={hoveredId}
                           setHoveredId={setHoveredId}
