@@ -13,6 +13,7 @@ import PictureSection from './components/PictureSection';
 import HowItWorksSection from './components/HowItWorksSection';
 //import LatestReviewsSection from './components/LatestReviewsSection';
 import FAQSection from './components/FAQSection';
+import AboutSection from './components/AboutSection';
 import MapView from './components/MapView';
 import AddReviewForm from './components/AddReviewForm';
 import AuthCallback from './components/AuthCallback';
@@ -123,33 +124,30 @@ function App() {
                 <ChromeStoreSection />
                   {/* <LatestReviewsSection /> */}
                   <FAQSection />
+                  <AboutSection />
                 </>
               }
             />
         </Routes>
 
 
-        <footer className="mx-auto mt-8 max-w-6xl py-6 text-center text-sm text-gray-500">
-          <nav className="mb-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+        <footer className="mx-auto mt-8 max-w-6xl py-8 text-center text-sm text-gray-600 border-t border-gray-200">
+          <nav className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             {/* <Link className="hover:text-gray-700" to="/blog" {...umamiEventProps('footer:blog')}>Blog</Link>
             <span className="text-gray-400">•</span> */}
-            <Link className="hover:text-gray-700" to="/opiniones" {...umamiEventProps('footer:opiniones')}>Opiniones por ciudad</Link>
+            <Link className="hover:text-gray-700" to="/opiniones" {...umamiEventProps('footer:reviews')}>Reviews by city or town</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/terminosycondiciones" {...umamiEventProps('footer:terminos-condiciones')}>Términos y Condiciones</Link>
+            <Link className="hover:text-gray-700" to="/terminosycondiciones" {...umamiEventProps('footer:terms')}>Terms & Conditions</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/aviso-legal" {...umamiEventProps('footer:aviso-legal')}>Aviso Legal</Link>
+            <Link className="hover:text-gray-700" to="/politica-privacidad" {...umamiEventProps('footer:privacy')}>Privacy Policy</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/politica-privacidad" {...umamiEventProps('footer:privacidad')}>Política de Privacidad</Link>
+            <Link className="hover:text-gray-700" to="/cookies" {...umamiEventProps('footer:cookies')}>Cookies</Link>
             <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/cookies" {...umamiEventProps('footer:cookies')}>Política de Cookies</Link>
-            <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/condiciones-uso" {...umamiEventProps('footer:condiciones-uso')}>Condiciones de Uso</Link>
-            <span className="text-gray-400">•</span>
-            <Link className="hover:text-gray-700" to="/buenas-practicas" {...umamiEventProps('footer:buenas-practicas')}>Buenas Prácticas</Link>
+            <Link className="hover:text-gray-700" to="/about" {...umamiEventProps('footer:about')}>About</Link>
           </nav>
-            <p>
-              © {new Date().getFullYear()} CaseroOk - Todas las opiniones son anónimas y reflejan experiencias
-              personales, no declaraciones de hechos ni asesoramiento legal.
+            <p className="text-xs leading-relaxed max-w-4xl mx-auto">
+              © {new Date().getFullYear()} LAGS Consulting Limited (delivering HangarOK) — The UK's peer-to-peer cycle hangar review community. Built by riders, for riders. All rights reserved.<br />
+              LAGS Consulting Limited (delivering HangarOK) is a registered company in England & Wales Company No. 10042170
             </p>
           </footer>
         </div>

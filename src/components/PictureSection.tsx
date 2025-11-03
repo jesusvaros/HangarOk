@@ -20,30 +20,41 @@ const PictureSection: React.FC = () => {
 
       {/* Why we started HangarOK Section */}
       <section className="w-full bg-white py-16">
-        <div className="mx-auto max-w-3xl px-4 text-center">
-          <h2 className="mb-8 text-3xl font-bold">🚲 Why we started HangarOK</h2>
-          <div className="text-lg text-gray-700 space-y-6 mb-10">
-            <p>
-              HangarOK is the UK's first peer-to-peer hangar review platform.
-            </p>
-            <p>
-              We built it because cyclists, planners, and councils were all missing one thing: real-life data.
-            </p>
-            <p>
-              By sharing honest feedback — on community, safety, usability and support — we can help shape a better cycling culture across the UK.
-            </p>
-            <p className="font-semibold text-xl">
-              We're not just collecting stars. We're building understanding — one hangar at a time.
-            </p>
+        <div className="mx-auto max-w-6xl px-4">
+          <div className="flex flex-col md:flex-row items-center gap-12">
+            {/* Text Content */}
+            <div className="md:w-1/2 text-left">
+              <h2 className="mb-6 text-3xl font-bold text-[#4A5E32]">Why we started HangarOK</h2>
+              <div className="text-base text-gray-700 space-y-4 mb-8">
+                <p>
+                  We built it because cyclists, planners, and councils were all missing one thing: <strong>real-life data</strong>.
+                </p>
+                <p>
+                  By sharing honest feedback — on community, safety, usability and support — we can help shape a better cycling culture across the UK.
+                </p>
+                <p className="text-lg font-semibold text-[#4A5E32] italic">
+                  We're not just collecting stars. We're building understanding — one hangar at a time.
+                </p>
+              </div>
+              
+              <Link
+                to="/add-review"
+                className="inline-block rounded-lg bg-[#4A5E32] px-8 py-3 text-lg font-semibold text-white transition-colors hover:bg-[#3B4C28]"
+                {...umamiEventProps('picture-section:start-review')}
+              >
+                Start your first review
+              </Link>
+            </div>
+            
+            {/* Image */}
+            <div className="md:w-1/2">
+              <img
+                src="/images/hangar-photo.jpg"
+                alt="Cycle hangar on street"
+                className="w-full rounded-xl shadow-lg"
+              />
+            </div>
           </div>
-          
-          <Link
-            to="/add-review"
-            className="inline-block rounded-lg bg-[#4A5E32] px-8 py-3 text-lg font-semibold text-white transition-colors hover:bg-[#3B4C28]"
-            {...umamiEventProps('picture-section:start-review')}
-          >
-            Start your first review
-          </Link>
         </div>
       </section>
     </>
