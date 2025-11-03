@@ -389,7 +389,7 @@ const MapView = ({
                     trackUmamiEvent('map:mobile-open-list');
                     setMobileListOpen(true);
                   }}
-                  aria-label="Abrir opiniones"
+                  aria-label="Open reviews"
                 >
                   <span className="block h-1.5 w-8 rounded-full bg-gray-400" />
                 </button>
@@ -443,11 +443,11 @@ const MapView = ({
                     >
                       <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-gray-300" />
                       <div className="flex items-center justify-between mb-2">
-                        <h2 className="text-base font-semibold">Opiniones</h2>
+                        <h2 className="text-base font-semibold">Reviews</h2>
                         <button
                           type="button"
                           className="text-xl"
-                          aria-label="Cerrar"
+                          aria-label="Close"
                           onClick={() => {
                             trackUmamiEvent('map:mobile-close-list');
                             setMobileListOpen(false);

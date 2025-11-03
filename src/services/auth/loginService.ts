@@ -10,7 +10,7 @@ export const sendEmailOtp = async (email: string) => {
   if (!client || !email) {
     return { 
       success: false, 
-      error: 'Introduce un correo electrónico válido.' 
+      error: 'Please enter a valid email address.' 
     };
   }
   // Use environment variable for site URL, fallback to window.location.origin
@@ -40,7 +40,7 @@ export const sendEmailOtp = async (email: string) => {
     const message = error instanceof Error ? error.message : String(error);
     return {
       success: false,
-      error: `Error al conectar con el servidor de autenticación. ${message}`
+      error: `Unable to reach the authentication server. ${message}`
     };
   }
 };
@@ -55,7 +55,7 @@ export const signInWithGoogle = async () => {
   if (!client) {
     return { 
       success: false, 
-      error: 'Error de conexión con el servidor.' 
+      error: 'Cannot connect to the server.' 
     };
   }
 
@@ -83,7 +83,7 @@ export const signInWithGoogle = async () => {
     const message = error instanceof Error ? error.message : String(error);
     return {
       success: false,
-      error: `Error al iniciar sesión con Google. ${message}`
+      error: `Google sign-in failed. ${message}`
     };
   }
 };

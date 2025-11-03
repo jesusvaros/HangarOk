@@ -88,9 +88,9 @@ const ReviewPage = () => {
     const [step4Data, setStep4Data] = useState<Step4Data | null>(null);
     const [step5Data, setStep5Data] = useState<Step5Data | null>(null);
   
-    // Función para formatear la dirección como título
+    // Helper to format the address as a title
     const getAddressTitle = () => {
-      if (!step1Data?.hangar_location) return 'Review del hangar';
+      if (!step1Data?.hangar_location) return 'Hangar review';
   
       const { street, number, city } = step1Data.hangar_location;
       let title = '';
@@ -99,7 +99,7 @@ const ReviewPage = () => {
       if (number) title += ` ${number}`;
       if (city) title += `, ${city}`;
   
-      return title || 'Review del hangar';
+      return title || 'Hangar review';
     };
   
     useEffect(() => {
@@ -109,7 +109,7 @@ const ReviewPage = () => {
         try {
           const client = supabaseWrapper.getClient();
           if (!client) {
-            setError('Error de configuración de Supabase');
+            setError('Supabase configuration error');
             return;
           }
 
@@ -249,8 +249,8 @@ const ReviewPage = () => {
           // setStep4Data(step4);
           // setStep5Data(step5);
         } catch (err) {
-          console.error('Error al cargar los datos:', err);
-          setError('Error al cargar los datos de la revisión');
+          console.error('Error loading data:', err);
+          setError('Error loading review data');
         } finally {
           setLoading(false);
         }
@@ -264,7 +264,7 @@ const ReviewPage = () => {
       {isPublicReview && (
         <button
           type="button"
-          aria-label="Volver al mapa"
+          aria-label="Return to map"
           onClick={() => navigate('/map')}
           className="absolute left-4 top-4 mt-2 inline-flex items-center gap-4 focus:outline-none hover:underline"
           style={{ color: 'rgb(74,94,50)' }}
@@ -272,7 +272,7 @@ const ReviewPage = () => {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="rgb(74,94,50)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4">
             <path d="M15 18l-6-6 6-6" />
           </svg>
-          <span className="text-xl font-medium">Mapa</span>
+          <span className="text-xl font-medium">Map</span>
         </button>
       )}
       {/* Success Banner */}
@@ -360,7 +360,7 @@ const ReviewPage = () => {
         </div>
       )}
       
-      {/* Título principal con la dirección */}
+      {/* Main title with address */}
       <div className="flex flex-col items-center mb-8">
         <h1 className="text-center text-2xl font-bold md:text-3xl lg:text-4xl mt-8">
           {getAddressTitle()}
@@ -371,7 +371,7 @@ const ReviewPage = () => {
           <div className="flex items-center mt-2">
             <div className={`h-3 w-3 rounded-full mr-2 ${isValidated ? 'bg-green-500' : 'bg-orange-500'}`}></div>
             <span className="text-sm text-gray-600">
-              {isValidated ? 'Validado' : 'Pendiente de validación'}
+              {isValidated ? 'Validated' : 'Pending validation'}
             </span>
           </div>
         )}

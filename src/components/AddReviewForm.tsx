@@ -336,7 +336,7 @@ const AddReviewForm: React.FC = () => {
           isSubmitting: setIsSubmitting,
         });
 
-        // Actualizar estado de errores
+        // Update error state for the current step
         if (result.fieldErrors) {
           setErrors(prev => ({
             ...prev,
@@ -346,7 +346,7 @@ const AddReviewForm: React.FC = () => {
           }));
         }
 
-        // Avanzar si la validación es exitosa
+        // Advance when validation succeeds
         if (result.isValid) {
           trackUmamiEvent('review:stepper-advance', { from: currentStep, to: step });
           if (step === 6) {
@@ -358,8 +358,8 @@ const AddReviewForm: React.FC = () => {
           }
         }
       } catch (error) {
-        console.error('Error validando paso 1:', error);
-        const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+        console.error('Error validating step 1:', error);
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
         showErrorToast(errorMessage);
       }
     } else if (step <= currentStep) {

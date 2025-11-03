@@ -1,6 +1,6 @@
-// Este archivo ha sido refactorizado en módulos más pequeños.
-// Se mantiene para compatibilidad con código existente.
-// Por favor, usa las importaciones desde './services/supabase' en código nuevo.
+// This file was refactored into smaller modules.
+// It remains for backward compatibility with existing code.
+// Please import from './services/supabase' in new code.
 
-// Re-exportamos todas las funcionalidades desde la nueva estructura modular
+// Re-export all features from the new modular structure
 export * from './services/supabase';

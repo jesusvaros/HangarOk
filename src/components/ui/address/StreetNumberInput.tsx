@@ -29,12 +29,12 @@ export const StreetNumberInput: React.FC<StreetNumberInputProps> = ({
   return (
     <div className="w-1/4">
       <label htmlFor={id} className="mb-2 block text-lg font-medium text-black">
-        Número
+        Number
       </label>
       <CustomInput
         id={id}
         type="text"
-        placeholder="Número"
+        placeholder="Number"
         value={value}
         disabled={disabled}
         onChange={e => handleInputChange(e.target.value)}

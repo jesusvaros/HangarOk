@@ -19,24 +19,24 @@ const StatsSection: React.FC = () => {
   return (
     <section className="w-full bg-white py-16">
       <div className="mx-auto max-w-4xl px-4 text-center">
-        <h2 className="mb-8 text-3xl font-bold">Nuestras métricas</h2>
+        <h2 className="mb-8 text-3xl font-bold">Our metrics</h2>
         {stats ? (
           <dl className="grid grid-cols-1 gap-8 sm:grid-cols-3">
             <div>
               <dt className="text-4xl font-extrabold text-blue-600">{stats.totalReviews}</dt>
-              <dd className="mt-2 text-lg text-gray-600">Opiniones públicas</dd>
+              <dd className="mt-2 text-lg text-gray-600">Public reviews</dd>
             </div>
             <div>
               <dt className="text-4xl font-extrabold text-blue-600">{stats.verifiedLandlords}</dt>
-              <dd className="mt-2 text-lg text-gray-600">Caseros verificados</dd>
+              <dd className="mt-2 text-lg text-gray-600">Verified landlords</dd>
             </div>
             <div>
               <dt className="text-4xl font-extrabold text-blue-600">{stats.cities}</dt>
-              <dd className="mt-2 text-lg text-gray-600">Ciudades</dd>
+              <dd className="mt-2 text-lg text-gray-600">Cities</dd>
             </div>
           </dl>
         ) : (
-          <p className="text-gray-600">Cargando...</p>
+          <p className="text-gray-600">Loading...</p>
         )}
       </div>
     </section>

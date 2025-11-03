@@ -6,7 +6,7 @@ function formatDate(dateString: string | null) {
   if (!dateString) return null;
   try {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('es-ES', {
+    return new Intl.DateTimeFormat('en-GB', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -62,29 +62,29 @@ export default function BlogListPage() {
   return (
     <>
       <PageSEO
-        title={currentPage > 1 ? `Blog de CaseroOk - Página ${currentPage}` : "Blog de CaseroOk"}
-        description="Guías y novedades sobre alquiler seguro, viviendas y experiencias de inquilinos en España."
+        title={currentPage > 1 ? `CaseroOk Blog - Page ${currentPage}` : 'CaseroOk Blog'}
+        description="Guides and updates on safer renting, housing, and renter experiences across Spain."
         canonicalPath={currentPage > 1 ? `/blog?page=${currentPage}` : "/blog"}
       />
       <main className="mx-auto mt-28 max-w-6xl px-6 pb-24">
         <header className="mb-12 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Blog</p>
-          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl">Historias y guías para inquilinos informados</h1>
+          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl">Stories and guides for informed renters</h1>
           <p className="mx-auto mt-4 max-w-3xl text-lg text-gray-600">
-            Cada semana analizamos noticias del sector vivienda y las transformamos en artículos prácticos y originales.
+            Every week we analyse housing news and turn it into practical, original articles.
           </p>
         </header>
 
         {blogPosts.length === 0 && (
           <section className="rounded-xl border border-gray-200 bg-white p-10 text-center">
-            <h2 className="text-xl font-semibold text-gray-900">Anunciaremos el primer artículo muy pronto</h2>
-            <p className="mt-2 text-gray-600">Estamos preparando contenidos originales sobre alquiler, convivencia y derechos de inquilinos.</p>
+            <h2 className="text-xl font-semibold text-gray-900">We’ll publish the first article soon</h2>
+            <p className="mt-2 text-gray-600">We’re preparing original content on renting, community living, and renter rights.</p>
           </section>
         )}
 
         {heroPost && (
           <section className="mb-12">
-            <h2 className="mb-4 text-2xl font-semibold text-gray-900">Artículo destacado</h2>
+            <h2 className="mb-4 text-2xl font-semibold text-gray-900">Featured article</h2>
             <Link
               to={`/blog/${heroPost.slug}`}
               className="group block overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
@@ -99,7 +99,7 @@ export default function BlogListPage() {
                   />
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/40 via-black/0" />
                   <span className="pointer-events-none absolute left-5 top-5 rounded-full bg-emerald-600 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-white shadow">
-                    Destacado
+                    Featured
                   </span>
                 </div>
 
@@ -116,7 +116,7 @@ export default function BlogListPage() {
                     <p className="mt-4 text-base text-gray-600 md:text-lg">{heroExcerpt}</p>
                   ) : null}
                   <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-emerald-700">
-                    Leer más
+                    Read more
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>
@@ -130,10 +130,10 @@ export default function BlogListPage() {
         {secondaryPosts.length > 0 && (
           <section>
             <h2 className="mb-6 text-2xl font-semibold text-gray-900">
-              Artículos recientes
+              Recent articles
               {totalPages > 1 && (
                 <span className="ml-2 text-base font-normal text-gray-500">
-                  (Página {currentPage} de {totalPages})
+                  (Page {currentPage} of {totalPages})
                 </span>
               )}
             </h2>
@@ -169,7 +169,7 @@ export default function BlogListPage() {
                       </h2>
                       {excerpt ? <p className="mt-2 text-sm text-gray-600">{excerpt}</p> : null}
                       <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-emerald-700">
-                        Leer más
+                        Read more
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                         </svg>
@@ -193,7 +193,7 @@ export default function BlogListPage() {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
-                    Anterior
+                    Previous
                   </button>
 
                   {/* Page numbers */}
@@ -217,7 +217,7 @@ export default function BlogListPage() {
                     disabled={currentPage === totalPages}
                     className="flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    Siguiente
+                    Next
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
                     </svg>

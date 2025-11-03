@@ -9,7 +9,7 @@ export default function UmamiTracker() {
   useEffect(() => {
     if (!websiteId) {
       if (import.meta.env.DEV) {
-        console.warn('UmamiTracker: VITE_UMAMI_WEBSITE_ID no está definido, se omite el script.');
+        console.warn('UmamiTracker: VITE_UMAMI_WEBSITE_ID is not defined, skipping script injection.');
       }
       return;
     }
@@ -25,7 +25,7 @@ export default function UmamiTracker() {
     (document.head ?? document.body).appendChild(script);
 
     return () => {
-      // No retiramos el script para evitar recargas innecesarias en SPA
+      // Keep the script mounted to avoid unnecessary reloads in the SPA
     };
   }, [websiteId, scriptUrl]);
 

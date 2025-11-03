@@ -136,7 +136,7 @@ export const validateAndSubmitStep = async (
       return {
         isValid: false,
         isSubmitted: false,
-        message: submissionResult.message || 'Error en el envío de datos',
+        message: submissionResult.message || 'Error sending data',
         fieldErrors: {},
       };
     }
@@ -145,7 +145,7 @@ export const validateAndSubmitStep = async (
     return { isValid: true, isSubmitted: true, message: null };
   } catch (error) {
     console.error(`Error in step ${step}:`, error);
-    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
     if (showToast) showErrorToast(errorMessage);
 

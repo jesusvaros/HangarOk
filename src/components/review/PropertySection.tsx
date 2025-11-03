@@ -19,6 +19,28 @@ interface PropertySectionProps {
   } | null;
 }
 
+const propertyValueMap: Record<string, string> = {
+  'Bien aislado': 'Well insulated',
+  'Correcto': 'Adequate',
+  'Caluroso': 'Too hot',
+  'Frío': 'Cold',
+  'Silencioso': 'Quiet',
+  'Tolerable': 'Tolerable',
+  'Bastante': 'Quite noisy',
+  'Se oye todo': 'Very noisy',
+  'Nada de luz': 'No natural light',
+  'Poca luz': 'Low natural light',
+  'Luminoso': 'Bright',
+  'Muy luminoso': 'Very bright',
+  'Como nuevo': 'Like new',
+  'Bueno': 'Good',
+  'Aceptable': 'Acceptable',
+  'Poco': 'Needs attention',
+  'Malo': 'Poor',
+};
+
+const translatePropertyValue = (value: string) => propertyValueMap[value] ?? value;
+
 const PropertySection: React.FC<PropertySectionProps> = ({ propertyData }) => {
   if (!propertyData) {
     return null;
@@ -72,50 +94,50 @@ const PropertySection: React.FC<PropertySectionProps> = ({ propertyData }) => {
 
   return (
     <div className="grid gap-12 md:grid-cols-2 text-[16px]">
-      {/* Temperatura Verano */}
+      {/* Summer temperature */}
       <div className="flex justify-between gap-3 ml-2 mr-2">
         <Thermometer
           level={getSummerTemp().percent}
           icon={getSummerTemp().icon}
           primaryColor={getSummerTemp().color}
-          label={propertyData.summer_temperature}
-          title="Aislamiento en verano"
+          label={translatePropertyValue(propertyData.summer_temperature)}
+          title="Summer insulation"
         />
 
-        {/* Temperatura Invierno */}
+        {/* Winter temperature */}
         <Thermometer
           level={getWinterTemp().percent}
           icon={getWinterTemp().icon}
           primaryColor={getWinterTemp().color}
-          label={propertyData.winter_temperature}
+          label={translatePropertyValue(propertyData.winter_temperature)}
           left={true}
-          title="Aislamiento en invierno"
+          title="Winter insulation"
         />
       </div>
 
-      {/* Nivel de ruido */}
+      {/* Noise level */}
       <div className="md:col-span-1 ">
         <div className="pb-2">
           <p className="text-gray-500 flex items-center gap-2 ">
-            Nivel de ruido <SpeakerXMarkIcon width={24} height={24} />
+            Noise level <SpeakerXMarkIcon width={24} height={24} />
           </p>
-          <p className="text-lg font-medium">{propertyData.noise_level}</p>
+          <p className="text-lg font-medium">{translatePropertyValue(propertyData.noise_level)}</p>
         </div>
 
-        {/* Nivel de luz */}
+        {/* Light level */}
         <div className="pb-2">
           <p className="text-gray-500 flex items-center gap-2">
-            Nivel de luz <SunIcon width={24} height={24} />
+            Natural light <SunIcon width={24} height={24} />
           </p>
-          <p className="text-lg font-medium">{propertyData.light_level}</p>
+          <p className="text-lg font-medium">{translatePropertyValue(propertyData.light_level)}</p>
         </div>
 
-        {/* Mantenimiento */}
+        {/* Maintenance */}
         <div className="pb-2">
           <p className="text-gray-500 flex items-center gap-2">
-            Estado de mantenimiento <SparklesIcon width={24} height={24} />
+            Maintenance state <SparklesIcon width={24} height={24} />
           </p>
-          <p className="text-lg font-medium">{propertyData.maintenance_status}</p>
+          <p className="text-lg font-medium">{translatePropertyValue(propertyData.maintenance_status)}</p>
         </div>
       </div>
     </div>

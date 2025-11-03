@@ -11,23 +11,39 @@ interface CommunitySectionProps {
   } | null;
 }
 
+const valueMap: Record<string, string> = {
+  'Sí, tolerable': 'Yes, tolerable',
+  'Sí, molestos': 'Yes, disruptive',
+  'No hay': 'None',
+  'Muy limpio': 'Very clean',
+  'Buena': 'Good',
+  'Poca': 'Limited',
+  'Sin limpieza': 'No cleaning',
+  'Muy segura': 'Very safe',
+  'Sin problemas': 'No issues',
+  'Mejorable': 'Could improve',
+  'Poco segura': 'Not very safe',
+};
+
+const translateValue = (value?: string) => (value ? valueMap[value] ?? value : value);
+
 const CommunitySection: React.FC<CommunitySectionProps> = ({ communityData }) => {
   if (!communityData) {
-    return <p className="text-gray-500">Información no disponible</p>;
+    return <p className="text-gray-500">Information not available</p>;
   }
 
   return (
     <div className="grid gap-4 md:grid-cols-2 text-[16px]">
       {communityData.neighbor_types && communityData.neighbor_types.length > 0 && (
         <div className="md:col-span-2">
-          <p className="mb-2 text-[16px] font-medium text-gray-500">Tipos de vecinos</p>
+          <p className="mb-2 text-[16px] font-medium text-gray-500">Neighbour types</p>
           <div className="flex flex-wrap gap-2">
             {communityData.neighbor_types.map((type, index) => (
               <span
                 key={index}
                 className="rounded-full bg-green-100 px-3 py-1 text-[16px] text-green-800"
               >
-                {type}
+                {translateValue(type) ?? type}
               </span>
             ))}
           </div>
@@ -36,35 +52,41 @@ const CommunitySection: React.FC<CommunitySectionProps> = ({ communityData }) =>
 
       {communityData.tourist_apartments && (
         <div>
-          <p className="text-[16px] font-medium text-gray-500">Apartamentos turísticos</p>
-          <p className="text-[18px] font-medium">{communityData.tourist_apartments}</p>
+          <p className="text-[16px] font-medium text-gray-500">Tourist apartments</p>
+          <p className="text-[18px] font-medium">
+            {translateValue(communityData.tourist_apartments)}
+          </p>
         </div>
       )}
 
       {communityData.building_cleanliness && (
         <div>
-          <p className="text-[16px] font-medium text-gray-500">Limpieza del edificio</p>
-          <p className="text-[18px] font-medium">{communityData.building_cleanliness}</p>
+          <p className="text-[16px] font-medium text-gray-500">Building cleanliness</p>
+          <p className="text-[18px] font-medium">
+            {translateValue(communityData.building_cleanliness)}
+          </p>
         </div>
       )}
 
       {communityData.community_security && (
         <div>
-          <p className="text-[16px] font-medium text-gray-500">Seguridad</p>
-          <p className="text-[18px] font-medium">{communityData.community_security}</p>
+          <p className="text-[16px] font-medium text-gray-500">Security</p>
+          <p className="text-[18px] font-medium">
+            {translateValue(communityData.community_security)}
+          </p>
         </div>
       )}
 
       {communityData.community_environment && communityData.community_environment.length > 0 && (
         <div className="md:col-span-2">
-          <p className="mb-2 text-[16px] font-medium text-gray-500">Ambiente</p>
+          <p className="mb-2 text-[16px] font-medium text-gray-500">Environment</p>
           <div className="flex flex-wrap gap-2">
             {communityData.community_environment.map((env, index) => (
               <span
                 key={index}
                 className="rounded-full bg-green-100 px-3 py-1 text-[16px] text-green-800"
               >
-                {env}
+                {translateValue(env) ?? env}
               </span>
             ))}
           </div>

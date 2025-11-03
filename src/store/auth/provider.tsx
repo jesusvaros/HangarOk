@@ -15,7 +15,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const client = supabaseWrapper.getClient();
         if (!client) {
-          setError('Error de configuración de Supabase');
+          setError('Supabase configuration error');
           setIsLoading(false);
           return;
         }
@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           setIsAdmin(userEmail === 'xjesusvr@gmail.com');
         }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error desconocido');
+        setError(err instanceof Error ? err.message : 'Unknown error');
       } finally {
         setIsLoading(false);
       }

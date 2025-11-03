@@ -70,7 +70,7 @@ export const AddressInput: React.FC<AddressInputProps> = ({
             type="button"
             onClick={onActionClick}
             disabled={actionDisabled}
-            aria-label="Ubicarme"
+            aria-label="Locate me"
             className="text-[rgb(74,94,50)] hover:text-[rgb(54,74,30)] disabled:opacity-50 disabled:cursor-not-allowed"
             {...umamiEventProps('map:locate')}
           >

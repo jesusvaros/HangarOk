@@ -1,11 +1,11 @@
 import { z } from 'zod';
 
 export const opinionSchema = z.object({
-  caseroId: z.string().min(3, 'El identificador debe tener al menos 3 caracteres'),
+  caseroId: z.string().min(3, 'Identifier must be at least 3 characters long'),
   texto: z
     .string()
-    .min(10, 'La opinión debe tener al menos 10 caracteres')
-    .max(500, 'La opinión no puede exceder los 500 caracteres'),
+    .min(10, 'Review must be at least 10 characters long')
+    .max(500, 'Review cannot exceed 500 characters'),
   would_recommend: z.number().min(1).max(5),
 });
 

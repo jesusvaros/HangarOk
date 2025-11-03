@@ -37,31 +37,31 @@ const ModerationPage = () => {
   const [actionLoading, setActionLoading] = useState<Record<string, boolean>>({});
   const [actionMessage, setActionMessage] = useState<{text: string, type: 'success' | 'error'} | null>(null);
 
-  // Cargar reviews cuando el usuario está autenticado y es admin
+  // Load reviews once the authenticated user is confirmed as admin
   useEffect(() => {
-    // Esperar a que la autenticación termine de cargar
+    // Wait for auth state to finish loading
     if (authLoading) return;
     
     if (isAdmin) {
       fetchReviews();
     } else if (!authLoading) {
-      // Solo mostrar error si ya terminó de cargar la autenticación y no es admin
-      setError('No tienes permisos para acceder a esta página');
+      // Show error only after auth finishes and user is not admin
+      setError('You do not have permission to access this page');
       setLoading(false);
     }
   }, [isAdmin, authLoading]);
 
-  // Cargar todas las reviews
+  // Fetch all reviews
   const fetchReviews = async () => {
     try {
       const client = supabaseWrapper.getClient();
       if (!client) {
-        setError('Error de configuración de Supabase');
+        setError('Supabase configuration error');
         setLoading(false);
         return;
       }
 
-      // Obtener todas las reviews con información adicional
+      // Retrieve reviews with additional information
       const { data, error } = await client.rpc('get_review_sessions_for_moderation');
 
       const { data: session, error: sessionError } = await client.rpc('get_review_session_admin', { p_id: data[0].review_session_id });
@@ -70,7 +70,7 @@ const ModerationPage = () => {
     
       if (error) {
         console.error('Error fetching reviews:', error);
-        setError('Error al cargar las reviews');
+        setError('Error loading reviews');
         setLoading(false);
         return;
       }
@@ -118,12 +118,12 @@ const ModerationPage = () => {
       setLoading(false);
     } catch (err) {
       console.error('Error in fetchReviews:', err);
-      setError('Error al cargar las reviews');
+      setError('Error loading reviews');
       setLoading(false);
     }
   };
 
-  // Expandir/colapsar una review para mostrar sus opiniones
+  // Toggle review expansion to show opinions
   const toggleReviewExpansion = (reviewId: string) => {
     setExpandedReviews(prev => ({
       ...prev,
@@ -131,7 +131,7 @@ const ModerationPage = () => {
     }));
   };
 
-  // Manejar cambio en el motivo de rechazo
+  // Handle updates to the rejection reason field
   const handleRejectionReasonChange = (reviewId: string, reason: string) => {
     setRejectionReasons(prev => ({
       ...prev,
@@ -139,12 +139,12 @@ const ModerationPage = () => {
     }));
   };
 
-  // Moderar una review completa (global)
+  // Moderate a review (approve or reject)
   const handleModerateReview = async (reviewId: string, status: 'approved' | 'rejected') => {
     const review = reviews.find(r => r.review_session_id === reviewId);
     if (!review) return;
     
-    // Marcar esta acción como cargando
+    // Mark this review as loading
     setActionLoading(prev => ({
       ...prev,
       [reviewId]: true
@@ -154,10 +154,10 @@ const ModerationPage = () => {
     
     try {
       const client = supabaseWrapper.getClient();
-      if (!client) throw new Error('Error de configuración de Supabase');
+      if (!client) throw new Error('Supabase configuration error');
       
       if (status === 'approved') {
-        // Aprobar: validar la sesión mediante RPC en la base de datos
+        // Approve by validating the session via RPC
         const { error } = await client.rpc('validate_review', {
           p_session_id: reviewId
         });
@@ -170,12 +170,12 @@ const ModerationPage = () => {
         // Rechazar: usar RPC reject_review con motivo
         const reason = rejectionReasons[reviewId] || '';
         if (!reason.trim()) {
-          throw new Error('Debes proporcionar un motivo para rechazar la review');
+          throw new Error('Please provide a reason to reject the review');
         }
 
         const { data: sessionRes } = await client.auth.getSession();
         const token = sessionRes?.session?.access_token;
-        if (!token) throw new Error('No se pudo obtener el token de sesión para autenticar la petición');
+        if (!token) throw new Error('Could not obtain the session token to authenticate the request');
 
         const functionsUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/reject-review`;
         const resp = await fetch(functionsUrl, {
@@ -192,13 +192,13 @@ const ModerationPage = () => {
 
         if (!resp.ok) {
           const txt = await resp.text();
-          throw new Error(txt || 'Fallo al rechazar la review');
+          throw new Error(txt || 'Failed to reject the review');
         }
 
-        // El estado local se actualizará más abajo en el bloque común para 'rejected'
+        // Local state updates below in the shared 'rejected' block
       }
       
-      // Actualizar la lista de reviews solo en caso de rechazo (en aprobación ya se eliminó del listado)
+      // Update the review list only after rejection (approved reviews were removed earlier)
       if (status === 'rejected') {
         const reason = rejectionReasons[reviewId] || '';
         setReviews(reviews.map(r => 
@@ -209,11 +209,11 @@ const ModerationPage = () => {
       }
       
       setActionMessage({
-        text: `Review ${status === 'approved' ? 'aprobada' : 'rechazada'} correctamente`,
+        text: `Review ${status === 'approved' ? 'approved' : 'rejected'} successfully`,
         type: 'success'
       });
       
-      // Limpiar el motivo de rechazo si se aprobó
+      // Clear the stored rejection reason on approval
       if (status === 'approved') {
         setRejectionReasons(prev => {
           const newReasons = {...prev};
@@ -222,7 +222,7 @@ const ModerationPage = () => {
         });
       }
       
-      // Cerrar la vista expandida
+      // Collapse the expanded row
       setExpandedReviews(prev => ({
         ...prev,
         [reviewId]: false
@@ -230,7 +230,7 @@ const ModerationPage = () => {
     } catch (err) {
       console.error('Error moderating review:', err);
       setActionMessage({
-        text: err instanceof Error ? err.message : 'Error al moderar la review',
+        text: err instanceof Error ? err.message : 'Error moderating the review',
         type: 'error'
       });
     } finally {
@@ -241,12 +241,12 @@ const ModerationPage = () => {
     }
   };
 
-  // Si no es admin, mostrar mensaje de acceso denegado
+  // Show access denied if the user is not an admin
   if (!isAdmin && !loading) {
     return (
       <div className="container mx-auto px-4 py-8 mt-16">
         <div className="rounded-lg bg-red-100 p-4 text-red-700">
-          <p>No tienes permisos para acceder a esta página</p>
+          <p>You do not have permission to access this page.</p>
         </div>
       </div>
     );
@@ -254,9 +254,9 @@ const ModerationPage = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 mt-16">
-      <h1 className="mb-8 text-2xl font-bold md:text-3xl">Panel de Moderación</h1>
+      <h1 className="mb-8 text-2xl font-bold md:text-3xl">Moderation panel</h1>
       
-      {/* Mensaje de acción */}
+      {/* Action message */}
       {actionMessage && (
         <div className={`mb-4 rounded-lg p-4 ${
           actionMessage.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
@@ -279,10 +279,10 @@ const ModerationPage = () => {
             <thead>
               <tr className="bg-gray-100">
                 <th className="border p-2 text-left"></th>
-                <th className="border p-2 text-left">Dirección</th>
-                <th className="border p-2 text-left">Usuario</th>
-                <th className="border p-2 text-left">Fecha</th>
-                <th className="border p-2 text-left">Estado</th>
+                <th className="border p-2 text-left">Address</th>
+                <th className="border p-2 text-left">User</th>
+                <th className="border p-2 text-left">Date</th>
+                <th className="border p-2 text-left">Status</th>
               </tr>
             </thead>
             <tbody>
@@ -305,71 +305,71 @@ const ModerationPage = () => {
                         )}
                       </button>
                     </td>
-                    <td className="border p-2">{review.address_details?.fullAddress || 'Dirección no disponible'}</td>
+                    <td className="border p-2">{review.address_details?.fullAddress || 'Address not available'}</td>
                     <td className="border p-2">{review.user_id}</td>
-                    <td className="border p-2">{new Date(review.created_at).toLocaleDateString()}</td>
+                    <td className="border p-2">{new Date(review.created_at).toLocaleDateString('en-GB')}</td>
                     <td className="border p-2">
                       <span className={`inline-block rounded-full px-2 py-1 text-xs font-semibold ${
                         review.moderation_status === 'approved' ? 'bg-green-100 text-green-800' :
                         review.moderation_status === 'rejected' ? 'bg-red-100 text-red-800' :
                         'bg-yellow-100 text-yellow-800'
                       }`}>
-                        {review.moderation_status === 'approved' ? 'Aprobada' :
-                         review.moderation_status === 'rejected' ? 'Rechazada' : 'Pendiente'}
+                        {review.moderation_status === 'approved' ? 'Approved' :
+                         review.moderation_status === 'rejected' ? 'Rejected' : 'Pending'}
                       </span>
                     </td>
                   </tr>
                   
-                  {/* Fila expandible con las opiniones */}
+          {/* Expanded row with opinions */}
                   {expandedReviews[review.review_session_id] && (
                     <tr>
                       <td colSpan={5} className="border p-4 bg-gray-50">
                         <div className="mb-4">
-                          {/* Tabla de opiniones */}
+                          {/* Review table */}
                           <table className="w-full border-collapse mb-6">
                             <thead>
                               <tr className="bg-gray-100">
-                                <th className="border p-2 text-left">Opinión sobre la propiedad</th>
-                                <th className="border p-2 text-left">Opinión sobre la comunidad</th>
-                                <th className="border p-2 text-left">Opinión sobre el propietario</th>
+                                <th className="border p-2 text-left">Property review</th>
+                                <th className="border p-2 text-left">Community review</th>
+                                <th className="border p-2 text-left">Landlord review</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
                                 <td className="border p-2">
-                                  <p className="bg-white p-3 rounded border">{review.property_opinion || 'No hay opinión'}</p>
+                                  <p className="bg-white p-3 rounded border">{review.property_opinion || 'No review provided'}</p>
                                 </td>
                                 <td className="border p-2">
-                                  <p className="bg-white p-3 rounded border">{review.community_opinion || 'No hay opinión'}</p>
+                                  <p className="bg-white p-3 rounded border">{review.community_opinion || 'No review provided'}</p>
                                 </td>
                                 <td className="border p-2">
-                                  <p className="bg-white p-3 rounded border">{review.owner_opinion || 'No hay opinión'}</p>
+                                  <p className="bg-white p-3 rounded border">{review.owner_opinion || 'No review provided'}</p>
                                 </td>
                               </tr>
                             </tbody>
                           </table>
                            
-                          {/* Motivo de rechazo guardado (si aplica) */}
+                          {/* Stored rejection reason (if any) */}
                           {review.moderation_status === 'rejected' && (
                             <div className="mb-4 rounded border border-red-200 bg-red-50 p-3 text-red-800">
-                              <div className="font-semibold mb-1">Motivo del rechazo</div>
+                              <div className="font-semibold mb-1">Rejection reason</div>
                               <p className="whitespace-pre-line">{review.rejection_reason || '-'}</p>
                             </div>
                           )}
 
-                          {/* Campo para el motivo de rechazo */}
+                          {/* Rejection reason input */}
                           <div className="mb-4">
-                            <label className="block font-medium mb-1">Motivo del rechazo (requerido para rechazar):</label>
+                            <label className="block font-medium mb-1">Rejection reason (required to reject):</label>
                             <textarea
                               value={rejectionReasons[review.review_session_id] || ''}
                               onChange={(e) => handleRejectionReasonChange(review.review_session_id, e.target.value)}
                               className="w-full rounded border p-2 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
                               rows={2}
-                              placeholder="Explica por qué rechazas esta review..."
+                              placeholder="Explain why you are rejecting this review..."
                             />
                           </div>
                           
-                          {/* Botones de aprobación/rechazo global */}
+                          {/* Approve/reject buttons */}
                           <div className="flex justify-end space-x-2">
                             <button 
                               onClick={() => handleModerateReview(review.review_session_id, 'approved')}
@@ -380,7 +380,7 @@ const ModerationPage = () => {
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                 </svg>
-                                Aprobar 
+                                Approve
                               </span>
                             </button>
                             <button 
@@ -392,7 +392,7 @@ const ModerationPage = () => {
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                 </svg>
-                                Rechazar
+                                Reject
                               </span>
                             </button>
                           </div>
@@ -407,7 +407,7 @@ const ModerationPage = () => {
         </div>
       )}
 
-      {/* Mensaje de acción */}
+      {/* Action message */}
     </div>
   );
 };

@@ -4,71 +4,73 @@ import LegalContainer from '../components/legal/LegalContainer';
 export default function PoliticaPrivacidad() {
   return (
     <LegalContainer>
-      <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Política de privacidad</h1>
-      <p className="text-sm text-gray-500 mb-6">Última actualización: 19/08/2025</p>
+      <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Privacy policy</h1>
+      <p className="text-sm text-gray-500 mb-6">Last updated: 19/08/2025</p>
 
-      <h2 className="text-xl font-semibold mb-2">1) Responsable del tratamiento</h2>
-      <p className="text-gray-700 mb-6">{LEGAL_META.ownerName} – Contacto: {LEGAL_META.contactEmail}.</p>
+      <h2 className="text-xl font-semibold mb-2">1) Data controller</h2>
+      <p className="text-gray-700 mb-6">{LEGAL_META.ownerName} – Contact: {LEGAL_META.contactEmail}.</p>
 
-      <h2 className="text-xl font-semibold mb-2">2) Qué datos tratamos</h2>
+      <h2 className="text-xl font-semibold mb-2">2) Data we process</h2>
       <div className="space-y-4 text-gray-700 mb-6">
-        <p><strong>Datos aportados por usuarios que publican opiniones:</strong> texto de la reseña, valoración y metadatos técnicos mínimos anti‑spam (p. ej., IP/UA).</p>
+        <p><strong>Information provided by users who publish reviews:</strong> review text, rating, and minimal anti-spam technical metadata (e.g., IP/UA).</p>
         <div>
-          <p className="mb-2"><strong>Identificadores de caseros/gestores para deduplicar y agrupar reseñas:</strong></p>
+          <p className="mb-2"><strong>Landlord/manager identifiers to deduplicate and group reviews:</strong></p>
           <ul className="list-disc pl-6 space-y-1">
-            <li>No guardamos datos personales en claro (nombre, teléfono, email).</li>
-            <li>Guardamos únicamente un hash irreversible (p. ej. SHA‑256) de datos normalizados (ej.: teléfono normalizado o email normalizado).</li>
-            <li>El hash se calcula en tu dispositivo (frontend o extensión) y solo se envía el hash, nunca el dato original.</li>
+            <li>We do not store personal data in plain text (name, phone, email).</li>
+            <li>We only store an irreversible hash (e.g. SHA-256) of normalised data (such as normalised phone number or email).</li>
+            <li>The hash is computed on your device (web or extension) and only the hash is sent, never the original data.</li>
           </ul>
         </div>
-        <p><strong>Datos de uso/analítica (solo si habilitas analítica con consentimiento):</strong> páginas vistas, eventos agregados.</p>
+        <p><strong>Usage/analytics data (only if you consent):</strong> page views and aggregated events.</p>
       </div>
 
-      <h2 className="text-xl font-semibold mb-2">3) Origen de los datos</h2>
+      <h2 className="text-xl font-semibold mb-2">3) Data sources</h2>
       <div className="space-y-2 text-gray-700 mb-6">
-        <p>Aportación voluntaria del usuario al publicar su reseña.</p>
+        <p>Voluntary contribution from the user when submitting a review.</p>
         <p>
-          Extensión de navegador (Chrome/Firefox): capta únicamente información visible en páginas como Idealista; calcula el hash localmente y consulta el backend con ese hash. No realiza scraping masivo ni descarga datos personales en claro.
+          Browser extension (Chrome/Firefox): only captures information visible on listing sites (e.g., Idealista); computes hashes locally and queries the backend with that hash. It does not scrape at scale or download personal data in plain text.
         </p>
       </div>
 
-      <h2 className="text-xl font-semibold mb-2">4) Finalidades</h2>
+      <h2 className="text-xl font-semibold mb-2">4) Purposes</h2>
       <ul className="list-disc pl-6 text-gray-700 mb-6 space-y-1">
-        <li>Publicar y moderar opiniones.</li>
-        <li>Agrupar reseñas por casero/gestor mediante hashes para evitar duplicidades y mejorar la consulta.</li>
-        <li>Prevención de abuso y spam (limitación de frecuencia, señales técnicas).</li>
-        <li>(Opcional) Analítica para mejorar el servicio.</li>
+        <li>Publishing and moderating reviews.</li>
+        <li>Grouping reviews by landlord/manager via hashes to avoid duplicates and aid discovery.</li>
+        <li>Preventing abuse and spam (rate limiting, technical signals).</li>
+        <li>(Optional) Analytics to improve the service.</li>
       </ul>
 
-      <h2 className="text-xl font-semibold mb-2">5) Base jurídica</h2>
+      <h2 className="text-xl font-semibold mb-2">5) Legal basis</h2>
       <div className="text-gray-700 mb-6 space-y-2">
-        <p>Consentimiento del usuario que envía la reseña.</p>
+        <p>User consent when submitting a review.</p>
         <p>
-          Interés legítimo (art. 6.1.f RGPD) para: moderación, seguridad, deduplicación mediante hash y correcto funcionamiento del servicio. No se usan decisiones automatizadas con efectos jurídicos.
+          Legitimate interest (Art. 6.1.f GDPR) for moderation, security, deduplication via hash, and proper service operation. No automated decisions with legal effects are made.
         </p>
       </div>
 
-      <h2 className="text-xl font-semibold mb-2">6) Cesiones y encargados</h2>
+      <h2 className="text-xl font-semibold mb-2">6) Sharing and processors</h2>
       <p className="text-gray-700 mb-6">
-        No cedemos datos a terceros salvo obligación legal. Usamos proveedores de infraestructura como encargados del tratamiento (p. ej., Supabase, {LEGAL_META.hostingProvider}), bajo contrato conforme al RGPD. Pueden existir transferencias internacionales; en tal caso aplicamos garantías adecuadas (Cláusulas Contractuales Tipo de la UE).
+        We do not share data with third parties unless legally required. We rely on infrastructure providers as data processors (e.g., Supabase, {LEGAL_META.hostingProvider}) under GDPR-compliant agreements. International transfers may occur; in that case we apply appropriate safeguards (EU Standard Contractual Clauses).
       </p>
 
-      <h2 className="text-xl font-semibold mb-2">7) Plazos de conservación</h2>
+      <h2 className="text-xl font-semibold mb-2">7) Retention periods</h2>
       <ul className="list-disc pl-6 text-gray-700 mb-6 space-y-1">
-        <li>Reseñas y hashes: mientras el servicio esté activo o hasta que solicites su supresión/bloqueo.</li>
-        <li>Logs técnicos anti‑spam: {LEGAL_META.logsRetentionDays}.</li>
+        <li>Reviews and hashes: while the service remains active or until you request deletion/blocking.</li>
+        <li>Anti-spam technical logs: {LEGAL_META.logsRetentionDays}.</li>
       </ul>
 
-      <h2 className="text-xl font-semibold mb-2">8) Derechos</h2>
+      <h2 className="text-xl font-semibold mb-2">8) Rights</h2>
       <p className="text-gray-700 mb-6">
-        Puedes solicitar acceso, rectificación, supresión, oposición, limitación y portabilidad escribiendo a {LEGAL_META.contactEmail}. Nota sobre los hashes: al no almacenar el dato original, la supresión se realiza bloqueando o eliminando el hash asociado. Si eres un tercero afectado (p. ej., casero) y crees que existe una identificación indirecta, contáctanos para bloqueo del hash y desindexación del agrupado.
+        You can request access, rectification, deletion, opposition, restriction, and portability by emailing {LEGAL_META.contactEmail}.
+        Regarding hashes: because we do not store the original data, deletion means blocking or removing the associated hash.
+        If you are a third party (e.g., a landlord) and believe there is indirect identification, contact us to block the hash and remove the grouping.
       </p>
 
-      <h2 className="text-xl font-semibold mb-2">9) Menores</h2>
-      <p className="text-gray-700 mb-6">El servicio no está dirigido a menores de 14 años. No se aceptan envíos de datos por menores.</p>
+      <h2 className="text-xl font-semibold mb-2">9) Minors</h2>
+      <p className="text-gray-700 mb-6">The service is not directed at minors under 14. We do not accept submissions from minors.</p>
 
-      <h2 className="text-xl font-semibold mb-2">10) Cambios</h2>
-      <p className="text-gray-700">Podemos actualizar esta política. Publicaremos la versión vigente con fecha de actualización.</p>
+      <h2 className="text-xl font-semibold mb-2">10) Changes</h2>
+      <p className="text-gray-700">We may update this policy. We will publish the current version with its revision date.</p>
     </LegalContainer>
   );
 }

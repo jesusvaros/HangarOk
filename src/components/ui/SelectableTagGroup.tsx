@@ -22,16 +22,16 @@ const SelectableTagGroup: React.FC<SelectableTagGroupProps> = ({
 }) => {
   const handleTagClick = (option: string) => {
     if (multiSelect) {
-      // Para multiselección
+      // Multi-select behaviour
       if (selectedOptions.includes(option)) {
-        // Si ya está seleccionado, lo quitamos
+        // Remove if already selected
         onChange(selectedOptions.filter(item => item !== option));
       } else {
-        // Si no está seleccionado, lo añadimos
+        // Add otherwise
         onChange([...selectedOptions, option]);
       }
     } else {
-      // Para selección única (como un radio button)
+      // Single selection (radio-button-like)
       onChange([option]);
     }
   };

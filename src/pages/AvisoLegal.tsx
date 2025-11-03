@@ -4,39 +4,39 @@ import LegalContainer from '../components/legal/LegalContainer';
 export default function AvisoLegal() {
   return (
     <LegalContainer>
-      <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Aviso legal</h1>
-      <p className="text-sm text-gray-500 mb-6">Última actualización: 19/08/2025</p>
+      <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Legal notice</h1>
+      <p className="text-sm text-gray-500 mb-6">Last updated: 19/08/2025</p>
 
-      <h2 className="text-xl font-semibold mb-2">Responsable del sitio</h2>
+      <h2 className="text-xl font-semibold mb-2">Site owner</h2>
       <p className="text-gray-900 mb-6">
-        Este sitio web es titularidad de {LEGAL_META.ownerName}, con domicilio en {LEGAL_META.cityCountry}.<br />
-        Contacto: {LEGAL_META.contactEmail}.
+        This website is owned by {LEGAL_META.ownerName}, based in {LEGAL_META.cityCountry}.<br />
+        Contact: {LEGAL_META.contactEmail}.
       </p>
 
-      <h2 className="text-xl font-semibold mb-2">Objeto</h2>
+      <h2 className="text-xl font-semibold mb-2">Purpose</h2>
       <p className="text-gray-700 mb-6">
-        Este sitio ofrece un blog/plataforma de opiniones de inquilinos sobre experiencias de alquiler, con funcionalidades de publicación y consulta de reseñas anónimas.
+        This site provides a blog/platform for renters to share experiences through anonymous reviews, with tools to publish and browse them.
       </p>
 
-      <h2 className="text-xl font-semibold mb-2">Propiedad intelectual</h2>
+      <h2 className="text-xl font-semibold mb-2">Intellectual property</h2>
       <p className="text-gray-900 mb-6">
-        Los contenidos propios (marca, logotipo, textos, código) pertenecen a {LEGAL_META.projectName} o a sus autores y quedan protegidos por la normativa de propiedad intelectual. El uso del sitio no concede licencia alguna sobre dichos derechos.
+        Site assets (brand, logo, copy, code) belong to {LEGAL_META.projectName} or the respective authors and are protected by intellectual property laws. Using the site does not grant any licence over those rights.
       </p>
 
-      <h2 className="text-xl font-semibold mb-2">Responsabilidad de contenidos</h2>
+      <h2 className="text-xl font-semibold mb-2">Content responsibility</h2>
       <p className="text-gray-900 mb-6">
-        Las opiniones publicadas son responsabilidad exclusiva de sus autores. {LEGAL_META.projectName} puede moderar o retirar contenidos que vulneren estas condiciones, la ley o los principios de respeto.
+        Reviews are the sole responsibility of their authors. {LEGAL_META.projectName} may moderate or remove content that breaches these terms, the law, or basic standards of respect.
       </p>
 
-      <h2 className="text-xl font-semibold mb-2">Enlaces</h2>
-      <p className="text-gray-900 mb-6">Este sitio puede enlazar a webs de terceros sin que ello implique responsabilidad sobre sus contenidos.</p>
+      <h2 className="text-xl font-semibold mb-2">Links</h2>
+      <p className="text-gray-900 mb-6">The site may link to third-party pages without assuming responsibility for their content.</p>
 
-      <h2 className="text-xl font-semibold mb-2">Disponibilidad</h2>
-      <p className="text-gray-900 mb-6">No se garantiza la continuidad del servicio ni la ausencia de errores. Se procurará solventarlos con la mayor diligencia posible.</p>
+      <h2 className="text-xl font-semibold mb-2">Availability</h2>
+      <p className="text-gray-900 mb-6">Service continuity or error-free operation cannot be guaranteed, though we will fix issues as quickly as possible.</p>
 
-      <h2 className="text-xl font-semibold mb-2">Ley aplicable y jurisdicción</h2>
+      <h2 className="text-xl font-semibold mb-2">Applicable law and jurisdiction</h2>
       <p className="text-gray-900">
-        Se aplica la legislación española. Para cualquier controversia, las partes se someten a los Juzgados y Tribunales de {LEGAL_META.jurisdictionCity}, salvo norma imperativa en contrario.
+        Spanish law applies. Any dispute will be handled by the Courts and Tribunals of {LEGAL_META.jurisdictionCity}, unless mandatory rules state otherwise.
       </p>
     </LegalContainer>
   );

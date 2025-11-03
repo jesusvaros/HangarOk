@@ -17,7 +17,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, onLoginComplete })
             type="button"
             onClick={onClose}
             className="absolute right-4 top-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200"
-            aria-label="Cerrar"
+            aria-label="Close"
             {...umamiEventProps('login:modal-close')}
           >
             ✕

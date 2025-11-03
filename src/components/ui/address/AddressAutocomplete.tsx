@@ -31,7 +31,7 @@ const AddressAutocomplete: React.FC<AddressAutocompleteProps> = ({
   onNumberChange,
   onNumberBlur,
   onSelect,
-  placeholder = 'Buscar dirección...',
+  placeholder = 'Search address...',
   showNumberField = false,
   hasError = false,
   numberHasError = false,

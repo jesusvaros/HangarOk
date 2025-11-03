@@ -2,7 +2,7 @@
 import React from 'react';
 
 interface ThermometerProps {
-  level: number; // entre 1 y 100
+  level: number; // between 1 and 100
   icon: React.ReactNode;
   primaryColor?: string;
   label?: string;
@@ -28,7 +28,7 @@ const Thermometer: React.FC<ThermometerProps> = ({
         {title}
       </p>
       <div className="relative w-5 h-36 bg-gray-200 rounded-full ">
-        {/* Fondo del termómetro */}
+        {/* Thermometer fill */}
         <div
           className={`absolute bottom-3 left-0 w-full transition-all duration-300 ease-in-out z-10 border-x-2 border-black`}
           style={{
@@ -41,7 +41,7 @@ const Thermometer: React.FC<ThermometerProps> = ({
           style={{ backgroundColor: primaryColor }}
         />
 
-        {/* Icono en el punto exacto */}
+        {/* Icon positioned at the exact level */}
         <div
           className="border-2 border-black absolute transition-all w-8 h-8 ml-[-5px] flex items-center justify-center rounded-full bg-white "
           style={{ top: iconOffset, zIndex: 12 }}

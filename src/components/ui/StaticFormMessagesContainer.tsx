@@ -11,7 +11,7 @@ const StaticFormMessagesContainer: React.FC<StaticFormMessagesContainerProps> = 
   step,
   isMobile = false,
 }) => {
-  // Definir los mensajes para cada paso
+  // Define helper messages per step
   const getMessagesForStep = () => {
     switch (step) {
       case 1:

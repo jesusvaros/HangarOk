@@ -10,14 +10,14 @@ interface StaticFormMessageProps {
 }
 
 /**
- * Componente para mostrar mensajes estáticos fuera del recuadro del formulario
- * No utiliza el contexto de mensajes para evitar problemas de renderizado
+ * Displays static messages outside the form container.
+ * It avoids the message context to prevent re-render issues.
  */
 const StaticFormMessage: React.FC<StaticFormMessageProps> = ({
   title,
   message,
-  backgroundColor = 'rgb(225, 245, 110)', // Amarillo verde por defecto (como en el header)
-  textColor = 'black', // Verde oscuro por defecto
+  backgroundColor = 'rgb(225, 245, 110)', // Default yellow-green (matches header)
+  textColor = 'black', // Default dark green
   className = '',
   icon,
 }) => {

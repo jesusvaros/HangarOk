@@ -34,7 +34,7 @@ const ErrorToast: React.FC<ErrorToastProps> = ({ t, message }) => {
             </div>
           </div>
           <div className="ml-3 flex-1">
-            <p className="text-sm font-medium text-gray-900">Error de validación</p>
+            <p className="text-sm font-medium text-gray-900">Validation error</p>
             <p className="mt-1 text-sm text-gray-500">{message}</p>
           </div>
         </div>
@@ -46,7 +46,7 @@ const ErrorToast: React.FC<ErrorToastProps> = ({ t, message }) => {
           }}
           className="w-full border border-transparent rounded-none rounded-r-lg p-4 flex items-center justify-center text-sm font-medium text-red-600 hover:text-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 cursor-pointer"
         >
-          Cerrar
+          Close
         </button>
       </div>
     </div>

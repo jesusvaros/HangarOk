@@ -28,9 +28,9 @@ const OpinionSection: React.FC<OpinionSectionProps> = ({
       {showHeader && (
         <div className="flex items-center gap-2 mb-2">
           <ChatBubbleLeftRightIcon className="h-5 w-5 text-green-700" />
-          <h3 className="text-[18px] font-semibold">Opiniones </h3>
+          <h3 className="text-[18px] font-semibold">Opinions</h3>
           {wouldRecommend && (
-            <div className="ml-3 flex items-center" aria-label={`Recomendación ${wouldRecommend} de 5`}>
+            <div className="ml-3 flex items-center" aria-label={`Recommendation ${wouldRecommend} out of 5`}>
               {[1,2,3,4,5].map((i) => (
                 <span key={i} className="mr-0.5">
                   {i <= Number(wouldRecommend) ? (
@@ -49,7 +49,7 @@ const OpinionSection: React.FC<OpinionSectionProps> = ({
         <div className="border-l-4 border-green-200 pl-4">
           <div className="flex items-center gap-2 mb-2">
             <HomeIcon className="h-5 w-5 text-green-600" />
-            <h4 className="text-[16px] font-medium">Sobre la casa</h4>
+            <h4 className="text-[16px] font-medium">About the home</h4>
           </div>
           <p className="text-gray-700 whitespace-pre-line">{propertyOpinion}</p>
         </div>
@@ -59,7 +59,7 @@ const OpinionSection: React.FC<OpinionSectionProps> = ({
         <div className="border-l-4 border-green-200 pl-4">
           <div className="flex items-center gap-2 mb-2">
             <UserGroupIcon className="h-5 w-5 text-green-600" />
-            <h4 className="text-[16px] font-medium">Sobre la comunidad</h4>
+            <h4 className="text-[16px] font-medium">About the community</h4>
           </div>
           <p className="text-gray-700 whitespace-pre-line">{communityOpinion}</p>
         </div>
@@ -69,7 +69,9 @@ const OpinionSection: React.FC<OpinionSectionProps> = ({
         <div className="border-l-4 border-green-200 pl-4">
           <div className="flex items-center gap-2 mb-2">
             <UserIcon className="h-5 w-5 text-green-600" />
-            <h4 className="text-[16px] font-medium">Sobre {ownerOpinion.toLowerCase().includes('agencia') ? 'la agencia' : 'el propietario'}</h4>
+            <h4 className="text-[16px] font-medium">
+              About {ownerOpinion.toLowerCase().includes('agencia') ? 'the agency' : 'the landlord'}
+            </h4>
           </div>
           <p className="text-gray-700 whitespace-pre-line">{ownerOpinion}</p>
         </div>

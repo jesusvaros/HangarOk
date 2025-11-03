@@ -106,7 +106,7 @@ const ProfilePage: React.FC = () => {
           
           return {
             ...session,
-            displayAddress: addressResult?.hangar_location?.street || 'Dirección no disponible',
+            displayAddress: addressResult?.hangar_location?.street || 'Address not available',
             validated: session.validated_at !== null && session.validated_at !== undefined,
             completed: allStepsCompleted,
             nextIncompleteStep
@@ -116,7 +116,7 @@ const ProfilePage: React.FC = () => {
         setUserReviews(processedReviews);
       } catch (error) {
         console.error('Error fetching profile data:', error);
-        toast.error('Error al cargar los datos del perfil');
+        toast.error('Error loading profile data');
       } finally {
         setLoading(false);
       }
@@ -135,7 +135,7 @@ const ProfilePage: React.FC = () => {
     return (
       <div className="flex min-h-screen items-center justify-center bg-gray-100 pt-16">
         <div className="w-full max-w-3xl rounded-lg bg-white p-8 shadow-md">
-          <p className="text-center text-gray-600">Cargando perfil...</p>
+          <p className="text-center text-gray-600">Loading profile...</p>
         </div>
       </div>
     );
@@ -144,12 +144,12 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="min-h-screen pt-24 gap-8 mx-auto max-w-3xl px-4">
         <div className="mb-8 rounded-lg bg-white p-8 shadow-md">
-          <h1 className="mb-6 text-2xl font-semibold ">Mi Perfil</h1>
+          <h1 className="mb-6 text-2xl font-semibold ">My profile</h1>
           
           {/* Personal Info Section */}
           <div className="mb-8">
             <h2 className="mb-4 border-b border-gray-200 pb-2 text-xl font-semibold ">
-              Información Personal
+              Personal information
             </h2>
             {userProfile && (
               <div className="text-left">
@@ -161,7 +161,7 @@ const ProfilePage: React.FC = () => {
           {/* My Reviews Section */}
           <div className="mb-8">
             <h2 className="mb-4 border-b border-gray-200 pb-2 text-xl font-semibold ">
-              Mis Reseñas
+              My reviews
             </h2>
             {userReviews.length > 0 ? (
               <div className="space-y-4">
@@ -192,24 +192,24 @@ const ProfilePage: React.FC = () => {
                             {isPendingValidation && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-[rgb(225,245,110)] px-2 py-0.5 text-xs font-medium text-black">
                                 <span className="h-2 w-2 rounded-full bg-orange-500"></span>
-                                Pendiente de validación
+                                Pending validation
                               </span>
                             )}
                             {isIncomplete && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2 py-0.5 text-xs font-medium text-black ring-1 ring-orange-200">
                                 <span className="h-2 w-2 rounded-full bg-orange-500"></span>
-                                Incompleta
+                                Incomplete
                               </span>
                             )}
                             {isValidated && (
                               <span className="inline-flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-medium text-black ring-1 ring-green-200">
                                 <span className="h-2 w-2 rounded-full bg-green-500"></span>
-                                Validada
+                                Validated
                               </span>
                             )}
                           </header>
                           <time className="block text-sm text-black" dateTime={new Date(review.created_at).toISOString()}>
-                            {new Date(review.created_at).toLocaleDateString('es-ES')}
+                            {new Date(review.created_at).toLocaleDateString('en-GB')}
                           </time>
                         </div>
                         <aside className="shrink-0 rounded-full bg-[rgb(225,245,110)] p-2">
@@ -234,7 +234,7 @@ const ProfilePage: React.FC = () => {
                 })}
               </div>
             ) : (
-              <p className="text-gray-500">No has creado ninguna reseña todavía.</p>
+              <p className="text-gray-500">You haven’t created any reviews yet.</p>
             )}
           </div>
           
@@ -258,7 +258,7 @@ const ProfilePage: React.FC = () => {
                   d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
                 />
               </svg>
-              Cerrar Sesión
+              Sign out
             </button>
           </div>
         </div>

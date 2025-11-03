@@ -2,8 +2,8 @@ import toast from 'react-hot-toast';
 import ErrorToast from './ErrorToast';
 
 /**
- * Muestra un toast de error personalizado
- * @param message Mensaje de error a mostrar
+ * Display a custom error toast.
+ * @param message Error message to show
  */
 export const showErrorToast = (message: string) => {
   return toast.custom(t => <ErrorToast t={t} message={message} />, {
@@ -13,8 +13,8 @@ export const showErrorToast = (message: string) => {
 };
 
 /**
- * Muestra un toast de éxito (para futuro uso)
- * @param message Mensaje de éxito a mostrar
+ * Display a success toast (reserved for future use).
+ * @param message Success message to show
  */
 export const showSuccessToast = (message: string) => {
   return toast.custom(

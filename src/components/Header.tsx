@@ -108,7 +108,7 @@ const Header: React.FC = () => {
           <Link
             to="/"
             className="flex items-center"
-            aria-label="CaseroOk - Inicio"
+            aria-label="CaseroOk - Home"
             {...umamiEventProps('nav:logo-home')}
           >
             <img src={logoUrl} alt="CaseroOk" className="h-12 w-12 md:h-14 md:w-14" />
@@ -128,7 +128,7 @@ const Header: React.FC = () => {
                   type="text"
                   value={address}
                   onChange={e => setAddress(e.target.value)}
-                  placeholder="Dirección de la vivienda"
+                  placeholder="Property address"
                   className="flex-grow rounded-l-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
@@ -136,7 +136,7 @@ const Header: React.FC = () => {
                   className="whitespace-nowrap rounded-r-lg bg-[#F97316] px-8 py-3 text-lg font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   {...umamiEventProps('header:start-review')}
                 >
-                  Empezar
+                  Start
                 </button>
               </div>
 
@@ -150,7 +150,7 @@ const Header: React.FC = () => {
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                   </svg>
-                  Opina
+                  Add review
                 </Link>
               </div>
             </>
@@ -245,7 +245,7 @@ const LoginDropdown: React.FC = () => {
         onClick={toggleDropdown}
         className="flex h-10 w-10 items-center justify-center rounded-full bg-[#4A5E32] text-white transition-colors hover:bg-[#5A6E42]"
         aria-expanded={isDropdownOpen}
-        aria-label={user ? 'Perfil de usuario' : 'Iniciar sesión'}
+        aria-label={user ? 'User profile' : 'Sign in'}
       >
         {user ? (
           <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -273,13 +273,13 @@ const LoginDropdown: React.FC = () => {
                 onClick={() => setIsDropdownOpen(false)}
                 className="mt-2 w-full rounded bg-[#4A5E32] px-4 py-2 text-center text-white transition-colors hover:bg-[#5A6E42]"
               >
-                Mi Perfil
+                My profile
               </Link>
               <button
                 onClick={handleLogout}
                 className="mt-2 w-full rounded bg-[#4A5E32] px-4 py-2 text-white transition-colors hover:bg-[#5A6E42]"
               >
-                Cerrar sesión
+                Sign out
               </button>
             </div>
           ) : (

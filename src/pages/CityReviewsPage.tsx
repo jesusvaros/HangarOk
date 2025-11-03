@@ -66,7 +66,7 @@ export default function CityReviewsPage() {
   }, [citySlug]);
 
   const reviewCount = reviews.length;
-  const fallbackCityName = cityName || (citySlug ? humanizeSlug(citySlug) : 'Ciudad');
+  const fallbackCityName = cityName || (citySlug ? humanizeSlug(citySlug) : 'City');
 
   const initialView = useMemo(() => {
     if (!reviews.length) return undefined;
@@ -102,16 +102,16 @@ export default function CityReviewsPage() {
 
   const heroSubtitle =
     reviewCount === 1
-      ? `Tenemos 1 opinión publicada sobre alquilar en ${fallbackCityName}.`
-      : `Tenemos ${reviewCount} opiniones publicadas sobre alquilar en ${fallbackCityName}.`;
+      ? `We have 1 published review about renting in ${fallbackCityName}.`
+      : `We have ${reviewCount} published reviews about renting in ${fallbackCityName}.`;
 
-  const seoTitle = `Opiniones de alquiler en ${fallbackCityName} | CaseroOk`;
+  const seoTitle = `Rental reviews in ${fallbackCityName} | CaseroOk`;
   const seoDescription =
     reviewCount > 0
-      ? `Descubre ${reviewCount === 1 ? 'la opinión' : `las ${reviewCount} opiniones`} de inquilinos sobre caseros y pisos en ${fallbackCityName}${
+      ? `Discover ${reviewCount === 1 ? 'the review' : `${reviewCount} reviews`} from renters about landlords and homes in ${fallbackCityName}${
           stateName ? `, ${stateName}` : ''
         }.`
-      : `Descubre opiniones de inquilinos sobre caseros y pisos en ${fallbackCityName}.`;
+      : `Discover renter opinions about landlords and homes in ${fallbackCityName}.`;
 
   return (
     <>
@@ -125,39 +125,39 @@ export default function CityReviewsPage() {
         {status === 'loading' ? (
           <section className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
             <p className="text-sm font-medium uppercase tracking-wide text-emerald-700">
-              Opiniones por ciudad
+              City reviews
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-gray-900">
-              Opiniones sobre alquiler en {fallbackCityName}
+              Rental reviews in {fallbackCityName}
             </h1>
-            <p className="mt-4 text-gray-600">Cargando detalles y mapa…</p>
+            <p className="mt-4 text-gray-600">Loading details and map…</p>
           </section>
         ) : null}
 
         {status === 'not-found' ? (
           <section className="rounded-2xl border border-gray-200 bg-white p-12 text-center shadow-sm">
             <p className="text-sm font-medium uppercase tracking-wide text-emerald-700">
-              Opiniones por ciudad
+              City reviews
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-gray-900">
-              No encontramos reseñas en {fallbackCityName}
+              We couldn’t find reviews for {fallbackCityName}
             </h1>
             <p className="mt-4 text-gray-600">
-              Aún no tenemos opiniones públicas para esta ubicación. Puedes explorar todas las reseñas
-              en el mapa general o volver al listado de ciudades disponibles.
+              We don’t have public reviews for this location yet. You can explore every review on the
+              main map or head back to the list of available cities.
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link
                 to="/map"
                 className="rounded-full bg-emerald-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800"
               >
-                Ver mapa completo
+                View full map
               </Link>
               <Link
                 to="/opiniones"
                 className="rounded-full border border-emerald-700 px-5 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50"
               >
-                Ver ciudades con opiniones
+                View cities with reviews
               </Link>
             </div>
           </section>
@@ -167,10 +167,10 @@ export default function CityReviewsPage() {
           <>
             <header className="mb-12 text-center md:text-left">
               <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">
-                Opiniones por ciudad
+                City reviews
               </p>
               <h1 className="mt-3 text-3xl font-bold text-gray-900 md:text-4xl">
-                Opiniones sobre alquiler en {formatCityWithState(fallbackCityName, stateName)}
+                Rental reviews in {formatCityWithState(fallbackCityName, stateName)}
               </h1>
               <p className="mt-4 max-w-2xl text-lg text-gray-600 md:mt-3">{heroSubtitle}</p>
               <div className="mt-4 flex flex-wrap justify-center gap-3 md:justify-start">
@@ -178,13 +178,13 @@ export default function CityReviewsPage() {
                   to="/map"
                   className="rounded-full bg-emerald-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800"
                 >
-                  Ver mapa completo
+                  View full map
                 </Link>
                 <Link
                   to="/opiniones"
                   className="rounded-full border border-emerald-700 px-5 py-2 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-50"
                 >
-                  Ver todas las ciudades
+                  View all cities
                 </Link>
               </div>
             </header>
@@ -192,10 +192,10 @@ export default function CityReviewsPage() {
             <section className="mb-12">
               <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-gray-900">
-                  Qué opinan los inquilinos de {fallbackCityName}
+                  What renters say about {fallbackCityName}
                 </h2>
                 <p className="mt-3 text-sm text-gray-600">
-                  Seleccionamos testimonios reales para que puedas evaluar mejor el alquiler en esta zona.
+                  We’ve highlighted real testimonies so you can understand the renting experience in this area.
                 </p>
                 <div className="mt-6 grid gap-6 md:grid-cols-2">
                   {reviews.slice(0, Math.min(4, reviews.length)).map(review => (
@@ -217,7 +217,7 @@ export default function CityReviewsPage() {
 
             {initialView ? (
               <MapView
-                title={`Mapa de opiniones en ${formatCityWithState(fallbackCityName, stateName)}`}
+                title={`Review map for ${formatCityWithState(fallbackCityName, stateName)}`}
                 subtitle={heroSubtitle}
                 initialViewOverride={initialView}
                 reviews={reviews}
@@ -226,17 +226,16 @@ export default function CityReviewsPage() {
             ) : (
               <section className="rounded-2xl border border-gray-200 bg-white p-10 text-center shadow-sm">
                 <h2 className="text-xl font-semibold text-gray-900">
-                  Aún no podemos mostrar el mapa de {fallbackCityName}
+                  We can’t show the map for {fallbackCityName} yet
                 </h2>
                 <p className="mt-3 text-gray-600">
-                  Las opiniones disponibles todavía no incluyen coordenadas precisas. Consulta el mapa
-                  general para ver todas las reseñas.
+                  The available reviews don’t include precise coordinates yet. Check the main map to see every review.
                 </p>
                 <Link
                   to="/map"
                   className="mt-6 inline-flex items-center rounded-full bg-emerald-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800"
                 >
-                  Abrir mapa general
+                  Open main map
                 </Link>
               </section>
             )}

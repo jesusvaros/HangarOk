@@ -22,7 +22,7 @@ const ChromeStoreSection: React.FC = () => {
         <div className="md:w-1/2">
           <img
             src="/chrome-extension-placeholder.svg"
-            alt="Vista previa de la extensión"
+            alt="Extension preview"
             className="w-full rounded-xl border border-gray-200 shadow-xl"
           />
         </div>

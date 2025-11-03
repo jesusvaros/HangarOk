@@ -70,7 +70,7 @@ const InputSection: React.FC = () => {
   const handleStart = async () => {
     try {
       if (!formData.hangarLocation?.coordinates || !address.trim()) {
-        showErrorToast('Por favor selecciona una dirección de la lista para continuar');
+        showErrorToast('Please select an address from the list to continue');
         return;
       }
 
@@ -79,7 +79,7 @@ const InputSection: React.FC = () => {
         addressAutocompleteResult: formData.addressAutocompleteResult,
       });
 
-      // Inicializar o recuperar la sesión con el ID del usuario si está autenticado
+      // Initialise or recover the session with the user ID if authenticated
       const { sessionId } = await initializeSession(user?.id);
 
       if (sessionId) {
@@ -87,7 +87,7 @@ const InputSection: React.FC = () => {
       }
     } catch (error) {
       console.error('Error:', error);
-      showErrorToast('Ha ocurrido un error al procesar tu solicitud');
+      showErrorToast('Something went wrong while processing your request');
     } finally {
       setIsLoading(false);
     }
@@ -95,7 +95,7 @@ const InputSection: React.FC = () => {
 
   const handleGoToMap = () => {
       if (!formData.hangarLocation?.coordinates || !address.trim()) {
-        showErrorToast('Por favor selecciona una dirección de la lista para continuar');
+        showErrorToast('Please select an address from the list to continue');
         return;
       }
       const coords = formData.hangarLocation.coordinates;

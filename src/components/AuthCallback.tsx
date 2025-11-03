@@ -33,7 +33,7 @@ const AuthCallback = () => {
       
       const client = supabaseWrapper.getClient();
       if (!client) {
-        toast.error('Error de configuración de Supabase');
+        toast.error('Supabase configuration error');
         navigate('/');
         return;
       }
@@ -43,7 +43,7 @@ const AuthCallback = () => {
       
       if (sessionError) {
         console.error('Error getting session:', sessionError);
-        toast.error('Error al obtener la sesión');
+        toast.error('Error retrieving session');
         navigate('/');
         return;
       }
@@ -128,16 +128,16 @@ const AuthCallback = () => {
           }
         } catch (error) {
           console.error('Error updating review session:', error);
-          toast.error('Error al actualizar la sesión');
+          toast.error('Error updating session');
           navigate('/');
         }
       } else {
         // Regular login (no session ID) or no user
         console.log('Regular login (no session ID) or no user');
         if (!user) {
-          toast.error('No se pudo validar la sesión.');
+          toast.error('Session could not be validated.');
         } else {
-          toast.success('Sesión iniciada correctamente');
+          toast.success('Signed in successfully');
         }
         navigate('/');
       }
@@ -148,7 +148,7 @@ const AuthCallback = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <p className="text-center text-sm text-gray-600">Confirmando sesión…</p>
+      <p className="text-center text-sm text-gray-600">Confirming session…</p>
     </div>
   );
 };

@@ -84,7 +84,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
 
     if (!formData.contactEmail) {
       setStatus('error');
-      setErrorMessage('Introduce un correo electrónico válido.');
+      setErrorMessage('Please enter a valid email address.');
       return;
     }
 
@@ -94,7 +94,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
     
     if (!result.success) {
       setStatus('error');
-      setErrorMessage(result.error || 'Error al enviar el enlace');
+      setErrorMessage(result.error || 'We couldn’t send the link');
     } else {
       setStatus('link-sent');
       setResendTimer(30);
@@ -110,16 +110,16 @@ const LoginContent: React.FC<LoginContentProps> = ({
   return (
     <>
       {showTitle && (
-        <h2 className="mb-3 text-3xl font-bold text-gray-800">Guardar y validar tu opinión</h2>
+        <h2 className="mb-3 text-3xl font-bold text-gray-800">Save and verify your review</h2>
       )}
 
       {showInfo && (
         <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-base text-amber-800">
-          <p className="mb-1 font-semibold">Esta información:</p>
+          <p className="mb-1 font-semibold">Why we ask for this:</p>
           <ul className="ml-4 list-disc space-y-1">
-            <li>Solo será usada para validar la review</li>
-            <li>Siempre será anónima</li>
-            <li>Te permitirá editarla si fuera necesario</li>
+            <li>Only used to validate your review</li>
+            <li>Always kept anonymous</li>
+            <li>Lets you edit it later if needed</li>
           </ul>
         </div>
       )}
@@ -132,7 +132,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
                 htmlFor="contactEmail" 
                 className="mb-1 block text-base font-medium text-gray-700"
               >
-                Correo electrónico
+                Email address
               </label>
               <input
                 type="email"
@@ -141,13 +141,13 @@ const LoginContent: React.FC<LoginContentProps> = ({
                 onChange={e => updateFormData({ contactEmail: e.target.value })}
                 required
                 className="w-full rounded-lg border p-3 text-base focus:outline-none focus:ring-2 focus:ring-[rgb(74,94,50)]"
-                placeholder="tu@email.com"
+                placeholder="you@example.com"
               />
             </div>
 
             {status === 'error' && (
               <p className="mb-2 text-base text-red-600">
-                {errorMessage || 'Error al enviar el link'}
+                {errorMessage || 'There was a problem sending the link'}
               </p>
             )}
 
@@ -155,12 +155,12 @@ const LoginContent: React.FC<LoginContentProps> = ({
               type="submit"
               className="mb-2 w-full rounded-lg bg-[rgb(74,94,50)] py-2.5 text-base text-white hover:bg-[rgb(60,76,40)]"
             >
-              Validar por correo
+              Verify via email
             </button>
           </form>
         </>
       ) : status === 'loading' ? (
-        <p className="text-center text-base text-gray-600">Enviando enlace de login...</p>
+        <p className="text-center text-base text-gray-600">Sending login link...</p>
       ) : (
         <div className="mb-3 rounded-md bg-gray-50 p-4 text-base text-gray-700">
           {isEditingEmail ? (
@@ -182,13 +182,13 @@ const LoginContent: React.FC<LoginContentProps> = ({
                 type="submit"
                 className="w-full rounded bg-[rgb(74,94,50)] py-2.5 text-base text-white hover:bg-[rgb(60,76,40)]"
               >
-                Enviar nuevo enlace
+                Send a new link
               </button>
             </form>
           ) : (
             <>
               <p className="mb-2 text-base">
-                📩 Hemos enviado un enlace a{' '}
+                📩 We’ve sent a sign-in link to{' '}
                 <span className="font-semibold">{formData.contactEmail}</span>.
               </p>
               <div className="flex items-center justify-between">
@@ -199,7 +199,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
                   }}
                   className="text-base text-blue-600 underline hover:text-blue-800"
                 >
-                  Cambiar email
+                  Change email
                 </button>
                 <button
                   onClick={() => {
@@ -209,7 +209,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
                   disabled={!canResend}
                   className={`text-base ${canResend ? 'text-blue-600 hover:text-blue-800' : 'text-gray-400 cursor-not-allowed'}`}
                 >
-                  {canResend ? 'Reenviar enlace' : `Reenviar en ${resendTimer}s`}
+                  {canResend ? 'Resend link' : `Resend in ${resendTimer}s`}
                 </button>
               </div>
             </>
@@ -218,7 +218,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
       )}
 
       <div className="my-2 mb-4 flex items-center justify-center">
-        <span className="mx-2 text-sm text-gray-500">ó</span>
+        <span className="mx-2 text-sm text-gray-500">or</span>
       </div>
 
       <button
@@ -249,7 +249,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
             d="M272 107.7c39.5-.6 77.4 14.5 106.2 41.8l79.2-79.2C413.3 24.3 346.2-.4 272 0 168.5 0 76.4 61.5 32.4 164.6l88.9 69.2C142.6 154.9 202 107.7 272 107.7z"
           />
         </svg>
-        <span className="font-medium text-gray-700">Continuar con Google</span>
+        <span className="font-medium text-gray-700">Continue with Google</span>
       </button>
     </>
   );

@@ -10,7 +10,7 @@ function formatDate(dateString: string | null) {
   if (!dateString) return null;
   try {
     const date = new Date(dateString);
-    return new Intl.DateTimeFormat('es-ES', {
+    return new Intl.DateTimeFormat('en-GB', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -69,7 +69,7 @@ export default function BlogPostPage() {
   const readingMinutes = computeReadingMinutes(post);
   const publishedLabel = formatDate(post?.publishedAt ?? null);
   const blocks = post ? parseContent(post.content) : [];
-  const seoTitle = post?.seoTitle ?? post?.title ?? 'Artículo del blog';
+  const seoTitle = post?.seoTitle ?? post?.title ?? 'Blog article';
   const seoDescription = post?.seoDescription ?? post?.summary ?? undefined;
 
   const notFound = !post;
@@ -84,7 +84,7 @@ export default function BlogPostPage() {
       />
       <main className="mx-auto mt-28 max-w-3xl px-6 pb-24">
         <nav className="mb-6 text-sm text-gray-500">
-          <Link to="/" className="text-gray-500 hover:text-gray-700">Inicio</Link>
+          <Link to="/" className="text-gray-500 hover:text-gray-700">Home</Link>
           <span className="mx-2 text-gray-400">/</span>
           <Link to="/blog" className="text-gray-500 hover:text-gray-700">Blog</Link>
           {post ? (
@@ -97,23 +97,23 @@ export default function BlogPostPage() {
 
         {notFound ? (
           <section className="rounded-xl border border-red-200 bg-red-50 p-8 text-center text-red-700">
-            <h1 className="text-2xl font-semibold">Artículo no encontrado</h1>
-            <p className="mt-3 text-base text-red-600">Comprueba la URL o vuelve al listado del blog para seguir leyendo.</p>
+            <h1 className="text-2xl font-semibold">Article not found</h1>
+            <p className="mt-3 text-base text-red-600">Check the URL or return to the blog index to keep reading.</p>
             <Link
               to="/blog"
               className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800"
             >
-              Ver todos los artículos
+              View all articles
             </Link>
           </section>
         ) : (
           <article className="bg-white">
             <header className="mb-8">
-              <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">Blog CaseroOk</p>
+              <p className="text-sm font-semibold uppercase tracking-wide text-emerald-700">CaseroOk Blog</p>
               <h1 className="mt-4 text-4xl font-bold text-gray-900">{post.title}</h1>
               <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-gray-500">
-                {publishedLabel ? <span>Publicado el {publishedLabel}</span> : null}
-                {readingMinutes ? <span>• {readingMinutes} min de lectura</span> : null}
+                {publishedLabel ? <span>Published on {publishedLabel}</span> : null}
+                {readingMinutes ? <span>• {readingMinutes} min read</span> : null}
                 {post.sourceUrl ? (
                   <a
                     href={post.sourceUrl}
@@ -121,7 +121,7 @@ export default function BlogPostPage() {
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 text-emerald-700 hover:text-emerald-800"
                   >
-                    Fuente original
+                    Source article
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M13 11l3-3m0 0l-3-3m3 3H8a4 4 0 00-4 4v8" />
                     </svg>
@@ -174,15 +174,15 @@ export default function BlogPostPage() {
             </section>
 
             <footer className="mt-12 rounded-3xl bg-emerald-50 p-8 text-gray-800">
-              <h2 className="text-xl font-semibold text-emerald-900">¿Quieres compartir tu experiencia?</h2>
+              <h2 className="text-xl font-semibold text-emerald-900">Want to share your experience?</h2>
               <p className="mt-2 text-gray-700">
-                En CaseroOk transformamos noticias y vivencias reales en recursos prácticos para inquilinos. Si quieres contribuir con tu historia, puedes publicar una opinión anónima en minutos.
+                At CaseroOk we turn real stories and housing news into practical resources for renters. If you want to contribute, you can publish an anonymous review in minutes.
               </p>
               <Link
                 to="/add-review"
                 className="mt-6 inline-flex items-center gap-2 rounded-full bg-emerald-700 px-5 py-2 text-sm font-semibold text-white transition hover:bg-emerald-800"
               >
-                Escribir una opinión
+                Share a review
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
                 </svg>

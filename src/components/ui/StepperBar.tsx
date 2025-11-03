@@ -56,7 +56,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
                 onClick={() => onStepClick(index + 1)}
                 {...umamiEventProps('review:stepper-click', { step: index + 1 })}
               >
-                {/* Círculo */}
+                {/* Step circle */}
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full ${
                     isActive
@@ -68,7 +68,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
                   style={{
                     backgroundColor: isActive || isCompleted ? greenColor : undefined,
                   }}
-                  aria-label={`Ir al paso ${index + 1}: ${step}`}
+                  aria-label={`Go to step ${index + 1}: ${step}`}
                 >
                   {isCompleted ? (
                     <svg
@@ -89,7 +89,7 @@ const StepperBar: React.FC<StepperBarProps> = ({
                     <span className="text-base font-semibold">{index + 1}</span>
                   )}
                 </div>
-                {/* Etiqueta */}
+                {/* Step label */}
                 <span
                   title={step}
                   className={`${isVertical ? 'ml-3' : 'mt-2'} text-base md:text-lg text-black ${isVertical ? 'text-left' : 'text-center'} block whitespace-nowrap truncate rounded-md px-3 py-2`}

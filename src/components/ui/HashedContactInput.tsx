@@ -60,7 +60,7 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
           className="flex h-12 w-12 items-center justify-center rounded-md border bg-white text-gray-600 mt-3"
           onMouseEnter={() => window.dispatchEvent(new CustomEvent('cv:privacyHover', { detail: true }))}
           onMouseLeave={() => window.dispatchEvent(new CustomEvent('cv:privacyHover', { detail: false }))}
-          aria-label="Información de privacidad"
+          aria-label="Privacy information"
           role="button"
           tabIndex={0}
           onClick={() => {
@@ -86,9 +86,9 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="w-full max-w-md rounded-lg bg-white p-5 shadow-lg">
             <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-base font-semibold">Así lo guardamos</h4>
+              <h4 className="text-base font-semibold">How we store it</h4>
               <button
-                aria-label="Cerrar"
+                aria-label="Close"
                 className="rounded p-1 hover:bg-gray-100"
                 onClick={() => {
                   trackUmamiEvent('review:privacy-info-close');
@@ -99,7 +99,7 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
               </button>
             </div>
             <p className="mb-2 text-sm text-gray-600">
-              Este es el valor cifrado que se almacena en nuestra base de datos:
+              This is the encrypted value stored in our database:
             </p>
             <code className="block max-w-full truncate rounded bg-gray-100 p-2 text-xs">
               {computedHash || hashValue || '-'}
@@ -112,7 +112,7 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
                   setShowModal(false);
                 }}
               >
-                Cerrar
+                Close
               </button>
             </div>
           </div>
