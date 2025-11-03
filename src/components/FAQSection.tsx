@@ -11,7 +11,7 @@ const faqs = [
   {
     question: 'What is HangarOK?',
     answer:
-      'HangarOK is where riders and residents anonymously share their experiences with on-street cycle hangars — helping others make informed choices and improving local cycling infrastructure.',
+      'HangarOK is where riders and residents anonymously share their experiences with on-street cycle hangars - helping others make informed choices and improving local cycling infrastructure.',
   },
   {
     question: 'Are personal details shared?',
@@ -26,7 +26,7 @@ const faqs = [
   {
     question: 'What if I don\'t have a hangar yet?',
     answer:
-      'You can still share your experience — about being on a waiting list, lack of nearby hangars, or what would make you cycle more.',
+      'You can still share your experience - about being on a waiting list, lack of nearby hangars, or what would make you cycle more.',
   },
   {
     question: 'What if I see inaccurate or inappropriate content?',

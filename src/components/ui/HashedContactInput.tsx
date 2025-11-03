@@ -102,7 +102,7 @@ const HashedContactInput: React.FC<HashedContactInputProps> = ({
               Este es el valor cifrado que se almacena en nuestra base de datos:
             </p>
             <code className="block max-w-full truncate rounded bg-gray-100 p-2 text-xs">
-              {computedHash || hashValue || '—'}
+              {computedHash || hashValue || '-'}
             </code>
             <div className="mt-4 flex justify-end">
               <button

@@ -293,7 +293,7 @@ const ReviewPage = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 You just helped cyclists across the UK make safer choices! 🚴
               </h2>
-              <p className="text-lg text-gray-700 mb-4">Thank you — seriously.</p>
+              <p className="text-lg text-gray-700 mb-4">Thank you - seriously.</p>
               
               {/* Action Buttons */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

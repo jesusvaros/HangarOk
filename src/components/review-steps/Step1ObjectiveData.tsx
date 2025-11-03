@@ -123,16 +123,16 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
       <div>
         <SelectableTagGroup
           label="Do you use this hangar right now?"
-          options={['✅ Yes — I have a space', '❌ No — Not yet / Waiting / Nearby rider']}
+          options={['✅ Yes - I have a space', '❌ No - Not yet / Waiting / Nearby rider']}
           selectedOptions={
             formData.usesHangar === true
-              ? ['✅ Yes — I have a space']
+              ? ['✅ Yes - I have a space']
               : formData.usesHangar === false
-              ? ['❌ No — Not yet / Waiting / Nearby rider']
+              ? ['❌ No - Not yet / Waiting / Nearby rider']
               : []
           }
           onChange={(selected) => {
-            const value = selected[0] === '✅ Yes — I have a space' ? true : false;
+            const value = selected[0] === '✅ Yes - I have a space' ? true : false;
             updateFormData({ usesHangar: value });
           }}
           multiSelect={false}

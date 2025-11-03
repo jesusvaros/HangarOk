@@ -46,7 +46,7 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({
       {/* Title */}
       <div>
         <h2 className="text-2xl font-semibold text-[rgb(74,94,50)]">
-          When something goes wrong — do they fix it?
+          When something goes wrong - do they fix it?
         </h2>
       </div>
 

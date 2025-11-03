@@ -29,7 +29,7 @@ const ChromeStoreSection: React.FC = () => {
         <div className="md:w-1/2 text-left">
           <h2 className="mb-6 text-3xl font-bold md:text-4xl">📊 In development: "Hangar Health" data dashboard</h2>
           <p className="mb-8 text-lg text-gray-700">
-            A live dashboard showing hangar user satisfaction — powered by your reviews.
+            A live dashboard showing hangar user satisfaction - powered by your reviews.
           </p>
         </div>
       </div>

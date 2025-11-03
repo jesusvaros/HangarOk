@@ -4,12 +4,12 @@ const benefits = [
   {
     emoji: '👀',
     title: 'Real-world insight',
-    text: 'See what it\'s actually like to use your local hangar — not the marketing version.'
+    text: 'See what it\'s actually like to use your local hangar - not the marketing version.'
   },
   {
     emoji: '🔒',
     title: 'Anonymous community',
-    text: 'Your feedback is private, your data secure. No names, no tracking — just truth.'
+    text: 'Your feedback is private, your data secure. No names, no tracking - just truth.'
   },
   {
     emoji: '⚡',
@@ -19,7 +19,7 @@ const benefits = [
   {
     emoji: '🚴',
     title: 'Better cycling for everyone',
-    text: 'Your voice helps make cycling feel safe, accessible, and normal — not niche.'
+    text: 'Your voice helps make cycling feel safe, accessible, and normal - not niche.'
   }
 ];
 

@@ -12,7 +12,7 @@ const PictureSection: React.FC = () => {
             "We've normalised cars as invisible, but call bike hangars an eyesore.
             <br />
             <span className="block mt-4">
-              HangarOK flips that — it's time the conversation got honest."
+              HangarOK flips that - it's time the conversation got honest."
             </span>
           </p>
         </div>
@@ -30,10 +30,10 @@ const PictureSection: React.FC = () => {
                   We built it because cyclists, planners, and councils were all missing one thing: <strong>real-life data</strong>.
                 </p>
                 <p>
-                  By sharing honest feedback — on community, safety, usability and support — we can help shape a better cycling culture across the UK.
+                  By sharing honest feedback - on community, safety, usability and support - we can help shape a better cycling culture across the UK.
                 </p>
                 <p className="text-lg font-semibold text-[#4A5E32] italic">
-                  We're not just collecting stars. We're building understanding — one hangar at a time.
+                  We're not just collecting stars. We're building understanding - one hangar at a time.
                 </p>
               </div>
               

@@ -353,7 +353,7 @@ const ModerationPage = () => {
                           {review.moderation_status === 'rejected' && (
                             <div className="mb-4 rounded border border-red-200 bg-red-50 p-3 text-red-800">
                               <div className="font-semibold mb-1">Motivo del rechazo</div>
-                              <p className="whitespace-pre-line">{review.rejection_reason || '—'}</p>
+                              <p className="whitespace-pre-line">{review.rejection_reason || '-'}</p>
                             </div>
                           )}
 

@@ -52,7 +52,7 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
           {/* Daytime safety rating */}
           <div>
             <StarRating
-              label="Daytime — how safe?"
+              label="Daytime - how safe?"
               value={formData.daytimeSafetyRating}
               onChange={(value) => updateFormData({ daytimeSafetyRating: value })}
               error={fieldErrors?.daytimeSafetyRating}
@@ -62,7 +62,7 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
           {/* Nighttime safety rating */}
           <div>
             <StarRating
-              label="Night-time — how safe?"
+              label="Night-time - how safe?"
               value={formData.nighttimeSafetyRating}
               onChange={(value) => updateFormData({ nighttimeSafetyRating: value })}
               error={fieldErrors?.nighttimeSafetyRating}
