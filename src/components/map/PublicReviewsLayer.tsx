@@ -32,7 +32,7 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
         )
         .map(r => {
           const isSelected = String(r.id) === String(selectedId ?? '');
-          const wr = typeof r.would_recommend === 'number' ? r.would_recommend : undefined;
+          const wr = typeof r.overall_safety_rating === 'number' ? r.overall_safety_rating : undefined;
           const color = wr === undefined
             ? '#4B5563' // gray-600
             : wr > 3

@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function DetailsPanel({ review, onClose }: Props) {
-  const wr = typeof review?.would_recommend === 'number' ? review.would_recommend : undefined;
+  const wr = typeof review?.overall_safety_rating === 'number' ? review.overall_safety_rating : undefined;
   const headerClass = wr === undefined
     ? 'bg-gray-600'
     : wr > 3
@@ -23,14 +23,6 @@ export default function DetailsPanel({ review, onClose }: Props) {
     typeof wr === 'number'
       ? (String(Math.min(5, Math.max(1, wr))) as '1' | '2' | '3' | '4' | '5')
       : undefined;
-
-  // Trim very long opinions for compact panel; full text is in the review page
-  const truncate = (text: string | null | undefined, max = 280) => {
-    if (!text) return undefined;
-    const t = text.trim();
-    if (t.length <= max) return t;
-    return t.slice(0, max - 1).trimEnd() + '…';
-  };
 
   return (
     <div className="flex flex-col max-h-full bg-white">
@@ -97,7 +89,7 @@ export default function DetailsPanel({ review, onClose }: Props) {
               <OpinionSection
                 propertyOpinion={undefined}
                 communityOpinion={undefined}
-                ownerOpinion={truncate(review.owner_opinion, 200)}
+                ownerOpinion={undefined}
                 wouldRecommend={wouldRecommendStr}
                 showHeader={false}
               />
@@ -109,7 +101,7 @@ export default function DetailsPanel({ review, onClose }: Props) {
                 <Link
                   to={`/review/${review.id}`}
                   className="inline-flex items-center gap-1 text-[rgb(74,94,50)] hover:underline"
-                  {...umamiEventProps('map:details-view-review', { hasOpinion: Boolean(review.owner_opinion) })}
+                  {...umamiEventProps('map:details-view-review', { hasSafetyRating: Boolean(review.overall_safety_rating) })}
                 >
                   Ver detalles completos
                   <span aria-hidden>→</span>

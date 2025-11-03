@@ -270,8 +270,8 @@ const MapView = ({
                     lat: r.lat ?? undefined,
                     lng: r.lng ?? undefined,
                     texto: r.full_address ?? '—',
-                    comment: r.owner_opinion ?? undefined,
-                    would_recommend: r.would_recommend ?? undefined,
+                    comment: undefined,
+                    would_recommend: r.overall_safety_rating ?? undefined,
                   }))}
                   hoveredId={hoveredId}
                   setHoveredId={setHoveredId}
@@ -279,7 +279,7 @@ const MapView = ({
                   onSelect={r => {
                     const match = publicReviews.find(x => String(x.id) === String(r.id));
                     if (match) {
-                      trackUmamiEvent('map:list-select', { hasOpinion: Boolean(match.owner_opinion) });
+                      trackUmamiEvent('map:list-select', { hasSafetyRating: Boolean(match.overall_safety_rating) });
                       setSelectedReview(match);
                     }
                   }}
@@ -368,7 +368,7 @@ const MapView = ({
                     reviews={publicReviews}
                     selectedId={selectedReview?.id ?? null}
                     onSelect={(rev: PublicReview) => {
-                      trackUmamiEvent('map:marker-select', { hasOpinion: Boolean(rev.owner_opinion) });
+                      trackUmamiEvent('map:marker-select', { hasSafetyRating: Boolean(rev.overall_safety_rating) });
                       setSelectedReview(rev);
                       setMobileListOpen(false);
                     }}
@@ -461,8 +461,8 @@ const MapView = ({
                             lat: r.lat ?? undefined,
                             lng: r.lng ?? undefined,
                             texto: r.full_address ?? '—',
-                            comment: r.owner_opinion ?? undefined,
-                            would_recommend: r.would_recommend ?? undefined,
+                            comment: undefined,
+                            would_recommend: r.overall_safety_rating ?? undefined,
                           }))}
                           hoveredId={hoveredId}
                           setHoveredId={setHoveredId}
@@ -470,7 +470,7 @@ const MapView = ({
                           onSelect={r => {
                             const match = publicReviews.find(x => String(x.id) === String(r.id));
                             if (match) {
-                              trackUmamiEvent('map:list-select', { hasOpinion: Boolean(match.owner_opinion) });
+                              trackUmamiEvent('map:list-select', { hasSafetyRating: Boolean(match.overall_safety_rating) });
                               setSelectedReview(match);
                             }
                             setMobileListOpen(false);

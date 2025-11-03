@@ -204,7 +204,7 @@ export default function CityReviewsPage() {
                       className="rounded-2xl border border-gray-200 bg-gray-50 p-5 text-left"
                     >
                       <p className="text-sm text-gray-700">
-                        {review.owner_opinion ?? 'Opinión pendiente de completar.'}
+                        {review.overall_safety_rating ? `Safety rating: ${review.overall_safety_rating}/5` : 'Review pending completion.'}
                       </p>
                       <footer className="mt-4 text-xs font-medium uppercase tracking-wide text-gray-500">
                         {review.full_address ?? fallbackCityName}
