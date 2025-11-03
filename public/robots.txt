@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://caserook.com/sitemap.xml
+Sitemap: https://hangarok.com/sitemap.xml

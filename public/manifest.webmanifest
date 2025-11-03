@@ -1,10 +1,10 @@
 {
-  "name": "CaseroOk",
-  "short_name": "CaseroOk",
+  "name": "HangarOK",
+  "short_name": "HangarOK",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0ea5e9",
+  "theme_color": "#4A5E32",
   "icons": [
     {
       "src": "/logo_coloreado.svg",

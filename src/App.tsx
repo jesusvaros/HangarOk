@@ -66,19 +66,19 @@ function App() {
         <Routes>
           <Route path="/auth/callback" element={
             <>
-              <PageSEO title="Autenticación | CaseroOk" description="Procesando autenticación segura." noindex />
+              <PageSEO title="Authentication | HangarOK" description="Processing secure authentication." noindex />
               <AuthCallback />
             </>
           } />
           <Route path="/review/:id" element={
             <>
-              <PageSEO title="Opinión | CaseroOk" description="Lee opiniones anónimas de inquilinos sobre viviendas y caseros." />
+              <PageSEO title="Review | HangarOK" description="Read anonymous reviews from riders about cycle hangars." />
               <ReviewPage />
             </>
           } />
           <Route path="/map" element={
             <>
-              <PageSEO title="Mapa de Opiniones | CaseroOk" description="Explora en el mapa las opiniones anónimas sobre viviendas y caseros." />
+              <PageSEO title="Hangar Map | HangarOK" description="Explore anonymous reviews of cycle hangars across the UK on our interactive map." />
               <MapView />
             </>
           } />
@@ -88,24 +88,24 @@ function App() {
           {/* <Route path="/blog/:slug" element={<BlogPostPage />} /> */}
           <Route path="/profile" element={
             <>
-              <PageSEO title="Perfil | CaseroOk" description="Gestiona tu perfil en CaseroOk." noindex />
+              <PageSEO title="Profile | HangarOK" description="Manage your HangarOK profile." noindex />
               <ProfilePage />
             </>
           } />
           <Route path="/admin/moderate" element={<ModerationPage />} />
           {/* Legal routes */}
-          <Route path="/aviso-legal" element={<><PageSEO title="Aviso Legal | CaseroOk" description="Información legal de CaseroOk." /><AvisoLegal /></>} />
-          <Route path="/politica-privacidad" element={<><PageSEO title="Política de Privacidad | CaseroOk" description="Cómo tratamos tus datos personales." /><PoliticaPrivacidad /></>} />
-          <Route path="/cookies" element={<><PageSEO title="Política de Cookies | CaseroOk" description="Información sobre el uso de cookies." /><PoliticaCookies /></>} />
-          <Route path="/condiciones-uso" element={<><PageSEO title="Condiciones de Uso | CaseroOk" description="Términos y condiciones de uso de CaseroOk." /><CondicionesUso /></>} />
-          <Route path="/buenas-practicas" element={<><PageSEO title="Buenas Prácticas | CaseroOk" description="Recomendaciones para publicar opiniones responsables." /><BuenasPracticas /></>} />
-          <Route path="/terminosycondiciones" element={<><PageSEO title="Términos y Condiciones | CaseroOk" description="Términos y Condiciones de CaseroOk." /><LegalHub /></>} />
-          <Route path="/terminosCondiciones" element={<><PageSEO title="Términos y Condiciones | CaseroOk" description="Términos y Condiciones de CaseroOk." /><LegalHub /></>} />
+          <Route path="/aviso-legal" element={<><PageSEO title="Legal Notice | HangarOK" description="Legal information for HangarOK." /><AvisoLegal /></>} />
+          <Route path="/politica-privacidad" element={<><PageSEO title="Privacy Policy | HangarOK" description="How we handle your personal data." /><PoliticaPrivacidad /></>} />
+          <Route path="/cookies" element={<><PageSEO title="Cookie Policy | HangarOK" description="Information about cookie usage." /><PoliticaCookies /></>} />
+          <Route path="/condiciones-uso" element={<><PageSEO title="Terms of Use | HangarOK" description="Terms and conditions for using HangarOK." /><CondicionesUso /></>} />
+          <Route path="/buenas-practicas" element={<><PageSEO title="Best Practices | HangarOK" description="Guidelines for posting responsible reviews." /><BuenasPracticas /></>} />
+          <Route path="/terminosycondiciones" element={<><PageSEO title="Terms & Conditions | HangarOK" description="Terms and Conditions for HangarOK." /><LegalHub /></>} />
+          <Route path="/terminosCondiciones" element={<><PageSEO title="Terms & Conditions | HangarOK" description="Terms and Conditions for HangarOK." /><LegalHub /></>} />
           <Route
             path="/add-review"
             element={
               <FormMessagesProvider>
-                <PageSEO title="Añadir Opinión | CaseroOk" description="Comparte una opinión anónima sobre tu vivienda o casero." noindex />
+                <PageSEO title="Add Review | HangarOK" description="Share an anonymous review about your cycle hangar." noindex />
                 <AddReviewForm />
               </FormMessagesProvider>
             }
@@ -114,7 +114,7 @@ function App() {
             path="/"
             element={
               <>
-                <PageSEO title="CaseroOk — Opiniones anónimas sobre viviendas y caseros" description="Descubre y comparte opiniones anónimas sobre viviendas y caseros en España." />
+                <PageSEO title="HangarOK — UK's peer-to-peer cycle hangar reviews" description="Share and discover anonymous reviews of cycle hangars across the UK. Help improve cycling infrastructure with real rider feedback." />
                 <HeroSection />
                 <InputSection />
                 <HowItWorksSection />
