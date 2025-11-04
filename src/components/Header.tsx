@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../store/auth/hooks';
 import LoginContent from './ui/LoginContent';
-import logoUrl from '../assets/logo_coloreado.svg';
-import wordmarkUrl from '../assets/caserook_letras.svg';
+import logoSymbolUrl from '../assets/logo_hangarOk-no-bg.png';
+import logoWordmarkUrl from '../assets/logowords.png';
 import { umamiEventProps } from '../utils/analytics';
 
 const Header: React.FC = () => {
@@ -105,14 +105,9 @@ const Header: React.FC = () => {
     >
       <div className="flex w-full items-center justify-between">
         {showLogo ? (
-          <Link
-            to="/"
-            className="flex items-center"
-            aria-label="CaseroOk - Home"
-            {...umamiEventProps('nav:logo-home')}
-          >
-            <img src={logoUrl} alt="CaseroOk" className="h-12 w-12 md:h-14 md:w-14" />
-            <img src={wordmarkUrl} alt="CaseroOk" className="hidden md:inline-block ml-2 h-6 md:h-7" />
+          <Link to="/" className="flex items-center  overflow-hidden h-[48px]" aria-label="HangarOK - Home" {...umamiEventProps('nav:logo-home')}>
+            <img src={logoSymbolUrl} alt="HangarOK icon" className="h-11 w-11 object-contain md:h-13 md:w-13" />
+            <img src={logoWordmarkUrl} alt="HangarOK" className="hidden md:block h-[128px] -ml-4" />
           </Link>
         ) : (
           <span />

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import logoUrl from '../assets/logo_coloreado.svg';
+import logoUrl from '../assets/logohangarOK.svg';
+import logoWordmarkUrl from '../assets/logowords.png';
 import { umamiEventProps } from '../utils/analytics';
 
 const HeroSection = () => {
@@ -8,14 +9,16 @@ const HeroSection = () => {
       <div className="container mx-auto flex flex-col-reverse items-center px-4 text-center md:flex-row md:text-left">
         <div className="mt-10 md:mt-0 md:w-1/2">
           {/* Desktop: show logo on the left; hidden on mobile */}
-          <div className="mx-auto hidden w-fit items-center gap-5 md:flex">
-            <img src={logoUrl} alt="HangarOK" className="h-28 w-28 md:h-72 md:w-72" />
+          <div className="mx-auto hidden w-fit flex-col items-center md:flex relative">
+            <img src={logoUrl} alt="HangarOK" className="h-32 w-32 md:h-[20rem] md:w-[20rem]" />
+            <img src={logoWordmarkUrl} alt="HangarOK wordmark" className="hidden md:block md:w-[18rem] absolute -bottom-[8rem]" />
           </div>
         </div>
         <div className="md:w-1/2 flex flex-col items-center md:items-start">
           {/* Mobile: show logo + wordmark together */}
-          <div className="mb-4 flex items-center justify-center gap-4 md:hidden">
-            <img src={logoUrl} alt="HangarOK" className="h-20 w-20" />
+          <div className="mb-4 flex flex-col items-center justify-center md:hidden relative">
+            <img src={logoUrl} alt="HangarOK" className="h-56 w-56" />
+            <img src={logoWordmarkUrl} alt="HangarOK wordmark" className="w-56 absolute -top-[6rem]" />
             <h1 className="text-2xl font-bold text-[#232C17]">
               Real reviews of real hangars by real riders
             </h1>

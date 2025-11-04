@@ -75,9 +75,9 @@ const MapView = ({
 
   // Center/zoom state used with SetViewOnChange to avoid remounts
   const [center, setCenter] = useState<[number, number]>(
-    initialViewOverride?.center ?? [40.416775, -3.70379]
-  ); // Madrid
-  const [zoom, setZoom] = useState<number>(initialViewOverride?.zoom ?? 14);
+    initialViewOverride?.center ?? [51.507351, -0.127758]
+  ); // London
+  const [zoom, setZoom] = useState<number>(initialViewOverride?.zoom ?? 16);
   const centerInitialized = useRef(false);
   const geolocationAttempted = useRef(false);
   const mapRef = useRef<LeafletMap | null>(null);
@@ -172,19 +172,19 @@ const MapView = ({
           geolocationAttempted.current = true;
         },
         () => {
-          // 4) Default fallback: Madrid
-          setCenter([40.416775, -3.70379]);
-          setZoom(14);
-          mapRef.current?.setView([40.416775, -3.70379], 14, { animate: false });
+          // 4) Default fallback: London
+          setCenter([51.507351, -0.127758]);
+          setZoom(16);
+          mapRef.current?.setView([51.507351, -0.127758], 16, { animate: false });
           centerInitialized.current = true;
           geolocationAttempted.current = true;
         }
       );
     } else {
-      // 4) Default fallback: Madrid
-      setCenter([40.416775, -3.70379]);
-      setZoom(14);
-      mapRef.current?.setView([40.416775, -3.70379], 14, { animate: false });
+      // 4) Default fallback: London
+      setCenter([51.507351, -0.127758]);
+      setZoom(16);
+      mapRef.current?.setView([51.507351, -0.127758], 16, { animate: false });
       centerInitialized.current = true;
       geolocationAttempted.current = true;
     }
