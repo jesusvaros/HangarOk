@@ -202,7 +202,7 @@ ${urlset}
 async function generateSitemap() {
   await loadEnv();
 
-  const baseUrl = process.env.SITE_URL ?? 'https://caserook.com';
+  const baseUrl = process.env.SITE_URL ?? 'https://hangarok.com';
   const today = new Date().toISOString().slice(0, 10);
 
   const staticEntries = [
