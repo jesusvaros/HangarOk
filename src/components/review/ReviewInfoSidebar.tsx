@@ -27,12 +27,12 @@ const InfoField = ({
 }) => {
   if (!value) return null;
   return (
-    <div className="flex items-center gap-3 rounded-2xl border border-gray-100 bg-white p-3 shadow-sm">
-      <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ backgroundColor: 'rgba(74,94,50,0.1)', color: ACCENT }}>
+    <div className="flex items-center gap-3 rounded-xl px-1.5 py-1.5">
+      <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ backgroundColor: 'rgba(74,94,50,0.12)', color: ACCENT }}>
         {icon}
       </div>
       <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">{label}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">{label}</p>
         <p className="text-sm font-semibold text-gray-800">{value}</p>
       </div>
     </div>
@@ -124,12 +124,7 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
             <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">{headerCaption}</p>
             <div className="mt-1 flex flex-col gap-1">
               <span className="text-lg font-semibold text-gray-900 leading-tight">{formatAddress(step1Data)}</span>
-              {step1Data?.hangar_location?.number && (
-                <span className="text-4xl font-black text-gray-900 leading-none">{step1Data.hangar_location.number}</span>
-              )}
-              {step1Data?.hangar_location?.postalCode && (
-                <span className="text-sm text-gray-500">{step1Data.hangar_location.postalCode}</span>
-              )}
+             
             </div>
           </div>
         </div>
@@ -153,12 +148,11 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
             </div>
           )}
         </div>
-      </div>
-
-      <div className="grid gap-3">
-        <InfoField icon={<HomeModernIcon className="h-5 w-5" />} label="Home type" value={homeTypeLabel} />
-        <InfoField icon={<ShareIcon className="h-5 w-5" />} label="Connection to hangar" value={connectionLabel} />
-        <InfoField icon={<UserGroupIcon className="h-5 w-5" />} label="Usage" value={usageLabel} />
+        <div className="mt-4 space-y-2 border-t border-gray-100 pt-4">
+          <InfoField icon={<HomeModernIcon className="h-5 w-5" />} label="Home type" value={homeTypeLabel} />
+          <InfoField icon={<ShareIcon className="h-5 w-5" />} label="Connection to hangar" value={connectionLabel} />
+          <InfoField icon={<UserGroupIcon className="h-5 w-5" />} label="Usage" value={usageLabel} />
+        </div>
       </div>
 
       {quickMetrics.length > 0 && (

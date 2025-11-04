@@ -32,9 +32,8 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
   impactLabel,
 }) => {
   return (
-    <div className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2">
-        <SectionCard title="Local Perspective" subtitle="How this rider connects with the hangar" icon={<UserGroupIcon className="h-6 w-6" />}>
+    <div className="space-y-4">
+      <SectionCard title="Local Perspective" subtitle="How this rider connects with the hangar" icon={<UserGroupIcon className="h-6 w-6" />}>
           {connectionLabel && (
             <div className="rounded-xl bg-gray-50 p-3 text-sm text-gray-700">
               Connection: <span className="font-semibold">{connectionLabel}</span>
@@ -53,7 +52,7 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
           <TagList title="Cycling impact" tags={step4Data?.impact_tags} tone="warning" />
         </SectionCard>
 
-        <SectionCard title="Perception & Safety" subtitle="Feelings from outside the hangar" icon={<ShieldCheckIcon className="h-6 w-6" />}>
+      <SectionCard title="Perception & Safety" subtitle="Feelings from outside the hangar" icon={<ShieldCheckIcon className="h-6 w-6" />}>
           <div className="space-y-3">
             <RatingRow icon={<SparklesIcon className="h-5 w-5" />} label="Belonging" value={step2Data?.belongs_rating ?? null} />
             <RatingRow icon={<QueueListIcon className="h-5 w-5" />} label="Fair use" value={step2Data?.fair_use_rating ?? null} />
@@ -63,25 +62,22 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
           <TagList title="Safety worries" tags={step3Data?.safety_tags} tone="warning" />
           <TagList title="Community perception" tags={step2Data?.perception_tags} />
         </SectionCard>
-      </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <SectionCard title="Access & Waitlist" subtitle="Experience trying to get a space" icon={<QueueListIcon className="h-6 w-6" />}>
+      <SectionCard title="Access & Waitlist" subtitle="Experience trying to get a space" icon={<QueueListIcon className="h-6 w-6" />}>
           <RatingRow icon={<QueueListIcon className="h-5 w-5" />} label="Waitlist fairness" value={step5Data?.waitlist_fairness_rating ?? null} />
           <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5" />} label="Communication" value={step5Data?.communication_rating ?? null} />
           <RatingRow icon={<BoltIcon className="h-5 w-5" />} label="Fix speed" value={step5Data?.fix_speed_rating ?? null} />
           <TagList title="Waitlist notes" tags={step5Data?.waitlist_tags} />
         </SectionCard>
 
-        <SectionCard
-          title="Reporting Experience"
-          subtitle="How easy it is to raise issues from the outside"
-          icon={<WrenchScrewdriverIcon className="h-6 w-6" />}
-        >
-          <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5" />} label="Easy to report" value={step5Data?.report_ease_rating ?? null} />
-          <TagList title="Maintenance concerns noticed" tags={step5Data?.maintenance_tags} tone="warning" />
-        </SectionCard>
-      </div>
+      <SectionCard
+        title="Reporting Experience"
+        subtitle="How easy it is to raise issues from the outside"
+        icon={<WrenchScrewdriverIcon className="h-6 w-6" />}
+      >
+        <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5" />} label="Easy to report" value={step5Data?.report_ease_rating ?? null} />
+        <TagList title="Maintenance concerns noticed" tags={step5Data?.maintenance_tags} tone="warning" />
+      </SectionCard>
     </div>
   );
 };
