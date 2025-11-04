@@ -5,6 +5,8 @@ import { useAuth } from '../../store/auth/hooks';
 // TODO: This file is for old rental apartment reviews, needs to be updated for hangars
 import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
 import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
+import type { Step2Data, Step3Data, Step4Data, Step5Data } from './reviewStepTypes';
+import ReviewDataView from './ReviewDataView';
 // import { getSessionStep2Data } from '../../services/supabase/GetSubmitStep2';
 // import { getSessionStep3Data } from '../../services/supabase/GetSubmitStep3';
 // import { getSessionStep4Data } from '../../services/supabase/GetSubmitStep4';
@@ -16,46 +18,6 @@ import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
 // import PropertySection from './PropertySection';
 // import CommunitySection from './CommunitySection';
 // import OpinionSection from './OpinionSection';
-
-// Hangar Review Interfaces - Step1Data is now imported as AddressStepData
-
-interface Step2Data {
-  belongs_rating?: number;
-  fair_use_rating?: number;
-  appearance_rating?: number;
-  perception_tags?: string[];
-  community_feedback?: string;
-}
-
-interface Step3Data {
-  daytime_safety_rating?: number;
-  nighttime_safety_rating?: number;
-  bike_messed_with?: boolean;
-  current_bike_storage?: string;
-  theft_worry_rating?: number;
-  safety_tags?: string[];
-}
-
-interface Step4Data {
-  lock_ease_rating?: number;
-  space_rating?: number;
-  lighting_rating?: number;
-  maintenance_rating?: number;
-  usability_tags?: string[];
-  improvement_suggestion?: string;
-  stops_cycling?: string;
-  impact_tags?: string[];
-}
-
-interface Step5Data {
-  report_ease_rating?: number;
-  fix_speed_rating?: number;
-  communication_rating?: number;
-  maintenance_tags?: string[];
-  waitlist_fairness_rating?: number;
-  waitlist_tags?: string[];
-  improvement_feedback?: string;
-}
 
 const ReviewPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -386,53 +348,14 @@ const ReviewPage = () => {
           <p>{error}</p>
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto">
-          {/* Temporary JSON view for hangar reviews */}
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-bold mb-4 text-gray-800">Review Data (Temporary View)</h2>
-            <div className="space-y-4">
-              {step1Data && (
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Step 1: Location & Usage</h3>
-                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
-                    {JSON.stringify(step1Data, null, 2)}
-                  </pre>
-                </div>
-              )}
-              {step2Data && (
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Step 2: Community Perception</h3>
-                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
-                    {JSON.stringify(step2Data, null, 2)}
-                  </pre>
-                </div>
-              )}
-              {step3Data && (
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Step 3: Safety & Security</h3>
-                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
-                    {JSON.stringify(step3Data, null, 2)}
-                  </pre>
-                </div>
-              )}
-              {step4Data && (
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Step 4: Usability & Impact</h3>
-                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
-                    {JSON.stringify(step4Data, null, 2)}
-                  </pre>
-                </div>
-              )}
-              {step5Data && (
-                <div>
-                  <h3 className="font-semibold text-lg mb-2">Step 5: Maintenance & Support</h3>
-                  <pre className="bg-gray-50 p-4 rounded overflow-auto text-sm">
-                    {JSON.stringify(step5Data, null, 2)}
-                  </pre>
-                </div>
-              )}
-            </div>
-          </div>
+        <div className="mx-auto max-w-5xl">
+          <ReviewDataView
+            step1Data={step1Data}
+            step2Data={step2Data}
+            step3Data={step3Data}
+            step4Data={step4Data}
+            step5Data={step5Data}
+          />
         </div>
       )}
     </div>
