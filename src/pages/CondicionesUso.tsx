@@ -5,53 +5,71 @@ export default function CondicionesUso() {
   return (
     <LegalContainer>
       <h1 className="text-4xl font-extrabold mb-2 text-gray-900">Terms of use</h1>
-      <p className="text-sm text-gray-500 mb-6">Last updated: 19/08/2025</p>
+      <p className="text-sm text-gray-500 mb-6">Last updated: 03/11/2025</p>
 
       <h2 className="text-xl font-semibold mb-2">1) Purpose</h2>
-      <p className="text-gray-700 mb-6">These terms govern access to and use of [Project Name], a platform/blog for anonymous rental experiences.</p>
+      <p className="text-gray-700 mb-6">
+        These terms govern access to and use of {LEGAL_META.projectName}, a community platform where cyclists review public and private bike hangars, report
+        maintenance issues, and discover safer places to store a bicycle.
+      </p>
 
-      <h2 className="text-xl font-semibold mb-2">2) Registration and publication</h2>
-      <p className="text-gray-700 mb-6">Users are responsible for the accuracy of what they publish and for complying with these rules.</p>
+      <h2 className="text-xl font-semibold mb-2">2) Registration and submissions</h2>
+      <p className="text-gray-700 mb-6">
+        You are responsible for the accuracy of the information you share about hangars, surrounding streets, and operators. Reviews must reflect genuine
+        experiences and comply with UK law and these rules.
+      </p>
 
-      <h2 className="text-xl font-semibold mb-2">3) Content restrictions</h2>
-      <ul className="list-disc pl-6 text-gray-700 mb-6 space-y-1">
-        <li>Never post personal data about third parties in plain text (full name, phone, email, exact address, or other identifiers).</li>
-        <li>No abusive language, defamation, hate speech, or incitement to violence.</li>
-        <li>No false information or content that infringes third-party rights.</li>
-      </ul>
-
-      <h2 className="text-xl font-semibold mb-2">4) Secure “identifier” field (hash)</h2>
+      <h2 className="text-xl font-semibold mb-2">3) Content standards</h2>
       <div className="text-gray-700 mb-6 space-y-2">
-        <p>To group reviews for the same landlord/manager and avoid duplicates, the system may ask you to provide a landlord phone or email in designated fields only.</p>
-        <p>This information is NEVER sent in plain text: it is normalised and hashed locally (e.g., SHA-256) and only the hash is sent.</p>
-        <p>Do not publish such data inside the review text or other visible fields.</p>
-        <p>Users agree not to attempt re-identification or use hashes for purposes beyond the service.</p>
-      </div>
-
-      <h2 className="text-xl font-semibold mb-2">5) Browser extension</h2>
-      <div className="text-gray-700 mb-6 space-y-2">
-        <p>The official [Project Name] extension:</p>
+        <p>To keep the map useful for riders, please avoid the following:</p>
         <ul className="list-disc pl-6 space-y-1">
-          <li>Only processes information visible on sites such as Idealista.</li>
-          <li>Generates the hash locally and queries the backend with it to show any related reviews.</li>
-          <li>Does not download or store personal data in plain text.</li>
+          <li>Publishing personal data about key holders, councils, or other riders (names, phone numbers, emails, vehicle plates, etc.).</li>
+          <li>Uploading photos of people without their consent or sharing CCTV footage.</li>
+          <li>Spreading false claims, defamatory statements, or hate speech.</li>
+          <li>Promoting commercial offers unrelated to bike parking.</li>
         </ul>
       </div>
 
-      <h2 className="text-xl font-semibold mb-2">6) Moderation and takedowns</h2>
-      <p className="text-gray-700 mb-6">We may moderate, hide, or delete content that breaches these terms or the law. Use [email] to report abuse or request a review.</p>
+      <h2 className="text-xl font-semibold mb-2">4) Location accuracy</h2>
+      <p className="text-gray-700 mb-6">
+        Each review must correspond to the correct hangar, street, or postcode. Do not mislabel hangars or intentionally mark private sheds, residential
+        buildings, or unrelated infrastructure.
+      </p>
+
+      <h2 className="text-xl font-semibold mb-2">5) Photos and maintenance evidence</h2>
+      <p className="text-gray-700 mb-6">
+        Upload only photos you took yourself. Images should focus on the hangar, racks, locks, lighting, or maintenance issues. Blur or crop any people or
+        licence plates that appear by accident.
+      </p>
+
+      <h2 className="text-xl font-semibold mb-2">6) Moderation</h2>
+      <p className="text-gray-700 mb-6">
+        {LEGAL_META.projectName} may moderate, edit, or remove contributions that breach these terms, local bylaws, or basic standards of respect. You can flag
+        content by contacting {LEGAL_META.contactEmail}.
+      </p>
 
       <h2 className="text-xl font-semibold mb-2">7) Liability</h2>
-      <p className="text-gray-700 mb-6">Reviews are the authors’ responsibility. [Project Name] does not guarantee accuracy or accept liability for decisions made based on the reviews.</p>
+      <p className="text-gray-700 mb-6">
+        Reviews belong to their authors. {LEGAL_META.projectName} does not guarantee availability of hangars, nor accept liability for theft, damage, or incidents
+        occurring in or near a hangar.
+      </p>
 
       <h2 className="text-xl font-semibold mb-2">8) Intellectual property</h2>
-      <p className="text-gray-700 mb-6">Users guarantee they hold the rights to publish their content and grant [Project Name] a non-exclusive, free licence to host and display it.</p>
+      <p className="text-gray-700 mb-6">
+        By posting, you confirm you hold the rights to share your text and media, and grant {LEGAL_META.projectName} a non-exclusive licence to host and display
+        them on its website, apps, and datasets.
+      </p>
 
       <h2 className="text-xl font-semibold mb-2">9) Termination</h2>
-      <p className="text-gray-700 mb-6">We may suspend accounts or publications for serious or repeated breaches.</p>
+      <p className="text-gray-700 mb-6">
+        We may suspend accounts, hide reviews, or block submissions for serious or repeated breaches of these terms or misuse of the mapping tools.
+      </p>
 
       <h2 className="text-xl font-semibold mb-2">10) Law and jurisdiction</h2>
-      <p className="text-gray-700">Spanish law applies; jurisdiction lies with the courts of {LEGAL_META.jurisdictionCity}, unless mandatory rules state otherwise.</p>
+      <p className="text-gray-700">
+        These terms are governed by the laws of England and Wales; jurisdiction lies with the courts of {LEGAL_META.jurisdictionCity}, unless mandatory rules
+        state otherwise.
+      </p>
     </LegalContainer>
   );
 }

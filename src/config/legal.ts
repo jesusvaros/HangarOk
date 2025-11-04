@@ -1,11 +1,11 @@
 // Centralized site/legal metadata. Fill these with your details.
 export const LEGAL_META = {
-  ownerName: 'CaseroOk',
-  cityCountry: 'Seville, Spain',
+  ownerName: 'HangarOK',
+  cityCountry: 'London, United Kingdom',
   contactEmail: 'caserook@gmail.com',
-  siteName: 'CaseroOk',
-  projectName: 'CaseroOk',
-  jurisdictionCity: 'Seville',
+  siteName: 'HangarOK',
+  projectName: 'HangarOK',
+  jurisdictionCity: 'London',
   hostingProvider: 'Vercel',
   analyticsProvider: 'Plausible',
   logsRetentionDays: '90 days',
