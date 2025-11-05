@@ -2,7 +2,7 @@
 export const LEGAL_META = {
   ownerName: 'HangarOK',
   cityCountry: 'London, United Kingdom',
-  contactEmail: 'caserook@gmail.com',
+  contactEmail: 'rume@e-mobilityproject.com',
   siteName: 'HangarOK',
   projectName: 'HangarOK',
   jurisdictionCity: 'London',
