@@ -145,7 +145,7 @@ export default function CityReviewsIndexPage() {
                     {city.state ? <span className="text-gray-500">, {city.state}</span> : null}
                   </h2>
                   <p className="mt-3 text-sm text-gray-600">
-                    Open the map centred on {city.name} and read the real experiences shared by other renters.
+                    Open the map centred on {city.name} and read the real experiences shared by other riders.
                   </p>
                   <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-emerald-700">
                     View reviews

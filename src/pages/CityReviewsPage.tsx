@@ -108,7 +108,7 @@ export default function CityReviewsPage() {
   const seoTitle = `Hangar reviews in ${fallbackCityName} | HangarOK`;
   const seoDescription =
     reviewCount > 0
-      ? `Discover ${reviewCount === 1 ? 'the review' : `${reviewCount} reviews`} from renters about landlords and homes in ${fallbackCityName}${
+      ? `Discover ${reviewCount === 1 ? 'the review' : `${reviewCount} reviews`} from riders about landlords and homes in ${fallbackCityName}${
           stateName ? `, ${stateName}` : ''
         }.`
       : `Discover renter opinions about landlords and homes in ${fallbackCityName}.`;
@@ -192,7 +192,7 @@ export default function CityReviewsPage() {
             <section className="mb-12">
               <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm">
                 <h2 className="text-lg font-semibold text-gray-900">
-                  What renters say about {fallbackCityName}
+                  What riders say about {fallbackCityName}
                 </h2>
                 <p className="mt-3 text-sm text-gray-600">
                   We’ve highlighted real testimonies so you can understand the cycle hangar experience in this area.

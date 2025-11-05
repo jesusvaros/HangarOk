@@ -69,7 +69,7 @@ export default function BlogListPage() {
       <main className="mx-auto mt-28 max-w-6xl px-6 pb-24">
         <header className="mb-12 text-center">
           <p className="mb-3 text-sm font-semibold uppercase tracking-wide text-emerald-700">Blog</p>
-          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl">Stories and guides for informed renters</h1>
+          <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl md:text-5xl">Stories and guides for informed riders</h1>
           <p className="mx-auto mt-4 max-w-3xl text-lg text-gray-600">
             Every week we analyse housing news and turn it into practical, original articles.
           </p>

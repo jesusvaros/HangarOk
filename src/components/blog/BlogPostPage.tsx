@@ -176,7 +176,7 @@ export default function BlogPostPage() {
             <footer className="mt-12 rounded-3xl bg-emerald-50 p-8 text-gray-800">
               <h2 className="text-xl font-semibold text-emerald-900">Want to share your experience?</h2>
               <p className="mt-2 text-gray-700">
-                At CaseroOk we turn real stories and housing news into practical resources for renters. If you want to contribute, you can publish an anonymous review in minutes.
+                At CaseroOk we turn real stories and housing news into practical resources for riders. If you want to contribute, you can publish an anonymous review in minutes.
               </p>
               <Link
                 to="/add-review"
