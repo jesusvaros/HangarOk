@@ -14,7 +14,7 @@ const AboutSection: React.FC = () => {
           
           <div className="max-w-3xl mx-auto space-y-6 text-lg leading-relaxed mb-10">
             <p className="text-white/95">
-              <strong className="text-[#E1F56E]">HangarOK</strong> is the UK's first rider-to-rider review platform for cycle hangars, built to provide a rich layer of data across the cycling industry that doesn't currently exist.
+              <strong className="text-[#E1F56E]">HangarOK</strong> is the UK's first peer-to-peer review platform for cycle hangars, built to provide a rich layer of data across the cycling industry that doesn't currently exist.
             </p>
             <p className="text-white/95">
               All reviews are accessible, anonymised, and aggregated into the <strong className="text-[#E1F56E]">HangarOK Index</strong>, a live measure of how fair, safe, and well run cycle hangars are across the UK.

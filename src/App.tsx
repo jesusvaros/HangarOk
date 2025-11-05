@@ -114,7 +114,7 @@ function App() {
             path="/"
             element={
               <>
-                <PageSEO title="HangarOK | UK's rider-to-rider cycle hangar reviews" description="Share and discover anonymous reviews of cycle hangars across the UK. Help improve cycling infrastructure with real rider feedback." />
+                <PageSEO title="HangarOK | UK's peer-to-peer cycle hangar reviews" description="Share and discover anonymous reviews of cycle hangars across the UK. Help improve cycling infrastructure with real rider feedback." />
                 <HeroSection />
                 <InputSection />
                 <HowItWorksSection />
@@ -146,7 +146,7 @@ function App() {
             <Link className="hover:text-gray-700" to="/about" {...umamiEventProps('footer:about')}>About</Link>
           </nav>
             <p className="text-xs leading-relaxed max-w-4xl mx-auto">
-              © {new Date().getFullYear()} LAGS Consulting Limited (delivering HangarOK). The UK's rider-to-rider cycle hangar review community. Built by riders, for riders. All rights reserved.<br />
+              © {new Date().getFullYear()} LAGS Consulting Limited (delivering HangarOK). The UK's peer-to-peer cycle hangar review community. Built by riders, for riders. All rights reserved.<br />
               LAGS Consulting Limited (delivering HangarOK) is a registered company in England & Wales Company No. 10042170
             </p>
           </footer>
