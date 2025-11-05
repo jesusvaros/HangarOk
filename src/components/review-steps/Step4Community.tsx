@@ -134,12 +134,12 @@ const Step4Community: React.FC<Step4CommunityProps> = ({
           <div>
             <SelectableTagGroup
               label="Is not having a hangar stopping you from cycling?"
-              options={['Yes - a lot', 'Yes - a bit', 'Not really', 'No']}
+              options={['Yes, a lot', 'Yes, a bit', 'Not really', 'No']}
               selectedOptions={
                 formData.stopsCycling === 'yes_lot'
-                  ? ['Yes - a lot']
+                  ? ['Yes, a lot']
                   : formData.stopsCycling === 'yes_bit'
-                  ? ['Yes - a bit']
+                  ? ['Yes, a bit']
                   : formData.stopsCycling === 'not_really'
                   ? ['Not really']
                   : formData.stopsCycling === 'no'
@@ -148,8 +148,8 @@ const Step4Community: React.FC<Step4CommunityProps> = ({
               }
               onChange={(selected) => {
                 const value = 
-                  selected[0] === 'Yes - a lot' ? 'yes_lot' :
-                  selected[0] === 'Yes - a bit' ? 'yes_bit' :
+                  selected[0] === 'Yes, a lot' ? 'yes_lot' :
+                  selected[0] === 'Yes, a bit' ? 'yes_bit' :
                   selected[0] === 'Not really' ? 'not_really' : 'no';
                 updateFormData({ stopsCycling: value });
               }}

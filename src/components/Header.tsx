@@ -105,7 +105,7 @@ const Header: React.FC = () => {
     >
       <div className="flex w-full items-center justify-between">
         {showLogo ? (
-          <Link to="/" className="flex items-center  overflow-hidden h-[48px]" aria-label="HangarOK - Home" {...umamiEventProps('nav:logo-home')}>
+          <Link to="/" className="flex items-center overflow-hidden h-[48px]" aria-label="HangarOK home" {...umamiEventProps('nav:logo-home')}>
             <img src={logoSymbolUrl} alt="HangarOK icon" className="h-11 w-11 object-contain md:h-13 md:w-13" />
             <img src={logoWordmarkUrl} alt="HangarOK" className="hidden md:block h-[128px] -ml-4" />
           </Link>

@@ -255,7 +255,7 @@ const ReviewPage = () => {
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
                 You just helped cyclists across the UK make safer choices! 🚴
               </h2>
-              <p className="text-lg text-gray-700 mb-4">Thank you - seriously.</p>
+              <p className="text-lg text-gray-700 mb-4">Thank you. Seriously.</p>
               
               {/* Action Buttons */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -286,7 +286,7 @@ const ReviewPage = () => {
                 <button
                   onClick={async () => {
                     const shareData = {
-                      title: 'HangarOk - Cycle Hangar Reviews',
+                      title: 'HangarOK | Cycle Hangar Reviews',
                       text: 'I just reviewed a cycle hangar on HangarOk! Help make cycling safer by sharing your experience too.',
                       url: window.location.origin,
                     };

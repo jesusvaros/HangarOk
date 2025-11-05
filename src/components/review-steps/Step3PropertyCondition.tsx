@@ -30,7 +30,7 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
     { value: 'feels_safe', label: '✅ Feels safe on this street' },
     { value: 'police_dont_care', label: '🚔 Police don\'t take bike theft seriously' },
     { value: 'insurance_no_cover', label: '🛡️ Insurance doesn\'t really cover me' },
-    { value: 'cars_too_close', label: '🚗 Cars park too close - feels unsafe' },
+    { value: 'cars_too_close', label: '🚗 Cars park too close and feel unsafe' },
   ];
 
   // Determine if user has a hangar based on Step 1
@@ -52,7 +52,7 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
           {/* Daytime safety rating */}
           <div>
             <StarRating
-              label="Daytime - how safe?"
+              label="Daytime safety"
               value={formData.daytimeSafetyRating}
               onChange={(value) => updateFormData({ daytimeSafetyRating: value })}
               error={fieldErrors?.daytimeSafetyRating}
@@ -62,7 +62,7 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
           {/* Nighttime safety rating */}
           <div>
             <StarRating
-              label="Night-time - how safe?"
+              label="Night-time safety"
               value={formData.nighttimeSafetyRating}
               onChange={(value) => updateFormData({ nighttimeSafetyRating: value })}
               error={fieldErrors?.nighttimeSafetyRating}

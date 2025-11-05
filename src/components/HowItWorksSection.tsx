@@ -17,7 +17,7 @@ const steps = [
     Icon: PencilSquareIcon,
     number: '2️⃣',
     title: 'Share your experience',
-    text: 'Add your honest review - from door weight to theft safety to community vibes.'
+    text: 'Add your honest review covering door weight, theft safety, lighting, and community vibes.'
   },
   {
     Icon: UserGroupIcon,

@@ -16,9 +16,9 @@ const HeroSection = () => {
         </div>
         <div className="md:w-1/2 flex flex-col items-center md:items-start">
           {/* Mobile: show logo + wordmark together */}
-          <div className="mb-4 flex flex-col items-center justify-center md:hidden relative">
-            <img src={logoUrl} alt="HangarOK" className="h-56 w-56" />
-            <img src={logoWordmarkUrl} alt="HangarOK wordmark" className="w-56 absolute -top-[6rem]" />
+          <div className="mb-4 flex flex-col items-center justify-center gap-3 md:hidden">
+            <img src={logoUrl} alt="HangarOK" className="h-24 w-24" />
+            <img src={logoWordmarkUrl} alt="HangarOK wordmark" className="w-48" />
             <h1 className="text-2xl font-bold text-[#232C17]">
               Real reviews of real hangars by real riders
             </h1>
@@ -28,7 +28,7 @@ const HeroSection = () => {
             Real reviews of real hangars by real riders
           </h1>
           <p className="mb-8 text-lg text-gray-700 md:text-xl max-w-xl text-center md:text-left">
-            The best test of any cycle hangar is real life - and the best reviewer is you. <br /> <b>HangarOK</b> is the home of honest, transparent hangar reviews made by real cyclists, commuters, and residents - just like you.
+            The best test of any cycle hangar is real life, and the best reviewer is you. <br /> <b>HangarOK</b> is the home of honest, transparent hangar reviews made by real cyclists, commuters, and residents just like you.
           </p>
           
           <Link
