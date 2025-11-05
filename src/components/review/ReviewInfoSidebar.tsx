@@ -86,10 +86,9 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
             <MapPinIcon className="h-5 w-5" />
           </div>
           <div className="flex-1">
-              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">{headerCaption}</p>
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-700">{headerCaption}</p>
               <div className="mt-1 flex flex-col gap-1">
               <span className="text-lg font-semibold text-gray-900 leading-tight">{formatAddress(step1Data)}</span>
-              {hangarNumber && <span className="text-sm font-semibold text-[#4A5E32]">Hangar {hangarNumber}</span>}
              
             </div>
           </div>

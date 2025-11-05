@@ -55,7 +55,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   const { data, error} = await client
     .from('public_reviews')
-    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, lighting_rating, maintenance_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number, belongs_rating, fair_use_rating, appearance_rating, theft_worry_rating, bike_messed_with, current_bike_storage, stops_cycling, impact_tags, waitlist_fairness_rating, waitlist_tags, connection_type, community_feedback, improvement_suggestion, improvement_feedback, report_ease_rating, fix_speed_rating, communication_rating, home_type')
+    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, lighting_rating, maintenance_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number, belongs_rating, fair_use_rating, appearance_rating, theft_worry_rating, bike_messed_with, impact_tags, waitlist_fairness_rating, waitlist_tags, improvement_suggestion, report_ease_rating, fix_speed_rating, communication_rating, home_type')
     .eq('is_public', true);
 
   if (error || !data) return [];
