@@ -138,7 +138,7 @@ export default function BlogListPage() {
               )}
             </h2>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {secondaryPosts.map(post => {
+              {secondaryPosts.map((post: StaticBlogPost) => {
                 const readingMinutes = computeReadingMinutes(post);
                 const publishedLabel = formatDate(post.publishedAt);
                 const excerpt = buildExcerpt(post);

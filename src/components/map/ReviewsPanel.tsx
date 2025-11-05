@@ -102,7 +102,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                     <div className="flex items-center gap-2">
                       <UserIcon className={`h-4 w-4 ${isCurrentUser ? 'text-green-700' : 'text-orange-600'}`} />
                       <span className={`text-xs font-bold uppercase tracking-wide ${isCurrentUser ? 'text-green-800' : 'text-orange-700'}`}>
-                        {r.hangar_number || 'Hangar'}
+                        {r.hangar_number ? `Hangar ${r.hangar_number}` : 'Hangar'}
                       </span>
                     </div>
                     {hasRating && (

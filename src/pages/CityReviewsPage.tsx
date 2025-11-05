@@ -102,10 +102,10 @@ export default function CityReviewsPage() {
 
   const heroSubtitle =
     reviewCount === 1
-      ? `We have 1 published review about renting in ${fallbackCityName}.`
-      : `We have ${reviewCount} published reviews about renting in ${fallbackCityName}.`;
+      ? `We have 1 published review about cycle hangars in ${fallbackCityName}.`
+      : `We have ${reviewCount} published reviews about cycle hangars in ${fallbackCityName}.`;
 
-  const seoTitle = `Rental reviews in ${fallbackCityName} | CaseroOk`;
+  const seoTitle = `Hangar reviews in ${fallbackCityName} | HangarOK`;
   const seoDescription =
     reviewCount > 0
       ? `Discover ${reviewCount === 1 ? 'the review' : `${reviewCount} reviews`} from renters about landlords and homes in ${fallbackCityName}${
@@ -128,7 +128,7 @@ export default function CityReviewsPage() {
               City reviews
             </p>
             <h1 className="mt-2 text-3xl font-semibold text-gray-900">
-              Rental reviews in {fallbackCityName}
+              Hangar reviews in {fallbackCityName}
             </h1>
             <p className="mt-4 text-gray-600">Loading details and map…</p>
           </section>
@@ -170,7 +170,7 @@ export default function CityReviewsPage() {
                 City reviews
               </p>
               <h1 className="mt-3 text-3xl font-bold text-gray-900 md:text-4xl">
-                Rental reviews in {formatCityWithState(fallbackCityName, stateName)}
+                Hangar reviews in {formatCityWithState(fallbackCityName, stateName)}
               </h1>
               <p className="mt-4 max-w-2xl text-lg text-gray-600 md:mt-3">{heroSubtitle}</p>
               <div className="mt-4 flex flex-wrap justify-center gap-3 md:justify-start">
@@ -195,7 +195,7 @@ export default function CityReviewsPage() {
                   What renters say about {fallbackCityName}
                 </h2>
                 <p className="mt-3 text-sm text-gray-600">
-                  We’ve highlighted real testimonies so you can understand the renting experience in this area.
+                  We’ve highlighted real testimonies so you can understand the cycle hangar experience in this area.
                 </p>
                 <div className="mt-6 grid gap-6 md:grid-cols-2">
                   {reviews.slice(0, Math.min(4, reviews.length)).map(review => (

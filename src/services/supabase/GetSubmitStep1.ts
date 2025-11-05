@@ -14,6 +14,7 @@ interface HangarStep1Data {
   uses_hangar: boolean;
   home_type: 'flat' | 'house' | 'shared' | 'other';
   connection_type: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes';
+  hangar_number?: string | null;
 }
 
 // Alias for backward compatibility with old code

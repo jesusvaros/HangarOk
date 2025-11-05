@@ -93,6 +93,7 @@ const ReviewPage = () => {
               // Step 1: Location & Usage
               setStep1Data({
                 hangar_location: publicReview.address_details,
+                hangar_number: publicReview.hangar_number ?? null,
                 uses_hangar: publicReview.uses_hangar,
                 home_type: publicReview.home_type,
                 connection_type: publicReview.connection_type,

@@ -163,10 +163,13 @@ export default function DetailsPanel({ review, onClose }: Props) {
           )}
         </div>
         {/* Location in header */}
-        {review?.full_address && (
-          <div className="flex items-center gap-1 text-white/90">
-            <MapPinIcon className="h-3 w-3 flex-shrink-0" />
-            <p className="text-xs truncate">{review.full_address}</p>
+        {(review?.full_address || review?.hangar_number) && (
+          <div className="flex items-start gap-1 text-white/90">
+            <MapPinIcon className="h-3 w-3 flex-shrink-0 mt-0.5" />
+            <div className="flex flex-col leading-tight">
+              {review?.full_address && <p className="text-xs truncate">{review.full_address}</p>}
+              {review?.hangar_number && <p className="text-xs font-semibold">Hangar {review.hangar_number}</p>}
+            </div>
           </div>
         )}
       </div>

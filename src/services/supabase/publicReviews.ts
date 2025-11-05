@@ -37,7 +37,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   const { data, error} = await client
     .from('public_reviews')
-    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, lighting_rating, maintenance_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags')
+    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, lighting_rating, maintenance_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number')
     .eq('is_public', true);
 
   if (error || !data) return [];
@@ -82,6 +82,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     safety_tags?: string[] | null;
     usability_tags?: string[] | null;
     maintenance_tags?: string[] | null;
+    hangar_number?: string | null;
   };
 
   const rows = data as unknown as Row[];
@@ -146,7 +147,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
       overall_safety_rating: overallSafetyRating,
       overall_usability_rating: overallUsabilityRating,
       uses_hangar: review.uses_hangar ?? null,
-      hangar_number: null, // TODO: Add this column to public_reviews table
+      hangar_number: review.hangar_number ?? null,
       daytime_safety_rating: review.daytime_safety_rating ?? null,
       nighttime_safety_rating: review.nighttime_safety_rating ?? null,
       lock_ease_rating: review.lock_ease_rating ?? null,

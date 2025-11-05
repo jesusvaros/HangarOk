@@ -76,7 +76,7 @@ export default function CityReviewsIndexPage() {
   return (
     <>
       <PageSEO
-        title="Rental reviews by city | CaseroOk"
+        title="Hangar reviews by city | HangarOK"
         description="Explore verified renter reviews organised by city. Pick your area and read real experiences before you rent."
         canonicalPath="/opiniones"
       />
@@ -86,7 +86,7 @@ export default function CityReviewsIndexPage() {
             Verified reviews
           </p>
           <h1 className="mt-3 text-3xl font-bold text-gray-900 md:text-4xl">
-            Rental reviews by city
+            Hangar reviews by city
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-gray-600 md:mt-3">
             We gather real renter stories to help you find safer, fairer rentals. Browse the cities available

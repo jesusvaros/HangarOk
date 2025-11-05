@@ -1,20 +1,16 @@
 import React, { useMemo } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapPinIcon, HomeModernIcon, ShareIcon, UserGroupIcon, SparklesIcon } from '@heroicons/react/24/outline';
-import { ShieldCheckIcon, BoltIcon, WrenchScrewdriverIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, HomeModernIcon, ShareIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
-import type { Step3Data, Step4Data, Step5Data } from './reviewStepTypes';
+import type { Step3Data } from './reviewStepTypes';
 import { ACCENT, average, formatAddress, formatOptionLabel, HOME_TYPE_LABELS, CONNECTION_TYPE_LABELS } from './reviewFormatting';
-import { RatingRow } from './reviewShared';
 import { svgToIcon } from '../map/svgIcon';
 import { faceBubbleSVG } from '../map/heroPin';
 
 type ReviewInfoSidebarProps = {
   step1Data: AddressStepData | null;
   step3Data: Step3Data | null;
-  step4Data: Step4Data | null;
-  step5Data: Step5Data | null;
   usesHangar: boolean;
 };
 
@@ -41,49 +37,9 @@ const InfoField = ({
   );
 };
 
-const buildQuickMetrics = (
-  step3Data: Step3Data | null,
-  step4Data: Step4Data | null,
-  step5Data: Step5Data | null,
-  usesHangar: boolean
-) => {
-  const safetyAverage = average([
-    step3Data?.daytime_safety_rating ?? null,
-    step3Data?.nighttime_safety_rating ?? null,
-  ]);
-  const usabilityAverage = average([
-    step4Data?.lock_ease_rating ?? null,
-    step4Data?.space_rating ?? null,
-    step4Data?.lighting_rating ?? null,
-    step4Data?.maintenance_rating ?? null,
-  ]);
-  const supportAverage = average([
-    step5Data?.report_ease_rating ?? null,
-    step5Data?.fix_speed_rating ?? null,
-    step5Data?.communication_rating ?? null,
-  ]);
-
-  const theftIcon = <ExclamationTriangleIcon className="h-5 w-5" />;
-
-  const metrics = [
-    safetyAverage != null && { label: 'Overall safety', value: safetyAverage, icon: <ShieldCheckIcon className="h-5 w-5" /> },
-    usabilityAverage != null && { label: 'Everyday usability', value: usabilityAverage, icon: <BoltIcon className="h-5 w-5" /> },
-    supportAverage != null && {
-      label: usesHangar ? 'Support & fixes' : 'Council responsiveness',
-      value: supportAverage,
-      icon: <WrenchScrewdriverIcon className="h-5 w-5" />,
-    },
-    step3Data?.theft_worry_rating != null && { label: 'Worry about theft', value: step3Data.theft_worry_rating, icon: theftIcon },
-  ];
-
-  return metrics.filter(Boolean) as Array<{ label: string; value: number; icon: React.ReactNode }>;
-};
-
 const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
   step1Data,
   step3Data,
-  step4Data,
-  step5Data,
   usesHangar,
 }) => {
   const coordinates = step1Data?.hangar_location?.coordinates;
@@ -119,20 +75,21 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
   const homeTypeLabel = formatOptionLabel(step1Data?.home_type) ?? HOME_TYPE_LABELS[step1Data?.home_type ?? ''] ?? null;
   const connectionLabel = formatOptionLabel(step1Data?.connection_type) ?? CONNECTION_TYPE_LABELS[step1Data?.connection_type ?? ''] ?? null;
   const usageLabel = usesHangar ? 'Uses the hangar regularly' : 'Does not currently rent a space';
-  const quickMetrics = buildQuickMetrics(step3Data, step4Data, step5Data, usesHangar);
   const headerCaption = usesHangar ? 'Current hangar rider review' : 'Local rider / waiting list perspective';
+  const hangarNumber = step1Data?.hangar_number ?? null;
 
   return (
     <aside className="mb-6 space-y-4 lg:mb-0 lg:sticky lg:top-24 lg:self-start">
       <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm ring-1 ring-gray-100/50">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ backgroundColor: 'rgba(74,94,50,0.1)', color: ACCENT }}>
+          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#E1F56E]/30 text-[#3B4C28]">
             <MapPinIcon className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">{headerCaption}</p>
-            <div className="mt-1 flex flex-col gap-1">
+              <p className="text-xs font-semibold uppercase tracking-wide text-emerald-600">{headerCaption}</p>
+              <div className="mt-1 flex flex-col gap-1">
               <span className="text-lg font-semibold text-gray-900 leading-tight">{formatAddress(step1Data)}</span>
+              {hangarNumber && <span className="text-sm font-semibold text-[#4A5E32]">Hangar {hangarNumber}</span>}
              
             </div>
           </div>
@@ -158,30 +115,12 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
           )}
         </div>
         <div className="mt-4 space-y-2 border-t border-gray-100 pt-4">
+          <InfoField icon={<MapPinIcon className="h-5 w-5" />} label="Hangar number" value={hangarNumber} />
           <InfoField icon={<HomeModernIcon className="h-5 w-5" />} label="Home type" value={homeTypeLabel} />
           <InfoField icon={<ShareIcon className="h-5 w-5" />} label="Connection to hangar" value={connectionLabel} />
           <InfoField icon={<UserGroupIcon className="h-5 w-5" />} label="Usage" value={usageLabel} />
         </div>
       </div>
-
-      {quickMetrics.length > 0 && (
-        <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm ring-1 ring-gray-100/50">
-          <div className="mb-4 flex items-start gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ backgroundColor: 'rgba(74,94,50,0.1)', color: ACCENT }}>
-              <SparklesIcon className="h-5 w-5" />
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-gray-900">At a glance</h3>
-              <p className="text-xs text-gray-500">Key scores from this review</p>
-            </div>
-          </div>
-          <div className="space-y-3">
-            {quickMetrics.map((metric) => (
-              <RatingRow key={metric.label} icon={metric.icon} label={metric.label} value={metric.value} />
-            ))}
-          </div>
-        </div>
-      )}
     </aside>
   );
 };

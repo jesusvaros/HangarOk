@@ -30,20 +30,20 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Community Vibe" subtitle="How the hangar fits the neighbourhood" icon={<UserGroupIcon className="h-6 w-6" />}>
+      <SectionCard title="Community Vibe" subtitle="How the hangar fits the neighbourhood" icon={<UserGroupIcon className="h-6 w-6 text-[#E1F56E]" />}>
           <div className="space-y-3">
-            <RatingRow icon={<SparklesIcon className="h-5 w-5" />} label="Belonging" value={step2Data?.belongs_rating ?? null} />
-            <RatingRow icon={<QueueListIcon className="h-5 w-5" />} label="Fair use" value={step2Data?.fair_use_rating ?? null} />
-            <RatingRow icon={<ExclamationTriangleIcon className="h-5 w-5" />} label="Appearance" value={step2Data?.appearance_rating ?? null} />
+            <RatingRow icon={<SparklesIcon className="h-5 w-5 text-[#E1F56E]" />} label="Belonging" value={step2Data?.belongs_rating ?? null} />
+            <RatingRow icon={<QueueListIcon className="h-5 w-5 text-[#E1F56E]" />} label="Fair use" value={step2Data?.fair_use_rating ?? null} />
+            <RatingRow icon={<ExclamationTriangleIcon className="h-5 w-5 text-[#E1F56E]" />} label="Appearance" value={step2Data?.appearance_rating ?? null} />
           </div>
           <TagList title="Neighbours say…" tags={step2Data?.perception_tags} />
         </SectionCard>
 
-      <SectionCard title="Safety Check" subtitle="Confidence leaving a bike inside" icon={<ShieldCheckIcon className="h-6 w-6" />}>
+      <SectionCard title="Safety Check" subtitle="Confidence leaving a bike inside" icon={<ShieldCheckIcon className="h-6 w-6 text-[#E1F56E]" />}>
           <div className="space-y-3">
-            <RatingRow icon={<SunIcon className="h-5 w-5" />} label="Daytime safety" value={step3Data?.daytime_safety_rating ?? null} />
-            <RatingRow icon={<MoonIcon className="h-5 w-5" />} label="Night safety" value={step3Data?.nighttime_safety_rating ?? null} />
-            <RatingRow icon={<ExclamationTriangleIcon className="h-5 w-5" />} label="Worry about theft" value={step3Data?.theft_worry_rating ?? null} />
+            <RatingRow icon={<SunIcon className="h-5 w-5 text-[#E1F56E]" />} label="Daytime safety" value={step3Data?.daytime_safety_rating ?? null} />
+            <RatingRow icon={<MoonIcon className="h-5 w-5 text-[#E1F56E]" />} label="Night safety" value={step3Data?.nighttime_safety_rating ?? null} />
+            <RatingRow icon={<ExclamationTriangleIcon className="h-5 w-5 text-[#E1F56E]" />} label="Worry about theft" value={step3Data?.theft_worry_rating ?? null} />
           </div>
           <BooleanSignal
             label="Has their bike been messed with?"
@@ -59,21 +59,21 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           <TagList title="Safety notes" tags={step3Data?.safety_tags} tone="warning" />
         </SectionCard>
 
-      <SectionCard title="Everyday Usability" subtitle="How easy it is to use the hangar" icon={<BoltIcon className="h-6 w-6" />}>
+      <SectionCard title="Everyday Usability" subtitle="How easy it is to use the hangar" icon={<BoltIcon className="h-6 w-6 text-[#E1F56E]" />}>
           <div className="space-y-3">
-            <RatingRow icon={<LockClosedIcon className="h-5 w-5" />} label="Lock ease" value={step4Data?.lock_ease_rating ?? null} />
-            <RatingRow icon={<ArrowsPointingOutIcon className="h-5 w-5" />} label="Space available" value={step4Data?.space_rating ?? null} />
-            <RatingRow icon={<LightBulbIcon className="h-5 w-5" />} label="Lighting" value={step4Data?.lighting_rating ?? null} />
-            <RatingRow icon={<WrenchScrewdriverIcon className="h-5 w-5" />} label="Maintenance" value={step4Data?.maintenance_rating ?? null} />
+            <RatingRow icon={<LockClosedIcon className="h-5 w-5 text-[#E1F56E]" />} label="Lock ease" value={step4Data?.lock_ease_rating ?? null} />
+            <RatingRow icon={<ArrowsPointingOutIcon className="h-5 w-5 text-[#E1F56E]" />} label="Space available" value={step4Data?.space_rating ?? null} />
+            <RatingRow icon={<LightBulbIcon className="h-5 w-5 text-[#E1F56E]" />} label="Lighting" value={step4Data?.lighting_rating ?? null} />
+            <RatingRow icon={<WrenchScrewdriverIcon className="h-5 w-5 text-[#E1F56E]" />} label="Maintenance" value={step4Data?.maintenance_rating ?? null} />
           </div>
           <TagList title="Usability notes" tags={step4Data?.usability_tags} />
         </SectionCard>
 
-      <SectionCard title="Maintenance & Support" subtitle="How quickly things get fixed" icon={<WrenchScrewdriverIcon className="h-6 w-6" />}>
+      <SectionCard title="Maintenance & Support" subtitle="How quickly things get fixed" icon={<WrenchScrewdriverIcon className="h-6 w-6 text-[#E1F56E]" />}>
           <div className="space-y-3">
-            <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5" />} label="Easy to report" value={step5Data?.report_ease_rating ?? null} />
-            <RatingRow icon={<BoltIcon className="h-5 w-5" />} label="Fix speed" value={step5Data?.fix_speed_rating ?? null} />
-            <RatingRow icon={<SparklesIcon className="h-5 w-5" />} label="Communication" value={step5Data?.communication_rating ?? null} />
+            <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5 text-[#E1F56E]" />} label="Easy to report" value={step5Data?.report_ease_rating ?? null} />
+            <RatingRow icon={<BoltIcon className="h-5 w-5 text-[#E1F56E]" />} label="Fix speed" value={step5Data?.fix_speed_rating ?? null} />
+            <RatingRow icon={<SparklesIcon className="h-5 w-5 text-[#E1F56E]" />} label="Communication" value={step5Data?.communication_rating ?? null} />
           </div>
           <TagList title="Maintenance issues spotted" tags={step5Data?.maintenance_tags} tone="warning" />
         </SectionCard>
