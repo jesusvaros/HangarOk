@@ -9,16 +9,16 @@ const HeroSection = () => {
       <div className="container mx-auto flex flex-col-reverse items-center px-4 text-center md:flex-row md:text-left">
         <div className="mt-10 md:mt-0 md:w-1/2">
           {/* Desktop: show logo on the left; hidden on mobile */}
-          <div className="mx-auto hidden w-fit flex-col items-center md:flex relative">
+          <div className="mx-auto hidden w-fit flex-col items-center md:flex relative -mt-12">
             <img src={logoUrl} alt="HangarOK" className="h-32 w-32 md:h-[20rem] md:w-[20rem]" />
             <img src={logoWordmarkUrl} alt="HangarOK wordmark" className="hidden md:block md:w-[18rem] absolute -bottom-[8rem]" />
           </div>
         </div>
         <div className="md:w-1/2 flex flex-col items-center md:items-start">
           {/* Mobile: show logo + wordmark together */}
-          <div className="mb-4 flex flex-col items-center justify-center gap-3 md:hidden">
-            <img src={logoUrl} alt="HangarOK" className="h-24 w-24" />
-            <img src={logoWordmarkUrl} alt="HangarOK wordmark" className="w-48" />
+          <div className="mb-4 flex flex-col items-center justify-center gap-3 md:hidden relative">
+            <img src={logoUrl} alt="HangarOK" className="h-65 w-65" />
+            <img src={logoWordmarkUrl} alt="HangarOK wordmark" className="w-48 absolute bottom-[1rem]" />
             <h1 className="text-2xl font-bold text-[#232C17]">
               Real reviews of real hangars by real riders
             </h1>
@@ -28,7 +28,7 @@ const HeroSection = () => {
             Real reviews of real hangars by real riders
           </h1>
           <p className="mb-8 text-lg text-gray-700 md:text-xl max-w-xl text-center md:text-left">
-            The best test of any cycle hangar is real life, and the best reviewer is you. <br /> <b>HangarOK</b> is the home of honest, transparent hangar reviews made by real cyclists, commuters, and residents just like you.
+            The best test of any cycle hangar is real life, and the best reviewer is you. <div className='mb-4' /> <b>HangarOK</b> is the home of honest, transparent hangar reviews made by real cyclists, commuters, and residents just like you.
           </p>
           
           <Link

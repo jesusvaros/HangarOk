@@ -91,6 +91,16 @@ const StarDisplay = ({ score }: { score: number }) => {
   );
 };
 
+const formatScoreValue = (value: number) =>
+  Number.isInteger(value) ? value.toString() : value.toFixed(1);
+
+const ScoreBadge = ({ label, value }: { label: string; value: number }) => (
+  <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold text-gray-700">
+    <span>{label}</span>
+    <span>{formatScoreValue(value)}</span>
+  </span>
+);
+
 type UsageKey = 'users' | 'waiting' | 'unknown';
 
 const usageKeyFromValue = (value?: boolean | null): UsageKey => {
@@ -146,6 +156,14 @@ const USAGE_STYLES: Record<
     hoverClass: 'hover:bg-slate-50',
     focusRingClass: 'focus-visible:ring-slate-500',
   },
+};
+
+const WAITING_SCORE_LABELS: Record<string, string> = {
+  theft: 'Theft',
+  waitlist: 'Waitlist',
+  belonging: 'Belonging',
+  fair_use: 'Fair use',
+  appearance: 'Appearance',
 };
 
 interface ReviewsPanelProps {
@@ -216,11 +234,11 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
             const appearanceScore =
               typeof r.appearance_rating === 'number' ? r.appearance_rating : null;
             const waitingRatingItems = [
-              theftScore != null && { key: 'theft', label: 'Worry about theft', value: theftScore },
-              waitlistScore != null && { key: 'waitlist', label: 'Waitlist fairness', value: waitlistScore },
-              belongingScore != null && { key: 'belonging', label: 'Belonging', value: belongingScore },
-              fairUseScore != null && { key: 'fair_use', label: 'Fair use', value: fairUseScore },
-              appearanceScore != null && { key: 'appearance', label: 'Appearance', value: appearanceScore },
+              theftScore != null && { key: 'theft', label: WAITING_SCORE_LABELS.theft, value: theftScore },
+              waitlistScore != null && { key: 'waitlist', label: WAITING_SCORE_LABELS.waitlist, value: waitlistScore },
+              belongingScore != null && { key: 'belonging', label: WAITING_SCORE_LABELS.belonging, value: belongingScore },
+              fairUseScore != null && { key: 'fair_use', label: WAITING_SCORE_LABELS.fair_use, value: fairUseScore },
+              appearanceScore != null && { key: 'appearance', label: WAITING_SCORE_LABELS.appearance, value: appearanceScore },
             ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
             const hasRating = isWaitingRider ? waitingRatingItems.length > 0 : score > 0;
             const label = hasRating ? getRatingLabel(score) : 'No rating yet';
@@ -389,11 +407,11 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                         ? member.appearance_rating
                                         : null;
                                     const memberWaitingItems = [
-                                      memberTheftScore != null && { key: 'theft', label: 'Worry about theft', value: memberTheftScore },
-                                      memberWaitlistScore != null && { key: 'waitlist', label: 'Waitlist fairness', value: memberWaitlistScore },
-                                      memberBelongingScore != null && { key: 'belonging', label: 'Belonging', value: memberBelongingScore },
-                                      memberFairUseScore != null && { key: 'fair_use', label: 'Fair use', value: memberFairUseScore },
-                                      memberAppearanceScore != null && { key: 'appearance', label: 'Appearance', value: memberAppearanceScore },
+                                      memberTheftScore != null && { key: 'theft', label: WAITING_SCORE_LABELS.theft, value: memberTheftScore },
+                                      memberWaitlistScore != null && { key: 'waitlist', label: WAITING_SCORE_LABELS.waitlist, value: memberWaitlistScore },
+                                      memberBelongingScore != null && { key: 'belonging', label: WAITING_SCORE_LABELS.belonging, value: memberBelongingScore },
+                                      memberFairUseScore != null && { key: 'fair_use', label: WAITING_SCORE_LABELS.fair_use, value: memberFairUseScore },
+                                      memberAppearanceScore != null && { key: 'appearance', label: WAITING_SCORE_LABELS.appearance, value: memberAppearanceScore },
                                     ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
 
                                     return (
@@ -440,12 +458,11 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                         <div className="mt-3 space-y-1.5">
                                           {memberIsWaiting ? (
                                             memberWaitingItems.length > 0 ? (
-                                              memberWaitingItems.map(item => (
-                                                <div key={item.key} className="flex items-center justify-between">
-                                                  <span className="text-xs font-medium text-gray-600">{item.label}</span>
-                                                  <StarDisplay score={item.value} />
-                                                </div>
-                                              ))
+                                              <div className="flex flex-wrap gap-1.5">
+                                                {memberWaitingItems.map(item => (
+                                                  <ScoreBadge key={item.key} label={item.label} value={item.value} />
+                                                ))}
+                                              </div>
                                             ) : (
                                               <p className="text-[11px] text-gray-400 italic">
                                                 No waiting rider scores yet
@@ -506,12 +523,9 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                       <p className="mb-3 text-xs text-gray-500 line-clamp-2">{address}</p>
                       {isWaitingRider ? (
                         waitingRatingItems.length > 0 ? (
-                          <div className="space-y-1.5">
+                          <div className="flex flex-wrap gap-1.5">
                             {waitingRatingItems.map((item) => (
-                              <div key={item.key} className="flex items-center justify-between">
-                                <span className="text-xs font-medium text-gray-600">{item.label}</span>
-                                <StarDisplay score={item.value} />
-                              </div>
+                              <ScoreBadge key={item.key} label={item.label} value={item.value} />
                             ))}
                           </div>
                         ) : (
