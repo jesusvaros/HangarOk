@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
-import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { MapPinIcon, HomeModernIcon, ShareIcon, UserGroupIcon, SparklesIcon } from '@heroicons/react/24/outline';
 import { ShieldCheckIcon, BoltIcon, WrenchScrewdriverIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
 import type { Step3Data, Step4Data, Step5Data } from './reviewStepTypes';
 import { ACCENT, average, formatAddress, formatOptionLabel, HOME_TYPE_LABELS, CONNECTION_TYPE_LABELS } from './reviewFormatting';
 import { RatingRow } from './reviewShared';
+import { svgToIcon } from '../map/svgIcon';
+import { faceBubbleSVG } from '../map/heroPin';
 
 type ReviewInfoSidebarProps = {
   step1Data: AddressStepData | null;
@@ -93,19 +95,26 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
     typeof lat === 'number' && !Number.isNaN(lat) && typeof lng === 'number' && !Number.isNaN(lng) ? [lat, lng] : null;
 
   const isBrowser = typeof window !== 'undefined';
+  const safetyAverage = average([
+    step3Data?.daytime_safety_rating ?? null,
+    step3Data?.nighttime_safety_rating ?? null,
+  ]);
   const markerIcon = useMemo(() => {
     if (!isBrowser) return null;
-    return L.divIcon({
-      className: '',
-      html: `
-        <div style="display:flex;align-items:center;justify-content:center;width:32px;height:32px;background:rgba(74,94,50,0.15);border-radius:9999px;position:relative;">
-          <div style="width:14px;height:14px;background:${ACCENT};border-radius:9999px;box-shadow:0 0 0 4px rgba(74,94,50,0.2);"></div>
-        </div>
-      `,
-      iconSize: [32, 32],
-      iconAnchor: [16, 16],
-    });
-  }, [isBrowser]);
+    const rating = typeof safetyAverage === 'number' ? safetyAverage : null;
+    const color =
+      rating == null
+        ? '#4B5563'
+        : rating > 3
+          ? '#22C55E'
+          : rating < 3
+            ? '#EF4444'
+            : '#4B5563';
+    const rounded = rating == null ? 3 : Math.round(rating);
+    const face = rounded <= 2 ? 'sad' : rounded === 3 ? 'neutral' : 'happy';
+    const size = 44;
+    return svgToIcon(faceBubbleSVG({ fill: color, stroke: 'none', size, face }), [size, size], [size / 2, size]);
+  }, [isBrowser, safetyAverage]);
 
   const homeTypeLabel = formatOptionLabel(step1Data?.home_type) ?? HOME_TYPE_LABELS[step1Data?.home_type ?? ''] ?? null;
   const connectionLabel = formatOptionLabel(step1Data?.connection_type) ?? CONNECTION_TYPE_LABELS[step1Data?.connection_type ?? ''] ?? null;
