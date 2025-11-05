@@ -89,8 +89,7 @@ export default function CityReviewsIndexPage() {
             Hangar reviews by city
           </h1>
           <p className="mt-4 max-w-2xl text-lg text-gray-600 md:mt-3">
-            We gather real renter stories to help you find safer, fairer rentals. Browse the cities available
-            and open the map centred on your area.
+            We gather real rider stories to help you find safer cycle hangars. Browse the cities available and open the map centred on your area.
           </p>
         </header>
 
