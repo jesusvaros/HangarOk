@@ -20,6 +20,16 @@ export type ReviewListItem = {
   hangar_number?: string | null;
   groupCount?: number;
   groupedIds?: (string | number)[];
+  theft_worry_rating?: number | null;
+  waitlist_fairness_rating?: number | null;
+  belongs_rating?: number | null;
+  fair_use_rating?: number | null;
+  appearance_rating?: number | null;
+  impact_tags?: string[] | null;
+  perception_tags?: string[] | null;
+  connection_type?: string | null;
+  current_bike_storage?: string | null;
+  stops_cycling?: string | null;
   groupedReviews?: Array<{
     id: string | number;
     full_address?: string | null;
@@ -27,6 +37,13 @@ export type ReviewListItem = {
     overall_safety_rating?: number | null;
     overall_usability_rating?: number | null;
     hangar_number?: string | null;
+    theft_worry_rating?: number | null;
+    waitlist_fairness_rating?: number | null;
+    belongs_rating?: number | null;
+    fair_use_rating?: number | null;
+    appearance_rating?: number | null;
+    perception_tags?: string[] | null;
+    impact_tags?: string[] | null;
   }>;
 };
 
@@ -185,13 +202,31 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
             const id = r.id ?? `${r.lat}-${r.lng}`;
             const address = r.texto ?? '-';
             const score = r.would_recommend ?? 0;
-            const hasRating = score > 0;
+            const isGroup = (r.groupCount ?? 0) > 1 && (r.groupedReviews?.length ?? 0) > 0;
+            const isCurrentUser = !isGroup && r.uses_hangar === true;
+            const isWaitingRider = !isGroup && r.uses_hangar === false;
+            const theftScore =
+              typeof r.theft_worry_rating === 'number' ? r.theft_worry_rating : null;
+            const waitlistScore =
+              typeof r.waitlist_fairness_rating === 'number' ? r.waitlist_fairness_rating : null;
+            const belongingScore =
+              typeof r.belongs_rating === 'number' ? r.belongs_rating : null;
+            const fairUseScore =
+              typeof r.fair_use_rating === 'number' ? r.fair_use_rating : null;
+            const appearanceScore =
+              typeof r.appearance_rating === 'number' ? r.appearance_rating : null;
+            const waitingRatingItems = [
+              theftScore != null && { key: 'theft', label: 'Worry about theft', value: theftScore },
+              waitlistScore != null && { key: 'waitlist', label: 'Waitlist fairness', value: waitlistScore },
+              belongingScore != null && { key: 'belonging', label: 'Belonging', value: belongingScore },
+              fairUseScore != null && { key: 'fair_use', label: 'Fair use', value: fairUseScore },
+              appearanceScore != null && { key: 'appearance', label: 'Appearance', value: appearanceScore },
+            ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
+            const hasRating = isWaitingRider ? waitingRatingItems.length > 0 : score > 0;
             const label = hasRating ? getRatingLabel(score) : 'No rating yet';
             const reviewCount = r.groupCount ?? r.groupedReviews?.length ?? 0;
             const headerClass = definecolor(score);
             const isSelected = String(selectedId ?? '') === String(id);
-            const isGroup = (r.groupCount ?? 0) > 1 && (r.groupedReviews?.length ?? 0) > 0;
-            const isCurrentUser = !isGroup && r.uses_hangar === true;
             const userIconColor = isGroup
               ? 'text-blue-700'
               : isCurrentUser
@@ -324,12 +359,42 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                     const safetyScore =
                                       typeof member.overall_safety_rating === 'number'
                                         ? member.overall_safety_rating
-                                        : null;
+                                        : typeof member.theft_worry_rating === 'number'
+                                          ? member.theft_worry_rating
+                                          : null;
                                     const usabilityScore =
                                       typeof member.overall_usability_rating === 'number'
                                         ? member.overall_usability_rating
                                         : null;
                                     const memberAddress = member.full_address ?? 'Rider review';
+                                    const memberIsWaiting = member.uses_hangar === false;
+                                    const memberTheftScore =
+                                      typeof member.theft_worry_rating === 'number'
+                                        ? member.theft_worry_rating
+                                        : null;
+                                    const memberWaitlistScore =
+                                      typeof member.waitlist_fairness_rating === 'number'
+                                        ? member.waitlist_fairness_rating
+                                        : null;
+                                    const memberBelongingScore =
+                                      typeof member.belongs_rating === 'number'
+                                        ? member.belongs_rating
+                                        : null;
+                                    const memberFairUseScore =
+                                      typeof member.fair_use_rating === 'number'
+                                        ? member.fair_use_rating
+                                        : null;
+                                    const memberAppearanceScore =
+                                      typeof member.appearance_rating === 'number'
+                                        ? member.appearance_rating
+                                        : null;
+                                    const memberWaitingItems = [
+                                      memberTheftScore != null && { key: 'theft', label: 'Worry about theft', value: memberTheftScore },
+                                      memberWaitlistScore != null && { key: 'waitlist', label: 'Waitlist fairness', value: memberWaitlistScore },
+                                      memberBelongingScore != null && { key: 'belonging', label: 'Belonging', value: memberBelongingScore },
+                                      memberFairUseScore != null && { key: 'fair_use', label: 'Fair use', value: memberFairUseScore },
+                                      memberAppearanceScore != null && { key: 'appearance', label: 'Appearance', value: memberAppearanceScore },
+                                    ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
 
                                     return (
                                       <button
@@ -343,6 +408,13 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                             usability_rating: usabilityScore ?? undefined,
                                             uses_hangar: member.uses_hangar ?? null,
                                             hangar_number: member.hangar_number ?? r.hangar_number ?? null,
+                                            theft_worry_rating: memberTheftScore ?? null,
+                                            waitlist_fairness_rating: memberWaitlistScore ?? null,
+                                            belongs_rating: memberBelongingScore ?? null,
+                                            fair_use_rating: memberFairUseScore ?? null,
+                                            appearance_rating: memberAppearanceScore ?? null,
+                                            perception_tags: member.perception_tags ?? null,
+                                            impact_tags: member.impact_tags ?? null,
                                           })
                                         }
                                         className={`w-full rounded-lg border px-3 py-3 text-left transition focus:outline-none ${meta.borderClass} ${meta.hoverClass} ${meta.focusRingClass}`}
@@ -366,22 +438,39 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                         </div>
                                         <p className="mt-2 text-xs text-gray-600 line-clamp-2">{memberAddress}</p>
                                         <div className="mt-3 space-y-1.5">
-                                          {safetyScore ? (
-                                            <div className="flex items-center justify-between">
-                                              <span className="text-xs font-medium text-gray-600">Safety</span>
-                                              <StarDisplay score={safetyScore} />
-                                            </div>
+                                          {memberIsWaiting ? (
+                                            memberWaitingItems.length > 0 ? (
+                                              memberWaitingItems.map(item => (
+                                                <div key={item.key} className="flex items-center justify-between">
+                                                  <span className="text-xs font-medium text-gray-600">{item.label}</span>
+                                                  <StarDisplay score={item.value} />
+                                                </div>
+                                              ))
+                                            ) : (
+                                              <p className="text-[11px] text-gray-400 italic">
+                                                No waiting rider scores yet
+                                              </p>
+                                            )
                                           ) : (
-                                            <p className="text-[11px] text-gray-400 italic">
-                                              No safety score yet
-                                            </p>
+                                            <>
+                                              {safetyScore ? (
+                                                <div className="flex items-center justify-between">
+                                                  <span className="text-xs font-medium text-gray-600">Safety</span>
+                                                  <StarDisplay score={safetyScore} />
+                                                </div>
+                                              ) : (
+                                                <p className="text-[11px] text-gray-400 italic">
+                                                  No safety score yet
+                                                </p>
+                                              )}
+                                              {usabilityScore ? (
+                                                <div className="flex items-center justify-between">
+                                                  <span className="text-xs font-medium text-gray-600">Usability</span>
+                                                  <StarDisplay score={usabilityScore} />
+                                                </div>
+                                              ) : null}
+                                            </>
                                           )}
-                                          {usabilityScore ? (
-                                            <div className="flex items-center justify-between">
-                                              <span className="text-xs font-medium text-gray-600">Usability</span>
-                                              <StarDisplay score={usabilityScore} />
-                                            </div>
-                                          ) : null}
                                         </div>
                                       </button>
                                     );
@@ -415,7 +504,20 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                       className="block w-full px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
                     >
                       <p className="mb-3 text-xs text-gray-500 line-clamp-2">{address}</p>
-                      {hasRating ? (
+                      {isWaitingRider ? (
+                        waitingRatingItems.length > 0 ? (
+                          <div className="space-y-1.5">
+                            {waitingRatingItems.map((item) => (
+                              <div key={item.key} className="flex items-center justify-between">
+                                <span className="text-xs font-medium text-gray-600">{item.label}</span>
+                                <StarDisplay score={item.value} />
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-xs text-gray-400 italic">{label}</p>
+                        )
+                      ) : hasRating ? (
                         <div className="space-y-1.5">
                           <div className="flex items-center justify-between">
                             <span className="text-xs font-medium text-gray-600">Safety</span>

@@ -18,6 +18,24 @@ export type PublicReview = {
   space_rating: number | null;
   lighting_rating: number | null;
   maintenance_rating: number | null;
+  belongs_rating: number | null;
+  fair_use_rating: number | null;
+  appearance_rating: number | null;
+  theft_worry_rating: number | null;
+  bike_messed_with: boolean | null;
+  current_bike_storage: string | null;
+  stops_cycling: string | null;
+  impact_tags: string[] | null;
+  waitlist_fairness_rating: number | null;
+  waitlist_tags: string[] | null;
+  connection_type: string | null;
+  community_feedback: string | null;
+  improvement_suggestion: string | null;
+  improvement_feedback: string | null;
+  report_ease_rating: number | null;
+  fix_speed_rating: number | null;
+  communication_rating: number | null;
+  home_type: string | null;
   // Tags
   perception_tags: string[] | null;
   safety_tags: string[] | null;
@@ -37,7 +55,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   const { data, error} = await client
     .from('public_reviews')
-    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, lighting_rating, maintenance_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number')
+    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, lighting_rating, maintenance_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number, belongs_rating, fair_use_rating, appearance_rating, theft_worry_rating, bike_messed_with, current_bike_storage, stops_cycling, impact_tags, waitlist_fairness_rating, waitlist_tags, connection_type, community_feedback, improvement_suggestion, improvement_feedback, report_ease_rating, fix_speed_rating, communication_rating, home_type')
     .eq('is_public', true);
 
   if (error || !data) return [];
@@ -77,6 +95,24 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     space_rating?: number | null;
     lighting_rating?: number | null;
     maintenance_rating?: number | null;
+    belongs_rating?: number | null;
+    fair_use_rating?: number | null;
+    appearance_rating?: number | null;
+    theft_worry_rating?: number | null;
+    bike_messed_with?: boolean | null;
+    current_bike_storage?: string | null;
+    stops_cycling?: string | null;
+    impact_tags?: string[] | null;
+    waitlist_fairness_rating?: number | null;
+    waitlist_tags?: string[] | null;
+    connection_type?: string | null;
+    community_feedback?: string | null;
+    improvement_suggestion?: string | null;
+    improvement_feedback?: string | null;
+    report_ease_rating?: number | null;
+    fix_speed_rating?: number | null;
+    communication_rating?: number | null;
+    home_type?: string | null;
     uses_hangar?: boolean | null;
     perception_tags?: string[] | null;
     safety_tags?: string[] | null;
@@ -154,6 +190,24 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
       space_rating: review.space_rating ?? null,
       lighting_rating: review.lighting_rating ?? null,
       maintenance_rating: review.maintenance_rating ?? null,
+      belongs_rating: review.belongs_rating ?? null,
+      fair_use_rating: review.fair_use_rating ?? null,
+      appearance_rating: review.appearance_rating ?? null,
+      theft_worry_rating: review.theft_worry_rating ?? null,
+      bike_messed_with: typeof review.bike_messed_with === 'boolean' ? review.bike_messed_with : null,
+      current_bike_storage: review.current_bike_storage ?? null,
+      stops_cycling: review.stops_cycling ?? null,
+      impact_tags: review.impact_tags ?? null,
+      waitlist_fairness_rating: review.waitlist_fairness_rating ?? null,
+      waitlist_tags: review.waitlist_tags ?? null,
+      connection_type: review.connection_type ?? null,
+      community_feedback: review.community_feedback ?? null,
+      improvement_suggestion: review.improvement_suggestion ?? null,
+      improvement_feedback: review.improvement_feedback ?? null,
+      report_ease_rating: review.report_ease_rating ?? null,
+      fix_speed_rating: review.fix_speed_rating ?? null,
+      communication_rating: review.communication_rating ?? null,
+      home_type: review.home_type ?? null,
       perception_tags: review.perception_tags ?? null,
       safety_tags: review.safety_tags ?? null,
       usability_tags: review.usability_tags ?? null,

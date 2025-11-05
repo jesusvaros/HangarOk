@@ -126,7 +126,13 @@ const MapView = ({
 
         const safetyScores = group
           .map(candidate =>
-            typeof candidate.overall_safety_rating === 'number' ? candidate.overall_safety_rating : null
+            typeof candidate.overall_safety_rating === 'number'
+              ? candidate.overall_safety_rating
+              : typeof candidate.theft_worry_rating === 'number'
+                ? candidate.theft_worry_rating
+                : typeof candidate.waitlist_fairness_rating === 'number'
+                  ? candidate.waitlist_fairness_rating
+                  : null
           )
           .filter((score): score is number => score != null);
         const usabilityScores = group
@@ -167,18 +173,42 @@ const MapView = ({
             overall_safety_rating: candidate.overall_safety_rating ?? null,
             overall_usability_rating: candidate.overall_usability_rating ?? null,
             hangar_number: candidate.hangar_number ?? key,
+            theft_worry_rating: candidate.theft_worry_rating ?? null,
+            waitlist_fairness_rating: candidate.waitlist_fairness_rating ?? null,
+            belongs_rating: candidate.belongs_rating ?? null,
+            fair_use_rating: candidate.fair_use_rating ?? null,
+            appearance_rating: candidate.appearance_rating ?? null,
+            perception_tags: candidate.perception_tags ?? null,
+            impact_tags: candidate.impact_tags ?? null,
           })),
         });
       } else {
+        const fallbackSafety =
+          typeof review.overall_safety_rating === 'number'
+            ? review.overall_safety_rating
+            : typeof review.theft_worry_rating === 'number'
+              ? review.theft_worry_rating
+              : undefined;
+
         result.push({
           id: review.id,
           lat: review.lat ?? undefined,
           lng: review.lng ?? undefined,
           texto: review.full_address ?? '-',
-          would_recommend: review.overall_safety_rating ?? undefined,
+          would_recommend: fallbackSafety,
           usability_rating: review.overall_usability_rating ?? undefined,
           uses_hangar: review.uses_hangar ?? null,
           hangar_number: review.hangar_number ?? null,
+          theft_worry_rating: review.theft_worry_rating ?? null,
+          waitlist_fairness_rating: review.waitlist_fairness_rating ?? null,
+          belongs_rating: review.belongs_rating ?? null,
+          fair_use_rating: review.fair_use_rating ?? null,
+          appearance_rating: review.appearance_rating ?? null,
+          perception_tags: review.perception_tags ?? null,
+          impact_tags: review.impact_tags ?? null,
+          connection_type: review.connection_type ?? null,
+          current_bike_storage: review.current_bike_storage ?? null,
+          stops_cycling: review.stops_cycling ?? null,
         });
       }
     });

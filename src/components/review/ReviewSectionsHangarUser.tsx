@@ -30,7 +30,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Community Vibe" subtitle="How the hangar fits the neighbourhood" icon={<UserGroupIcon className="h-6 w-6" />}>
+      <SectionCard title="Community Vibe" subtitle="How the hangar fits the neighbourhood" icon={<UserGroupIcon className="h-6 w-6 text-gray-500" />}>
           <div className="space-y-3">
             <RatingRow icon={<SparklesIcon className="h-5 w-5 text-black" />} label="Belonging" value={step2Data?.belongs_rating ?? null} />
             <RatingRow icon={<QueueListIcon className="h-5 w-5 text-black" />} label="Fair use" value={step2Data?.fair_use_rating ?? null} />
@@ -39,7 +39,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           <TagList title="Neighbours say…" tags={step2Data?.perception_tags} />
         </SectionCard>
 
-      <SectionCard title="Safety Check" subtitle="Confidence leaving a bike inside" icon={<ShieldCheckIcon className="h-6 w-6" />}>
+      <SectionCard title="Safety Check" subtitle="Confidence leaving a bike inside" icon={<ShieldCheckIcon className="h-6 w-6 text-gray-500" />}>
           <div className="space-y-3">
             <RatingRow icon={<SunIcon className="h-5 w-5 text-black" />} label="Daytime safety" value={step3Data?.daytime_safety_rating ?? null} />
             <RatingRow icon={<MoonIcon className="h-5 w-5 text-black" />} label="Night safety" value={step3Data?.nighttime_safety_rating ?? null} />
@@ -59,7 +59,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           <TagList title="Safety notes" tags={step3Data?.safety_tags} tone="warning" />
         </SectionCard>
 
-      <SectionCard title="Everyday Usability" subtitle="How easy it is to use the hangar" icon={<BoltIcon className="h-6 w-6" />}>
+      <SectionCard title="Everyday Usability" subtitle="How easy it is to use the hangar" icon={<BoltIcon className="h-6 w-6 text-gray-500" />}>
           <div className="space-y-3">
             <RatingRow icon={<LockClosedIcon className="h-5 w-5 text-black" />} label="Lock ease" value={step4Data?.lock_ease_rating ?? null} />
             <RatingRow icon={<ArrowsPointingOutIcon className="h-5 w-5 text-black" />} label="Space available" value={step4Data?.space_rating ?? null} />
@@ -69,7 +69,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           <TagList title="Usability notes" tags={step4Data?.usability_tags} />
         </SectionCard>
 
-      <SectionCard title="Maintenance & Support" subtitle="How quickly things get fixed" icon={<WrenchScrewdriverIcon className="h-6 w-6" />}>
+      <SectionCard title="Maintenance & Support" subtitle="How quickly things get fixed" icon={<WrenchScrewdriverIcon className="h-6 w-6 text-gray-500" />}>
           <div className="space-y-3">
             <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5 text-black" />} label="Easy to report" value={step5Data?.report_ease_rating ?? null} />
             <RatingRow icon={<BoltIcon className="h-5 w-5 text-black" />} label="Fix speed" value={step5Data?.fix_speed_rating ?? null} />

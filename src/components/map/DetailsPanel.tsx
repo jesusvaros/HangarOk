@@ -1,8 +1,9 @@
 import React from 'react';
 import type { PublicReview } from '../../services/supabase/publicReviews';
 import { Link } from 'react-router-dom';
-import { MapPinIcon, CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, LightBulbIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, LightBulbIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon, SparklesIcon, QueueListIcon, ExclamationTriangleIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
 import { umamiEventProps } from '../../utils/analytics';
+import { formatOptionLabel } from '../review/reviewFormatting';
 
 // Visual rating bar component
 const RatingBar = ({ value, maxValue = 5, color = 'rgb(74,94,50)' }: { value: number; maxValue?: number; color?: string }) => {
@@ -90,6 +91,8 @@ const getTagIcon = (tag: string) => {
     'someone_in_space': '🚲',
     'vandalism': '🔨',
     'good_at_fixing': '✅',
+    'waiting_too_long': '⏳',
+    'avoid_cycling': '🚳',
   };
   return iconMap[tag] || '•';
 };
@@ -119,6 +122,8 @@ const getTagLabel = (tag: string) => {
     'someone_in_space': 'Space occupied',
     'vandalism': 'Vandalism',
     'good_at_fixing': 'Good at fixing',
+    'waiting_too_long': 'Waiting too long',
+    'avoid_cycling': 'Avoids cycling',
   };
   return labelMap[tag] || tag.replace(/_/g, ' ');
 };
@@ -135,17 +140,50 @@ type Props = {
 };
 
 export default function DetailsPanel({ review, onClose, groupContext }: Props) {
-  const wr = typeof review?.overall_safety_rating === 'number' ? review.overall_safety_rating : undefined;
-  const headerClass = wr === undefined
+  const safetyForHeader =
+    typeof review?.overall_safety_rating === 'number'
+      ? review.overall_safety_rating
+      : typeof review?.theft_worry_rating === 'number'
+        ? review.theft_worry_rating
+        : typeof review?.waitlist_fairness_rating === 'number'
+          ? review.waitlist_fairness_rating
+          : undefined;
+  const headerClass = safetyForHeader === undefined
     ? 'bg-gray-600'
-    : wr > 3
+    : safetyForHeader > 3
       ? 'bg-green-600'
-      : wr < 3
+      : safetyForHeader < 3
         ? 'bg-red-600'
         : 'bg-gray-600';
   const isCurrentUser = review?.uses_hangar === true;
+  const isWaitingRider = review?.uses_hangar === false;
   const userIcon = isCurrentUser ? CheckBadgeIcon : ClockIcon;
   const userLabel = isCurrentUser ? 'Current User' : 'Waiting List / Nearby';
+  const theftRating = typeof review?.theft_worry_rating === 'number' ? review.theft_worry_rating : null;
+  const waitlistRating = typeof review?.waitlist_fairness_rating === 'number' ? review.waitlist_fairness_rating : null;
+  const communicationRating = typeof review?.communication_rating === 'number' ? review.communication_rating : null;
+  const fixSpeedRating = typeof review?.fix_speed_rating === 'number' ? review.fix_speed_rating : null;
+  const belongsRating = typeof review?.belongs_rating === 'number' ? review.belongs_rating : null;
+  const fairUseRating = typeof review?.fair_use_rating === 'number' ? review.fair_use_rating : null;
+  const appearanceRating = typeof review?.appearance_rating === 'number' ? review.appearance_rating : null;
+  const connectionLabel = formatOptionLabel(review?.connection_type ?? null);
+  const currentStorageLabel = formatOptionLabel(review?.current_bike_storage ?? null);
+  const stopsCyclingLabel = formatOptionLabel(review?.stops_cycling ?? null);
+  const communityNote = review?.community_feedback?.trim() ?? '';
+  const improvementNote = review?.improvement_feedback?.trim() ?? '';
+  const waitingCommunityRatings = [
+    belongsRating != null && { key: 'belonging', label: 'Belonging', value: belongsRating },
+    fairUseRating != null && { key: 'fair_use', label: 'Fair use', value: fairUseRating },
+    appearanceRating != null && { key: 'appearance', label: 'Appearance', value: appearanceRating },
+  ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
+  const waitingSafetyRatings = [
+    theftRating != null && { key: 'theft', label: 'Worry about theft', value: theftRating },
+  ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
+  const waitingAccessRatings = [
+    waitlistRating != null && { key: 'waitlist', label: 'Waitlist fairness', value: waitlistRating },
+    communicationRating != null && { key: 'communication', label: 'Communication', value: communicationRating },
+    fixSpeedRating != null && { key: 'fix_speed', label: 'Fix speed', value: fixSpeedRating },
+  ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
   const showNavigation = Boolean(groupContext && groupContext.total > 1);
   const navIndex = groupContext?.index ?? 0;
   const navTotal = groupContext?.total ?? 1;
@@ -224,7 +262,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
         <>
           <div className="flex-1 overflow-y-auto overflow-x-hidden p-3 space-y-2.5">
             {/* Overall Ratings - Radial Charts */}
-            {(review.overall_safety_rating || review.overall_usability_rating) && (
+            {!isWaitingRider && (review.overall_safety_rating || review.overall_usability_rating) && (
               <div className="bg-gradient-to-br from-gray-50 to-white rounded-lg p-3 border border-gray-200">
                 <div className="flex justify-around items-center gap-4">
                   {review.overall_safety_rating && (
@@ -245,10 +283,91 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
               </div>
             )}
 
+            {isWaitingRider && (
+              <div className="space-y-2">
+                {waitingCommunityRatings.length > 0 && (
+                  <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <SparklesIcon className="h-3.5 w-3.5" style={{ color: 'rgb(74,94,50)' }} />
+                      <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Community vibe</h4>
+                    </div>
+                    <div className="space-y-1.5">
+                      {waitingCommunityRatings.map(item => (
+                        <div key={item.key} className="flex items-center gap-1.5">
+                          <span className="text-[10px] text-gray-600 font-medium w-24 flex-shrink-0">{item.label}</span>
+                          <div className="flex-1 min-w-0">
+                            <RatingBar value={item.value} color="rgb(74,94,50)" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {waitingSafetyRatings.length > 0 && (
+                  <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <ExclamationTriangleIcon className="h-3.5 w-3.5" style={{ color: 'rgb(74,94,50)' }} />
+                      <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Safety outlook</h4>
+                    </div>
+                    <div className="space-y-1.5">
+                      {waitingSafetyRatings.map(item => (
+                        <div key={item.key} className="flex items-center gap-1.5">
+                          <span className="text-[10px] text-gray-600 font-medium w-24 flex-shrink-0">{item.label}</span>
+                          <div className="flex-1 min-w-0">
+                            <RatingBar value={item.value} color="rgb(74,94,50)" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {waitingAccessRatings.length > 0 && (
+                  <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <QueueListIcon className="h-3.5 w-3.5" style={{ color: 'rgb(74,94,50)' }} />
+                      <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Access & waitlist</h4>
+                    </div>
+                    <div className="space-y-1.5">
+                      {waitingAccessRatings.map(item => (
+                        <div key={item.key} className="flex items-center gap-1.5">
+                          <span className="text-[10px] text-gray-600 font-medium w-24 flex-shrink-0">{item.label}</span>
+                          <div className="flex-1 min-w-0">
+                            <RatingBar value={item.value} color="rgb(74,94,50)" />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {(connectionLabel || currentStorageLabel || stopsCyclingLabel) && (
+                  <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
+                    <div className="flex items-center gap-1.5 mb-2">
+                      <ChatBubbleLeftRightIcon className="h-3.5 w-3.5" style={{ color: 'rgb(74,94,50)' }} />
+                      <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Connection to hangar</h4>
+                    </div>
+                    <div className="space-y-1 text-[11px] text-gray-600">
+                      {connectionLabel && (
+                        <p><span className="font-semibold text-gray-700">Connection:</span> {connectionLabel}</p>
+                      )}
+                      {currentStorageLabel && (
+                        <p><span className="font-semibold text-gray-700">Stores bike:</span> {currentStorageLabel}</p>
+                      )}
+                      {stopsCyclingLabel && (
+                        <p><span className="font-semibold text-gray-700">Impact:</span> {stopsCyclingLabel}</p>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Detailed Ratings with Visual Bars */}
             <div className="space-y-2">
               {/* Safety Ratings */}
-              {(review.daytime_safety_rating || review.nighttime_safety_rating) && (
+              {!isWaitingRider && (review.daytime_safety_rating || review.nighttime_safety_rating) && (
                 <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
                   <div className="flex items-center gap-1.5 mb-2">
                     <div className="p-1 rounded" style={{ backgroundColor: 'rgba(74,94,50,0.1)' }}>
@@ -299,7 +418,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
               )}
 
               {/* Usability Ratings */}
-              {(review.lock_ease_rating || review.space_rating || review.lighting_rating || review.maintenance_rating) && (
+              {!isWaitingRider && (review.lock_ease_rating || review.space_rating || review.lighting_rating || review.maintenance_rating) && (
                 <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
                   <div className="flex items-center gap-1.5 mb-2">
                     <div className="p-1 rounded" style={{ backgroundColor: 'rgba(74,94,50,0.1)' }}>
@@ -390,6 +509,69 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
                       </span>
                     ))}
                   </div>
+                </div>
+              )}
+
+              {review.impact_tags && review.impact_tags.length > 0 && (
+                <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <div className="p-1 rounded" style={{ backgroundColor: 'rgba(74,94,50,0.1)' }}>
+                      <SparklesIcon className="h-3.5 w-3.5" style={{ color: 'rgb(74,94,50)' }} />
+                    </div>
+                    <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Cycling impact</h4>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {review.impact_tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium"
+                        style={{ backgroundColor: 'rgba(74,94,50,0.1)', color: 'rgb(74,94,50)' }}
+                      >
+                        <span className="text-xs">{getTagIcon(tag)}</span>
+                        <span>{getTagLabel(tag)}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {review.waitlist_tags && review.waitlist_tags.length > 0 && (
+                <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <div className="p-1 rounded" style={{ backgroundColor: 'rgba(74,94,50,0.1)' }}>
+                      <QueueListIcon className="h-3.5 w-3.5" style={{ color: 'rgb(74,94,50)' }} />
+                    </div>
+                    <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Waitlist experience</h4>
+                  </div>
+                  <div className="flex flex-wrap gap-1">
+                    {review.waitlist_tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-medium"
+                        style={{ backgroundColor: 'rgba(74,94,50,0.1)', color: 'rgb(74,94,50)' }}
+                      >
+                        <span className="text-xs">{getTagIcon(tag)}</span>
+                        <span>{getTagLabel(tag)}</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {(communityNote || improvementNote) && (
+                <div className="bg-white rounded-lg p-2.5 border shadow-sm space-y-2" style={{ borderColor: 'rgb(74,94,50)' }}>
+                  {communityNote && (
+                    <div>
+                      <h4 className="text-xs font-bold uppercase mb-1" style={{ color: 'rgb(74,94,50)' }}>Community notes</h4>
+                      <p className="text-[11px] text-gray-600 whitespace-pre-wrap">{communityNote}</p>
+                    </div>
+                  )}
+                  {improvementNote && (
+                    <div>
+                      <h4 className="text-xs font-bold uppercase mb-1" style={{ color: 'rgb(74,94,50)' }}>Feedback to council</h4>
+                      <p className="text-[11px] text-gray-600 whitespace-pre-wrap">{improvementNote}</p>
+                    </div>
+                  )}
                 </div>
               )}
 
