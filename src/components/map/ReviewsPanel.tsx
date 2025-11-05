@@ -94,12 +94,50 @@ const StarDisplay = ({ score }: { score: number }) => {
 const formatScoreValue = (value: number) =>
   Number.isInteger(value) ? value.toString() : value.toFixed(1);
 
-const ScoreBadge = ({ label, value }: { label: string; value: number }) => (
-  <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-semibold text-gray-700">
-    <span>{label}</span>
-    <span>{formatScoreValue(value)}</span>
-  </span>
-);
+type ScoreBadgeVariant = 'positive' | 'negative' | 'neutral';
+
+const SCORE_BADGE_STYLES: Record<ScoreBadgeVariant, { container: string; dot: string }> = {
+  positive: { container: 'bg-white text-slate-700 border border-slate-200', dot: 'bg-emerald-500' },
+  negative: { container: 'bg-white text-slate-700 border border-slate-200', dot: 'bg-rose-500' },
+  neutral: { container: 'bg-white text-slate-600 border border-slate-200', dot: 'bg-slate-400' },
+};
+
+const ScoreBadge = ({ label, value, variant = 'neutral' }: { label: string; value: number; variant?: ScoreBadgeVariant }) => {
+  const styles = SCORE_BADGE_STYLES[variant];
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold ${styles.container}`}>
+      <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} aria-hidden />
+      <span>{label}</span>
+      <span>{formatScoreValue(value)}</span>
+    </span>
+  );
+};
+
+type RatingTone = 'excellent' | 'average' | 'poor' | 'none';
+
+const getRatingTone = (score?: number | null): RatingTone => {
+  if (typeof score !== 'number' || Number.isNaN(score) || score <= 0) return 'none';
+  if (score >= 4) return 'excellent';
+  if (score <= 2.5) return 'poor';
+  return 'average';
+};
+
+const RATING_BADGE_STYLES: Record<RatingTone, { background: string; dot: string; text: string }> = {
+  excellent: { background: 'bg-white', dot: 'bg-emerald-500', text: 'text-slate-800' },
+  average: { background: 'bg-white', dot: 'bg-slate-400', text: 'text-slate-700' },
+  poor: { background: 'bg-white', dot: 'bg-rose-500', text: 'text-slate-800' },
+  none: { background: 'bg-white', dot: 'bg-slate-300', text: 'text-slate-500' },
+};
+
+const RatingBadge = ({ label, tone }: { label: string; tone: RatingTone }) => {
+  const styles = RATING_BADGE_STYLES[tone];
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-semibold ${styles.background} ${styles.text}`}>
+      <span className={`h-2 w-2 rounded-full ${styles.dot}`} aria-hidden />
+      <span>{label}</span>
+    </span>
+  );
+};
 
 type UsageKey = 'users' | 'waiting' | 'unknown';
 
@@ -115,55 +153,88 @@ const USAGE_STYLES: Record<
     categoryTitle: string;
     label: string;
     icon: typeof CheckBadgeIcon;
-    textClass: string;
-    accentClass: string;
-    badgeClass: string;
-    borderClass: string;
-    hoverClass: string;
-    focusRingClass: string;
+    iconWrapperClass: string;
+    categoryTextClass: string;
   }
 > = {
   users: {
     categoryTitle: 'Hangar riders',
     label: 'Hangar rider',
     icon: CheckBadgeIcon,
-    textClass: 'text-green-700',
-    accentClass: 'text-green-600',
-    badgeClass: 'bg-green-100 text-green-800 border border-green-200',
-    borderClass: 'border-green-200',
-    hoverClass: 'hover:bg-green-50',
-    focusRingClass: 'focus-visible:ring-green-500',
+    iconWrapperClass: 'bg-emerald-100 text-emerald-700',
+    categoryTextClass: 'text-slate-600',
   },
   waiting: {
     categoryTitle: 'Waiting & nearby riders',
     label: 'Waiting / nearby',
     icon: ClockIcon,
-    textClass: 'text-orange-700',
-    accentClass: 'text-orange-600',
-    badgeClass: 'bg-orange-100 text-orange-800 border border-orange-200',
-    borderClass: 'border-orange-200',
-    hoverClass: 'hover:bg-orange-50',
-    focusRingClass: 'focus-visible:ring-orange-500',
+    iconWrapperClass: 'bg-amber-100 text-amber-700',
+    categoryTextClass: 'text-slate-600',
   },
   unknown: {
     categoryTitle: 'Other riders',
     label: 'Usage unknown',
     icon: UserGroupIcon,
-    textClass: 'text-slate-600',
-    accentClass: 'text-slate-500',
-    badgeClass: 'bg-slate-100 text-slate-700 border border-slate-200',
-    borderClass: 'border-slate-200',
-    hoverClass: 'hover:bg-slate-50',
-    focusRingClass: 'focus-visible:ring-slate-500',
+    iconWrapperClass: 'bg-slate-200 text-slate-600',
+    categoryTextClass: 'text-slate-600',
   },
 };
 
 const WAITING_SCORE_LABELS: Record<string, string> = {
-  theft: 'Theft',
+  theft: 'Worry about theft',
   waitlist: 'Waitlist',
   belonging: 'Belonging',
   fair_use: 'Fair use',
   appearance: 'Appearance',
+};
+
+type WaitingMetric = { key: string; label: string; value: number };
+
+const selectWaitingMetricGroups = (metrics: WaitingMetric[]) => {
+  const positives = metrics
+    .filter(metric => metric.value >= 4)
+    .sort((a, b) => b.value - a.value);
+  const negatives = metrics
+    .filter(metric => metric.value <= 2.5)
+    .sort((a, b) => a.value - b.value);
+
+  return {
+    positives: positives.slice(0, 1),
+    negatives: negatives.slice(0, 1),
+  };
+};
+
+const WaitingMetricSummary: React.FC<{ metrics: WaitingMetric[] }> = ({ metrics }) => {
+  const { positives, negatives } = selectWaitingMetricGroups(metrics);
+
+  if (positives.length === 0 && negatives.length === 0) {
+    return <p className="text-[11px] text-slate-400 italic">No waiting rider scores yet</p>;
+  }
+
+  return (
+    <div className="space-y-2">
+      {negatives.length > 0 && (
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-600">Needs attention</p>
+          <div className="mt-1 flex flex-wrap gap-1.5">
+            {negatives.map(item => (
+              <ScoreBadge key={`neg-${item.key}`} label={item.label} value={item.value} variant="negative" />
+            ))}
+          </div>
+        </div>
+      )}
+      {positives.length > 0 && (
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-600">Riders like</p>
+          <div className="mt-1 flex flex-wrap gap-1.5">
+            {positives.map(item => (
+              <ScoreBadge key={`pos-${item.key}`} label={item.label} value={item.value} variant="positive" />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 interface ReviewsPanelProps {
@@ -182,19 +253,6 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
   selectedId,
 }) => {
   const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>({});
-
-  const definecolor = (recommendation: number) => {
-    if (!recommendation) {
-      return 'bg-gray-600';
-    }
-    if (recommendation > 3) {
-      return 'bg-green-600';
-    }
-    if (recommendation < 3) {
-      return 'bg-red-600';
-    }
-    return 'bg-gray-600';
-  };
 
   const toggleGroup = (groupId: string) => {
     setExpandedGroups((prev) => ({
@@ -233,33 +291,39 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
               typeof r.fair_use_rating === 'number' ? r.fair_use_rating : null;
             const appearanceScore =
               typeof r.appearance_rating === 'number' ? r.appearance_rating : null;
-            const waitingRatingItems = [
+            const waitingRatingItems: WaitingMetric[] = [
               theftScore != null && { key: 'theft', label: WAITING_SCORE_LABELS.theft, value: theftScore },
               waitlistScore != null && { key: 'waitlist', label: WAITING_SCORE_LABELS.waitlist, value: waitlistScore },
               belongingScore != null && { key: 'belonging', label: WAITING_SCORE_LABELS.belonging, value: belongingScore },
               fairUseScore != null && { key: 'fair_use', label: WAITING_SCORE_LABELS.fair_use, value: fairUseScore },
               appearanceScore != null && { key: 'appearance', label: WAITING_SCORE_LABELS.appearance, value: appearanceScore },
-            ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
-            const hasRating = isWaitingRider ? waitingRatingItems.length > 0 : score > 0;
-            const label = hasRating ? getRatingLabel(score) : 'No rating yet';
+            ].filter((item): item is WaitingMetric => Boolean(item));
+            const waitingHasInsights = waitingRatingItems.length > 0;
+            const hasRating = !isWaitingRider && score > 0;
+            const label = isWaitingRider
+              ? waitingHasInsights
+                ? 'Rider feedback'
+                : 'No rating yet'
+              : hasRating
+                ? getRatingLabel(score)
+                : 'No rating yet';
             const reviewCount = r.groupCount ?? r.groupedReviews?.length ?? 0;
-            const headerClass = definecolor(score);
             const isSelected = String(selectedId ?? '') === String(id);
-            const userIconColor = isGroup
-              ? 'text-blue-700'
+            const statusIconWrapper = isGroup
+              ? 'bg-amber-100 text-emerald-700'
               : isCurrentUser
-                ? 'text-green-700'
-                : 'text-orange-600';
-            const badgeTextColor = isGroup
-              ? 'text-blue-700'
+                ? 'bg-emerald-100 text-emerald-700'
+                : isWaitingRider
+                  ? 'bg-amber-100 text-amber-700'
+                  : 'bg-slate-200 text-slate-600';
+            const statusLabel = isGroup
+              ? 'Hangar reviews'
               : isCurrentUser
-                ? 'text-green-800'
-                : 'text-orange-700';
-            const badgeBackground = isGroup
-              ? 'bg-blue-50 border-blue-200'
-              : isCurrentUser
-                ? 'bg-green-50 border-green-200'
-                : 'bg-orange-50 border-orange-200';
+                ? 'Hangar rider'
+                : isWaitingRider
+                  ? 'Waiting rider'
+                  : 'Rider';
+            const ratingTone = hasRating ? getRatingTone(score) : 'none';
             const UserIcon = isGroup ? UserGroupIcon : isCurrentUser ? CheckBadgeIcon : ClockIcon;
             const expanded = expandedGroups[String(id)] ?? true;
             const toggleLabel = expanded ? 'Hide riders' : 'See riders';
@@ -267,7 +331,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
               <button
                 type="button"
                 onClick={() => toggleGroup(String(id))}
-                className="inline-flex items-center gap-1 rounded-md border border-blue-200 px-3 py-1.5 text-[11px] font-semibold text-blue-800 transition hover:bg-blue-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+                className="inline-flex items-center gap-1 rounded-md border border-amber-200 px-3 py-1.5 text-[11px] font-semibold text-amber-700 transition hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
               >
                 <span>{toggleLabel}</span>
                 <ChevronDownIcon
@@ -275,6 +339,21 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                 />
               </button>
             );
+            const cardClasses = [
+              'overflow-hidden',
+              'rounded-lg',
+              'border',
+              'bg-white',
+              'transition',
+              isGroup ? 'cursor-pointer' : 'cursor-default',
+            ];
+            if (isSelected) {
+              cardClasses.push('ring-2', 'ring-amber-400', 'bg-amber-50', 'shadow-md');
+            } else if (hoveredId === id) {
+              cardClasses.push('ring-1', 'ring-amber-300', 'shadow-md');
+            } else {
+              cardClasses.push('shadow-sm');
+            }
 
             const handleListClick = (event: React.MouseEvent<HTMLLIElement>) => {
               if (!isGroup) return;
@@ -288,68 +367,45 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                 onMouseEnter={() => setHoveredId(id)}
                 onMouseLeave={() => setHoveredId(null)}
                 onClick={handleListClick}
-                className={`overflow-hidden rounded-lg border bg-white transition ${
-                  hoveredId === id ? 'ring-2 ring-amber-300 shadow-md' : 'shadow-sm'
-                } ${isSelected ? 'ring-2 ring-green-600 bg-emerald-50' : ''} ${
-                  isGroup ? 'cursor-pointer' : 'cursor-default'
-                }`}
+                className={cardClasses.join(' ')}
               >
                 {isGroup ? (
                   <>
-                    <div className={`px-3 py-2 border-b ${badgeBackground}`}>
-                      <div className="flex items-start gap-2">
-                        <UserIcon className={`h-4 w-4 ${userIconColor}`} />
-                        <div className="flex-1 min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <span className={`text-[10px] font-semibold uppercase tracking-wide ${badgeTextColor}`}>
+                    <div className="px-3 py-3 border-b bg-white flex items-start gap-3">
+                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
+                          <UserIcon className="h-4 w-4" />
+                        </span>
+                        <div className="flex-1 min-w-0 space-y-1 flex justify-between ">
+                          <div className="flex flex-col">
+                            <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Hangar
                             </span>
-                            <span className="text-sm font-bold text-blue-900">
+                            <span className="text-sm font-semibold text-slate-800">
                               {r.hangar_number ?? 'Unknown'}
                             </span>
-                            {hasRating ? (
-                              <span
-                                className={`px-2 py-0.5 rounded text-xs font-bold ${headerClass} text-white ml-auto`}
-                              >
-                                {label}
-                              </span>
-                            ) : null}
                           </div>
-                          <span className="text-[11px] font-medium text-blue-700 block">
+
+                             <p className="text-xs text-slate-500">
                             {reviewCount} review{reviewCount === 1 ? '' : 's'} available
-                          </span>
-                        </div>
+                          </p>
+                          </div>   
                       </div>
-                    </div>
+               
 
                     <div className="px-3 py-3 space-y-3">
-                      <p className="text-xs text-gray-500 mb-1 line-clamp-2">{address}</p>
+                      <p className="text-xs text-slate-500 mb-1 line-clamp-2">{address}</p>
 
                       {hasRating ? (
-                        <div className="space-y-3">
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs font-semibold text-gray-700">Average safety</span>
-                              <StarDisplay score={score} />
-                            </div>
-                            {r.usability_rating && r.usability_rating > 0 ? (
-                              <div className="flex items-center justify-between">
-                                <span className="text-xs font-medium text-gray-600">Average usability</span>
-                                <StarDisplay score={r.usability_rating} />
-                              </div>
-                            ) : null}
-                          </div>
                           <div className="pt-1">{toggleButton}</div>
-                        </div>
                       ) : (
                         <div className="space-y-2">
-                          <p className="text-xs text-gray-400 italic">{label}</p>
+                          <p className="text-xs text-slate-400 italic">{label}</p>
                           <div className="pt-1">{toggleButton}</div>
                         </div>
                       )}
 
                       {!expanded ? (
-                        <p className="text-xs font-semibold text-blue-700">
+                        <p className="text-xs font-semibold text-slate-600">
                           Expand to compare all rider scores in this hangar.
                         </p>
                       ) : (
@@ -364,10 +420,12 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                             return (
                               <div key={usageKey} className="space-y-2">
                                 <div className="flex items-center gap-2">
-                                  {React.createElement(meta.icon, {
-                                    className: `h-4 w-4 ${meta.accentClass}`,
-                                  })}
-                                  <p className={`text-xs font-semibold uppercase tracking-wide ${meta.textClass}`}>
+                                  <span className={`flex h-7 w-7 items-center justify-center rounded-full ${meta.iconWrapperClass}`}>
+                                    {React.createElement(meta.icon, {
+                                      className: 'h-3.5 w-3.5',
+                                    })}
+                                  </span>
+                                  <p className={`text-xs font-semibold uppercase tracking-wide ${meta.categoryTextClass}`}>
                                     {meta.categoryTitle} · {members.length}
                                   </p>
                                 </div>
@@ -435,44 +493,34 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                             impact_tags: member.impact_tags ?? null,
                                           })
                                         }
-                                        className={`w-full rounded-lg border px-3 py-3 text-left transition focus:outline-none ${meta.borderClass} ${meta.hoverClass} ${meta.focusRingClass}`}
+                                        className="w-full rounded-lg border border-slate-200 px-3 py-3 text-left transition focus:outline-none hover:bg-amber-50 focus-visible:ring-2 focus-visible:ring-amber-400"
                                       >
                                         <div className="flex items-center justify-between">
                                           <div className="flex items-center gap-2">
-                                            {React.createElement(meta.icon, {
-                                              className: `h-4 w-4 ${meta.accentClass}`,
-                                            })}
-                                            <span
-                                              className={`text-xs font-semibold uppercase tracking-wide ${meta.textClass}`}
-                                            >
+                                            <span className={`flex h-6 w-6 items-center justify-center rounded-full ${meta.iconWrapperClass}`}>
+                                              {React.createElement(meta.icon, {
+                                                className: 'h-3.5 w-3.5',
+                                              })}
+                                            </span>
+                                            <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">
                                               {meta.label}
                                             </span>
                                           </div>
                                           <span
-                                            className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${meta.badgeClass}`}
+                                            className="inline-flex items-center gap-1 rounded-full border border-amber-200 px-2 py-0.5 text-[10px] font-semibold text-amber-700"
                                           >
                                             View review
                                           </span>
                                         </div>
-                                        <p className="mt-2 text-xs text-gray-600 line-clamp-2">{memberAddress}</p>
+                                        <p className="mt-2 text-xs text-slate-600 line-clamp-2">{memberAddress}</p>
                                         <div className="mt-3 space-y-1.5">
                                           {memberIsWaiting ? (
-                                            memberWaitingItems.length > 0 ? (
-                                              <div className="flex flex-wrap gap-1.5">
-                                                {memberWaitingItems.map(item => (
-                                                  <ScoreBadge key={item.key} label={item.label} value={item.value} />
-                                                ))}
-                                              </div>
-                                            ) : (
-                                              <p className="text-[11px] text-gray-400 italic">
-                                                No waiting rider scores yet
-                                              </p>
-                                            )
+                                            <WaitingMetricSummary metrics={memberWaitingItems} />
                                           ) : (
                                             <>
                                               {safetyScore ? (
                                                 <div className="flex items-center justify-between">
-                                                  <span className="text-xs font-medium text-gray-600">Safety</span>
+                                                  <span className="text-xs font-medium text-slate-600">Safety</span>
                                                   <StarDisplay score={safetyScore} />
                                                 </div>
                                               ) : (
@@ -482,7 +530,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                               )}
                                               {usabilityScore ? (
                                                 <div className="flex items-center justify-between">
-                                                  <span className="text-xs font-medium text-gray-600">Usability</span>
+                                                  <span className="text-xs font-medium text-slate-600">Usability</span>
                                                   <StarDisplay score={usabilityScore} />
                                                 </div>
                                               ) : null}
@@ -502,50 +550,43 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                   </>
                 ) : (
                   <>
-                    <div className={`px-3 py-2 border-b flex items-center justify-between ${badgeBackground}`}>
-                      <div className="flex items-center gap-2">
-                        <UserIcon className={`h-4 w-4 ${userIconColor}`} />
-                        <span className={`text-xs font-bold uppercase tracking-wide ${badgeTextColor}`}>
+                    <div className="px-3 py-3 border-b bg-white flex items-center gap-3">
+                      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
+                        <UserIcon className="h-4 w-4" />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
+                          {statusLabel}
+                        </p>
+                        <p className="text-sm font-semibold text-slate-800">
                           {r.hangar_number ? `Hangar ${r.hangar_number}` : 'Hangar'}
-                        </span>
+                        </p>
                       </div>
-                      {hasRating && (
-                        <div className={`px-2 py-0.5 rounded text-xs font-bold ${headerClass} text-white`}>
-                          {label}
-                        </div>
-                      )}
+                      {hasRating ? <RatingBadge label={label} tone={ratingTone} /> : null}
                     </div>
                     <button
                       type="button"
                       onClick={() => onSelect(r)}
-                      className="block w-full px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
+                      className="block w-full px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                     >
-                      <p className="mb-3 text-xs text-gray-500 line-clamp-2">{address}</p>
+                      <p className="mb-3 text-xs text-slate-500 line-clamp-2">{address}</p>
                       {isWaitingRider ? (
-                        waitingRatingItems.length > 0 ? (
-                          <div className="flex flex-wrap gap-1.5">
-                            {waitingRatingItems.map((item) => (
-                              <ScoreBadge key={item.key} label={item.label} value={item.value} />
-                            ))}
-                          </div>
-                        ) : (
-                          <p className="text-xs text-gray-400 italic">{label}</p>
-                        )
+                        <WaitingMetricSummary metrics={waitingRatingItems} />
                       ) : hasRating ? (
                         <div className="space-y-1.5">
                           <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-gray-600">Safety</span>
+                            <span className="text-xs font-medium text-slate-600">Safety</span>
                             <StarDisplay score={score} />
                           </div>
                           {r.usability_rating && r.usability_rating > 0 ? (
                             <div className="flex items-center justify-between">
-                              <span className="text-xs font-medium text-gray-600">Usability</span>
+                              <span className="text-xs font-medium text-slate-600">Usability</span>
                               <StarDisplay score={r.usability_rating} />
                             </div>
                           ) : null}
                         </div>
                       ) : (
-                        <p className="text-xs text-gray-400 italic">{label}</p>
+                        <p className="text-xs text-slate-400 italic">{label}</p>
                       )}
                     </button>
                   </>
