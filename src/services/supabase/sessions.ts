@@ -16,6 +16,18 @@ export async function createReviewSession(payload: { session_id: string; user_id
   }
   
   console.log('Review session created/retrieved:', data);
+
+  if (payload.user_id) {
+    try {
+      await client.rpc('update_review_session_user_by_token', {
+        p_session_token: payload.session_id,
+        p_user_id: payload.user_id,
+      });
+    } catch (linkError) {
+      console.error('Error linking review session to user during creation:', linkError);
+      // Do not throw – session creation succeeded and the link can be retried later
+    }
+  }
 }
 
 export async function getReviewSessionStatus(

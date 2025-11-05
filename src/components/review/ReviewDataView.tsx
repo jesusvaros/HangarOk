@@ -53,14 +53,14 @@ const buildQuickMetrics = (
   ]);
 
   const metrics = [
-    safetyAverage != null && { label: 'Overall safety', value: safetyAverage, icon: <ShieldCheckIcon className="h-5 w-5 text-[#E1F56E]" /> },
-    usabilityAverage != null && { label: 'Everyday usability', value: usabilityAverage, icon: <BoltIcon className="h-5 w-5 text-[#E1F56E]" /> },
+    safetyAverage != null && { label: 'Overall safety', value: safetyAverage, icon: <ShieldCheckIcon className="h-5 w-5 text-black" /> },
+    usabilityAverage != null && { label: 'Everyday usability', value: usabilityAverage, icon: <BoltIcon className="h-5 w-5 text-black" /> },
     supportAverage != null && {
       label: usesHangar ? 'Support & fixes' : 'Council responsiveness',
       value: supportAverage,
-      icon: <WrenchScrewdriverIcon className="h-5 w-5 text-[#E1F56E]" />,
+      icon: <WrenchScrewdriverIcon className="h-5 w-5 text-black" />,
     },
-    step3Data?.theft_worry_rating != null && { label: 'Worry about theft', value: step3Data.theft_worry_rating, icon: <ExclamationTriangleIcon className="h-5 w-5 text-[#E1F56E]" /> },
+    step3Data?.theft_worry_rating != null && { label: 'Worry about theft', value: step3Data.theft_worry_rating, icon: <ExclamationTriangleIcon className="h-5 w-5 text-black" /> },
   ];
 
   return metrics.filter(Boolean) as Array<{ label: string; value: number; icon: React.ReactNode }>;
@@ -73,8 +73,6 @@ const ReviewDataView: React.FC<Props> = ({ step1Data, step2Data, step3Data, step
   const currentStorageLabel = formatOptionLabel(step3Data?.current_bike_storage) ?? null;
   const impactLabel = step4Data?.stops_cycling ? formatOptionLabel(step4Data.stops_cycling) : null;
   const connectionLabel = step1Data?.connection_type ? formatOptionLabel(step1Data.connection_type) : null;
-  const quickMetrics = buildQuickMetrics(step3Data, step4Data, step5Data, usesHangar);
-
   return (
     <div className="lg:grid lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] lg:gap-8">
       <ReviewInfoSidebar
@@ -85,25 +83,8 @@ const ReviewDataView: React.FC<Props> = ({ step1Data, step2Data, step3Data, step
 
       <div className="space-y-6">
 
-        {quickMetrics.length > 0 && (
-          <div className="rounded-3xl border border-gray-100 bg-white p-5 shadow-sm ring-1 ring-gray-100/50">
-            <div className="mb-4 flex items-start gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#E1F56E]/30 text-[#3B4C28]">
-                <SparklesIcon className="h-5 w-5" />
-              </div>
-              <div>
-                <h3 className="text-sm font-semibold text-gray-900">At a glance</h3>
-                <p className="text-xs text-gray-500">Key scores from this review</p>
-              </div>
-            </div>
-            <div className="space-y-3">
-              {quickMetrics.map(metric => (
-                <RatingRow key={metric.label} icon={metric.icon} label={metric.label} value={metric.value} />
-              ))}
-            </div>
-          </div>
-        )}
-
+        <ReviewRiderOpinions entries={feedbackEntries} />
+        
         {usesHangar ? (
           <ReviewSectionsHangarUser
             step2Data={step2Data}
@@ -123,7 +104,6 @@ const ReviewDataView: React.FC<Props> = ({ step1Data, step2Data, step3Data, step
           />
         )}
 
-        <ReviewRiderOpinions entries={feedbackEntries} />
       </div>
     </div>
   );

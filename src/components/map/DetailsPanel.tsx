@@ -1,7 +1,7 @@
 import React from 'react';
 import type { PublicReview } from '../../services/supabase/publicReviews';
 import { Link } from 'react-router-dom';
-import { MapPinIcon, CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, LightBulbIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, LightBulbIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { umamiEventProps } from '../../utils/analytics';
 
 // Visual rating bar component
@@ -126,9 +126,15 @@ const getTagLabel = (tag: string) => {
 type Props = {
   review: PublicReview | null;
   onClose?: () => void;
+  groupContext?: {
+    index: number;
+    total: number;
+    onSelectIndex: (index: number) => void;
+    hangarLabel?: string;
+  };
 };
 
-export default function DetailsPanel({ review, onClose }: Props) {
+export default function DetailsPanel({ review, onClose, groupContext }: Props) {
   const wr = typeof review?.overall_safety_rating === 'number' ? review.overall_safety_rating : undefined;
   const headerClass = wr === undefined
     ? 'bg-gray-600'
@@ -140,6 +146,18 @@ export default function DetailsPanel({ review, onClose }: Props) {
   const isCurrentUser = review?.uses_hangar === true;
   const userIcon = isCurrentUser ? CheckBadgeIcon : ClockIcon;
   const userLabel = isCurrentUser ? 'Current User' : 'Waiting List / Nearby';
+  const showNavigation = Boolean(groupContext && groupContext.total > 1);
+  const navIndex = groupContext?.index ?? 0;
+  const navTotal = groupContext?.total ?? 1;
+  const displayHangarNumber = review?.hangar_number ?? groupContext?.hangarLabel ?? null;
+  const goToPrevious = () => {
+    if (!groupContext) return;
+    groupContext.onSelectIndex(Math.max(0, groupContext.index - 1));
+  };
+  const goToNext = () => {
+    if (!groupContext) return;
+    groupContext.onSelectIndex(Math.min(groupContext.total - 1, groupContext.index + 1));
+  };
 
   return (
     <div className="flex flex-col h-full max-h-[80vh] md:max-h-[45vh] bg-white">
@@ -150,7 +168,7 @@ export default function DetailsPanel({ review, onClose }: Props) {
             {React.createElement(userIcon, { className: 'h-4 w-4 text-white' })}
             <h3 className="text-xs font-semibold">{userLabel}</h3>
           </div>
-          {review && (
+          {onClose && (
             <button
               type="button"
               aria-label="Close details"
@@ -163,12 +181,39 @@ export default function DetailsPanel({ review, onClose }: Props) {
           )}
         </div>
         {/* Location in header */}
-        {(review?.full_address || review?.hangar_number) && (
+        {(review?.full_address || displayHangarNumber) && (
           <div className="flex items-start gap-1 text-white/90">
             <MapPinIcon className="h-3 w-3 flex-shrink-0 mt-0.5" />
             <div className="flex flex-col leading-tight">
               {review?.full_address && <p className="text-xs truncate">{review.full_address}</p>}
-              {review?.hangar_number && <p className="text-xs font-semibold">Hangar {review.hangar_number}</p>}
+              {displayHangarNumber && <p className="text-xs font-semibold">Hangar {displayHangarNumber}</p>}
+            </div>
+          </div>
+        )}
+        {showNavigation && (
+          <div className="mt-3 flex items-center justify-between text-[11px] text-white/80">
+            <span className="font-medium">
+              Review {navIndex + 1} of {navTotal}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                aria-label="Previous review in this hangar"
+                onClick={goToPrevious}
+                disabled={navIndex <= 0}
+                className="inline-flex items-center justify-center rounded-md border border-white/30 bg-white/10 px-2 py-1 text-xs font-semibold hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 disabled:cursor-not-allowed"
+              >
+                <ChevronLeftIcon className="h-3.5 w-3.5" />
+              </button>
+              <button
+                type="button"
+                aria-label="Next review in this hangar"
+                onClick={goToNext}
+                disabled={navIndex >= navTotal - 1}
+                className="inline-flex items-center justify-center rounded-md border border-white/30 bg-white/10 px-2 py-1 text-xs font-semibold hover:bg-white/20 disabled:opacity-40 disabled:hover:bg-white/10 disabled:cursor-not-allowed"
+              >
+                <ChevronRightIcon className="h-3.5 w-3.5" />
+              </button>
             </div>
           </div>
         )}

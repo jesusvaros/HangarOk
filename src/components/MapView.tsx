@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MapContainer, Marker, ZoomControl } from 'react-leaflet';
 import MapLibreLayer from './map/MapLibreLayer';
@@ -7,7 +7,7 @@ import type { Map as LeafletMap } from 'leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { AddressResult } from './ui/AddressAutocomplete';
-import ReviewsPanel from './map/ReviewsPanel';
+import ReviewsPanel, { type ReviewListItem } from './map/ReviewsPanel';
 import SearchBar from './map/SearchBar';
 import { getPublicReviews, type PublicReview } from '../services/supabase/publicReviews';
 import { geocodingService } from './ui/address/geocodingService';
@@ -71,6 +71,12 @@ const MapView = ({
   const [publicReviews, setPublicReviews] = useState<PublicReview[]>(reviews ?? []);
   const [visiblePublic, setVisiblePublic] = useState<PublicReview[]>(reviews ?? []);
   const [selectedReview, setSelectedReview] = useState<PublicReview | null>(null);
+  const [groupSelection, setGroupSelection] = useState<{
+    hangarKey: string;
+    hangarLabel: string;
+    reviews: PublicReview[];
+    index: number;
+  } | null>(null);
   const [mobileListOpen, setMobileListOpen] = useState(false);
 
   // Center/zoom state used with SetViewOnChange to avoid remounts
@@ -95,6 +101,176 @@ const MapView = ({
     iconSize: [16, 16],
     iconAnchor: [8, 8],
   });
+
+  const groupedListItems = useMemo<ReviewListItem[]>(() => {
+    if (!visiblePublic.length) return [];
+
+    const hangarGroups = new Map<string, PublicReview[]>();
+    visiblePublic.forEach(review => {
+      const key = review.hangar_number?.trim();
+      if (!key) return;
+      const existing = hangarGroups.get(key) ?? [];
+      existing.push(review);
+      hangarGroups.set(key, existing);
+    });
+
+    const processedHangars = new Set<string>();
+    const result: ReviewListItem[] = [];
+
+    visiblePublic.forEach(review => {
+      const key = review.hangar_number?.trim();
+      const group = key ? hangarGroups.get(key) ?? [] : [];
+      if (key && group.length > 1) {
+        if (processedHangars.has(key)) return;
+        processedHangars.add(key);
+
+        const safetyScores = group
+          .map(candidate =>
+            typeof candidate.overall_safety_rating === 'number' ? candidate.overall_safety_rating : null
+          )
+          .filter((score): score is number => score != null);
+        const usabilityScores = group
+          .map(candidate =>
+            typeof candidate.overall_usability_rating === 'number' ? candidate.overall_usability_rating : null
+          )
+          .filter((score): score is number => score != null);
+
+        const averageSafety =
+          safetyScores.length > 0
+            ? safetyScores.reduce((sum, score) => sum + score, 0) / safetyScores.length
+            : undefined;
+        const averageUsability =
+          usabilityScores.length > 0
+            ? usabilityScores.reduce((sum, score) => sum + score, 0) / usabilityScores.length
+            : undefined;
+
+        const primaryReview = group.find(
+          candidate => typeof candidate.full_address === 'string' && candidate.full_address.length > 0
+        );
+        const representative = group[0];
+
+        result.push({
+          id: `group-${key}`,
+          lat: representative?.lat ?? undefined,
+          lng: representative?.lng ?? undefined,
+          texto: primaryReview?.full_address ?? `Hangar ${key}`,
+          would_recommend: averageSafety,
+          usability_rating: averageUsability,
+          uses_hangar: null,
+          hangar_number: key,
+          groupCount: group.length,
+          groupedIds: group.map(candidate => candidate.id),
+          groupedReviews: group.map(candidate => ({
+            id: candidate.id,
+            full_address: candidate.full_address ?? null,
+            uses_hangar: candidate.uses_hangar ?? null,
+            overall_safety_rating: candidate.overall_safety_rating ?? null,
+            overall_usability_rating: candidate.overall_usability_rating ?? null,
+            hangar_number: candidate.hangar_number ?? key,
+          })),
+        });
+      } else {
+        result.push({
+          id: review.id,
+          lat: review.lat ?? undefined,
+          lng: review.lng ?? undefined,
+          texto: review.full_address ?? '-',
+          would_recommend: review.overall_safety_rating ?? undefined,
+          usability_rating: review.overall_usability_rating ?? undefined,
+          uses_hangar: review.uses_hangar ?? null,
+          hangar_number: review.hangar_number ?? null,
+        });
+      }
+    });
+
+    return result;
+  }, [visiblePublic]);
+
+  const normalizeHangarNumber = (value?: string | null) => (value ?? '').trim();
+
+  const openGroupForHangar = (hangarKey: string, preferredId?: string | number) => {
+    if (!hangarKey) return;
+    const related = visiblePublic.filter(
+      candidate => normalizeHangarNumber(candidate.hangar_number) === hangarKey
+    );
+    if (related.length === 0) return;
+    const label =
+      related.find(candidate => typeof candidate.hangar_number === 'string')?.hangar_number ??
+      hangarKey;
+    const initialIndex =
+      preferredId !== undefined
+        ? related.findIndex(candidate => String(candidate.id) === String(preferredId))
+        : 0;
+    const index = initialIndex >= 0 ? initialIndex : 0;
+    setGroupSelection({
+      hangarKey,
+      hangarLabel: label,
+      reviews: related,
+      index,
+    });
+    setSelectedReview(related[index]);
+  };
+
+  const handleSelectSingleReview = (review: PublicReview | null) => {
+    if (!review) {
+      setSelectedReview(null);
+      setGroupSelection(null);
+      return;
+    }
+
+    setSelectedReview(review);
+
+    const key = normalizeHangarNumber(review.hangar_number);
+    if (!key) {
+      setGroupSelection(null);
+      return;
+    }
+
+    const related = visiblePublic.filter(
+      candidate => normalizeHangarNumber(candidate.hangar_number) === key
+    );
+    if (related.length > 1) {
+      const index = related.findIndex(candidate => String(candidate.id) === String(review.id));
+      setGroupSelection({
+        hangarKey: key,
+        hangarLabel: review.hangar_number ?? key,
+        reviews: related,
+        index: index >= 0 ? index : 0,
+      });
+    } else {
+      setGroupSelection(null);
+    }
+  };
+
+  const handleGroupIndexChange = (nextIndex: number) => {
+    setGroupSelection(prev => {
+      if (!prev) return prev;
+      if (prev.reviews.length === 0) return null;
+      const clamped = Math.max(0, Math.min(nextIndex, prev.reviews.length - 1));
+      if (clamped === prev.index) return prev;
+      const nextReview = prev.reviews[clamped];
+      if (!nextReview) return prev;
+      setSelectedReview(nextReview);
+      return {
+        ...prev,
+        index: clamped,
+      };
+    });
+  };
+
+  const selectedListId: string | number | null = groupSelection
+    ? `group-${groupSelection.hangarKey}`
+    : selectedReview?.id ?? null;
+
+  const detailsGroupContext =
+    groupSelection && groupSelection.reviews.length > 1
+      ? {
+          index: groupSelection.index,
+          total: groupSelection.reviews.length,
+          hangarLabel: groupSelection.hangarLabel,
+          onSelectIndex: handleGroupIndexChange,
+        }
+      : undefined;
 
   // Initialize map center on mount with priority: override -> query params -> localStorage -> geolocation -> default
   useEffect(() => {
@@ -265,25 +441,29 @@ const MapView = ({
             <aside className="hidden md:flex md:flex-col">
               <div className="h-[80vh]">
                 <ReviewsPanel
-                  reviews={visiblePublic.map(r => ({
-                    id: r.id,
-                    lat: r.lat ?? undefined,
-                    lng: r.lng ?? undefined,
-                    texto: r.full_address ?? '-',
-                    comment: undefined,
-                    would_recommend: r.overall_safety_rating ?? undefined,
-                    usability_rating: r.overall_usability_rating ?? undefined,
-                    uses_hangar: r.uses_hangar ?? null,
-                    hangar_number: r.hangar_number ?? null,
-                  }))}
+                  reviews={groupedListItems}
                   hoveredId={hoveredId}
                   setHoveredId={setHoveredId}
-                  selectedId={selectedReview?.id ?? null}
-                  onSelect={r => {
-                    const match = publicReviews.find(x => String(x.id) === String(r.id));
+                  selectedId={selectedListId}
+                  onSelect={item => {
+                    const isGroup = Boolean(item.groupCount && item.groupCount > 1 && item.hangar_number);
+                    trackUmamiEvent('map:list-select', {
+                      hasSafetyRating: isGroup
+                        ? Boolean(item.would_recommend)
+                        : Boolean(
+                            publicReviews.find(x => String(x.id) === String(item.id))?.overall_safety_rating
+                          ),
+                      grouped: isGroup,
+                    });
+
+                    if (isGroup && item.hangar_number) {
+                      openGroupForHangar(normalizeHangarNumber(item.hangar_number));
+                      return;
+                    }
+
+                    const match = publicReviews.find(x => String(x.id) === String(item.id));
                     if (match) {
-                      trackUmamiEvent('map:list-select', { hasSafetyRating: Boolean(match.overall_safety_rating) });
-                      setSelectedReview(match);
+                      handleSelectSingleReview(match);
                     }
                   }}
                 />
@@ -351,7 +531,7 @@ const MapView = ({
                   />
                   <CloseOnMove
                     onMove={() => {
-                      setSelectedReview(null);
+                      handleSelectSingleReview(null);
                       setHoveredId(null);
                       setSearchValue('');
                       setMobileListOpen(false);
@@ -371,8 +551,22 @@ const MapView = ({
                     reviews={publicReviews}
                     selectedId={selectedReview?.id ?? null}
                     onSelect={(rev: PublicReview) => {
-                      trackUmamiEvent('map:marker-select', { hasSafetyRating: Boolean(rev.overall_safety_rating) });
-                      setSelectedReview(rev);
+                      const hangarKey = normalizeHangarNumber(rev.hangar_number);
+                      const relatedInView = hangarKey
+                        ? visiblePublic.filter(
+                            candidate => normalizeHangarNumber(candidate.hangar_number) === hangarKey
+                          )
+                        : [];
+                      trackUmamiEvent('map:marker-select', {
+                        hasSafetyRating: Boolean(rev.overall_safety_rating),
+                        grouped: relatedInView.length > 1,
+                      });
+
+                      if (hangarKey && relatedInView.length > 1) {
+                        openGroupForHangar(hangarKey, rev.id);
+                      } else {
+                        handleSelectSingleReview(rev);
+                      }
                       setMobileListOpen(false);
                     }}
                   />
@@ -402,8 +596,9 @@ const MapView = ({
                       <DetailsPanel
                         review={selectedReview}
                         onClose={() => {
-                          setSelectedReview(null);
+                          handleSelectSingleReview(null);
                         }}
+                        groupContext={detailsGroupContext}
                       />
                   
                   </div>
@@ -421,8 +616,9 @@ const MapView = ({
                         <DetailsPanel
                           review={selectedReview}
                           onClose={() => {
-                            setSelectedReview(null);
+                            handleSelectSingleReview(null);
                           }}
+                          groupContext={detailsGroupContext}
                         />
                       </motion.div>
                     </div>
@@ -458,25 +654,33 @@ const MapView = ({
                       </div>
                       <div className="flex-1 overflow-auto">
                         <ReviewsPanel
-                          reviews={visiblePublic.map(r => ({
-                            id: r.id,
-                            lat: r.lat ?? undefined,
-                            lng: r.lng ?? undefined,
-                            texto: r.full_address ?? '-',
-                            comment: undefined,
-                            would_recommend: r.overall_safety_rating ?? undefined,
-                            usability_rating: r.overall_usability_rating ?? undefined,
-                            uses_hangar: r.uses_hangar ?? null,
-                            hangar_number: r.hangar_number ?? null,
-                          }))}
+                          reviews={groupedListItems}
                           hoveredId={hoveredId}
                           setHoveredId={setHoveredId}
-                          selectedId={selectedReview?.id ?? null}
-                          onSelect={r => {
-                            const match = publicReviews.find(x => String(x.id) === String(r.id));
-                            if (match) {
-                              trackUmamiEvent('map:list-select', { hasSafetyRating: Boolean(match.overall_safety_rating) });
-                              setSelectedReview(match);
+                          selectedId={selectedListId}
+                          onSelect={item => {
+                            const isGroup = Boolean(
+                              item.groupCount && item.groupCount > 1 && item.hangar_number
+                            );
+                            trackUmamiEvent('map:list-select', {
+                              hasSafetyRating: isGroup
+                                ? Boolean(item.would_recommend)
+                                : Boolean(
+                                    publicReviews.find(x => String(x.id) === String(item.id))
+                                      ?.overall_safety_rating
+                                  ),
+                              grouped: isGroup,
+                            });
+
+                            if (isGroup && item.hangar_number) {
+                              openGroupForHangar(normalizeHangarNumber(item.hangar_number));
+                            } else {
+                              const match = publicReviews.find(
+                                x => String(x.id) === String(item.id)
+                              );
+                              if (match) {
+                                handleSelectSingleReview(match);
+                              }
                             }
                             setMobileListOpen(false);
                           }}

@@ -14,7 +14,7 @@ export const RatingRow = ({ icon, label, value, accent = ACCENT }: RatingRowProp
 
   return (
     <div className="flex items-center gap-3">
-      <div className="flex h-9 w-9 items-center justify-center rounded-lg" style={{ backgroundColor: 'rgba(74,94,50,0.08)', color: accent }}>
+      <div className="flex items-center justify-center text-black">
         {icon}
       </div>
       <div className="flex-1">
