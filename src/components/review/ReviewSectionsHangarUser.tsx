@@ -47,7 +47,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           </div>
           <BooleanSignal
             label="Has their bike been messed with?"
-            value={step3Data?.bike_messed_with ?? null}
+            value={!step3Data?.bike_messed_with}
             positive={{ text: 'No issues reported', icon: '✅' }}
             negative={{ text: 'Yes, reported issues', icon: '⚠️' }}
           />
