@@ -550,7 +550,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                   </>
                 ) : (
                   <>
-                    <div className="px-3 py-3 border-b bg-white flex items-center gap-3">
+                    <div className="px-3 py-3 border-b bg-white flex items-center gap-3 cursor-pointer" onClick={() => onSelect(r)} >
                       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
                         <UserIcon className="h-4 w-4" />
                       </span>
@@ -566,7 +566,6 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                     </div>
                     <button
                       type="button"
-                      onClick={() => onSelect(r)}
                       className="block w-full px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                     >
                       <p className="mb-3 text-xs text-slate-500 line-clamp-2">{address}</p>

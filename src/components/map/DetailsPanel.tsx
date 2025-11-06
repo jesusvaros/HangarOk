@@ -1,7 +1,7 @@
 import React from 'react';
 import type { PublicReview } from '../../services/supabase/publicReviews';
 import { Link } from 'react-router-dom';
-import { CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, LightBulbIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon, SparklesIcon, QueueListIcon, ExclamationTriangleIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon, SparklesIcon, QueueListIcon, ExclamationTriangleIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { umamiEventProps } from '../../utils/analytics';
 
 // Visual rating bar component
@@ -52,6 +52,13 @@ const getTagIcon = (tag: string) => {
     'good_at_fixing': '✅',
     'waiting_too_long': '⏳',
     'avoid_cycling': '🚳',
+    'insurance_no_cover': '🛡️',
+    'police_dont_care': '🚓',
+    'no_clear_contact': '☎️',
+    'no_idea_position': '🧭',
+    'no_one_responsible': '🙅',
+    'blends_in': '🫥',
+    'more_hangars_needed': '➕',
   };
   return iconMap[tag] || '•';
 };
@@ -83,6 +90,13 @@ const getTagLabel = (tag: string) => {
     'good_at_fixing': 'Good at fixing',
     'waiting_too_long': 'Waiting too long',
     'avoid_cycling': 'Avoids cycling',
+    'insurance_no_cover': 'Insurance no cover',
+    'police_dont_care': "Police don't care",
+    'no_clear_contact': 'No clear contact',
+    'no_idea_position': 'No idea where it is',
+    'no_one_responsible': 'No one responsible',
+    'blends_in': 'Blends in',
+    'more_hangars_needed': 'More hangars needed',
   };
   return labelMap[tag] || tag.replace(/_/g, ' ');
 };
@@ -102,16 +116,12 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
   const isCurrentUser = review?.uses_hangar === true;
   const isWaitingRider = review?.uses_hangar === false;
   const isGroupedView = Boolean(groupContext && groupContext.total > 1);
-  const StatusIcon = isGroupedView
-    ? UserGroupIcon
-    : isCurrentUser
+  const StatusIcon = isCurrentUser
       ? CheckBadgeIcon
       : isWaitingRider
         ? ClockIcon
         : UserGroupIcon;
-  const statusIconWrapper = isGroupedView
-    ? 'bg-amber-100 text-amber-700'
-    : isCurrentUser
+  const statusIconWrapper = isCurrentUser
       ? 'bg-emerald-100 text-emerald-700'
       : isWaitingRider
         ? 'bg-amber-100 text-amber-700'
@@ -367,24 +377,6 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
                         <span className="text-[10px] text-gray-600 font-medium w-10 flex-shrink-0">Space</span>
                         <div className="flex-1 min-w-0">
                           <RatingBar value={review.space_rating} color="rgb(74,94,50)" />
-                        </div>
-                      </div>
-                    )}
-                    {review.lighting_rating && (
-                      <div className="flex items-center gap-1.5">
-                        <LightBulbIcon className="h-3 w-3 flex-shrink-0" style={{ color: 'rgb(74,94,50)' }} />
-                        <span className="text-[10px] text-gray-600 font-medium w-10 flex-shrink-0">Light</span>
-                        <div className="flex-1 min-w-0">
-                          <RatingBar value={review.lighting_rating} color="rgb(74,94,50)" />
-                        </div>
-                      </div>
-                    )}
-                    {review.maintenance_rating && (
-                      <div className="flex items-center gap-1.5">
-                        <WrenchScrewdriverIcon className="h-3 w-3 flex-shrink-0" style={{ color: 'rgb(74,94,50)' }} />
-                        <span className="text-[10px] text-gray-600 font-medium w-10 flex-shrink-0">Maint</span>
-                        <div className="flex-1 min-w-0">
-                          <RatingBar value={review.maintenance_rating} color="rgb(74,94,50)" />
                         </div>
                       </div>
                     )}
