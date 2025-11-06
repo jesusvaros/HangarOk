@@ -3,14 +3,14 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapPinIcon, HomeModernIcon, ShareIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
-import type { Step3Data } from './reviewStepTypes';
+import type { Step3Data, Step5Data } from './reviewStepTypes';
 import { ACCENT, average, formatAddress, formatOptionLabel, HOME_TYPE_LABELS, CONNECTION_TYPE_LABELS } from './reviewFormatting';
-import { svgToIcon } from '../map/svgIcon';
-import { faceBubbleSVG } from '../map/heroPin';
+import { createRatingFaceIcon } from '../map/ratingFaceIcon';
 
 type ReviewInfoSidebarProps = {
   step1Data: AddressStepData | null;
   step3Data: Step3Data | null;
+  step5Data: Step5Data | null;
   usesHangar: boolean;
 };
 
@@ -40,6 +40,7 @@ const InfoField = ({
 const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
   step1Data,
   step3Data,
+  step5Data,
   usesHangar,
 }) => {
   const coordinates = step1Data?.hangar_location?.coordinates;
@@ -55,22 +56,12 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
     step3Data?.daytime_safety_rating ?? null,
     step3Data?.nighttime_safety_rating ?? null,
   ]);
+  const waitlistFairness = step5Data?.waitlist_fairness_rating ?? null;
+  const iconRating = usesHangar ? safetyAverage : waitlistFairness;
   const markerIcon = useMemo(() => {
     if (!isBrowser) return null;
-    const rating = typeof safetyAverage === 'number' ? safetyAverage : null;
-    const color =
-      rating == null
-        ? '#4B5563'
-        : rating > 3
-          ? '#22C55E'
-          : rating < 3
-            ? '#EF4444'
-            : '#4B5563';
-    const rounded = rating == null ? 3 : Math.round(rating);
-    const face = rounded <= 2 ? 'sad' : rounded === 3 ? 'neutral' : 'happy';
-    const size = 44;
-    return svgToIcon(faceBubbleSVG({ fill: color, stroke: 'none', size, face }), [size, size], [size / 2, size]);
-  }, [isBrowser, safetyAverage]);
+    return createRatingFaceIcon({ rating: iconRating, size: 44 });
+  }, [isBrowser, iconRating]);
 
   const homeTypeLabel = formatOptionLabel(step1Data?.home_type) ?? HOME_TYPE_LABELS[step1Data?.home_type ?? ''] ?? null;
   const connectionLabel = formatOptionLabel(step1Data?.connection_type) ?? CONNECTION_TYPE_LABELS[step1Data?.connection_type ?? ''] ?? null;

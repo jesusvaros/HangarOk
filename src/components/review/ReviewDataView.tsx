@@ -40,6 +40,7 @@ const ReviewDataView: React.FC<Props> = ({ step1Data, step2Data, step3Data, step
       <ReviewInfoSidebar
         step1Data={step1Data}
         step3Data={step3Data}
+        step5Data={step5Data}
         usesHangar={usesHangar}
       />
 

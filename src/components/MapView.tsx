@@ -117,6 +117,19 @@ const MapView = ({
     const processedHangars = new Set<string>();
     const result: ReviewListItem[] = [];
 
+    const resolveRatingValue = (candidate: PublicReview): number | null => {
+      if (candidate.uses_hangar === false) {
+        if (typeof candidate.waitlist_fairness_rating === 'number') return candidate.waitlist_fairness_rating;
+        if (typeof candidate.overall_safety_rating === 'number') return candidate.overall_safety_rating;
+        if (typeof candidate.theft_worry_rating === 'number') return candidate.theft_worry_rating;
+        return null;
+      }
+      if (typeof candidate.overall_safety_rating === 'number') return candidate.overall_safety_rating;
+      if (typeof candidate.theft_worry_rating === 'number') return candidate.theft_worry_rating;
+      if (typeof candidate.waitlist_fairness_rating === 'number') return candidate.waitlist_fairness_rating;
+      return null;
+    };
+
     visiblePublic.forEach(review => {
       const key = review.hangar_number?.trim();
       const group = key ? hangarGroups.get(key) ?? [] : [];
@@ -124,16 +137,8 @@ const MapView = ({
         if (processedHangars.has(key)) return;
         processedHangars.add(key);
 
-        const safetyScores = group
-          .map(candidate =>
-            typeof candidate.overall_safety_rating === 'number'
-              ? candidate.overall_safety_rating
-              : typeof candidate.theft_worry_rating === 'number'
-                ? candidate.theft_worry_rating
-                : typeof candidate.waitlist_fairness_rating === 'number'
-                  ? candidate.waitlist_fairness_rating
-                  : null
-          )
+        const ratingScores = group
+          .map(candidate => resolveRatingValue(candidate))
           .filter((score): score is number => score != null);
         const usabilityScores = group
           .map(candidate =>
@@ -141,9 +146,9 @@ const MapView = ({
           )
           .filter((score): score is number => score != null);
 
-        const averageSafety =
-          safetyScores.length > 0
-            ? safetyScores.reduce((sum, score) => sum + score, 0) / safetyScores.length
+        const averageRating =
+          ratingScores.length > 0
+            ? ratingScores.reduce((sum, score) => sum + score, 0) / ratingScores.length
             : undefined;
         const averageUsability =
           usabilityScores.length > 0
@@ -160,7 +165,7 @@ const MapView = ({
           lat: representative?.lat ?? undefined,
           lng: representative?.lng ?? undefined,
           texto: primaryReview?.full_address ?? `Hangar ${key}`,
-          would_recommend: averageSafety,
+          would_recommend: averageRating,
           usability_rating: averageUsability,
           uses_hangar: null,
           hangar_number: key,
@@ -184,19 +189,14 @@ const MapView = ({
           })),
         });
       } else {
-        const fallbackSafety =
-          typeof review.overall_safety_rating === 'number'
-            ? review.overall_safety_rating
-            : typeof review.theft_worry_rating === 'number'
-              ? review.theft_worry_rating
-              : undefined;
+        const fallbackRating = resolveRatingValue(review) ?? undefined;
 
         result.push({
           id: review.id,
           lat: review.lat ?? undefined,
           lng: review.lng ?? undefined,
           texto: review.full_address ?? '-',
-          would_recommend: fallbackSafety,
+          would_recommend: fallbackRating,
           usability_rating: review.overall_usability_rating ?? undefined,
           uses_hangar: review.uses_hangar ?? null,
           hangar_number: review.hangar_number ?? null,

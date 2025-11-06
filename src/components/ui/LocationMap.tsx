@@ -3,8 +3,7 @@ import { MapContainer, Marker, useMap, useMapEvents } from 'react-leaflet';
 import MapLibreLayer from '../map/MapLibreLayer';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { svgToIcon } from '../map/svgIcon';
-import { faceBubbleSVG } from '../map/heroPin';
+import { createRatingFaceIcon } from '../map/ratingFaceIcon';
 
 // Fix for default marker icons in React-Leaflet
 // This is needed because the default icons reference assets that might not be available
@@ -120,19 +119,10 @@ const LocationMap: React.FC<LocationMapProps> = ({
         <Marker
           position={markerPosition}
           icon={(function(){
-            // Build a face bubble icon similar to PublicReviewsLayer when wouldRecommend is provided
             if (!wouldRecommend) return defaultIcon;
             const wrNum = Number(wouldRecommend);
-            const color = isNaN(wrNum)
-              ? '#4B5563'
-              : wrNum > 3
-                ? '#22C55E'
-                : wrNum < 3
-                  ? '#EF4444'
-                  : '#4B5563';
-            const face = isNaN(wrNum) ? 'neutral' : wrNum <= 2 ? 'sad' : wrNum === 3 ? 'neutral' : 'happy';
-            const size = 42;
-            return svgToIcon(faceBubbleSVG({ fill: color, stroke: 'none', size, face }), [size, size], [size/2, size]);
+            if (Number.isNaN(wrNum)) return defaultIcon;
+            return createRatingFaceIcon({ rating: wrNum, size: 42 });
           })()}
           draggable={!!onLocationSelect}
           eventHandlers={{

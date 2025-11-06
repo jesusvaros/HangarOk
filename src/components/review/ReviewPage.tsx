@@ -2,22 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { supabaseWrapper } from '../../services/supabase/client';
 import { useAuth } from '../../store/auth/hooks';
-// TODO: This file is for old rental apartment reviews, needs to be updated for hangars
 import { getAddressStep1Data } from '../../services/supabase/GetSubmitStep1';
 import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
 import type { Step2Data, Step3Data, Step4Data, Step5Data } from './reviewStepTypes';
 import ReviewDataView from './ReviewDataView';
-// import { getSessionStep2Data } from '../../services/supabase/GetSubmitStep2';
-// import { getSessionStep3Data } from '../../services/supabase/GetSubmitStep3';
-// import { getSessionStep4Data } from '../../services/supabase/GetSubmitStep4';
-// import { getSessionStep5Data } from '../../services/supabase/GetSubmitStep5';
-
-// Old rental review components - removed for hangar reviews
-// import LocationMap from '../ui/LocationMap';
-// import PeriodSection from './PeriodSection';
-// import PropertySection from './PropertySection';
-// import CommunitySection from './CommunitySection';
-// import OpinionSection from './OpinionSection';
 
 const ReviewPage = () => {
   const { id } = useParams<{ id: string }>();
