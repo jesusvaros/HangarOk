@@ -47,16 +47,18 @@ export type PublicReview = {
   state: string | null;
   postal_code: string | null;
   street: string | null;
+  validated_at: string | null;
 };
 
 export async function getPublicReviews(): Promise<PublicReview[]> {
   const client = supabaseWrapper.getClient();
   if (!client) return [];
 
-  const { data, error} = await client
+  const { data, error } = await client
     .from('public_reviews')
-    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number, belongs_rating, fair_use_rating, appearance_rating, theft_worry_rating, bike_messed_with, impact_tags, waitlist_fairness_rating, waitlist_tags, improvement_suggestion, report_ease_rating, fix_speed_rating, communication_rating, home_type')
-    .eq('is_public', true);
+    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number, belongs_rating, fair_use_rating, appearance_rating, theft_worry_rating, bike_messed_with, impact_tags, waitlist_fairness_rating, waitlist_tags, improvement_suggestion, report_ease_rating, fix_speed_rating, communication_rating, home_type, validated_at')
+    .eq('is_public', true)
+    .order('validated_at', { ascending: false, nullsFirst: false });
 
   if (error || !data) return [];
 
@@ -119,6 +121,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     usability_tags?: string[] | null;
     maintenance_tags?: string[] | null;
     hangar_number?: string | null;
+    validated_at?: string | null;
   };
 
   const rows = data as unknown as Row[];
@@ -217,11 +220,13 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
       state: state ?? null,
       postal_code: postalCode ?? null,
       street: street ?? null,
+      validated_at: review.validated_at ?? null,
     } satisfies PublicReview;
   });
 
   // Keep only entries with valid numeric coordinates
   return mapped.filter(
-    (r) => typeof r.lat === 'number' && typeof r.lng === 'number'
-  ) as PublicReview[];
+    (r): r is PublicReview =>
+      typeof r.lat === 'number' && typeof r.lng === 'number'
+  );
 }

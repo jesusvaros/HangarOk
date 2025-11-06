@@ -566,6 +566,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                     </div>
                     <button
                       type="button"
+                      onClick={() => onSelect(r)}
                       className="block w-full px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                     >
                       <p className="mb-3 text-xs text-slate-500 line-clamp-2">{address}</p>
