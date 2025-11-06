@@ -132,8 +132,25 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
               : []
           }
           onChange={(selected) => {
-            const value = selected[0] === '✅ Yes, I have a space' ? true : false;
-            updateFormData({ usesHangar: value });
+            const choice = selected[0];
+            if (choice === '✅ Yes, I have a space') {
+              updateFormData({
+                usesHangar: true,
+                connectionType: 'rent_space',
+              });
+              return;
+            }
+
+            if (choice === '❌ No, not yet / Waiting / Nearby rider') {
+              const payload: Partial<FormDataType> = { usesHangar: false };
+              if (formData.connectionType === 'rent_space') {
+                payload.connectionType = undefined;
+              }
+              updateFormData(payload);
+              return;
+            }
+
+            updateFormData({ usesHangar: undefined });
           }}
           multiSelect={false}
           error={fieldErrors?.usesHangar}
@@ -169,32 +186,31 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
       </div>
 
       {/* Section 4: Your connection to this hangar */}
-      <div>
-        <SelectableTagGroup
-          label="How do you use this hangar?"
-          options={['I rent a space', 'I used to', 'I live near it', 'I park here sometimes']}
-          selectedOptions={
-            formData.connectionType === 'rent_space'
-              ? ['I rent a space']
-              : formData.connectionType === 'used_to'
-              ? ['I used to']
-              : formData.connectionType === 'live_near'
-              ? ['I live near it']
-              : formData.connectionType === 'park_sometimes'
-              ? ['I park here sometimes']
-              : []
-          }
-          onChange={(selected) => {
-            const value = 
-              selected[0] === 'I rent a space' ? 'rent_space' :
-              selected[0] === 'I used to' ? 'used_to' :
-              selected[0] === 'I live near it' ? 'live_near' : 'park_sometimes';
-            updateFormData({ connectionType: value as FormDataType['connectionType'] });
-          }}
-          multiSelect={false}
-          error={fieldErrors?.connectionType}
-        />
-      </div>
+      {formData.usesHangar === false && (
+        <div>
+          <SelectableTagGroup
+            label="How do you use this hangar?"
+            options={['I used to', 'I live near it', 'I park here sometimes']}
+            selectedOptions={
+              formData.connectionType === 'used_to'
+                ? ['I used to']
+                : formData.connectionType === 'live_near'
+                ? ['I live near it']
+                : formData.connectionType === 'park_sometimes'
+                ? ['I park here sometimes']
+                : []
+            }
+            onChange={(selected) => {
+              const value = 
+                selected[0] === 'I used to' ? 'used_to' :
+                selected[0] === 'I live near it' ? 'live_near' : 'park_sometimes';
+              updateFormData({ connectionType: value as FormDataType['connectionType'] });
+            }}
+            multiSelect={false}
+            error={fieldErrors?.connectionType}
+          />
+        </div>
+      )}
 
 
       {/* Next button */}
