@@ -180,6 +180,7 @@ const MapView = ({
             appearance_rating: candidate.appearance_rating ?? null,
             perception_tags: candidate.perception_tags ?? null,
             impact_tags: candidate.impact_tags ?? null,
+            waitlist_tags: candidate.waitlist_tags ?? null,
           })),
         });
       } else {
@@ -206,6 +207,7 @@ const MapView = ({
           appearance_rating: review.appearance_rating ?? null,
           perception_tags: review.perception_tags ?? null,
           impact_tags: review.impact_tags ?? null,
+          waitlist_tags: review.waitlist_tags ?? null,
           connection_type: review.connection_type ?? null,
           current_bike_storage: review.current_bike_storage ?? null,
           stops_cycling: review.stops_cycling ?? null,

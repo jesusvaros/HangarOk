@@ -27,6 +27,7 @@ export type ReviewListItem = {
   appearance_rating?: number | null;
   impact_tags?: string[] | null;
   perception_tags?: string[] | null;
+  waitlist_tags?: string[] | null;
   connection_type?: string | null;
   current_bike_storage?: string | null;
   stops_cycling?: string | null;
@@ -44,6 +45,7 @@ export type ReviewListItem = {
     appearance_rating?: number | null;
     perception_tags?: string[] | null;
     impact_tags?: string[] | null;
+    waitlist_tags?: string[] | null;
   }>;
 };
 
@@ -91,28 +93,6 @@ const StarDisplay = ({ score }: { score: number }) => {
   );
 };
 
-const formatScoreValue = (value: number) =>
-  Number.isInteger(value) ? value.toString() : value.toFixed(1);
-
-type ScoreBadgeVariant = 'positive' | 'negative' | 'neutral';
-
-const SCORE_BADGE_STYLES: Record<ScoreBadgeVariant, { container: string; dot: string }> = {
-  positive: { container: 'bg-white text-slate-700 border border-slate-200', dot: 'bg-emerald-500' },
-  negative: { container: 'bg-white text-slate-700 border border-slate-200', dot: 'bg-rose-500' },
-  neutral: { container: 'bg-white text-slate-600 border border-slate-200', dot: 'bg-slate-400' },
-};
-
-const ScoreBadge = ({ label, value, variant = 'neutral' }: { label: string; value: number; variant?: ScoreBadgeVariant }) => {
-  const styles = SCORE_BADGE_STYLES[variant];
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-semibold ${styles.container}`}>
-      <span className={`h-1.5 w-1.5 rounded-full ${styles.dot}`} aria-hidden />
-      <span>{label}</span>
-      <span>{formatScoreValue(value)}</span>
-    </span>
-  );
-};
-
 type RatingTone = 'excellent' | 'average' | 'poor' | 'none';
 
 const getRatingTone = (score?: number | null): RatingTone => {
@@ -136,6 +116,39 @@ const RatingBadge = ({ label, tone }: { label: string; tone: RatingTone }) => {
       <span className={`h-2 w-2 rounded-full ${styles.dot}`} aria-hidden />
       <span>{label}</span>
     </span>
+  );
+};
+
+const WAITLIST_TAGS_DISPLAY: Record<
+  string,
+  {
+    icon: string;
+    label: string;
+  }
+> = {
+  waiting_too_long: { icon: '⌛', label: 'Waiting too long' },
+  no_idea_position: { icon: '❓', label: 'Don\'t know position' },
+  more_hangars_needed: { icon: '🚲', label: 'More hangars needed' },
+};
+
+const WAITLIST_TAG_ORDER = ['waiting_too_long', 'no_idea_position', 'more_hangars_needed'] as const;
+
+const WaitlistInsights: React.FC<{ tags: string[] }> = ({ tags }) => {
+  const tagSet = new Set(tags);
+  const displayable = WAITLIST_TAG_ORDER
+    .filter(tag => tagSet.has(tag))
+    .map(tag => ({ tag, data: WAITLIST_TAGS_DISPLAY[tag] }))
+    .filter((entry): entry is { tag: string; data: { icon: string; label: string } } => Boolean(entry.data));
+
+  return (
+      <div className="flex flex-wrap gap-2 row">
+        {displayable.map(({ tag, data }) => (
+          <div key={tag} className="flex shrink-1 gap-1 text-[10px] font-semibold text-slate-600 border border-slate-400 px-2 py-1 rounded-xl items-center">
+            <span className="text-base leading-none">{data.icon}</span>
+            <span>{data.label}</span>
+          </div>
+        ))}
+    </div>
   );
 };
 
@@ -178,63 +191,6 @@ const USAGE_STYLES: Record<
     iconWrapperClass: 'bg-slate-200 text-slate-600',
     categoryTextClass: 'text-slate-600',
   },
-};
-
-const WAITING_SCORE_LABELS: Record<string, string> = {
-  theft: 'Worry about theft',
-  waitlist: 'Waitlist',
-  belonging: 'Belonging',
-  fair_use: 'Fair use',
-  appearance: 'Appearance',
-};
-
-type WaitingMetric = { key: string; label: string; value: number };
-
-const selectWaitingMetricGroups = (metrics: WaitingMetric[]) => {
-  const positives = metrics
-    .filter(metric => metric.value >= 4)
-    .sort((a, b) => b.value - a.value);
-  const negatives = metrics
-    .filter(metric => metric.value <= 2.5)
-    .sort((a, b) => a.value - b.value);
-
-  return {
-    positives: positives.slice(0, 1),
-    negatives: negatives.slice(0, 1),
-  };
-};
-
-const WaitingMetricSummary: React.FC<{ metrics: WaitingMetric[] }> = ({ metrics }) => {
-  const { positives, negatives } = selectWaitingMetricGroups(metrics);
-
-  if (positives.length === 0 && negatives.length === 0) {
-    return <p className="text-[11px] text-slate-400 italic">No waiting rider scores yet</p>;
-  }
-
-  return (
-    <div className="space-y-2">
-      {negatives.length > 0 && (
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-600">Needs attention</p>
-          <div className="mt-1 flex flex-wrap gap-1.5">
-            {negatives.map(item => (
-              <ScoreBadge key={`neg-${item.key}`} label={item.label} value={item.value} variant="negative" />
-            ))}
-          </div>
-        </div>
-      )}
-      {positives.length > 0 && (
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-600">Riders like</p>
-          <div className="mt-1 flex flex-wrap gap-1.5">
-            {positives.map(item => (
-              <ScoreBadge key={`pos-${item.key}`} label={item.label} value={item.value} variant="positive" />
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
 };
 
 interface ReviewsPanelProps {
@@ -281,29 +237,15 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
             const isGroup = (r.groupCount ?? 0) > 1 && (r.groupedReviews?.length ?? 0) > 0;
             const isCurrentUser = !isGroup && r.uses_hangar === true;
             const isWaitingRider = !isGroup && r.uses_hangar === false;
-            const theftScore =
-              typeof r.theft_worry_rating === 'number' ? r.theft_worry_rating : null;
-            const waitlistScore =
-              typeof r.waitlist_fairness_rating === 'number' ? r.waitlist_fairness_rating : null;
-            const belongingScore =
-              typeof r.belongs_rating === 'number' ? r.belongs_rating : null;
-            const fairUseScore =
-              typeof r.fair_use_rating === 'number' ? r.fair_use_rating : null;
-            const appearanceScore =
-              typeof r.appearance_rating === 'number' ? r.appearance_rating : null;
-            const waitingRatingItems: WaitingMetric[] = [
-              theftScore != null && { key: 'theft', label: WAITING_SCORE_LABELS.theft, value: theftScore },
-              waitlistScore != null && { key: 'waitlist', label: WAITING_SCORE_LABELS.waitlist, value: waitlistScore },
-              belongingScore != null && { key: 'belonging', label: WAITING_SCORE_LABELS.belonging, value: belongingScore },
-              fairUseScore != null && { key: 'fair_use', label: WAITING_SCORE_LABELS.fair_use, value: fairUseScore },
-              appearanceScore != null && { key: 'appearance', label: WAITING_SCORE_LABELS.appearance, value: appearanceScore },
-            ].filter((item): item is WaitingMetric => Boolean(item));
-            const waitingHasInsights = waitingRatingItems.length > 0;
+            const waitlistTags = Array.isArray(r.waitlist_tags) ? r.waitlist_tags : [];
+            const waitlistHasFeedback = isWaitingRider
+              ? waitlistTags.some(tag => Boolean(WAITLIST_TAGS_DISPLAY[tag]))
+              : false;
             const hasRating = !isWaitingRider && score > 0;
             const label = isWaitingRider
-              ? waitingHasInsights
-                ? 'Rider feedback'
-                : 'No rating yet'
+              ? waitlistHasFeedback
+                ? 'Waiting list feedback'
+                : 'No waiting list feedback yet'
               : hasRating
                 ? getRatingLabel(score)
                 : 'No rating yet';
@@ -464,13 +406,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                       typeof member.appearance_rating === 'number'
                                         ? member.appearance_rating
                                         : null;
-                                    const memberWaitingItems = [
-                                      memberTheftScore != null && { key: 'theft', label: WAITING_SCORE_LABELS.theft, value: memberTheftScore },
-                                      memberWaitlistScore != null && { key: 'waitlist', label: WAITING_SCORE_LABELS.waitlist, value: memberWaitlistScore },
-                                      memberBelongingScore != null && { key: 'belonging', label: WAITING_SCORE_LABELS.belonging, value: memberBelongingScore },
-                                      memberFairUseScore != null && { key: 'fair_use', label: WAITING_SCORE_LABELS.fair_use, value: memberFairUseScore },
-                                      memberAppearanceScore != null && { key: 'appearance', label: WAITING_SCORE_LABELS.appearance, value: memberAppearanceScore },
-                                    ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
+                                    const memberWaitlistTags = Array.isArray(member.waitlist_tags) ? member.waitlist_tags : [];
 
                                     return (
                                       <button
@@ -491,6 +427,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                             appearance_rating: memberAppearanceScore ?? null,
                                             perception_tags: member.perception_tags ?? null,
                                             impact_tags: member.impact_tags ?? null,
+                                            waitlist_tags: memberWaitlistTags.length > 0 ? memberWaitlistTags : null,
                                           })
                                         }
                                         className="w-full rounded-lg border border-slate-200 px-3 py-3 text-left transition focus:outline-none hover:bg-amber-50 focus-visible:ring-2 focus-visible:ring-amber-400"
@@ -515,7 +452,15 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                         <p className="mt-2 text-xs text-slate-600 line-clamp-2">{memberAddress}</p>
                                         <div className="mt-3 space-y-1.5">
                                           {memberIsWaiting ? (
-                                            <WaitingMetricSummary metrics={memberWaitingItems} />
+                                            <>
+                                              {memberWaitlistScore ? (
+                                                <div className="flex items-center justify-between">
+                                                  <span className="text-xs font-medium text-slate-600">Waitlist fairness</span>
+                                                  <StarDisplay score={memberWaitlistScore} />
+                                                </div>
+                                              ) : null}
+                                              <WaitlistInsights tags={memberWaitlistTags} />
+                                            </>
                                           ) : (
                                             <>
                                               {safetyScore ? (
@@ -550,7 +495,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                   </>
                 ) : (
                   <>
-                    <div className="px-3 py-3 border-b bg-white flex items-center gap-3 cursor-pointer" onClick={() => onSelect(r)} >
+                    <div className="px-3 py-3 border-b bg-white flex items-center gap-3 cursor-pointer" onClick={() => onSelect(r)}>
                       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
                         <UserIcon className="h-4 w-4" />
                       </span>
@@ -571,7 +516,15 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                     >
                       <p className="mb-3 text-xs text-slate-500 line-clamp-2">{address}</p>
                       {isWaitingRider ? (
-                        <WaitingMetricSummary metrics={waitingRatingItems} />
+                        <>
+                          {typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 ? (
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs font-medium text-slate-600">Waitlist fairness</span>
+                              <StarDisplay score={r.waitlist_fairness_rating} />
+                            </div>
+                          ) : null}
+                          <WaitlistInsights tags={waitlistTags} />
+                        </>
                       ) : hasRating ? (
                         <div className="space-y-1.5">
                           <div className="flex items-center justify-between">

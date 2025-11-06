@@ -238,44 +238,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
           <div className="flex-1 overflow-y-auto overflow-x-hidden p-2 space-y-2.5">
             {isWaitingRider && (
               <div className="space-y-2">
-                {waitingCommunityRatings.length > 0 && (
-                  <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <SparklesIcon className="h-3.5 w-3.5" style={{ color: 'rgb(74,94,50)' }} />
-                      <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Community vibe</h4>
-                    </div>
-                    <div className="space-y-1.5">
-                      {waitingCommunityRatings.map(item => (
-                        <div key={item.key} className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-gray-600 font-medium w-24 flex-shrink-0">{item.label}</span>
-                          <div className="flex-1 min-w-0">
-                            <RatingBar value={item.value} color="rgb(74,94,50)" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {waitingSafetyRatings.length > 0 && (
-                  <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
-                    <div className="flex items-center gap-1.5 mb-2">
-                      <ExclamationTriangleIcon className="h-3.5 w-3.5" style={{ color: 'rgb(74,94,50)' }} />
-                      <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Safety outlook</h4>
-                    </div>
-                    <div className="space-y-1.5">
-                      {waitingSafetyRatings.map(item => (
-                        <div key={item.key} className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-gray-600 font-medium w-24 flex-shrink-0">{item.label}</span>
-                          <div className="flex-1 min-w-0">
-                            <RatingBar value={item.value} color="rgb(74,94,50)" />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
+            
                 {waitingAccessRatings.length > 0 && (
                   <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
                     <div className="flex items-center gap-1.5 mb-2">
@@ -299,7 +262,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
 
             {/* Detailed Ratings with Visual Bars */}
             <div className="space-y-2">
-              {/* Safety Ratings */}
+              {/* Safety Ratings */} 
               {!isWaitingRider && (review.daytime_safety_rating || review.nighttime_safety_rating) && (
                 <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
                   <div className="flex items-center gap-1.5 mb-2">
