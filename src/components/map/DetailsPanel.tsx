@@ -1,7 +1,7 @@
 import React from 'react';
 import type { PublicReview } from '../../services/supabase/publicReviews';
 import { Link } from 'react-router-dom';
-import { CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon, SparklesIcon, QueueListIcon, ExclamationTriangleIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon, QueueListIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import { umamiEventProps } from '../../utils/analytics';
 
 // Visual rating bar component
@@ -133,21 +133,9 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
       : isWaitingRider
         ? 'Waiting rider'
         : 'Rider';
-  const theftRating = typeof review?.theft_worry_rating === 'number' ? review.theft_worry_rating : null;
   const waitlistRating = typeof review?.waitlist_fairness_rating === 'number' ? review.waitlist_fairness_rating : null;
   const communicationRating = typeof review?.communication_rating === 'number' ? review.communication_rating : null;
   const fixSpeedRating = typeof review?.fix_speed_rating === 'number' ? review.fix_speed_rating : null;
-  const belongsRating = typeof review?.belongs_rating === 'number' ? review.belongs_rating : null;
-  const fairUseRating = typeof review?.fair_use_rating === 'number' ? review.fair_use_rating : null;
-  const appearanceRating = typeof review?.appearance_rating === 'number' ? review.appearance_rating : null;
-  const waitingCommunityRatings = [
-    belongsRating != null && { key: 'belonging', label: 'Belonging', value: belongsRating },
-    fairUseRating != null && { key: 'fair_use', label: 'Fair use', value: fairUseRating },
-    appearanceRating != null && { key: 'appearance', label: 'Appearance', value: appearanceRating },
-  ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
-  const waitingSafetyRatings = [
-    theftRating != null && { key: 'theft', label: 'Worry about theft', value: theftRating },
-  ].filter((item): item is { key: string; label: string; value: number } => Boolean(item));
   const waitingAccessRatings = [
     waitlistRating != null && { key: 'waitlist', label: 'Waitlist fairness', value: waitlistRating },
     communicationRating != null && { key: 'communication', label: 'Communication', value: communicationRating },

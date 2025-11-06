@@ -138,7 +138,10 @@ const WaitlistInsights: React.FC<{ tags: string[] }> = ({ tags }) => {
   const displayable = WAITLIST_TAG_ORDER
     .filter(tag => tagSet.has(tag))
     .map(tag => ({ tag, data: WAITLIST_TAGS_DISPLAY[tag] }))
-    .filter((entry): entry is { tag: string; data: { icon: string; label: string } } => Boolean(entry.data));
+    .filter(
+      (entry): entry is { tag: (typeof WAITLIST_TAG_ORDER)[number]; data: { icon: string; label: string } } =>
+        Boolean(entry.data),
+    );
 
   return (
       <div className="flex flex-wrap gap-2 row">
