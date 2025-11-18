@@ -23,7 +23,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({
 
   const usabilityTagOptions = [
     { value: 'door_heavy', label: '🚪 Door is heavy' },
-    { value: 'lock_jams', label: '🔒 Lock jams' },
+    { value: 'lock_jams', label: '🔒 Lock / cylinder issues' },
     { value: 'cramped', label: '😣 Feels cramped' },
     { value: 'easy_to_use', label: '✅ Really easy to use' },
     { value: 'usually_clean', label: '🧹 Usually clean' },

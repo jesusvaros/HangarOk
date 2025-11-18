@@ -1,5 +1,5 @@
-import type { Icon } from 'leaflet';
-import { svgToIcon } from './svgIcon';
+import type { DivIcon } from 'leaflet';
+import L from 'leaflet';
 import { faceBubbleSVG } from './heroPin';
 
 type RatingValue = number | null | undefined;
@@ -48,16 +48,18 @@ export const createRatingFaceIcon = ({
   size = DEFAULT_SIZE,
   variant = 'default',
   stroke = 'none',
-}: CreateIconOptions = {}): Icon => {
+}: CreateIconOptions = {}): DivIcon => {
   const mood = getMood(rating);
   const face = getFace(rating);
   const fill = COLOR_MAP[variant][mood];
 
-  return svgToIcon(
-    faceBubbleSVG({ fill, stroke, size, face }),
-    [size, size],
-    [size / 2, size],
-  );
+  return L.divIcon({
+    html: faceBubbleSVG({ fill, stroke, size, face }),
+    className: '',
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size],
+    popupAnchor: [0, -size],
+  });
 };
 
 export const ratingFaceHelpers = {

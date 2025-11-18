@@ -186,7 +186,9 @@ const MapView = ({
             perception_tags: candidate.perception_tags ?? null,
             impact_tags: candidate.impact_tags ?? null,
             waitlist_tags: candidate.waitlist_tags ?? null,
+            bike_messed_with: typeof candidate.bike_messed_with === 'boolean' ? candidate.bike_messed_with : null,
           })),
+          bike_messed_with: group.some(candidate => candidate.bike_messed_with === true),
         });
       } else {
         const fallbackRating = resolveRatingValue(review) ?? undefined;
@@ -211,6 +213,7 @@ const MapView = ({
           connection_type: review.connection_type ?? null,
           current_bike_storage: review.current_bike_storage ?? null,
           stops_cycling: review.stops_cycling ?? null,
+          bike_messed_with: typeof review.bike_messed_with === 'boolean' ? review.bike_messed_with : null,
         });
       }
     });

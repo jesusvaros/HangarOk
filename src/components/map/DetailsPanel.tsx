@@ -1,7 +1,7 @@
 import React from 'react';
 import type { PublicReview } from '../../services/supabase/publicReviews';
 import { Link } from 'react-router-dom';
-import { CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon, QueueListIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { CheckBadgeIcon, ClockIcon, SunIcon, MoonIcon, LockClosedIcon, ArrowsPointingOutIcon, WrenchScrewdriverIcon, ChevronLeftIcon, ChevronRightIcon, QueueListIcon, UserGroupIcon, LockOpenIcon } from '@heroicons/react/24/outline';
 import { umamiEventProps } from '../../utils/analytics';
 
 // Visual rating bar component
@@ -27,6 +27,7 @@ const getTagIcon = (tag: string) => {
     'cyclists_unwelcome': '🚴',
     'out_of_place': '🤔',
     'takes_space': '🚗',
+    'long_waitlist': '⏳',
     'people_moan': '😤',
     'more_like_this': '👍',
     'people_mock': '😂',
@@ -67,19 +68,20 @@ const getTagLabel = (tag: string) => {
   const labelMap: Record<string, string> = {
     'cyclists_unwelcome': 'Cyclists unwelcome',
     'out_of_place': 'Out of place',
-    'takes_space': 'Takes car space',
+    'long_waitlist': 'Long waitlist / slow process',
+    'takes_space': 'Takes up space',
     'people_moan': 'People complain',
     'more_like_this': 'More like this',
     'people_mock': 'People mock it',
     'car_parking_protected': 'Cars > bikes',
     'lock_tempting': 'Tempting to thieves',
-    'dark_hidden': 'Dark/hidden',
-    'people_hang': 'People hang around',
+    'dark_hidden': 'Feels dark / hidden',
+    'people_hang': 'People hanging around',
     'hangar_damaged': 'Gets damaged',
     'visible_neighbours': 'Visible to neighbors',
     'feels_safe': 'Feels safe',
     'door_heavy': 'Heavy door',
-    'lock_jams': 'Lock jams',
+    'lock_jams': 'Lock / cylinder issues',
     'cramped': 'Cramped',
     'easy_to_use': 'Easy to use',
     'usually_clean': 'Usually clean',
@@ -90,8 +92,8 @@ const getTagLabel = (tag: string) => {
     'good_at_fixing': 'Good at fixing',
     'waiting_too_long': 'Waiting too long',
     'avoid_cycling': 'Avoids cycling',
-    'insurance_no_cover': 'Insurance no cover',
-    'police_dont_care': "Police don't care",
+    'insurance_no_cover': "Insurance didn't really help me",
+    'police_dont_care': "Police don't follow up on thefts",
     'no_clear_contact': 'No clear contact',
     'no_idea_position': 'No idea where it is',
     'no_one_responsible': 'No one responsible',
@@ -145,6 +147,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
   const navIndex = groupContext?.index ?? 0;
   const navTotal = groupContext?.total ?? 1;
   const displayHangarNumber = review?.hangar_number ?? groupContext?.hangarLabel ?? null;
+  const theftAlert = review?.bike_messed_with === true;
   const goToPrevious = () => {
     if (!groupContext) return;
     groupContext.onSelectIndex(Math.max(0, groupContext.index - 1));
@@ -219,6 +222,20 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
           </div>
         )}
       </div>
+
+      {theftAlert && (
+        <div className="flex items-start gap-2 border-b border-rose-100 bg-rose-50 px-3 py-2 ">
+          <span className="flex min-h-8 min-w-8 items-center justify-center rounded-full bg-rose-200 ">
+            <LockOpenIcon className="h-4 w-4 text-black" strokeWidth={2} />
+          </span>
+          <div className="text-xs leading-tight">
+            <p className="font-semibold uppercase tracking-wide">Theft reported</p>
+            <p className="text-[11px]">
+              Riders have reported theft or attempted theft at this hangar.
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Scrollable content */}
       {review ? (

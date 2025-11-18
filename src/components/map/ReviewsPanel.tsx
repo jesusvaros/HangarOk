@@ -6,6 +6,7 @@ import {
   ClockIcon,
   UserGroupIcon,
   ChevronDownIcon,
+  LockOpenIcon,
 } from '@heroicons/react/24/outline';
 
 export type ReviewListItem = {
@@ -31,6 +32,7 @@ export type ReviewListItem = {
   connection_type?: string | null;
   current_bike_storage?: string | null;
   stops_cycling?: string | null;
+  bike_messed_with?: boolean | null;
   groupedReviews?: Array<{
     id: string | number;
     full_address?: string | null;
@@ -46,6 +48,7 @@ export type ReviewListItem = {
     perception_tags?: string[] | null;
     impact_tags?: string[] | null;
     waitlist_tags?: string[] | null;
+    bike_messed_with?: boolean | null;
   }>;
 };
 
@@ -284,6 +287,23 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                 />
               </button>
             );
+            const theftAlert = isGroup
+              ? (r.groupedReviews ?? []).some(member => member.bike_messed_with)
+              : r.bike_messed_with === true;
+            const theftBadge = theftAlert ? (
+              <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10px] font-semibold ">
+                <LockOpenIcon className="h-3.5 w-3.5 text-black" strokeWidth={2} />
+                Theft reported
+              </span>
+            ) : null;
+            const headerIndicators = !isGroup && (theftBadge || hasRating)
+              ? (
+                <div className="flex flex-col items-end gap-1">
+                  {theftBadge}
+                  {hasRating ? <RatingBadge label={label} tone={ratingTone} /> : null}
+                </div>
+              )
+              : null;
             const cardClasses = [
               'overflow-hidden',
               'rounded-lg',
@@ -317,10 +337,11 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                 {isGroup ? (
                   <>
                     <div className="px-3 py-3 border-b bg-white flex items-start gap-3">
-                        <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
-                          <UserIcon className="h-4 w-4" />
-                        </span>
-                        <div className="flex-1 min-w-0 space-y-1 flex justify-between ">
+                      <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
+                        <UserIcon className="h-4 w-4" />
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-start justify-between gap-2">
                           <div className="flex flex-col">
                             <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Hangar
@@ -329,12 +350,15 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                               {r.hangar_number ?? 'Unknown'}
                             </span>
                           </div>
-
-                             <p className="text-xs text-slate-500">
-                            {reviewCount} review{reviewCount === 1 ? '' : 's'} available
-                          </p>
-                          </div>   
+                          <div className="flex flex-col items-end gap-1 text-right">
+                            {theftBadge}
+                            <p className="text-xs text-slate-500">
+                              {reviewCount} review{reviewCount === 1 ? '' : 's'} available
+                            </p>
+                          </div>
+                        </div>
                       </div>
+                    </div>
                
 
                     <div className="px-3 py-3 space-y-3">
@@ -510,7 +534,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                           {r.hangar_number ? `Hangar ${r.hangar_number}` : 'Hangar'}
                         </p>
                       </div>
-                      {hasRating ? <RatingBadge label={label} tone={ratingTone} /> : null}
+                      {headerIndicators}
                     </div>
                     <button
                       type="button"

@@ -46,7 +46,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
             <RatingRow icon={<ExclamationTriangleIcon className="h-5 w-5 text-black" />} label="Worry about theft" value={step3Data?.theft_worry_rating ?? null} />
           </div>
           <BooleanSignal
-            label="Has their bike been messed with?"
+            label="Has there been a theft or attempted theft here?"
             value={!step3Data?.bike_messed_with}
             positive={{ text: 'No issues reported', icon: '✅' }}
             negative={{ text: 'Yes, reported issues', icon: '⚠️' }}

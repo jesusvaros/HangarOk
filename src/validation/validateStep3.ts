@@ -41,7 +41,7 @@ export const validateStep3 = (context: FormDataType): ValidationResult => {
     if (bikeMessedWith === undefined) {
       return {
         isValid: false,
-        message: 'Please indicate if your bike has been messed with',
+        message: 'Please indicate if you or someone nearby had a theft or attempted theft here',
         fieldErrors: { ...fieldErrors, bikeMessedWith: true },
       };
     }

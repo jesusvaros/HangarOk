@@ -4,6 +4,7 @@ import MapLibreLayer from '../map/MapLibreLayer';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { createRatingFaceIcon } from '../map/ratingFaceIcon';
+import { createRatingFaceIconWithTheft } from '../map/mapIcons';
 
 // Fix for default marker icons in React-Leaflet
 // This is needed because the default icons reference assets that might not be available
@@ -53,6 +54,7 @@ interface LocationMapProps {
   className?: string;
   onLocationSelect?: (lat: number, lng: number) => void;
   wouldRecommend?: '1'|'2'|'3'|'4'|'5';
+  hasTheftAlert?: boolean;
 }
 
 const LocationMap: React.FC<LocationMapProps> = ({
@@ -60,6 +62,7 @@ const LocationMap: React.FC<LocationMapProps> = ({
   className = '',
   onLocationSelect,
   wouldRecommend,
+  hasTheftAlert = false,
 }) => {
   // Default to London if no coordinates are provided
   const LONDON_COORDS: [number, number] = [51.5074, -0.1278];
@@ -122,6 +125,9 @@ const LocationMap: React.FC<LocationMapProps> = ({
             if (!wouldRecommend) return defaultIcon;
             const wrNum = Number(wouldRecommend);
             if (Number.isNaN(wrNum)) return defaultIcon;
+            if (hasTheftAlert) {
+              return createRatingFaceIconWithTheft({ rating: wrNum, size: 42 });
+            }
             return createRatingFaceIcon({ rating: wrNum, size: 42 });
           })()}
           draggable={!!onLocationSelect}

@@ -61,20 +61,20 @@ export const AddressInput: React.FC<AddressInputProps> = ({
           // Delay hiding the dropdown to allow for clicks on the options
           setTimeout(() => setIsFocused(false), 200);
         }}
-        className={`${hideLabel ? 'rounded-l-lg rounded-r-none' : 'rounded-lg'} ${hasError ? 'border-red-500 focus:border-red-500 focus:ring-red-500' : ''}`}
+        className={`rounded-lg ${hasError ? 'border-red-500 focus:border-red-500 focus:ring-red-500 ' : ''}`}
       />
       {/* Right-side controls: crosshair action and optional spinner */}
-      <div className={hideLabel ? 'absolute right-3 top-2.5 flex items-center gap-2' : 'absolute right-3 top-11 flex items-center gap-2'}>
+      <div className={`absolute right-3 top-11 flex items-center gap-2 bg-white ${hideLabel ? 'top-2.5' : ''}`}>
         {onActionClick && (
           <button
             type="button"
             onClick={onActionClick}
             disabled={actionDisabled}
             aria-label="Locate me"
-            className="text-[rgb(74,94,50)] hover:text-[rgb(54,74,30)] disabled:opacity-50 disabled:cursor-not-allowed"
+            className="text-[rgb(74,94,50)] hover:text-[rgb(54,74,30)] disabled:opacity-50 disabled:cursor-not-allowed "
             {...umamiEventProps('map:locate')}
           >
-            <Icon className="h-5 w-5" />
+            <Icon className="h-8 w-6" strokeWidth={2} />
           </button>
         )}
         {loading && (

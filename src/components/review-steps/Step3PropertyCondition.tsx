@@ -22,14 +22,13 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
   const { formData, updateFormData } = useFormContext();
 
   const safetyTagOptions = [
-    { value: 'lock_tempting', label: '🔓 Lock looks tempting to thieves' },
-    { value: 'dark_hidden', label: '🌑 Feels a bit dark / hidden' },
-    { value: 'people_hang', label: '👥 People hang around' },
+    { value: 'dark_hidden', label: '🌑 Feels dark / hidden' },
+    { value: 'people_hang', label: '👥 People hanging around' },
     { value: 'hangar_damaged', label: '🔨 The hangar gets damaged' },
     { value: 'visible_neighbours', label: '👁️ Visible to neighbours' },
     { value: 'feels_safe', label: '✅ Feels safe on this street' },
-    { value: 'police_dont_care', label: '🚔 Police don\'t take bike theft seriously' },
-    { value: 'insurance_no_cover', label: '🛡️ Insurance doesn\'t really cover me' },
+    { value: 'police_dont_care', label: '🚔 Police don\'t follow up on thefts' },
+    { value: 'insurance_no_cover', label: '🛡️ Insurance didn\'t really help me' },
     { value: 'cars_too_close', label: '🚗 Cars park too close and feel unsafe' },
   ];
 
@@ -69,10 +68,10 @@ const Step3PropertyCondition: React.FC<Step3Props> = ({
             />
           </div>
 
-          {/* Has bike been messed with */}
+          {/* Theft or attempted theft nearby */}
           <div>
             <SelectableTagGroup
-              label="Has your bike ever been messed with here?"
+              label="Have you or someone nearby had a theft or attempted theft here?"
               options={['Yes', 'No']}
               selectedOptions={
                 formData.bikeMessedWith === true

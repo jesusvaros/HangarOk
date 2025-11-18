@@ -24,7 +24,7 @@ const Step2RentalPeriod: React.FC<Step2Props> = ({
   const tagOptions = [
     { value: 'blends_in', label: '✅ Blends in fine' },
     { value: 'out_of_place', label: '🤔 Looks a bit out of place' },
-    { value: 'takes_space', label: '🚗 Takes space from parked cars' },
+    { value: 'long_waitlist', label: '⏳ Long waitlist / slow process' },
     { value: 'people_moan', label: '😤 People moan about it' },
     { value: 'cyclists_unwelcome', label: '🚴 Cyclists don\'t feel welcome here' },
     { value: 'more_like_this', label: '👍 Should be more like this' },
