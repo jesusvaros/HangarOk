@@ -223,7 +223,12 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
         )}
       </div>
 
-      {theftAlert && (
+   
+
+      {/* Scrollable content */}
+      {review ? (
+        <div className="flex-1 overflow-y-auto overflow-x-hidden ">
+           {theftAlert && (
         <div className="flex items-start gap-2 border-b border-rose-100 bg-rose-50 px-3 py-2 ">
           <span className="flex min-h-8 min-w-8 items-center justify-center rounded-full bg-rose-200 ">
             <LockOpenIcon className="h-4 w-4 text-black" strokeWidth={2} />
@@ -236,11 +241,8 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
           </div>
         </div>
       )}
+          <div className=" p-2 space-y-2.5">
 
-      {/* Scrollable content */}
-      {review ? (
-        <>
-          <div className="flex-1 overflow-y-auto overflow-x-hidden p-2 space-y-2.5">
             {isWaitingRider && (
               <div className="space-y-2">
             
@@ -458,7 +460,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
               </Link>
             </div>
           )}
-        </>
+        </div>
       ) : (
         <div className="flex-1 p-3">
           <p className="text-sm text-gray-500">
