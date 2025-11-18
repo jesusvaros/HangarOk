@@ -227,6 +227,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
 
       {/* Scrollable content */}
       {review ? (
+        <>
         <div className="flex-1 overflow-y-auto overflow-x-hidden ">
            {theftAlert && (
         <div className="flex items-start gap-2 border-b border-rose-100 bg-rose-50 px-3 py-2 ">
@@ -448,7 +449,9 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
             </div>
           </div>
 
-          {review.id && (
+          
+        </div>
+        {review.id && (
             <div className="flex-shrink-0 border-t border-gray-100 bg-white px-3 py-2.5">
               <Link
                 to={`/review/${review.id}`}
@@ -459,8 +462,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
                 <span aria-hidden>→</span>
               </Link>
             </div>
-          )}
-        </div>
+          )}</>
       ) : (
         <div className="flex-1 p-3">
           <p className="text-sm text-gray-500">
