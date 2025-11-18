@@ -1,5 +1,4 @@
 import L from 'leaflet';
-import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import { LockOpenIcon } from '@heroicons/react/24/outline';
 import { createRatingFaceIcon } from './ratingFaceIcon';
