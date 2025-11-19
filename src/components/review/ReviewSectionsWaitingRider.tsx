@@ -49,8 +49,8 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
             </div>
           )}
           {impactLabel && (
-            <div className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
-              Impact: <span className="font-semibold">{impactLabel}</span>
+            <div className="rounded-xl bg-red-50 p-3 text-sm text-red-700">
+              Cycling impact: <span className="font-semibold">{impactLabel}</span>
             </div>
           )}
           <TagList title="Cycling impact" tags={step4Data?.impact_tags} tone="warning" />

@@ -28,12 +28,20 @@ const buildFeedbackEntries = (step2Data: Step2Data | null, step4Data: Step4Data 
       : null,
   ].filter((entry): entry is { label: string; body: string } => entry !== null);
 
+const STOPS_CYCLING_LABELS: Record<string, string> = {
+  yes_lot: 'Yes, it stops me from cycling a lot',
+  yes_bit: 'Yes, it makes cycling harder',
+  not_really: 'Not really',
+  no: 'No, it doesn\'t stop me',
+};
+
 const ReviewDataView: React.FC<Props> = ({ step1Data, step2Data, step3Data, step4Data, step5Data }) => {
   const usesHangar = step1Data?.uses_hangar === true;
   const feedbackEntries = buildFeedbackEntries(step2Data, step4Data, step5Data);
 
   const currentStorageLabel = formatOptionLabel(step3Data?.current_bike_storage) ?? null;
-  const impactLabel = step4Data?.stops_cycling ? formatOptionLabel(step4Data.stops_cycling) : null;
+  const impactLabel =
+    step4Data?.stops_cycling ? STOPS_CYCLING_LABELS[step4Data.stops_cycling] ?? null : null;
   const connectionLabel = step1Data?.connection_type ? formatOptionLabel(step1Data.connection_type) : null;
   return (
     <div className="lg:grid lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] lg:gap-8">
