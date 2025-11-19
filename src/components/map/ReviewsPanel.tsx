@@ -291,8 +291,8 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
               ? (r.groupedReviews ?? []).some(member => member.bike_messed_with)
               : r.bike_messed_with === true;
             const theftBadge = theftAlert ? (
-              <span className="inline-flex items-center gap-1 rounded-full border border-rose-200 bg-rose-50 px-2 py-0.5 text-[10px] font-semibold ">
-                <LockOpenIcon className="h-3.5 w-3.5 text-black" strokeWidth={2} />
+              <span className="inline-flex items-center gap-1 rounded-full  bg-red-500 text-white px-2.5 py-1 text-[10px] font-semibold">
+                <LockOpenIcon className="h-3.5 w-3.5 text-white mr-0.5 shrink-0" strokeWidth={2.5} />
                 Theft reported
               </span>
             ) : null;

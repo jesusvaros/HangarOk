@@ -157,8 +157,25 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
     groupContext.onSelectIndex(Math.min(groupContext.total - 1, groupContext.index + 1));
   };
 
+  const panelHeightClass = theftAlert ? 'max-h-[85vh] md:max-h-[55vh]' : 'max-h-[75vh] md:max-h-[45vh]';
+
   return (
-    <div className="flex flex-col h-full max-h-[80vh] md:max-h-[45vh] bg-white">
+    <div className={`flex flex-col h-full ${panelHeightClass} bg-white shadow-lg rounded-xl overflow-hidden`} >
+      {theftAlert && (
+        <div className="flex items-start gap-3 bg-red-100 px-3 py-3 text-black">
+          <span className="mt-0.5 flex h-8 min-w-8 items-center justify-center rounded-full bg-[rgb(239,68,68)] text-white">
+            <LockOpenIcon className="h-4 w-4" strokeWidth={3}/>
+          </span>
+          <div className="space-y-1 text-xs leading-tight">
+            <p className="text-sm font-semibold uppercase ">
+              Theft reported
+            </p>
+            <p className="text-[11px] text-black font-medium">
+              Riders have reported theft or attempted theft at this hangar.
+            </p>
+          </div>
+        </div>
+      )}
       {/* Header with location and user status */}
       <div className="flex-shrink-0 border-b border-slate-200 bg-white px-3 py-3">
         <div className="flex items-start justify-between gap-3">
@@ -229,19 +246,6 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
       {review ? (
         <>
         <div className="flex-1 overflow-y-auto overflow-x-hidden ">
-           {theftAlert && (
-        <div className="flex items-start gap-2 border-b border-rose-100 bg-rose-50 px-3 py-2 ">
-          <span className="flex min-h-8 min-w-8 items-center justify-center rounded-full bg-rose-200 ">
-            <LockOpenIcon className="h-4 w-4 text-black" strokeWidth={2} />
-          </span>
-          <div className="text-xs leading-tight">
-            <p className="font-semibold uppercase tracking-wide">Theft reported</p>
-            <p className="text-[11px]">
-              Riders have reported theft or attempted theft at this hangar.
-            </p>
-          </div>
-        </div>
-      )}
           <div className=" p-2 space-y-2.5">
 
             {isWaitingRider && (
