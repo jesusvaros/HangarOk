@@ -411,7 +411,6 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                       typeof member.overall_usability_rating === 'number'
                                         ? member.overall_usability_rating
                                         : null;
-                                    const memberAddress = member.full_address ?? 'Rider review';
                                     const memberIsWaiting = member.uses_hangar === false;
                                     const memberTheftScore =
                                       typeof member.theft_worry_rating === 'number'
@@ -476,7 +475,6 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                             View review
                                           </span>
                                         </div>
-                                        <p className="mt-2 text-xs text-slate-600 line-clamp-2">{memberAddress}</p>
                                         <div className="mt-3 space-y-1.5">
                                           {memberIsWaiting ? (
                                             <>

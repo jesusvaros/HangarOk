@@ -627,7 +627,7 @@ const MapView = ({
               {/* Right-side details panel overlay (desktop) */}
               {selectedReview && (
                 <>
-                  <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[1100] w-[320px] max-w-[80vw]">
+                  <div className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-[999] w-[320px] max-w-[80vw]">
                       <DetailsPanel
                         review={selectedReview}
                         onClose={() => {
