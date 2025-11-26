@@ -653,7 +653,7 @@ const MapView = ({
                         animate={{ y: 0 }}
                         exit={{ y: '100%' }}
                         transition={{ duration: 0.25, ease: 'easeOut' }}
-                        className="absolute bottom-0 left-0 right-0 max-h-[45vh] rounded-t-2xl bg-white shadow-xl pointer-events-auto flex flex-col"
+                        className="absolute bottom-0 left-0 right-0 max-h-[75vh] rounded-t-2xl bg-white shadow-xl pointer-events-auto flex flex-col"
                       >
                         <DetailsPanel
                           review={selectedReview}

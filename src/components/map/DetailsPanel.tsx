@@ -148,7 +148,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
       {/* Content */}
       {review ? (
         <>
-          <div className="p-2 space-y-1.5">
+          <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
             {isWaitingRider && waitlistRating !== null && (
               <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
                 <div className="flex items-center gap-2 mb-2">
