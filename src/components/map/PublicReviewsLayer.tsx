@@ -1,6 +1,7 @@
 import { Marker } from 'react-leaflet';
 import type { PublicReview } from '../../services/supabase/publicReviews';
 import { createRatingFaceIcon } from './ratingFaceIcon';
+import { createRatingFaceIconWithTheft } from './mapIcons';
 
 interface Props {
   reviews: PublicReview[];
@@ -36,7 +37,10 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
           }
           const size = isSelected ? 52 : 42;
           const variant = isSelected ? 'selected' : 'default';
-          const icon = createRatingFaceIcon({ rating: ratingValue, size, variant });
+          const hasTheft = r.bike_messed_with === true;
+          const icon = hasTheft
+            ? createRatingFaceIconWithTheft({ rating: ratingValue, size, variant })
+            : createRatingFaceIcon({ rating: ratingValue, size, variant });
           const zIndexOffset = isSelected ? 1200 : 400; // keep selected above others
 
           return (
