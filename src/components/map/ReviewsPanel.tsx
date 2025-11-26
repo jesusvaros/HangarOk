@@ -262,7 +262,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                     )}
                     {colorBarClass && <div className={`${colorBarClass} h-2 rounded-t-lg`} />}
                     {hasRating && <RatingBar tone={ratingTone} />}
-                    <div className="px-3 py-3 border-b bg-white flex items-start gap-3">
+                    <div className="px-3 py-3 border-b bg-white flex items-start gap-3 rounded-t-lg">
                       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
                         <UserIcon className="h-4 w-4" />
                       </span>
