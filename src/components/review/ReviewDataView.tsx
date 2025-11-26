@@ -47,7 +47,9 @@ const ReviewDataView: React.FC<Props> = ({ step1Data, step2Data, step3Data, step
     <div className="lg:grid lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] lg:gap-8">
       <ReviewInfoSidebar
         step1Data={step1Data}
+        step2Data={step2Data}
         step3Data={step3Data}
+        step4Data={step4Data}
         step5Data={step5Data}
         usesHangar={usesHangar}
       />

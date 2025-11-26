@@ -3,14 +3,16 @@ import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapPinIcon, HomeModernIcon, ShareIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
-import type { Step3Data, Step5Data } from './reviewStepTypes';
+import type { Step2Data, Step3Data, Step4Data, Step5Data } from './reviewStepTypes';
 import { ACCENT, formatAddress, formatOptionLabel, HOME_TYPE_LABELS, CONNECTION_TYPE_LABELS } from './reviewFormatting';
 import { createRatingFaceIcon } from '../map/ratingFaceIcon';
-import { calculateSecurityRating } from '../../utils/ratingHelpers';
+import { calculateSecurityRating, calculateHangarOKScore } from '../../utils/ratingHelpers';
 
 type ReviewInfoSidebarProps = {
   step1Data: AddressStepData | null;
+  step2Data: Step2Data | null;
   step3Data: Step3Data | null;
+  step4Data: Step4Data | null;
   step5Data: Step5Data | null;
   usesHangar: boolean;
 };
@@ -40,7 +42,9 @@ const InfoField = ({
 
 const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
   step1Data,
+  step2Data,
   step3Data,
+  step4Data,
   step5Data,
   usesHangar,
 }) => {
@@ -53,7 +57,11 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
     typeof lat === 'number' && !Number.isNaN(lat) && typeof lng === 'number' && !Number.isNaN(lng) ? [lat, lng] : null;
 
   const isBrowser = typeof window !== 'undefined';
-  // Use shared security rating calculation with theft modifier
+  
+  // Calculate HangarOK Score for hangar users
+  const communityRatings = [step2Data?.belongs_rating, step2Data?.fair_use_rating, step2Data?.appearance_rating].filter((r): r is number => r !== null);
+  const communityVibe = communityRatings.length > 0 ? communityRatings.reduce((sum, r) => sum + r, 0) / communityRatings.length : null;
+  
   const securityRating = usesHangar 
     ? calculateSecurityRating(
         step3Data?.daytime_safety_rating,
@@ -61,8 +69,19 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
         step3Data?.bike_messed_with
       )
     : null;
+  
+  const usabilityRatings = [step4Data?.lock_ease_rating, step4Data?.space_rating, step4Data?.lighting_rating, step4Data?.maintenance_rating].filter((r): r is number => r !== null);
+  const usabilityAvg = usabilityRatings.length > 0 ? usabilityRatings.reduce((sum, r) => sum + r, 0) / usabilityRatings.length : null;
+  
+  const supportRatings = [step5Data?.report_ease_rating, step5Data?.fix_speed_rating, step5Data?.communication_rating].filter((r): r is number => r !== null);
+  const supportAvg = supportRatings.length > 0 ? supportRatings.reduce((sum, r) => sum + r, 0) / supportRatings.length : null;
+  
+  const hangarOKScore = usesHangar
+    ? calculateHangarOKScore(communityVibe, securityRating, usabilityAvg, supportAvg)
+    : null;
+  
   const waitlistFairness = step5Data?.waitlist_fairness_rating ?? null;
-  const iconRating = usesHangar ? securityRating : waitlistFairness;
+  const iconRating = usesHangar ? hangarOKScore : waitlistFairness;
   const markerIcon = useMemo(() => {
     if (!isBrowser) return null;
     return createRatingFaceIcon({ rating: iconRating, size: 44 });
@@ -110,6 +129,21 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
           )}
         </div>
         <div className="mt-4 space-y-2 border-t border-gray-100 pt-4">
+          {hangarOKScore !== null && (
+            <div className="flex items-center gap-3 rounded-xl px-1.5 py-1.5">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg" style={{ backgroundColor: 'rgba(74,94,50,0.12)', color: ACCENT }}>
+                {markerIcon && isBrowser && (
+                  <div dangerouslySetInnerHTML={{ __html: markerIcon.options.html as string }} style={{ transform: 'scale(0.7)' }} />
+                )}
+              </div>
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">HangarOK Score</p>
+                <p className="text-sm font-semibold text-gray-800">
+                  {hangarOKScore.toFixed(1)}/5
+                </p>
+              </div>
+            </div>
+          )}
           <InfoField icon={<MapPinIcon className="h-5 w-5" />} label="Hangar number" value={hangarNumber} />
           <InfoField icon={<HomeModernIcon className="h-5 w-5" />} label="Home type" value={homeTypeLabel} />
           <InfoField icon={<ShareIcon className="h-5 w-5" />} label="Connection to hangar" value={connectionLabel} />

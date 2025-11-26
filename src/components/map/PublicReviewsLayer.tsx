@@ -1,9 +1,6 @@
 import { Marker } from 'react-leaflet';
 import type { PublicReview } from '../../services/supabase/publicReviews';
-
 import { createRatingFaceIcon } from './ratingFaceIcon';
-import { createRatingFaceIconWithTheft } from './mapIcons';
-import { calculateSecurityRating } from '../../utils/ratingHelpers';
 
 interface Props {
   reviews: PublicReview[];
@@ -29,13 +26,8 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
             // Waiting riders: use waitlist fairness rating
             ratingValue = typeof r.waitlist_fairness_rating === 'number' ? r.waitlist_fairness_rating : undefined;
           } else {
-            // Hangar users: calculate security rating with theft modifier
-            const securityRating = calculateSecurityRating(
-              r.daytime_safety_rating,
-              r.nighttime_safety_rating,
-              r.bike_messed_with
-            );
-            ratingValue = securityRating ?? (typeof r.theft_worry_rating === 'number' ? r.theft_worry_rating : undefined);
+            // Hangar users: use HangarOK Score (average of 4 categories)
+            ratingValue = typeof r.hangarok_score === 'number' ? r.hangarok_score : undefined;
           }
           
           // Fallback to waitlist fairness if no other rating available
@@ -44,10 +36,7 @@ export default function PublicReviewsLayer({ reviews, selectedId, onSelect }: Pr
           }
           const size = isSelected ? 52 : 42;
           const variant = isSelected ? 'selected' : 'default';
-          const icon =
-            r.bike_messed_with === true
-              ? createRatingFaceIconWithTheft({ rating: ratingValue, size, variant })
-              : createRatingFaceIcon({ rating: ratingValue, size, variant });
+          const icon = createRatingFaceIcon({ rating: ratingValue, size, variant });
           const zIndexOffset = isSelected ? 1200 : 400; // keep selected above others
 
           return (

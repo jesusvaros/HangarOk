@@ -35,7 +35,7 @@ export type ReviewListItem = {
   id: string | number;
   lat?: number;
   lng?: number;
-  would_recommend?: number;
+  hangarok_score?: number | null;
   usability_rating?: number;
   texto?: string;
   comment?: string;
@@ -61,6 +61,7 @@ export type ReviewListItem = {
     uses_hangar?: boolean | null;
     overall_safety_rating?: number | null;
     overall_usability_rating?: number | null;
+    hangarok_score?: number | null;
     hangar_number?: string | null;
     theft_worry_rating?: number | null;
     waitlist_fairness_rating?: number | null;
@@ -156,14 +157,18 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
           {reviews.map((r) => {
             const id = r.id ?? `${r.lat}-${r.lng}`;
             const address = r.texto ?? '-';
-            const score = r.would_recommend ?? 0;
             const isGroup = (r.groupCount ?? 0) > 1 && (r.groupedReviews?.length ?? 0) > 0;
             const isCurrentUser = !isGroup && r.uses_hangar === true;
             const isWaitingRider = !isGroup && r.uses_hangar === false;
-            const hasRating = !isWaitingRider && score > 0;
+            
+            // Use HangarOK Score for hangar users, waitlist fairness for waiting riders
+            const hangarScore = typeof r.hangarok_score === 'number' ? r.hangarok_score : null;
             const waitlistRating = isWaitingRider && typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 
               ? r.waitlist_fairness_rating 
               : null;
+            
+            const displayScore = isWaitingRider ? waitlistRating : hangarScore;
+            const hasRating = displayScore !== null && displayScore > 0;
             const hasWaitlistRating = waitlistRating !== null;
             const reviewCount = r.groupCount ?? r.groupedReviews?.length ?? 0;
             const isSelected = String(selectedId ?? '') === String(id);
@@ -181,7 +186,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                 : isWaitingRider
                   ? 'Waiting rider'
                   : 'Rider';
-            const ratingTone = hasRating ? getRatingTone(score) : hasWaitlistRating ? getRatingTone(waitlistRating) : 'none';
+            const ratingTone = displayScore !== null ? getRatingTone(displayScore) : 'none';
             const UserIcon = isGroup ? HangarIcon : isCurrentUser ? BikeIcon : ClockIcon;
             const expanded = expandedGroups[String(id)] ?? true;
             const toggleLabel = expanded ? 'Hide riders' : 'See riders';
@@ -214,6 +219,18 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
               'transition',
               isGroup ? 'cursor-pointer' : 'cursor-default',
             ];
+            
+            // Determine color bar class for grouped reviews
+            let colorBarClass = '';
+            if (isGroup && hasRating) {
+              if (ratingTone === 'excellent') {
+                colorBarClass = 'bg-emerald-600';
+              } else if (ratingTone === 'poor') {
+                colorBarClass = 'bg-rose-600';
+              } else {
+                colorBarClass = 'bg-slate-500';
+              }
+            }
             if (isSelected) {
               cardClasses.push('ring-2', 'ring-amber-400', 'bg-amber-50', 'shadow-md');
             } else if (hoveredId === id) {
@@ -243,13 +260,13 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                         {theftBadge}
                       </div>
                     )}
+                    {colorBarClass && <div className={`${colorBarClass} h-2 rounded-t-lg`} />}
                     {hasRating && <RatingBar tone={ratingTone} />}
                     <div className="px-3 py-3 border-b bg-white flex items-start gap-3">
                       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
                         <UserIcon className="h-4 w-4" />
                       </span>
                       <div className="flex-1 min-w-0 flex items-start justify-between gap-2">
-                    
                           <div className="flex flex-col">
                             <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Hangar
@@ -268,7 +285,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                     </div>
                
 
-                    <div className="px-3 py-3 space-y-3 ">
+                    <div className="px-3 py-3 space-y-3">
                       <p className="text-xs text-slate-500 mb-1 line-clamp-2">{address}</p>
 
                       <div className="pt-1">{toggleButton}</div>
@@ -294,12 +311,6 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
 
                                 <div className="space-y-2">
                                   {members.map((member) => {
-                                    const safetyScore =
-                                      typeof member.overall_safety_rating === 'number'
-                                        ? member.overall_safety_rating
-                                        : typeof member.theft_worry_rating === 'number'
-                                          ? member.theft_worry_rating
-                                          : null;
                                     const usabilityScore =
                                       typeof member.overall_usability_rating === 'number'
                                         ? member.overall_usability_rating
@@ -326,6 +337,21 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                         ? member.appearance_rating
                                         : null;
 
+                                    // Determine member's rating for color bar
+                                    const memberDisplayScore = memberIsWaiting ? memberWaitlistScore : member.hangarok_score;
+                                    const hasMemberRating = typeof memberDisplayScore === 'number' && memberDisplayScore > 0;
+                                    const memberRatingTone = hasMemberRating ? getRatingTone(memberDisplayScore) : 'none';
+                                    let memberColorBarClass = '';
+                                    if (hasMemberRating) {
+                                      if (memberRatingTone === 'excellent') {
+                                        memberColorBarClass = 'bg-emerald-600';
+                                      } else if (memberRatingTone === 'poor') {
+                                        memberColorBarClass = 'bg-rose-600';
+                                      } else {
+                                        memberColorBarClass = 'bg-slate-500';
+                                      }
+                                    }
+
                                     return (
                                       <button
                                         key={member.id}
@@ -334,7 +360,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                           onSelect({
                                             id: member.id,
                                             texto: member.full_address ?? '-',
-                                            would_recommend: safetyScore ?? undefined,
+                                            hangarok_score: member.hangarok_score ?? null,
                                             usability_rating: usabilityScore ?? undefined,
                                             uses_hangar: member.uses_hangar ?? null,
                                             hangar_number: member.hangar_number ?? r.hangar_number ?? null,
@@ -348,8 +374,9 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                             waitlist_tags: null,
                                           })
                                         }
-                                        className="relative w-full rounded-lg border border-slate-200 px-3 py-2 text-left transition focus:outline-none hover:bg-amber-50 focus-visible:ring-2 focus-visible:ring-amber-400"
+                                        className="relative w-full rounded-lg border border-slate-200 text-left transition focus:outline-none hover:bg-amber-50 focus-visible:ring-2 focus-visible:ring-amber-400"
                                       >
+                                        {memberColorBarClass && <div className={`${memberColorBarClass} h-2 rounded-t-lg`} />}
                                         {member.bike_messed_with && (
                                           <div className="absolute -right-2 -top-3">
                                             <div className="flex items-center gap-2 rounded-full bg-red-500 px-1.5 py-1.5">
@@ -357,7 +384,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                             </div>
                                           </div>
                                         )}
-                                        <div className="flex items-center gap-4">
+                                        <div className="flex items-center gap-4 px-3 py-2">
                                           <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${meta.iconWrapperClass}`}>
                                             {React.createElement(meta.icon, {
                                               className: 'h-4 w-4',
@@ -371,8 +398,8 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                               </>
                                             ) : (
                                               <>
-                                                <span className="text-xs font-medium text-slate-600">Security rating</span>
-                                                <SegmentedBar value={safetyScore ?? 0} color="rgb(74,94,50)" />
+                                                <span className="text-xs font-medium text-slate-600">HangarOK Score</span>
+                                                <SegmentedBar value={member.hangarok_score ?? 0} color="rgb(74,94,50)" />
                                               </>
                                             )}
                                           </div>
@@ -427,8 +454,8 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                       ) : hasRating ? (
                         <div className="space-y-2">
                           <div className="space-y-1">
-                            <span className="text-xs font-medium text-slate-600">Security rating</span>
-                            <SegmentedBar value={score} color="rgb(74,94,50)" />
+                            <span className="text-xs font-medium text-slate-600">HangarOK Score</span>
+                            <SegmentedBar value={r.hangarok_score ?? 0} color="rgb(74,94,50)" />
                           </div>
                         </div>
                       ) : null}

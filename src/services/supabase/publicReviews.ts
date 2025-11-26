@@ -1,6 +1,6 @@
 import { supabaseWrapper } from './client';
 import { slugify } from '../../utils/slugify';
-import { calculateSecurityRating } from '../../utils/ratingHelpers';
+import { calculateSecurityRating, calculateHangarOKScore } from '../../utils/ratingHelpers';
 
 export type PublicReview = {
   id: string | number;
@@ -10,6 +10,7 @@ export type PublicReview = {
   // Hangar review fields (replacing owner_opinion and would_recommend)
   overall_safety_rating: number | null;  // Average of daytime and nighttime safety
   overall_usability_rating: number | null;  // Average of usability ratings
+  hangarok_score: number | null;  // Overall HangarOK Score (average of 4 categories)
   uses_hangar: boolean | null;  // true = current user, false = waiting list / nearby rider
   hangar_number: string | null;  // Hangar identifier (e.g., Cyclehangar_2271)
   // Individual ratings
@@ -178,6 +179,18 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     const overallUsabilityRating = usabilityRatings.length > 0
       ? usabilityRatings.reduce((sum, r) => sum + r, 0) / usabilityRatings.length
       : null;
+    
+    // Calculate category averages for HangarOK Score
+    const communityRatings = [review.belongs_rating, review.fair_use_rating, review.appearance_rating].filter((r): r is number => r != null);
+    const communityVibe = communityRatings.length > 0 ? communityRatings.reduce((sum, r) => sum + r, 0) / communityRatings.length : null;
+    
+    const supportRatings = [review.report_ease_rating, review.fix_speed_rating, review.communication_rating].filter((r): r is number => r != null);
+    const maintenanceSupport = supportRatings.length > 0 ? supportRatings.reduce((sum, r) => sum + r, 0) / supportRatings.length : null;
+    
+    // Calculate HangarOK Score (average of 4 categories)
+    const hangarokScore = review.uses_hangar === true
+      ? calculateHangarOKScore(communityVibe, overallSafetyRating, overallUsabilityRating, maintenanceSupport)
+      : null;
 
     return {
       id: review.id,
@@ -186,6 +199,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
       lng,
       overall_safety_rating: overallSafetyRating,
       overall_usability_rating: overallUsabilityRating,
+      hangarok_score: hangarokScore,
       uses_hangar: review.uses_hangar ?? null,
       hangar_number: review.hangar_number ?? null,
       daytime_safety_rating: review.daytime_safety_rating ?? null,

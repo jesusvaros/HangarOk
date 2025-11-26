@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ClockIcon, ChevronLeftIcon, ChevronRightIcon, QueueListIcon, UserGroupIcon, LockOpenIcon, ShieldCheckIcon, SparklesIcon, WrenchScrewdriverIcon, CubeIcon } from '@heroicons/react/24/outline';
 import { umamiEventProps } from '../../utils/analytics';
 import { SegmentedBar } from '../ui/SegmentedBar';
+import { calculateSecurityRating } from '../../utils/ratingHelpers';
 
 const BikeIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -149,18 +150,38 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
       {review ? (
         <>
           <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
-            {isWaitingRider && waitlistRating !== null && (
-              <div className="bg-white rounded-lg p-2.5 border shadow-sm" style={{ borderColor: 'rgb(74,94,50)' }}>
-                <div className="flex items-center gap-2 mb-2">
-                  <QueueListIcon className="h-4 w-4" style={{ color: 'rgb(74,94,50)' }} />
-                  <h4 className="text-xs font-bold uppercase" style={{ color: 'rgb(74,94,50)' }}>Waitlist fairness</h4>
-                </div>
-                <SegmentedBar value={waitlistRating} color="rgb(74,94,50)" />
-                <p className="mt-1.5 text-[10px] text-gray-500">
-                  How fair and transparent the waiting list process feels to riders trying to get a space.
-                </p>
-              </div>
-            )}
+            {isWaitingRider && (() => {
+              // Calculate Community Vibe for waiting riders
+              const communityRatings = [review.belongs_rating, review.fair_use_rating, review.appearance_rating].filter((r): r is number => typeof r === 'number' && r !== null);
+              const communityAvg = communityRatings.length > 0 ? communityRatings.reduce((sum, r) => sum + r, 0) / communityRatings.length : null;
+              
+              return (
+                <>
+                  {communityAvg !== null && (
+                    <div className="bg-white rounded-lg p-2.5 border shadow-sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        <UserGroupIcon className="h-4 w-4 text-slate-600" />
+                        <h4 className="text-xs font-bold uppercase text-slate-700">Community Vibe</h4>
+                      </div>
+                      <SegmentedBar value={communityAvg} color="rgb(74,94,50)" />
+                    </div>
+                  )}
+                  
+                  {waitlistRating !== null && (
+                    <div className="bg-white rounded-lg p-2.5 border shadow-sm">
+                      <div className="flex items-center gap-2 mb-2">
+                        <QueueListIcon className="h-4 w-4 text-slate-600" />
+                        <h4 className="text-xs font-bold uppercase text-slate-700">Waitlist fairness</h4>
+                      </div>
+                      <SegmentedBar value={waitlistRating} color="rgb(74,94,50)" />
+                      <p className="mt-1.5 text-[10px] text-gray-500">
+                        How fair and transparent the waiting list process feels to riders trying to get a space.
+                      </p>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
 
             {/* Breakdown Categories for Hangar Users */}
             {isCurrentUser && (() => {
@@ -168,8 +189,12 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
               const communityRatings = [review.belongs_rating, review.fair_use_rating, review.appearance_rating].filter((r): r is number => r !== null);
               const communityAvg = communityRatings.length > 0 ? communityRatings.reduce((sum, r) => sum + r, 0) / communityRatings.length : null;
 
-              const safetyRatings = [review.daytime_safety_rating, review.nighttime_safety_rating].filter((r): r is number => r !== null);
-              const safetyAvg = safetyRatings.length > 0 ? safetyRatings.reduce((sum, r) => sum + r, 0) / safetyRatings.length : null;
+              // Use shared security rating calculation with theft modifier
+              const safetyAvg = calculateSecurityRating(
+                review.daytime_safety_rating,
+                review.nighttime_safety_rating,
+                review.bike_messed_with
+              );
 
               const usabilityRatings = [review.lock_ease_rating, review.space_rating, review.lighting_rating, review.maintenance_rating].filter((r): r is number => r !== null);
               const usabilityAvg = usabilityRatings.length > 0 ? usabilityRatings.reduce((sum, r) => sum + r, 0) / usabilityRatings.length : null;

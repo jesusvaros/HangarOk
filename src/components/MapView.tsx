@@ -11,7 +11,6 @@ import ReviewsPanel, { type ReviewListItem } from './map/ReviewsPanel';
 import SearchBar from './map/SearchBar';
 import { getPublicReviews, type PublicReview } from '../services/supabase/publicReviews';
 import { geocodingService } from './ui/address/geocodingService';
-import { calculateSecurityRating } from '../utils/ratingHelpers';
 import PublicReviewsLayer from './map/PublicReviewsLayer';
 import MapBoundsWatcher from './map/MapBoundsWatcher';
 import DetailsPanel from './map/DetailsPanel';
@@ -118,25 +117,6 @@ const MapView = ({
     const processedHangars = new Set<string>();
     const result: ReviewListItem[] = [];
 
-    const resolveRatingValue = (candidate: PublicReview): number | null => {
-      // For waiting riders, return waitlist fairness rating
-      if (candidate.uses_hangar === false) {
-        if (typeof candidate.waitlist_fairness_rating === 'number') return candidate.waitlist_fairness_rating;
-        return null;
-      }
-      
-      // For hangar users, calculate security rating with theft modifier
-      if (candidate.uses_hangar === true) {
-        return calculateSecurityRating(
-          candidate.daytime_safety_rating,
-          candidate.nighttime_safety_rating,
-          candidate.bike_messed_with
-        );
-      }
-      
-      return null;
-    };
-
     visiblePublic.forEach(review => {
       const key = review.hangar_number?.trim();
       const group = key ? hangarGroups.get(key) ?? [] : [];
@@ -144,19 +124,12 @@ const MapView = ({
         if (processedHangars.has(key)) return;
         processedHangars.add(key);
 
-        const ratingScores = group
-          .map(candidate => resolveRatingValue(candidate))
-          .filter((score): score is number => score != null);
         const usabilityScores = group
           .map(candidate =>
             typeof candidate.overall_usability_rating === 'number' ? candidate.overall_usability_rating : null
           )
           .filter((score): score is number => score != null);
 
-        const averageRating =
-          ratingScores.length > 0
-            ? ratingScores.reduce((sum, score) => sum + score, 0) / ratingScores.length
-            : undefined;
         const averageUsability =
           usabilityScores.length > 0
             ? usabilityScores.reduce((sum, score) => sum + score, 0) / usabilityScores.length
@@ -172,7 +145,7 @@ const MapView = ({
           lat: representative?.lat ?? undefined,
           lng: representative?.lng ?? undefined,
           texto: primaryReview?.full_address ?? `Hangar ${key}`,
-          would_recommend: averageRating,
+          hangarok_score: null,
           usability_rating: averageUsability,
           uses_hangar: null,
           hangar_number: key,
@@ -184,6 +157,7 @@ const MapView = ({
             uses_hangar: candidate.uses_hangar ?? null,
             overall_safety_rating: candidate.overall_safety_rating ?? null,
             overall_usability_rating: candidate.overall_usability_rating ?? null,
+            hangarok_score: candidate.hangarok_score ?? null,
             hangar_number: candidate.hangar_number ?? key,
             theft_worry_rating: candidate.theft_worry_rating ?? null,
             waitlist_fairness_rating: candidate.waitlist_fairness_rating ?? null,
@@ -198,14 +172,12 @@ const MapView = ({
           bike_messed_with: group.some(candidate => candidate.bike_messed_with === true),
         });
       } else {
-        const fallbackRating = resolveRatingValue(review) ?? undefined;
-
         result.push({
           id: review.id,
           lat: review.lat ?? undefined,
           lng: review.lng ?? undefined,
           texto: review.full_address ?? '-',
-          would_recommend: fallbackRating,
+          hangarok_score: review.hangarok_score ?? null,
           usability_rating: review.overall_usability_rating ?? undefined,
           uses_hangar: review.uses_hangar ?? null,
           hangar_number: review.hangar_number ?? null,
@@ -491,9 +463,9 @@ const MapView = ({
                     const isGroup = Boolean(item.groupCount && item.groupCount > 1 && item.hangar_number);
                     trackUmamiEvent('map:list-select', {
                       hasSafetyRating: isGroup
-                        ? Boolean(item.would_recommend)
+                        ? Boolean(item.hangarok_score)
                         : Boolean(
-                            publicReviews.find(x => String(x.id) === String(item.id))?.overall_safety_rating
+                            publicReviews.find(x => String(x.id) === String(item.id))?.hangarok_score
                           ),
                       grouped: isGroup,
                     });
@@ -706,10 +678,10 @@ const MapView = ({
                             );
                             trackUmamiEvent('map:list-select', {
                               hasSafetyRating: isGroup
-                                ? Boolean(item.would_recommend)
+                                ? Boolean(item.hangarok_score)
                                 : Boolean(
                                     publicReviews.find(x => String(x.id) === String(item.id))
-                                      ?.overall_safety_rating
+                                      ?.hangarok_score
                                   ),
                               grouped: isGroup,
                             });

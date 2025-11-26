@@ -33,6 +33,29 @@ export const calculateSecurityRating = (
   return Math.max(0, Math.min(5, securityRating));
 };
 
+/**
+ * Calculate HangarOK Score - overall rating based on 4 categories
+ * Formula: Average of (Community Vibe + Safety Check + Everyday Usability + Maintenance & Support)
+ */
+export const calculateHangarOKScore = (
+  communityVibe: number | null | undefined,
+  safetyCheck: number | null | undefined,
+  everydayUsability: number | null | undefined,
+  maintenanceSupport: number | null | undefined
+): number | null => {
+  const scores: number[] = [];
+  if (typeof communityVibe === 'number') scores.push(communityVibe);
+  if (typeof safetyCheck === 'number') scores.push(safetyCheck);
+  if (typeof everydayUsability === 'number') scores.push(everydayUsability);
+  if (typeof maintenanceSupport === 'number') scores.push(maintenanceSupport);
+  
+  if (scores.length === 0) return null;
+  
+  const hangarOKScore = scores.reduce((sum, s) => sum + s, 0) / scores.length;
+  
+  return Math.max(0, Math.min(5, hangarOKScore));
+};
+
 export const getRatingTone = (score?: number | null): RatingTone => {
   if (typeof score !== 'number' || Number.isNaN(score) || score <= 0) return 'none';
   if (score > THRESHOLD_EXCELLENT) return 'excellent';
