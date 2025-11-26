@@ -4,8 +4,9 @@ import 'leaflet/dist/leaflet.css';
 import { MapPinIcon, HomeModernIcon, ShareIcon, UserGroupIcon } from '@heroicons/react/24/outline';
 import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
 import type { Step3Data, Step5Data } from './reviewStepTypes';
-import { ACCENT, average, formatAddress, formatOptionLabel, HOME_TYPE_LABELS, CONNECTION_TYPE_LABELS } from './reviewFormatting';
+import { ACCENT, formatAddress, formatOptionLabel, HOME_TYPE_LABELS, CONNECTION_TYPE_LABELS } from './reviewFormatting';
 import { createRatingFaceIcon } from '../map/ratingFaceIcon';
+import { calculateSecurityRating } from '../../utils/ratingHelpers';
 
 type ReviewInfoSidebarProps = {
   step1Data: AddressStepData | null;
@@ -52,12 +53,16 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
     typeof lat === 'number' && !Number.isNaN(lat) && typeof lng === 'number' && !Number.isNaN(lng) ? [lat, lng] : null;
 
   const isBrowser = typeof window !== 'undefined';
-  const safetyAverage = average([
-    step3Data?.daytime_safety_rating ?? null,
-    step3Data?.nighttime_safety_rating ?? null,
-  ]);
+  // Use shared security rating calculation with theft modifier
+  const securityRating = usesHangar 
+    ? calculateSecurityRating(
+        step3Data?.daytime_safety_rating,
+        step3Data?.nighttime_safety_rating,
+        step3Data?.bike_messed_with
+      )
+    : null;
   const waitlistFairness = step5Data?.waitlist_fairness_rating ?? null;
-  const iconRating = usesHangar ? safetyAverage : waitlistFairness;
+  const iconRating = usesHangar ? securityRating : waitlistFairness;
   const markerIcon = useMemo(() => {
     if (!isBrowser) return null;
     return createRatingFaceIcon({ rating: iconRating, size: 44 });

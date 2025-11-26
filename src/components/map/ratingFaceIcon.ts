@@ -1,10 +1,9 @@
 import type { DivIcon } from 'leaflet';
 import L from 'leaflet';
 import { faceBubbleSVG } from './heroPin';
+import { getMood, getFace, type Mood } from '../../utils/ratingHelpers';
 
 type RatingValue = number | null | undefined;
-type Mood = 'positive' | 'negative' | 'neutral';
-type Face = 'happy' | 'neutral' | 'sad';
 type Variant = 'default' | 'selected';
 
 const COLOR_MAP: Record<Variant, Record<Mood, string>> = {
@@ -21,20 +20,6 @@ const COLOR_MAP: Record<Variant, Record<Mood, string>> = {
 };
 
 const DEFAULT_SIZE = 44;
-
-const getMood = (rating: RatingValue): Mood => {
-  if (typeof rating !== 'number') return 'neutral';
-  if (rating > 3) return 'positive';
-  if (rating < 3) return 'negative';
-  return 'neutral';
-};
-
-const getFace = (rating: RatingValue): Face => {
-  const rounded = typeof rating === 'number' && Number.isFinite(rating) ? Math.round(rating) : 3;
-  if (rounded <= 2) return 'sad';
-  if (rounded === 3) return 'neutral';
-  return 'happy';
-};
 
 type CreateIconOptions = {
   rating?: RatingValue;
@@ -63,7 +48,5 @@ export const createRatingFaceIcon = ({
 };
 
 export const ratingFaceHelpers = {
-  getMood,
-  getFace,
   colors: COLOR_MAP,
 };

@@ -11,6 +11,7 @@ import ReviewsPanel, { type ReviewListItem } from './map/ReviewsPanel';
 import SearchBar from './map/SearchBar';
 import { getPublicReviews, type PublicReview } from '../services/supabase/publicReviews';
 import { geocodingService } from './ui/address/geocodingService';
+import { calculateSecurityRating } from '../utils/ratingHelpers';
 import PublicReviewsLayer from './map/PublicReviewsLayer';
 import MapBoundsWatcher from './map/MapBoundsWatcher';
 import DetailsPanel from './map/DetailsPanel';
@@ -118,15 +119,21 @@ const MapView = ({
     const result: ReviewListItem[] = [];
 
     const resolveRatingValue = (candidate: PublicReview): number | null => {
+      // For waiting riders, return waitlist fairness rating
       if (candidate.uses_hangar === false) {
         if (typeof candidate.waitlist_fairness_rating === 'number') return candidate.waitlist_fairness_rating;
-        if (typeof candidate.overall_safety_rating === 'number') return candidate.overall_safety_rating;
-        if (typeof candidate.theft_worry_rating === 'number') return candidate.theft_worry_rating;
         return null;
       }
-      if (typeof candidate.overall_safety_rating === 'number') return candidate.overall_safety_rating;
-      if (typeof candidate.theft_worry_rating === 'number') return candidate.theft_worry_rating;
-      if (typeof candidate.waitlist_fairness_rating === 'number') return candidate.waitlist_fairness_rating;
+      
+      // For hangar users, calculate security rating with theft modifier
+      if (candidate.uses_hangar === true) {
+        return calculateSecurityRating(
+          candidate.daytime_safety_rating,
+          candidate.nighttime_safety_rating,
+          candidate.bike_messed_with
+        );
+      }
+      
       return null;
     };
 

@@ -96,17 +96,29 @@ type SectionCardProps = {
   subtitle?: string;
   icon: React.ReactNode;
   children: React.ReactNode;
+  score?: number | null;
+  warning?: string;
 };
 
-export const SectionCard = ({ title, subtitle, icon, children }: SectionCardProps) => (
+export const SectionCard = ({ title, subtitle, icon, children, score, warning }: SectionCardProps) => (
   <section className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm ring-1 ring-gray-100/50">
     <div className="mb-4 flex items-start gap-3">
       <div className="flex h-10 w-10 items-center justify-center rounded-xl" style={{ backgroundColor: 'rgba(74,94,50,0.1)', color: ACCENT }}>
         {icon}
       </div>
-      <div>
-        <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
-        {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
+      <div className="flex-1">
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex-1">
+            <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+            {subtitle && <p className="text-sm text-gray-500">{subtitle}</p>}
+          </div>
+          {score !== null && score !== undefined && (
+            <div className="text-right">
+              <div className="text-2xl font-bold text-gray-900">{score.toFixed(1)}/5</div>
+              {warning && <p className="mt-0.5 text-xs" style={{ color: 'rgb(153, 27, 27)' }}>{warning}</p>}
+            </div>
+          )}
+        </div>
       </div>
     </div>
     <div className="space-y-4">{children}</div>

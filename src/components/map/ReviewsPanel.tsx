@@ -1,13 +1,35 @@
 import React, { useState } from 'react';
-import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
 import {
-  StarIcon as StarIconOutline,
-  CheckBadgeIcon,
   ClockIcon,
-  UserGroupIcon,
   ChevronDownIcon,
   LockOpenIcon,
 } from '@heroicons/react/24/outline';
+import { SegmentedBar } from '../ui/SegmentedBar';
+import HangarLogo from '../../assets/logohangarOK.svg';
+import { getRatingTone, RATING_BAR_STYLES, type RatingTone } from '../../utils/ratingHelpers';
+
+const BikeIcon = ({ className }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="5.5" cy="17.5" r="3.5" />
+    <circle cx="18.5" cy="17.5" r="3.5" />
+    <path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+    <path d="M12 17.5V14l-3-3 4-3 2 3h2" />
+  </svg>
+);
+
+const HangarIcon = ({ className }: { className?: string }) => (
+  <img 
+    src={HangarLogo} 
+    alt="Hangar" 
+    className={className}
+    style={{ 
+      filter: 'grayscale(100%) brightness(0.7)',
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain'
+    }}
+  />
+);
 
 export type ReviewListItem = {
   id: string | number;
@@ -52,118 +74,20 @@ export type ReviewListItem = {
   }>;
 };
 
-const getRatingLabel = (score: number): string => {
-  if (score >= 4.8) return 'Excellent';
-  if (score >= 4.3) return 'Excellent';
-  if (score >= 3.8) return 'Great';
-  if (score >= 2.8) return 'Average';
-  if (score >= 1.8) return 'Poor';
-  return 'Bad';
-};
-
-const getStarCount = (score: number): number => {
-  if (score >= 4.8) return 5;
-  if (score >= 4.3) return 4.5;
-  if (score >= 3.8) return 4;
-  if (score >= 2.8) return 3;
-  if (score >= 1.8) return 2;
-  return 1;
-};
-
-const StarDisplay = ({ score }: { score: number }) => {
-  const starCount = getStarCount(score);
+const RatingBar = ({ tone }: { tone: RatingTone }) => {
+  const styles = RATING_BAR_STYLES[tone];
   return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((i) => {
-        const isFull = i <= Math.floor(starCount);
-        const isHalf = !isFull && i === Math.ceil(starCount) && starCount % 1 !== 0;
-        if (isFull) {
-          return <StarIconSolid key={i} className="h-3.5 w-3.5 text-yellow-400" />;
-        }
-        if (isHalf) {
-          return (
-            <span key={i} className="relative">
-              <StarIconOutline className="h-3.5 w-3.5 text-yellow-400" />
-              <span className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
-                <StarIconSolid className="h-3.5 w-3.5 text-yellow-400" />
-              </span>
-            </span>
-          );
-        }
-        return <StarIconOutline key={i} className="h-3.5 w-3.5 text-gray-300" />;
-      })}
-    </div>
+    <div className={`${styles.background} h-2 rounded-t-lg`} />
   );
 };
 
-type RatingTone = 'excellent' | 'average' | 'poor' | 'none';
 
-const getRatingTone = (score?: number | null): RatingTone => {
-  if (typeof score !== 'number' || Number.isNaN(score) || score <= 0) return 'none';
-  if (score >= 4) return 'excellent';
-  if (score <= 2.5) return 'poor';
-  return 'average';
-};
-
-const RATING_BADGE_STYLES: Record<RatingTone, { background: string; dot: string; text: string }> = {
-  excellent: { background: 'bg-white', dot: 'bg-emerald-500', text: 'text-slate-800' },
-  average: { background: 'bg-white', dot: 'bg-slate-400', text: 'text-slate-700' },
-  poor: { background: 'bg-white', dot: 'bg-rose-500', text: 'text-slate-800' },
-  none: { background: 'bg-white', dot: 'bg-slate-300', text: 'text-slate-500' },
-};
-
-const RatingBadge = ({ label, tone }: { label: string; tone: RatingTone }) => {
-  const styles = RATING_BADGE_STYLES[tone];
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-[11px] font-semibold ${styles.background} ${styles.text}`}>
-      <span className={`h-2 w-2 rounded-full ${styles.dot}`} aria-hidden />
-      <span>{label}</span>
-    </span>
-  );
-};
-
-const WAITLIST_TAGS_DISPLAY: Record<
-  string,
-  {
-    icon: string;
-    label: string;
-  }
-> = {
-  waiting_too_long: { icon: '⌛', label: 'Waiting too long' },
-  no_idea_position: { icon: '❓', label: 'Don\'t know position' },
-  more_hangars_needed: { icon: '🚲', label: 'More hangars needed' },
-};
-
-const WAITLIST_TAG_ORDER = ['waiting_too_long', 'no_idea_position', 'more_hangars_needed'] as const;
-
-const WaitlistInsights: React.FC<{ tags: string[] }> = ({ tags }) => {
-  const tagSet = new Set(tags);
-  const displayable = WAITLIST_TAG_ORDER
-    .filter(tag => tagSet.has(tag))
-    .map(tag => ({ tag, data: WAITLIST_TAGS_DISPLAY[tag] }))
-    .filter(
-      (entry): entry is { tag: (typeof WAITLIST_TAG_ORDER)[number]; data: { icon: string; label: string } } =>
-        Boolean(entry.data),
-    );
-
-  return (
-      <div className="flex flex-wrap gap-2 row">
-        {displayable.map(({ tag, data }) => (
-          <div key={tag} className="flex shrink-1 gap-1 text-[10px] font-semibold text-slate-600 border border-slate-400 px-2 py-1 rounded-xl items-center">
-            <span className="text-base leading-none">{data.icon}</span>
-            <span>{data.label}</span>
-          </div>
-        ))}
-    </div>
-  );
-};
-
-type UsageKey = 'users' | 'waiting' | 'unknown';
+type UsageKey = 'users' | 'waiting';
 
 const usageKeyFromValue = (value?: boolean | null): UsageKey => {
   if (value === true) return 'users';
   if (value === false) return 'waiting';
-  return 'unknown';
+  return 'waiting';
 };
 
 const USAGE_STYLES: Record<
@@ -171,7 +95,7 @@ const USAGE_STYLES: Record<
   {
     categoryTitle: string;
     label: string;
-    icon: typeof CheckBadgeIcon;
+    icon: React.ComponentType<{ className?: string }>;
     iconWrapperClass: string;
     categoryTextClass: string;
   }
@@ -179,21 +103,14 @@ const USAGE_STYLES: Record<
   users: {
     categoryTitle: 'Hangar riders',
     label: 'Hangar rider',
-    icon: CheckBadgeIcon,
-    iconWrapperClass: 'bg-emerald-100 text-emerald-700',
+    icon: BikeIcon,
+    iconWrapperClass: 'bg-slate-200 text-slate-600',
     categoryTextClass: 'text-slate-600',
   },
   waiting: {
     categoryTitle: 'Waiting & nearby riders',
     label: 'Waiting / nearby',
     icon: ClockIcon,
-    iconWrapperClass: 'bg-amber-100 text-amber-700',
-    categoryTextClass: 'text-slate-600',
-  },
-  unknown: {
-    categoryTitle: 'Other riders',
-    label: 'Usage unknown',
-    icon: UserGroupIcon,
     iconWrapperClass: 'bg-slate-200 text-slate-600',
     categoryTextClass: 'text-slate-600',
   },
@@ -235,7 +152,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
           </div>
         </div>
       ) : (
-        <ul className="space-y-2 flex-1 overflow-auto p-1">
+        <ul className="space-y-5 flex-1 overflow-auto p-1 pt-5">
           {reviews.map((r) => {
             const id = r.id ?? `${r.lat}-${r.lng}`;
             const address = r.texto ?? '-';
@@ -243,26 +160,19 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
             const isGroup = (r.groupCount ?? 0) > 1 && (r.groupedReviews?.length ?? 0) > 0;
             const isCurrentUser = !isGroup && r.uses_hangar === true;
             const isWaitingRider = !isGroup && r.uses_hangar === false;
-            const waitlistTags = Array.isArray(r.waitlist_tags) ? r.waitlist_tags : [];
-            const waitlistHasFeedback = isWaitingRider
-              ? waitlistTags.some(tag => Boolean(WAITLIST_TAGS_DISPLAY[tag]))
-              : false;
             const hasRating = !isWaitingRider && score > 0;
-            const label = isWaitingRider
-              ? waitlistHasFeedback
-                ? 'Waiting list feedback'
-                : 'No waiting list feedback yet'
-              : hasRating
-                ? getRatingLabel(score)
-                : 'No rating yet';
+            const waitlistRating = isWaitingRider && typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 
+              ? r.waitlist_fairness_rating 
+              : null;
+            const hasWaitlistRating = waitlistRating !== null;
             const reviewCount = r.groupCount ?? r.groupedReviews?.length ?? 0;
             const isSelected = String(selectedId ?? '') === String(id);
             const statusIconWrapper = isGroup
-              ? 'bg-amber-100 text-emerald-700'
+              ? 'bg-slate-200 text-slate-600'
               : isCurrentUser
-                ? 'bg-emerald-100 text-emerald-700'
+                ? 'bg-slate-200 text-slate-600'
                 : isWaitingRider
-                  ? 'bg-amber-100 text-amber-700'
+                  ? 'bg-slate-200 text-slate-600'
                   : 'bg-slate-200 text-slate-600';
             const statusLabel = isGroup
               ? 'Hangar reviews'
@@ -271,15 +181,15 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                 : isWaitingRider
                   ? 'Waiting rider'
                   : 'Rider';
-            const ratingTone = hasRating ? getRatingTone(score) : 'none';
-            const UserIcon = isGroup ? UserGroupIcon : isCurrentUser ? CheckBadgeIcon : ClockIcon;
+            const ratingTone = hasRating ? getRatingTone(score) : hasWaitlistRating ? getRatingTone(waitlistRating) : 'none';
+            const UserIcon = isGroup ? HangarIcon : isCurrentUser ? BikeIcon : ClockIcon;
             const expanded = expandedGroups[String(id)] ?? true;
             const toggleLabel = expanded ? 'Hide riders' : 'See riders';
             const toggleButton = (
               <button
                 type="button"
                 onClick={() => toggleGroup(String(id))}
-                className="inline-flex items-center gap-1 rounded-md border border-amber-200 px-3 py-1.5 text-[11px] font-semibold text-amber-700 transition hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                className="inline-flex items-center gap-1 rounded-md border border-amber-200 px-3 py-1.5 text-[11px] font-semibold text-amber-700 transition hover:bg-amber-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 "
               >
                 <span>{toggleLabel}</span>
                 <ChevronDownIcon
@@ -296,16 +206,8 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                 Theft reported
               </span>
             ) : null;
-            const headerIndicators = !isGroup && (theftBadge || hasRating)
-              ? (
-                <div className="flex flex-col items-end gap-1">
-                  {theftBadge}
-                  {hasRating ? <RatingBadge label={label} tone={ratingTone} /> : null}
-                </div>
-              )
-              : null;
             const cardClasses = [
-              'overflow-hidden',
+              'relative',
               'rounded-lg',
               'border',
               'bg-white',
@@ -336,12 +238,18 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
               >
                 {isGroup ? (
                   <>
+                    {theftBadge && (
+                      <div className="absolute -right-1 -top-3 z-10">
+                        {theftBadge}
+                      </div>
+                    )}
+                    {hasRating && <RatingBar tone={ratingTone} />}
                     <div className="px-3 py-3 border-b bg-white flex items-start gap-3">
                       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
                         <UserIcon className="h-4 w-4" />
                       </span>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0 flex items-start justify-between gap-2">
+                    
                           <div className="flex flex-col">
                             <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                               Hangar
@@ -351,32 +259,22 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                             </span>
                           </div>
                           <div className="flex flex-col items-end gap-1 text-right">
-                            {theftBadge}
                             <p className="text-xs text-slate-500">
                               {reviewCount} review{reviewCount === 1 ? '' : 's'} available
                             </p>
                           </div>
                         </div>
-                      </div>
+            
                     </div>
                
 
-                    <div className="px-3 py-3 space-y-3">
+                    <div className="px-3 py-3 space-y-3 ">
                       <p className="text-xs text-slate-500 mb-1 line-clamp-2">{address}</p>
 
-                      {hasRating ? (
-                          <div className="pt-1">{toggleButton}</div>
-                      ) : (
-                        <div className="space-y-2">
-                          <p className="text-xs text-slate-400 italic">{label}</p>
-                          <div className="pt-1">{toggleButton}</div>
-                        </div>
-                      )}
+                      <div className="pt-1">{toggleButton}</div>
 
                       {!expanded ? (
-                        <p className="text-xs font-semibold text-slate-600">
-                          Expand to compare all rider scores in this hangar.
-                        </p>
+                        null
                       ) : (
                         <div className="space-y-4">
                           {(Object.keys(USAGE_STYLES) as UsageKey[]).map((usageKey) => {
@@ -389,11 +287,6 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                             return (
                               <div key={usageKey} className="space-y-2">
                                 <div className="flex items-center gap-2">
-                                  <span className={`flex h-7 w-7 items-center justify-center rounded-full ${meta.iconWrapperClass}`}>
-                                    {React.createElement(meta.icon, {
-                                      className: 'h-3.5 w-3.5',
-                                    })}
-                                  </span>
                                   <p className={`text-xs font-semibold uppercase tracking-wide ${meta.categoryTextClass}`}>
                                     {meta.categoryTitle} · {members.length}
                                   </p>
@@ -432,7 +325,6 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                       typeof member.appearance_rating === 'number'
                                         ? member.appearance_rating
                                         : null;
-                                    const memberWaitlistTags = Array.isArray(member.waitlist_tags) ? member.waitlist_tags : [];
 
                                     return (
                                       <button
@@ -453,59 +345,37 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                             appearance_rating: memberAppearanceScore ?? null,
                                             perception_tags: member.perception_tags ?? null,
                                             impact_tags: member.impact_tags ?? null,
-                                            waitlist_tags: memberWaitlistTags.length > 0 ? memberWaitlistTags : null,
+                                            waitlist_tags: null,
                                           })
                                         }
-                                        className="w-full rounded-lg border border-slate-200 px-3 py-3 text-left transition focus:outline-none hover:bg-amber-50 focus-visible:ring-2 focus-visible:ring-amber-400"
+                                        className="relative w-full rounded-lg border border-slate-200 px-3 py-2 text-left transition focus:outline-none hover:bg-amber-50 focus-visible:ring-2 focus-visible:ring-amber-400"
                                       >
-                                        <div className="flex items-center justify-between">
-                                          <div className="flex items-center gap-2">
-                                            <span className={`flex h-6 w-6 items-center justify-center rounded-full ${meta.iconWrapperClass}`}>
-                                              {React.createElement(meta.icon, {
-                                                className: 'h-3.5 w-3.5',
-                                              })}
-                                            </span>
-                                            <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">
-                                              {meta.label}
-                                            </span>
+                                        {member.bike_messed_with && (
+                                          <div className="absolute -right-2 -top-3">
+                                            <div className="flex items-center gap-2 rounded-full bg-red-500 px-1.5 py-1.5">
+                                              <LockOpenIcon className="h-3 w-3 text-white" strokeWidth={3} />
+                                            </div>
                                           </div>
-                                          <span
-                                            className="inline-flex items-center gap-1 rounded-full border border-amber-200 px-2 py-0.5 text-[10px] font-semibold text-amber-700"
-                                          >
-                                            View review
+                                        )}
+                                        <div className="flex items-center gap-4">
+                                          <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full ${meta.iconWrapperClass}`}>
+                                            {React.createElement(meta.icon, {
+                                              className: 'h-4 w-4',
+                                            })}
                                           </span>
-                                        </div>
-                                        <div className="mt-3 space-y-1.5">
-                                          {memberIsWaiting ? (
-                                            <>
-                                              {memberWaitlistScore ? (
-                                                <div className="flex items-center justify-between">
-                                                  <span className="text-xs font-medium text-slate-600">Waitlist fairness</span>
-                                                  <StarDisplay score={memberWaitlistScore} />
-                                                </div>
-                                              ) : null}
-                                              <WaitlistInsights tags={memberWaitlistTags} />
-                                            </>
-                                          ) : (
-                                            <>
-                                              {safetyScore ? (
-                                                <div className="flex items-center justify-between">
-                                                  <span className="text-xs font-medium text-slate-600">Safety</span>
-                                                  <StarDisplay score={safetyScore} />
-                                                </div>
-                                              ) : (
-                                                <p className="text-[11px] text-gray-400 italic">
-                                                  No safety score yet
-                                                </p>
-                                              )}
-                                              {usabilityScore ? (
-                                                <div className="flex items-center justify-between">
-                                                  <span className="text-xs font-medium text-slate-600">Usability</span>
-                                                  <StarDisplay score={usabilityScore} />
-                                                </div>
-                                              ) : null}
-                                            </>
-                                          )}
+                                          <div className="flex-1 space-y-1">
+                                            {memberIsWaiting ? (
+                                              <>
+                                                <span className="text-xs font-medium text-slate-600">Waitlist fairness</span>
+                                                <SegmentedBar value={memberWaitlistScore ?? 0} color="rgb(74,94,50)" />
+                                              </>
+                                            ) : (
+                                              <>
+                                                <span className="text-xs font-medium text-slate-600">Security rating</span>
+                                                <SegmentedBar value={safetyScore ?? 0} color="rgb(74,94,50)" />
+                                              </>
+                                            )}
+                                          </div>
                                         </div>
                                       </button>
                                     );
@@ -520,6 +390,12 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                   </>
                 ) : (
                   <>
+                    {theftBadge && (
+                      <div className="absolute -right-1 -top-3 z-10">
+                        {theftBadge}
+                      </div>
+                    )}
+                    {(hasRating || hasWaitlistRating) && <RatingBar tone={ratingTone} />}
                     <div className="px-3 py-3 border-b bg-white flex items-center gap-3 cursor-pointer" onClick={() => onSelect(r)}>
                       <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${statusIconWrapper}`}>
                         <UserIcon className="h-4 w-4" />
@@ -532,40 +408,30 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                           {r.hangar_number ? `Hangar ${r.hangar_number}` : 'Hangar'}
                         </p>
                       </div>
-                      {headerIndicators}
                     </div>
                     <button
                       type="button"
                       onClick={() => onSelect(r)}
-                      className="block w-full px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+                      className="block w-full px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 "
                     >
                       <p className="mb-3 text-xs text-slate-500 line-clamp-2">{address}</p>
                       {isWaitingRider ? (
                         <>
                           {typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 ? (
-                            <div className="flex items-center justify-between mb-2">
+                            <div className="space-y-1 mb-2">
                               <span className="text-xs font-medium text-slate-600">Waitlist fairness</span>
-                              <StarDisplay score={r.waitlist_fairness_rating} />
+                              <SegmentedBar value={r.waitlist_fairness_rating} color="rgb(74,94,50)" />
                             </div>
                           ) : null}
-                          <WaitlistInsights tags={waitlistTags} />
                         </>
                       ) : hasRating ? (
-                        <div className="space-y-1.5">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs font-medium text-slate-600">Safety</span>
-                            <StarDisplay score={score} />
+                        <div className="space-y-2">
+                          <div className="space-y-1">
+                            <span className="text-xs font-medium text-slate-600">Security rating</span>
+                            <SegmentedBar value={score} color="rgb(74,94,50)" />
                           </div>
-                          {r.usability_rating && r.usability_rating > 0 ? (
-                            <div className="flex items-center justify-between">
-                              <span className="text-xs font-medium text-slate-600">Usability</span>
-                              <StarDisplay score={r.usability_rating} />
-                            </div>
-                          ) : null}
                         </div>
-                      ) : (
-                        <p className="text-xs text-slate-400 italic">{label}</p>
-                      )}
+                      ) : null}
                     </button>
                   </>
                 )}

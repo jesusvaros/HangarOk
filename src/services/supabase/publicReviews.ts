@@ -1,5 +1,6 @@
 import { supabaseWrapper } from './client';
 import { slugify } from '../../utils/slugify';
+import { calculateSecurityRating } from '../../utils/ratingHelpers';
 
 export type PublicReview = {
   id: string | number;
@@ -158,13 +159,13 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
           : null;
     const citySlug = city ? slugify(city) : null;
     
-    // Calculate average safety rating (daytime + nighttime) / 2
-    const safetyRatings = [
-      review.daytime_safety_rating,
-      review.nighttime_safety_rating
-    ].filter((r): r is number => r != null);
-    const overallSafetyRating = safetyRatings.length > 0
-      ? safetyRatings.reduce((sum, r) => sum + r, 0) / safetyRatings.length
+    // Calculate security rating with theft modifier for hangar users
+    const overallSafetyRating = review.uses_hangar === true
+      ? calculateSecurityRating(
+          review.daytime_safety_rating,
+          review.nighttime_safety_rating,
+          review.bike_messed_with
+        )
       : null;
     
     // Calculate average usability rating (lock_ease + space + lighting + maintenance) / 4

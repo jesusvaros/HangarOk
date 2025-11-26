@@ -17,6 +17,7 @@ import {
 import type { Step2Data, Step3Data, Step4Data, Step5Data } from './reviewStepTypes';
 import { formatOptionLabel } from './reviewFormatting';
 import { RatingRow, TagList, BooleanSignal, SectionCard } from './reviewShared';
+import { calculateSecurityRating } from '../../utils/ratingHelpers';
 
 type Props = {
   step2Data: Step2Data | null;
@@ -28,9 +29,25 @@ type Props = {
 const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4Data, step5Data }) => {
   const currentStorageLabel = formatOptionLabel(step3Data?.current_bike_storage) ?? null;
 
+  // Calculate category averages (same as DetailsPanel)
+  const communityRatings = [step2Data?.belongs_rating, step2Data?.fair_use_rating, step2Data?.appearance_rating].filter((r): r is number => r !== null);
+  const communityAvg = communityRatings.length > 0 ? communityRatings.reduce((sum, r) => sum + r, 0) / communityRatings.length : null;
+
+  const securityRating = calculateSecurityRating(
+    step3Data?.daytime_safety_rating,
+    step3Data?.nighttime_safety_rating,
+    step3Data?.bike_messed_with
+  );
+
+  const usabilityRatings = [step4Data?.lock_ease_rating, step4Data?.space_rating, step4Data?.lighting_rating, step4Data?.maintenance_rating].filter((r): r is number => r !== null);
+  const usabilityAvg = usabilityRatings.length > 0 ? usabilityRatings.reduce((sum, r) => sum + r, 0) / usabilityRatings.length : null;
+
+  const supportRatings = [step5Data?.report_ease_rating, step5Data?.fix_speed_rating, step5Data?.communication_rating].filter((r): r is number => r !== null);
+  const supportAvg = supportRatings.length > 0 ? supportRatings.reduce((sum, r) => sum + r, 0) / supportRatings.length : null;
+
   return (
     <div className="space-y-4">
-      <SectionCard title="Community Vibe" subtitle="How the hangar fits the neighbourhood" icon={<UserGroupIcon className="h-6 w-6 text-gray-500" />}>
+      <SectionCard title="Community Vibe" subtitle="How the hangar fits the neighbourhood" icon={<UserGroupIcon className="h-6 w-6 text-gray-500" />} score={communityAvg}>
           <div className="space-y-3">
             <RatingRow icon={<SparklesIcon className="h-5 w-5 text-black" />} label="Belonging" value={step2Data?.belongs_rating ?? null} />
             <RatingRow icon={<QueueListIcon className="h-5 w-5 text-black" />} label="Fair use" value={step2Data?.fair_use_rating ?? null} />
@@ -39,7 +56,13 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           <TagList title="Neighbours say…" tags={step2Data?.perception_tags} />
         </SectionCard>
 
-      <SectionCard title="Safety Check" subtitle="Confidence leaving a bike inside" icon={<ShieldCheckIcon className="h-6 w-6 text-gray-500" />}>
+      <SectionCard 
+        title="Safety Check" 
+        subtitle="Confidence leaving a bike inside" 
+        icon={<ShieldCheckIcon className="h-6 w-6 text-gray-500" />} 
+        score={securityRating}
+        warning={step3Data?.bike_messed_with ? "⚠️ Low due to theft" : undefined}
+      >
           <div className="space-y-3">
             <RatingRow icon={<SunIcon className="h-5 w-5 text-black" />} label="Daytime safety" value={step3Data?.daytime_safety_rating ?? null} />
             <RatingRow icon={<MoonIcon className="h-5 w-5 text-black" />} label="Night safety" value={step3Data?.nighttime_safety_rating ?? null} />
@@ -59,7 +82,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           <TagList title="Safety notes" tags={step3Data?.safety_tags} tone="warning" />
         </SectionCard>
 
-      <SectionCard title="Everyday Usability" subtitle="How easy it is to use the hangar" icon={<BoltIcon className="h-6 w-6 text-gray-500" />}>
+      <SectionCard title="Everyday Usability" subtitle="How easy it is to use the hangar" icon={<BoltIcon className="h-6 w-6 text-gray-500" />} score={usabilityAvg}>
           <div className="space-y-3">
             <RatingRow icon={<LockClosedIcon className="h-5 w-5 text-black" />} label="Lock ease" value={step4Data?.lock_ease_rating ?? null} />
             <RatingRow icon={<ArrowsPointingOutIcon className="h-5 w-5 text-black" />} label="Space available" value={step4Data?.space_rating ?? null} />
@@ -69,7 +92,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           <TagList title="Usability notes" tags={step4Data?.usability_tags} />
         </SectionCard>
 
-      <SectionCard title="Maintenance & Support" subtitle="How quickly things get fixed" icon={<WrenchScrewdriverIcon className="h-6 w-6 text-gray-500" />}>
+      <SectionCard title="Maintenance & Support" subtitle="How quickly things get fixed" icon={<WrenchScrewdriverIcon className="h-6 w-6 text-gray-500" />} score={supportAvg}>
           <div className="space-y-3">
             <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5 text-black" />} label="Easy to report" value={step5Data?.report_ease_rating ?? null} />
             <RatingRow icon={<BoltIcon className="h-5 w-5 text-black" />} label="Fix speed" value={step5Data?.fix_speed_rating ?? null} />
