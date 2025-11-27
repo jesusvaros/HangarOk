@@ -52,7 +52,7 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
             <div className="rounded-xl bg-gray-50 p-3 text-sm text-gray-700">
               <div>Stores bike: <span className="font-semibold">{currentStorageLabel}</span></div>
               <div className="mt-2">
-                Worry about theft: <span className="font-semibold">
+                Theft risk outside the hangar: <span className="font-semibold">
                   {step3Data?.theft_worry_rating !== null && step3Data?.theft_worry_rating !== undefined 
                     ? `${step3Data.theft_worry_rating}/5` 
                     : 'Not rated'}
@@ -69,7 +69,7 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
         </SectionCard>
 
       <SectionCard 
-        title="Perception & Safety" 
+        title="Community Vibe" 
         subtitle="Feelings from outside the hangar" 
         icon={<ShieldCheckIcon className="h-6 w-6 text-gray-500" />}
         score={communityAvg}

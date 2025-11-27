@@ -4,6 +4,9 @@ import PageSEO from '../seo/PageSEO';
 import MapView from '../components/MapView';
 import { getPublicReviews, type PublicReview } from '../services/supabase/publicReviews';
 import { slugify } from '../utils/slugify';
+import { SegmentedBar } from '../components/ui/SegmentedBar';
+import { getRatingTone, RATING_BAR_STYLES } from '../utils/ratingHelpers';
+import { SparklesIcon, ShieldCheckIcon, WrenchScrewdriverIcon, CogIcon } from '@heroicons/react/24/outline';
 
 type Status = 'loading' | 'ready' | 'not-found';
 
@@ -67,6 +70,30 @@ export default function CityReviewsPage() {
 
   const reviewCount = reviews.length;
   const fallbackCityName = cityName || (citySlug ? humanizeSlug(citySlug) : 'City');
+
+  // Deterministic random selection based on current day
+  const selectedReviews = useMemo(() => {
+    if (reviews.length === 0) return [];
+    
+    // Get current day as seed (YYYY-MM-DD format)
+    const today = new Date();
+    const seed = today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
+    
+    // Simple seeded random function
+    const seededRandom = (s: number) => {
+      const x = Math.sin(s) * 10000;
+      return x - Math.floor(x);
+    };
+    
+    // Shuffle array with seeded random
+    const shuffled = [...reviews];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(seededRandom(seed + i) * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    return shuffled.slice(0, Math.min(4, shuffled.length));
+  }, [reviews]);
 
   const initialView = useMemo(() => {
     if (!reviews.length) return undefined;
@@ -198,19 +225,119 @@ export default function CityReviewsPage() {
                   We’ve highlighted real testimonies so you can understand the cycle hangar experience in this area.
                 </p>
                 <div className="mt-6 grid gap-6 md:grid-cols-2">
-                  {reviews.slice(0, Math.min(4, reviews.length)).map(review => (
-                    <blockquote
-                      key={review.id}
-                      className="rounded-2xl border border-gray-200 bg-gray-50 p-5 text-left"
-                    >
-                      <p className="text-sm text-gray-700">
-                        {review.overall_safety_rating ? `Safety rating: ${review.overall_safety_rating}/5` : 'Review pending completion.'}
-                      </p>
-                      <footer className="mt-4 text-xs font-medium uppercase tracking-wide text-gray-500">
-                        {review.full_address ?? fallbackCityName}
-                      </footer>
-                    </blockquote>
-                  ))}
+                  {selectedReviews.map(review => {
+                    // Calculate category ratings for hangar users
+                    const isHangarUser = review.uses_hangar === true;
+                    
+                    if (!isHangarUser) {
+                      return (
+                        <Link
+                          key={review.id}
+                          to={`/review/${review.id}`}
+                          className="block rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                        >
+                          <div className="p-5">
+                            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-3">
+                              {review.full_address ?? fallbackCityName}
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              {review.waitlist_fairness_rating ? `Waitlist fairness: ${review.waitlist_fairness_rating.toFixed(1)}/5` : 'Review pending completion.'}
+                            </p>
+                          </div>
+                        </Link>
+                      );
+                    }
+                    
+                    // Calculate 4 main categories for hangar users
+                    const communityVibe = (review.belongs_rating != null && review.fair_use_rating != null && review.appearance_rating != null)
+                      ? (review.belongs_rating + review.fair_use_rating + review.appearance_rating) / 3
+                      : null;
+                    
+                    const maintenanceSupport = (review.report_ease_rating != null && review.fix_speed_rating != null && review.communication_rating != null)
+                      ? (review.report_ease_rating + review.fix_speed_rating + review.communication_rating) / 3
+                      : null;
+                    
+                    type CategoryItem = { name: string; icon: typeof SparklesIcon; value: number };
+                    const categories = [
+                      { name: 'Community Vibe', icon: SparklesIcon, value: communityVibe },
+                      { name: 'Safety Check', icon: ShieldCheckIcon, value: review.overall_safety_rating },
+                      { name: 'Everyday Usability', icon: CogIcon, value: review.overall_usability_rating },
+                      { name: 'Maintenance & Support', icon: WrenchScrewdriverIcon, value: maintenanceSupport },
+                    ].filter((c): c is CategoryItem => c.value != null);
+                    
+                    if (categories.length < 2) {
+                      return (
+                        <Link
+                          key={review.id}
+                          to={`/review/${review.id}`}
+                          className="block rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                        >
+                          <div className="p-5">
+                            <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-3">
+                              {review.full_address ?? fallbackCityName}
+                            </p>
+                            <p className="text-sm text-gray-700">Review pending completion.</p>
+                          </div>
+                        </Link>
+                      );
+                    }
+                    
+                    const sorted = [...categories].sort((a, b) => b.value - a.value);
+                    const best = sorted[0];
+                    const worst = sorted[sorted.length - 1];
+                    
+                    // Get rating tone for color bar
+                    const hangarokScore = review.hangarok_score;
+                    const ratingTone = hangarokScore ? getRatingTone(hangarokScore) : 'none';
+                    const colorBarStyles = RATING_BAR_STYLES[ratingTone];
+                    
+                    return (
+                      <Link
+                        key={review.id}
+                        to={`/review/${review.id}`}
+                        className="block rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                      >
+                        {/* Color bar at top */}
+                        {hangarokScore && <div className={`${colorBarStyles.background} h-2`} />}
+                        
+                        <div className="p-5">
+                          {/* Address at top */}
+                          <p className="text-xs font-medium uppercase tracking-wide text-gray-500 mb-4">
+                            {review.full_address ?? fallbackCityName}
+                          </p>
+                          
+                          {/* HangarOK Score */}
+                          {hangarokScore && (
+                            <div className="mb-4">
+                              <span className="text-xs font-medium text-slate-600">HangarOK Score</span>
+                              <SegmentedBar value={hangarokScore} color="rgb(74,94,50)" />
+                            </div>
+                          )}
+                          
+                          {/* Best and Worst Categories */}
+                          <div className="space-y-3">
+                            <div className="flex items-center gap-2">
+                              <best.icon className="h-4 w-4 text-emerald-600 flex-shrink-0 self-start  mt-5" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Best</p>
+                                <p className="text-xs font-semibold text-slate-800 truncate">{best.name}</p>
+                                <SegmentedBar value={best.value} color="rgb(74,94,50)" showValue={false} />
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-2">
+                              <worst.icon className="h-4 w-4 text-slate-500 flex-shrink-0 self-start  mt-5" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Worst</p>
+                                <p className="text-xs font-semibold text-slate-800 truncate">{worst.name}</p>
+                                <SegmentedBar value={worst.value} color="rgb(74,94,50)" showValue={false} />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </section>

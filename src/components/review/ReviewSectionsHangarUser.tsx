@@ -66,7 +66,7 @@ const ReviewSectionsHangarUser: React.FC<Props> = ({ step2Data, step3Data, step4
           <div className="space-y-3">
             <RatingRow icon={<SunIcon className="h-5 w-5 text-black" />} label="Daytime safety" value={step3Data?.daytime_safety_rating ?? null} />
             <RatingRow icon={<MoonIcon className="h-5 w-5 text-black" />} label="Night safety" value={step3Data?.nighttime_safety_rating ?? null} />
-            <RatingRow icon={<ExclamationTriangleIcon className="h-5 w-5 text-black" />} label="Worry about theft" value={step3Data?.theft_worry_rating ?? null} />
+            <RatingRow icon={<ExclamationTriangleIcon className="h-5 w-5 text-black" />} label="Theft risk outside the hangar" value={step3Data?.theft_worry_rating ?? null} />
           </div>
           <BooleanSignal
             label="Has there been a theft or attempted theft here?"
