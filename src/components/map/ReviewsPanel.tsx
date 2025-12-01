@@ -288,7 +288,40 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                     <div className="px-3 py-3 space-y-3">
                       <p className="text-xs text-slate-500 mb-1 line-clamp-2">{address}</p>
 
-                      <div className="pt-1">{toggleButton}</div>
+                      {(() => {
+                        // Calculate average HangarOK score from hangar users only
+                        const hangarUserScores = (r.groupedReviews ?? [])
+                          .filter(member => member.uses_hangar === true && typeof member.hangarok_score === 'number')
+                          .map(member => member.hangarok_score as number);
+                        
+                        const avgScore = hangarUserScores.length > 0
+                          ? hangarUserScores.reduce((sum, score) => sum + score, 0) / hangarUserScores.length
+                          : null;
+
+                        if (avgScore === null) {
+                          return <div className="pt-1">{toggleButton}</div>;
+                        }
+
+                        const scoreTone = getRatingTone(avgScore);
+                        let badgeColor = 'bg-slate-100 text-slate-700 border-slate-300';
+                        if (scoreTone === 'excellent') badgeColor = 'bg-emerald-50 text-emerald-700 border-emerald-300';
+                        else if (scoreTone === 'poor') badgeColor = 'bg-rose-50 text-rose-700 border-rose-300';
+
+                        return (
+                          <div className="flex flex-col items-end gap-0.5">
+                            <span className="text-[10px] font-medium text-slate-500">HangarOK Score</span>
+                            <div className="pt-1 flex items-center justify-between gap-3 w-full">
+                              {toggleButton}
+                              <div className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${badgeColor}`}>
+                                <span className="text-xs font-medium">★</span>
+                                <span className="text-sm font-bold">
+                                  {avgScore.toFixed(1)}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })()}
 
                       {!expanded ? (
                         null
