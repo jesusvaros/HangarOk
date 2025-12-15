@@ -8,6 +8,7 @@ import PageSEO from './seo/PageSEO';
 import HeroSection from './components/HeroSection';
 import InputSection from './components/InputSection';
 import BenefitsSection from './components/BenefitsSection';
+import TrustRewardsSection from './components/TrustRewardsSection';
 import ChromeStoreSection from './components/ChromeStoreSection';
 import PictureSection from './components/PictureSection';
 import HowItWorksSection from './components/HowItWorksSection';
@@ -120,6 +121,7 @@ function App() {
                 <HowItWorksSection />
                 {/* <StatsSection /> */}
                 <BenefitsSection />
+                <TrustRewardsSection />
                   <PictureSection />
                 <ChromeStoreSection />
                   {/* <LatestReviewsSection /> */}
