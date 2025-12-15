@@ -27,6 +27,7 @@ const Step4Community: React.FC<Step4CommunityProps> = ({
     { value: 'cramped', label: '😣 Feels cramped' },
     { value: 'easy_to_use', label: '✅ Really easy to use' },
     { value: 'usually_clean', label: '🧹 Usually clean' },
+    { value: 'often_dirty', label: '🗑️ Often dirty / graffitied' },
   ];
 
   const impactTagOptions = [
