@@ -13,6 +13,7 @@ export interface FormContext {
   hangarLocation?: FormDataType['hangarLocation'];
   hangarNumber?: FormDataType['hangarNumber'];
   usesHangar?: FormDataType['usesHangar'];
+  openToSwap?: FormDataType['openToSwap'];
   homeType?: FormDataType['homeType'];
   connectionType?: FormDataType['connectionType'];
 }
@@ -89,7 +90,7 @@ export const submitStep1 = async (
   context: FormContext
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
-    const { hangarLocation, hangarNumber, usesHangar, homeType, connectionType } = context;
+    const { hangarLocation, hangarNumber, usesHangar, openToSwap, homeType, connectionType } = context;
 
     // Basic check - validation should have already happened
     if (!hangarLocation?.coordinates || usesHangar === undefined || !homeType || !connectionType) {
@@ -110,6 +111,7 @@ export const submitStep1 = async (
       hangarLocation,
       hangarNumber,
       usesHangar,
+      openToSwap,
       homeType,
       connectionType,
     });

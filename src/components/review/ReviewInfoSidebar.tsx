@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react';
 import { MapContainer, Marker, TileLayer } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapPinIcon, HomeModernIcon, ShareIcon, UserGroupIcon } from '@heroicons/react/24/outline';
+import { MapPinIcon, ShareIcon, UserGroupIcon, ArrowsRightLeftIcon } from '@heroicons/react/24/outline';
 import type { AddressStepData } from '../../services/supabase/GetSubmitStep1';
 import type { Step2Data, Step3Data, Step4Data, Step5Data } from './reviewStepTypes';
-import { ACCENT, formatAddress, formatOptionLabel, HOME_TYPE_LABELS, CONNECTION_TYPE_LABELS } from './reviewFormatting';
+import { ACCENT, formatAddress, formatOptionLabel, CONNECTION_TYPE_LABELS, formatOpenToSwap } from './reviewFormatting';
 import { createRatingFaceIcon } from '../map/ratingFaceIcon';
 import { calculateSecurityRating, calculateHangarOKScore } from '../../utils/ratingHelpers';
 
@@ -87,7 +87,7 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
     return createRatingFaceIcon({ rating: iconRating, size: 44 });
   }, [isBrowser, iconRating]);
 
-  const homeTypeLabel = formatOptionLabel(step1Data?.home_type) ?? HOME_TYPE_LABELS[step1Data?.home_type ?? ''] ?? null;
+  const openToSwapLabel = formatOpenToSwap(step1Data?.open_to_swap);
   const connectionLabel = formatOptionLabel(step1Data?.connection_type) ?? CONNECTION_TYPE_LABELS[step1Data?.connection_type ?? ''] ?? null;
   const usageLabel = usesHangar ? 'Uses the hangar regularly' : 'Does not currently rent a space';
   const headerCaption = usesHangar ? 'Current hangar rider review' : 'Local rider / waiting list perspective';
@@ -145,7 +145,9 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
             </div>
           )}
           <InfoField icon={<MapPinIcon className="h-5 w-5" />} label="Hangar number" value={hangarNumber} />
-          <InfoField icon={<HomeModernIcon className="h-5 w-5" />} label="Home type" value={homeTypeLabel} />
+          {usesHangar && (
+            <InfoField icon={<ArrowsRightLeftIcon className="h-5 w-5" />} label="Open to swap" value={openToSwapLabel} />
+          )}
           <InfoField icon={<ShareIcon className="h-5 w-5" />} label="Connection to hangar" value={connectionLabel} />
           <InfoField icon={<UserGroupIcon className="h-5 w-5" />} label="Usage" value={usageLabel} />
         </div>

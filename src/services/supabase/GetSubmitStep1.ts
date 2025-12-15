@@ -12,6 +12,7 @@ interface HangarStep1Data {
     fullAddress?: string;
   };
   uses_hangar: boolean;
+  open_to_swap?: boolean;
   home_type: 'flat' | 'house' | 'shared' | 'other';
   connection_type: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes';
   hangar_number?: string | null;
@@ -35,6 +36,7 @@ export interface HangarStep1Payload {
   };
   hangarNumber?: string; // NEW: Hangar number (independent from address)
   usesHangar: boolean;
+  openToSwap?: boolean | null;
   homeType: 'flat' | 'house' | 'shared' | 'other';
   connectionType: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes';
 }
@@ -91,6 +93,7 @@ export async function submitAddressStep1(payload: HangarStep1Payload): Promise<b
       },
       p_hangar_number: payload.hangarNumber || null,
       p_uses_hangar: payload.usesHangar,
+      p_open_to_swap: payload.openToSwap !== undefined ? payload.openToSwap : null,
       p_home_type: payload.homeType,
       p_connection_type: payload.connectionType,
     });

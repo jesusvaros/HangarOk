@@ -155,6 +155,34 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
           multiSelect={false}
           error={fieldErrors?.usesHangar}
         />
+
+        {/* Swap toggle - only show if user has a hangar */}
+        {formData.usesHangar === true && (
+          <div className="mt-4">
+            <SelectableTagGroup
+              label="I'd be open to swapping to a closer hangar (optional)"
+              options={['✅ Yes', '❌ No']}
+              selectedOptions={
+                formData.openToSwap === true
+                  ? ['✅ Yes']
+                  : formData.openToSwap === false
+                  ? ['❌ No']
+                  : []
+              }
+              onChange={(selected) => {
+                const choice = selected[0];
+                if (choice === '✅ Yes') {
+                  updateFormData({ openToSwap: true });
+                } else if (choice === '❌ No') {
+                  updateFormData({ openToSwap: false });
+                } else {
+                  updateFormData({ openToSwap: null });
+                }
+              }}
+              multiSelect={false}
+            />
+          </div>
+        )}
       </div>
 
       {/* Section 3: Your home type */}

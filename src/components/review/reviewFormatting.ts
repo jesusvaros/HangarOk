@@ -28,6 +28,8 @@ const OPTION_LABELS: Record<string, string> = {
   storage_room: 'Storage room',
   indoors: 'Indoors',
   outdoors: 'Outdoors',
+  true: 'Yes',
+  false: 'No',
 };
 
 export const TAG_ICON_MAP: Record<string, string> = {
@@ -110,6 +112,11 @@ export const formatTagLabel = (tag: string) => {
     good_at_fixing: 'Good at fixing',
   };
   return labels[tag] ?? TITLE_CASE(tag);
+};
+
+export const formatOpenToSwap = (value: boolean | null | undefined): string => {
+  if (value === true) return OPTION_LABELS.true;
+  return OPTION_LABELS.false; // false, null, undefined all show "No"
 };
 
 export const formatScore = (value: number) => (Number.isInteger(value) ? value : Number(value.toFixed(1)));

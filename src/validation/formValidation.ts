@@ -20,7 +20,9 @@ export interface ValidationResult {
 export interface FormContext {
   // Step 1: Hangar Location & Usage
   hangarLocation?: FormDataType['hangarLocation'];
+  hangarNumber?: FormDataType['hangarNumber'];
   usesHangar?: FormDataType['usesHangar'];
+  openToSwap?: FormDataType['openToSwap'];
   homeType?: FormDataType['homeType'];
   connectionType?: FormDataType['connectionType'];
   
