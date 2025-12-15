@@ -6,9 +6,32 @@ import { getPublicReviews, type PublicReview } from '../services/supabase/public
 import { slugify } from '../utils/slugify';
 import { SegmentedBar } from '../components/ui/SegmentedBar';
 import { getRatingTone, RATING_BAR_STYLES } from '../utils/ratingHelpers';
-import { SparklesIcon, ShieldCheckIcon, WrenchScrewdriverIcon, CogIcon } from '@heroicons/react/24/outline';
+import {
+  SparklesIcon,
+  ShieldCheckIcon,
+  WrenchScrewdriverIcon,
+  CogIcon,
+} from '@heroicons/react/24/outline';
+import { faceBubbleSVG } from '../components/map/heroPin';
 
 type Status = 'loading' | 'ready' | 'not-found';
+type FaceMood = 'positive' | 'negative' | 'neutral';
+
+const FACE_COLORS: Record<FaceMood, string> = {
+  positive: '#22C55E',
+  negative: '#EF4444',
+  neutral: '#4B5563',
+};
+
+const FaceIcon = ({ face, mood = 'neutral' }: { face: 'happy' | 'neutral' | 'sad'; mood?: FaceMood }) => (
+  <span
+    className="flex h-5 w-5 flex-shrink-0 items-center justify-center"
+    aria-hidden
+    dangerouslySetInnerHTML={{
+      __html: faceBubbleSVG({ fill: FACE_COLORS[mood], size: 20, face }),
+    }}
+  />
+);
 
 function humanizeSlug(slug: string) {
   return slug
@@ -285,6 +308,7 @@ export default function CityReviewsPage() {
                     const sorted = [...categories].sort((a, b) => b.value - a.value);
                     const best = sorted[0];
                     const worst = sorted[sorted.length - 1];
+                    const worstIsPerfect = worst.value >= 4.95;
                     
                     // Get rating tone for color bar
                     const hangarokScore = review.hangarok_score;
@@ -317,7 +341,7 @@ export default function CityReviewsPage() {
                           {/* Best and Worst Categories */}
                           <div className="space-y-3">
                             <div className="flex items-center gap-2">
-                              <best.icon className="h-4 w-4 text-emerald-600 flex-shrink-0 self-start  mt-5" />
+                              <FaceIcon face="happy" mood="positive" />
                               <div className="flex-1 min-w-0">
                                 <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Best</p>
                                 <p className="text-xs font-semibold text-slate-800 truncate">{best.name}</p>
@@ -325,14 +349,24 @@ export default function CityReviewsPage() {
                               </div>
                             </div>
                             
-                            <div className="flex items-center gap-2">
-                              <worst.icon className="h-4 w-4 text-slate-500 flex-shrink-0 self-start  mt-5" />
-                              <div className="flex-1 min-w-0">
-                                <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Worst</p>
-                                <p className="text-xs font-semibold text-slate-800 truncate">{worst.name}</p>
-                                <SegmentedBar value={worst.value} color="rgb(74,94,50)" showValue={false} />
+                            {worstIsPerfect ? (
+                              <div className="flex items-center gap-2">
+                                <FaceIcon face="happy" mood="positive" />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Worst</p>
+                                  <p className="text-xs font-semibold text-slate-800">No bad here — every category is top rated.</p>
+                                </div>
                               </div>
-                            </div>
+                            ) : (
+                              <div className="flex items-center gap-2">
+                                <FaceIcon face="sad" mood="negative" />
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-500">Worst</p>
+                                  <p className="text-xs font-semibold text-slate-800 truncate">{worst.name}</p>
+                                  <SegmentedBar value={worst.value} color="rgb(239,68,68)" showValue={false} />
+                                </div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </Link>
