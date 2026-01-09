@@ -4,10 +4,12 @@ import { umamiEventProps, trackUmamiEvent } from '../../utils/analytics';
 import { reviewNightTheme } from './ReviewNightTheme';
 import { useAuth } from '../../store/auth/hooks';
 import ContactModal from '../ui/ContactModal';
+import { useCountdown } from '../../hooks/useCountdown';
 
 const ReviewNightFinalCTA = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
+  const timeLeft = useCountdown('2026-03-06T10:30:00');
 
   const handleCTAClick = (e: React.MouseEvent) => {
     if (!user) {
@@ -68,16 +70,44 @@ const ReviewNightFinalCTA = () => {
             </div>
             
             <div className="space-y-6 md:space-y-8">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <button
-                  onClick={handleCTAClick}
-                  className="inline-block w-full md:w-auto rounded-xl md:rounded-2xl px-8 md:px-12 py-4 md:py-6 text-xl md:text-2xl font-black text-white transition-all shadow-xl hover:shadow-2xl"
-                  style={{ background: reviewNightTheme.gradientGreen }}
-                  {...umamiEventProps('review-night:final-cta-subscribe')}
-                >
-                  Subscribe to the event
-                </button>
-              </motion.div>
+              {user ? (
+                <div className="flex flex-col items-center gap-6">
+                  <p className="text-xl font-black uppercase tracking-widest text-gray-400">
+                    See you in
+                  </p>
+                  <div className="flex gap-4 md:gap-8 justify-center">
+                    {[
+                      { label: 'Days', value: timeLeft.days },
+                      { label: 'Hours', value: timeLeft.hours },
+                      { label: 'Min', value: timeLeft.minutes },
+                      { label: 'Sec', value: timeLeft.seconds }
+                    ].map((unit, i) => (
+                      <div key={i} className="flex flex-col items-center">
+                        <div 
+                          className="w-14 h-14 md:w-16 md:h-16 rounded-xl flex items-center justify-center text-xl md:text-2xl font-black text-white shadow-lg"
+                          style={{ background: reviewNightTheme.gradientGreen }}
+                        >
+                          {String(unit.value).padStart(2, '0')}
+                        </div>
+                        <span className="mt-2 text-[10px] font-bold uppercase tracking-tighter text-gray-400">
+                          {unit.label}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <button
+                    onClick={handleCTAClick}
+                    className="inline-block w-full md:w-auto rounded-xl md:rounded-2xl px-8 md:px-12 py-4 md:py-6 text-xl md:text-2xl font-black text-white transition-all shadow-xl hover:shadow-2xl"
+                    style={{ background: reviewNightTheme.gradientGreen }}
+                    {...umamiEventProps('review-night:final-cta-subscribe')}
+                  >
+                    Subscribe to the event
+                  </button>
+                </motion.div>
+              )}
               
               <div className="flex flex-wrap justify-center gap-4 md:gap-6">
                 {[

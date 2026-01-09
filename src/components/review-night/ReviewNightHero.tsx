@@ -5,10 +5,12 @@ import { reviewNightTheme } from './ReviewNightTheme';
 import { useAuth } from '../../store/auth/hooks';
 import ContactModal from '../ui/ContactModal';
 import etnaIcon from '../../assets/landing/mount etna image.png';
+import { useCountdown } from '../../hooks/useCountdown';
 
 const ReviewNightHero = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
+  const timeLeft = useCountdown('2026-03-06T10:30:00');
 
   const handleCTAClick = (e: React.MouseEvent) => {
     if (!user) {
@@ -99,14 +101,42 @@ const ReviewNightHero = () => {
             transition={{ delay: 0.8 }}
             className="flex flex-col items-center"
           >
-            <button
-              onClick={handleCTAClick}
-              className="inline-block rounded-xl px-12 py-5 text-2xl font-bold text-white transition-all shadow-xl hover:shadow-2xl active:scale-95"
-              style={{ background: reviewNightTheme.gradientGreen }}
-              {...umamiEventProps('review-night:cta-subscribe')}
-            >
-              Subscribe to the event
-            </button>
+            {user ? (
+              <div className="flex flex-col items-center gap-6">
+                <p className="text-xl font-black uppercase tracking-widest text-gray-500">
+                  Event starts in
+                </p>
+                <div className="flex gap-4 md:gap-8">
+                  {[
+                    { label: 'Days', value: timeLeft.days },
+                    { label: 'Hours', value: timeLeft.hours },
+                    { label: 'Min', value: timeLeft.minutes },
+                    { label: 'Sec', value: timeLeft.seconds }
+                  ].map((unit, i) => (
+                    <div key={i} className="flex flex-col items-center">
+                      <div 
+                        className="w-16 h-16 md:w-20 md:h-20 rounded-2xl flex items-center justify-center text-2xl md:text-3xl font-black text-white shadow-xl"
+                        style={{ background: reviewNightTheme.gradientGreen }}
+                      >
+                        {String(unit.value).padStart(2, '0')}
+                      </div>
+                      <span className="mt-2 text-xs font-bold uppercase tracking-tighter text-gray-400">
+                        {unit.label}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <button
+                onClick={handleCTAClick}
+                className="inline-block rounded-xl px-12 py-5 text-2xl font-bold text-white transition-all shadow-xl hover:shadow-2xl active:scale-95"
+                style={{ background: reviewNightTheme.gradientGreen }}
+                {...umamiEventProps('review-night:cta-subscribe')}
+              >
+                Subscribe to the event
+              </button>
+            )}
           </motion.div>
         </div>
       </div>
