@@ -15,11 +15,12 @@ const Header: React.FC = () => {
   // Hide input on specific routes
   const isAddReviewPage = location.pathname === '/add-review';
   const isHomePage = location.pathname === '/';
+  const isReviewNightPage = location.pathname == '/ReviewNight' || location.pathname ==='/reviewnight' ;
 
   // Handle scroll event to change header appearance
   useEffect(() => {
-    // On the add-review form page, keep header static and skip scroll listener
-    if (isAddReviewPage) {
+    // On the add-review form page or Review Night page, keep header static and skip scroll listener
+    if (isAddReviewPage || isReviewNightPage) {
       if (scrolled) setScrolled(false);
       return;
     }
@@ -33,7 +34,7 @@ const Header: React.FC = () => {
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [scrolled, isAddReviewPage]);
+  }, [scrolled, isAddReviewPage, isReviewNightPage]);
 
   const handleStart = () => {
     if (address.trim()) {
@@ -90,21 +91,26 @@ const Header: React.FC = () => {
     return () => obs.disconnect();
   }, [isHomePage]);
 
-  const showHeaderSearch = !isAddReviewPage && (!isHomePage || (!homeInputVisible && !heroVisible));
+  const showHeaderSearch = !isAddReviewPage && !isReviewNightPage && (!isHomePage || (!homeInputVisible && !heroVisible));
 
   return (
     <header
       className={`duration-400 fixed left-0 right-0 top-0 z-[1000] transition-all ${!heroVisible && !isAddReviewPage ? 'py-2' : 'py-3'} px-6`}
       style={{
-        backgroundColor: isAddReviewPage
-          ? 'rgb(225, 245, 110)'
+        backgroundColor: isAddReviewPage || isReviewNightPage
+          ? 'transparent'
           : (!heroVisible || !isHomePage)
             ? 'rgb(225, 245, 110)'
             : 'transparent',
       }}
     >
       <div className="flex w-full items-center justify-between">
-        {showLogo ? (
+        {/* Only show icon on Review Night page */}
+        {isReviewNightPage ? (
+          <Link to="/" className="flex items-center overflow-hidden h-[48px]" aria-label="HangarOK home" {...umamiEventProps('nav:logo-home')}>
+            <img src={logoSymbolUrl} alt="HangarOK icon" className="h-11 w-11 object-contain md:h-13 md:w-13" />
+          </Link>
+        ) : showLogo ? (
           <Link to="/" className="flex items-center overflow-hidden h-[48px]" aria-label="HangarOK home" {...umamiEventProps('nav:logo-home')}>
             <img src={logoSymbolUrl} alt="HangarOK icon" className="h-11 w-11 object-contain md:h-13 md:w-13" />
             <img src={logoWordmarkUrl} alt="HangarOK" className="hidden md:block h-[128px] -ml-4" />
@@ -113,9 +119,10 @@ const Header: React.FC = () => {
           <span />
         )}
 
-        {/* Input field on desktop, 'Add a review' button on mobile */}
-        <div className="flex flex-1 justify-center">
-          {showHeaderSearch && (
+        {/* Empty space for Review Night page, otherwise input field */}
+        {!isReviewNightPage ? (
+          <div className="flex flex-1 justify-center">
+            {showHeaderSearch && (
             <>
               {/* Desktop input and button */}
               <div className="hidden w-full max-w-xl md:flex">
@@ -123,7 +130,7 @@ const Header: React.FC = () => {
                   type="text"
                   value={address}
                   onChange={e => setAddress(e.target.value)}
-                  placeholder="Property address"
+                  placeholder="Hangar address"
                   className="flex-grow rounded-l-lg border border-gray-300 p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <button
@@ -151,9 +158,13 @@ const Header: React.FC = () => {
             </>
           )}
         </div>
+        ) : (
+          <div className="flex flex-1 justify-center" />
+        )}
 
         {/* Right side: blog + map + login with small gap and slight right margin */}
-        <div className="flex items-center gap-2 md:gap-3">
+        {!isReviewNightPage && (
+          <div className="flex items-center gap-2 md:gap-3">
           {/* Blog - Desktop version */}
           {/* <Link
             to="/blog"
@@ -198,6 +209,7 @@ const Header: React.FC = () => {
           {/* Login */}
           <LoginDropdown />
         </div>
+        )}
       </div>
     </header>
   );

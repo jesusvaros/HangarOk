@@ -12,6 +12,7 @@ interface LoginContentProps {
   showTitle?: boolean;
   onLoginComplete?: (sessionId: string, userId: string) => void;
   showInfo?: boolean;
+  mode?: 'default' | 'subscription';
 }
 
 const LoginContent: React.FC<LoginContentProps> = ({ 
@@ -19,6 +20,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
   showTitle = true,
   onLoginComplete,
   showInfo = true,
+  mode = 'default',
 }) => {
   const { formData, updateFormData } = useFormContext();
   const navigate = useNavigate();
@@ -110,17 +112,30 @@ const LoginContent: React.FC<LoginContentProps> = ({
   return (
     <>
       {showTitle && (
-        <h2 className="mb-3 text-3xl font-bold text-gray-800">Save and verify your review</h2>
+        <h2 className="mb-6 text-3xl font-black tracking-tight text-gray-900 leading-tight">
+          {mode === 'subscription' ? 'Subscribe to Review Night' : 'Save and verify your review'}
+        </h2>
       )}
 
       {showInfo && (
-        <div className="mb-4 rounded-md border border-amber-200 bg-amber-50 px-4 py-3 text-base text-amber-800">
-          <p className="mb-1 font-semibold">Why we ask for this:</p>
-          <ul className="ml-4 list-disc space-y-1">
-            <li>Only used to validate your review</li>
-            <li>Always kept anonymous</li>
-            <li>Lets you edit it later if needed</li>
-          </ul>
+        <div className="mb-8 space-y-4">
+          {(mode === 'subscription' ? [
+            { text: "Early access to live review events", icon: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" },
+            { text: "Riding experiences and community updates", icon: "M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" }
+          ] : [
+            { text: "Validated, trustworthy review", icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" },
+            { text: "Always 100% anonymous", icon: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" },
+            { text: "Edit or delete later", icon: "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" }
+          ]).map((item, i) => (
+            <div key={i} className="flex items-start gap-4 text-gray-600 leading-tight">
+              <div className="flex-shrink-0 w-6 h-6 rounded-lg bg-[rgb(74,94,50)]/10 flex items-center justify-center text-[rgb(74,94,50)]">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d={item.icon} />
+                </svg>
+              </div>
+              <span className="text-sm font-semibold pt-0.5">{item.text}</span>
+            </div>
+          ))}
         </div>
       )}
 
@@ -155,7 +170,7 @@ const LoginContent: React.FC<LoginContentProps> = ({
               type="submit"
               className="mb-2 w-full rounded-lg bg-[rgb(74,94,50)] py-2.5 text-base text-white hover:bg-[rgb(60,76,40)]"
             >
-              Verify via email
+              {mode === 'subscription' ? 'Subscribe via email' : 'Verify via email'}
             </button>
           </form>
         </>

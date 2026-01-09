@@ -33,6 +33,7 @@ import BuenasPracticas from './pages/BuenasPracticas';
 import CityReviewsIndexPage from './pages/CityReviewsIndexPage';
 import CityReviewsPage from './pages/CityReviewsPage';
 import UmamiTracker from './components/analytics/UmamiTracker';
+import ReviewNightPage from './components/ReviewNightPage';
 
 // Import Providers
 import { FormProvider } from './store/FormContext';
@@ -102,6 +103,12 @@ function App() {
           <Route path="/buenas-practicas" element={<><PageSEO title="Best Practices | HangarOK" description="Guidelines for posting responsible reviews." /><BuenasPracticas /></>} />
           <Route path="/terminosycondiciones" element={<><PageSEO title="Terms & Conditions | HangarOK" description="Terms and Conditions for HangarOK." /><LegalHub /></>} />
           <Route path="/terminosCondiciones" element={<><PageSEO title="Terms & Conditions | HangarOK" description="Terms and Conditions for HangarOK." /><LegalHub /></>} />
+          <Route path="/ReviewNight" element={
+            <>
+              <PageSEO title="Review Night | HangarOK" description="Join the quarterly Review Night - one night of real riders sharing their hangar experiences live on the map." />
+              <ReviewNightPage />
+            </>
+          } />
           <Route
             path="/add-review"
             element={

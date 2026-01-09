@@ -6,9 +6,10 @@ import { umamiEventProps } from '../../utils/analytics';
 interface ContactModalProps {
   onClose: () => void;
   onLoginComplete?: (sessionId: string, userId: string) => void;
+  mode?: 'default' | 'subscription';
 }
 
-const ContactModal: React.FC<ContactModalProps> = ({ onClose, onLoginComplete }) => {
+const ContactModal: React.FC<ContactModalProps> = ({ onClose, onLoginComplete, mode = 'default' }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px]">
       <div className="relative w-[92%] max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl">
@@ -22,7 +23,7 @@ const ContactModal: React.FC<ContactModalProps> = ({ onClose, onLoginComplete })
           >
             ✕
           </button>
-          <LoginContent onClose={onClose} showTitle={true} onLoginComplete={onLoginComplete} />
+          <LoginContent onClose={onClose} showTitle={true} onLoginComplete={onLoginComplete} mode={mode} />
         </div>
       </div>
     </div>
