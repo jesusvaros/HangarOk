@@ -111,9 +111,9 @@ const ReviewNightFinalCTA = () => {
               
               <div className="flex flex-wrap justify-center gap-4 md:gap-6">
                 {[
-                  "Selection is random",
-                  "One simple proof required",
-                  "Reviews remain public"
+                  "3 winners selected randomly",
+                  "Verified proof required",
+                  "Reviews published anonymously"
                 ].map((item, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: reviewNightTheme.accent }} />

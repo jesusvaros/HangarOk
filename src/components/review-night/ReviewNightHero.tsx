@@ -21,7 +21,7 @@ const ReviewNightHero = () => {
   };
 
   return (
-    <section className="relative min-h-[90vh] flex items-center overflow-hidden py-20">
+    <section className="relative min-h-[90vh] flex items-center overflow-hidden py-20 -mt-[48px]">
       {/* Dynamic Background */}
       <div 
         className="absolute inset-0 z-0" 
@@ -128,14 +128,29 @@ const ReviewNightHero = () => {
                 </div>
               </div>
             ) : (
-              <button
-                onClick={handleCTAClick}
-                className="inline-block rounded-xl px-12 py-5 text-2xl font-bold text-white transition-all shadow-xl hover:shadow-2xl active:scale-95"
-                style={{ background: reviewNightTheme.gradientGreen }}
-                {...umamiEventProps('review-night:cta-subscribe')}
-              >
-                Subscribe to the event
-              </button>
+              <div className="flex flex-col items-center gap-8">
+                <button
+                  onClick={handleCTAClick}
+                  className="inline-block rounded-xl px-12 py-5 text-2xl font-bold text-white transition-all shadow-xl hover:shadow-2xl active:scale-95"
+                  style={{ background: reviewNightTheme.gradientGreen }}
+                  {...umamiEventProps('review-night:cta-subscribe')}
+                >
+                  Subscribe to the event
+                </button>
+                
+                <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+                  {[
+                    "3 winners selected randomly",
+                    "Verified proof required",
+                    "Reviews published anonymously"
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: reviewNightTheme.accent }} />
+                      <span className="text-xs font-black uppercase tracking-widest" style={{ color: reviewNightTheme.textLight }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             )}
           </motion.div>
         </div>

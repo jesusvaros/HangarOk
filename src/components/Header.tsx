@@ -5,6 +5,7 @@ import LoginContent from './ui/LoginContent';
 import logoSymbolUrl from '../assets/logo_hangarOk-no-bg.png';
 import logoWordmarkUrl from '../assets/logowords.png';
 import { umamiEventProps } from '../utils/analytics';
+import ReviewNightBanner from './review-night/ReviewNightBanner';
 
 const Header: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -93,22 +94,27 @@ const Header: React.FC = () => {
 
   const showHeaderSearch = !isAddReviewPage && !isReviewNightPage && (!isHomePage || (!homeInputVisible && !heroVisible));
 
+  const showBanner = (location.pathname === '/' || location.pathname === '/map' || location.pathname.includes('/review')) && !isReviewNightPage;
+
   return (
-    <header
-      className={`duration-400 fixed left-0 right-0 top-0 z-[1000] transition-all ${!heroVisible && !isAddReviewPage ? 'py-2' : 'py-3'} px-6`}
-      style={{
-        backgroundColor: isAddReviewPage || isReviewNightPage
-          ? 'transparent'
-          : (!heroVisible || !isHomePage)
-            ? 'rgb(225, 245, 110)'
-            : 'transparent',
-      }}
-    >
+    <>
+      {showBanner && <ReviewNightBanner />}
+      <header
+        className={`duration-400 fixed left-0 right-0 z-[1000] transition-all ${!heroVisible && !isAddReviewPage ? 'py-2' : 'py-3'} px-6`}
+        style={{
+          top: showBanner ? '40px' : '0',
+          backgroundColor: isAddReviewPage || isReviewNightPage
+            ? 'transparent'
+            : (!heroVisible || !isHomePage)
+              ? 'rgb(225, 245, 110)'
+              : 'transparent',
+        }}
+      >
       <div className="flex w-full items-center justify-between">
         {/* Only show icon on Review Night page */}
         {isReviewNightPage ? (
-          <Link to="/" className="flex items-center overflow-hidden h-[48px]" aria-label="HangarOK home" {...umamiEventProps('nav:logo-home')}>
-            <img src={logoSymbolUrl} alt="HangarOK icon" className="h-11 w-11 object-contain md:h-13 md:w-13" />
+          <Link to="/" className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md border border-gray-100" aria-label="HangarOK home" {...umamiEventProps('nav:logo-home')}>
+            <img src={logoSymbolUrl} alt="HangarOK icon" className="h-8 w-8 object-contain" />
           </Link>
         ) : showLogo ? (
           <Link to="/" className="flex items-center overflow-hidden h-[48px]" aria-label="HangarOK home" {...umamiEventProps('nav:logo-home')}>
@@ -212,6 +218,7 @@ const Header: React.FC = () => {
         )}
       </div>
     </header>
+    </>
   );
 };
 

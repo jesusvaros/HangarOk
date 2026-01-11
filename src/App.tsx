@@ -48,7 +48,7 @@ function App() {
   return (
     <AuthProvider>
       <FormProvider>
-        <div className={`min-h-screen ${isGrayPage ? 'bg-gray-100' : 'bg-white'}`}>
+        <div className={`min-h-screen flex flex-col ${isGrayPage ? 'bg-gray-100' : 'bg-white'}`}>
         {/* Vercel Analytics */}
         <Analytics />
         <UmamiTracker />
@@ -65,82 +65,85 @@ function App() {
         />
         <Header />
 
-        <Routes>
-          <Route path="/auth/callback" element={
-            <>
-              <PageSEO title="Authentication | HangarOK" description="Processing secure authentication." noindex />
-              <AuthCallback />
-            </>
-          } />
-          <Route path="/review/:id" element={
-            <>
-              <PageSEO title="Review | HangarOK" description="Read anonymous reviews from riders about cycle hangars." />
-              <ReviewPage />
-            </>
-          } />
-          <Route path="/map" element={
-            <>
-              <PageSEO title="Hangar Map | HangarOK" description="Explore anonymous reviews of cycle hangars across the UK on our interactive map." />
-              <MapView />
-            </>
-          } />
-          <Route path="/opiniones" element={<CityReviewsIndexPage />} />
-          <Route path="/opiniones/:citySlug" element={<CityReviewsPage />} />
-          {/* <Route path="/blog" element={<BlogListPage />} /> */}
-          {/* <Route path="/blog/:slug" element={<BlogPostPage />} /> */}
-          <Route path="/profile" element={
-            <>
-              <PageSEO title="Profile | HangarOK" description="Manage your HangarOK profile." noindex />
-              <ProfilePage />
-            </>
-          } />
-          <Route path="/admin/moderate" element={<ModerationPage />} />
-          {/* Legal routes */}
-          <Route path="/aviso-legal" element={<><PageSEO title="Legal Notice | HangarOK" description="Legal information for HangarOK." /><AvisoLegal /></>} />
-          <Route path="/politica-privacidad" element={<><PageSEO title="Privacy Policy | HangarOK" description="How we handle your personal data." /><PoliticaPrivacidad /></>} />
-          <Route path="/cookies" element={<><PageSEO title="Cookie Policy | HangarOK" description="Information about cookie usage." /><PoliticaCookies /></>} />
-          <Route path="/condiciones-uso" element={<><PageSEO title="Terms of Use | HangarOK" description="Terms and conditions for using HangarOK." /><CondicionesUso /></>} />
-          <Route path="/buenas-practicas" element={<><PageSEO title="Best Practices | HangarOK" description="Guidelines for posting responsible reviews." /><BuenasPracticas /></>} />
-          <Route path="/terminosycondiciones" element={<><PageSEO title="Terms & Conditions | HangarOK" description="Terms and Conditions for HangarOK." /><LegalHub /></>} />
-          <Route path="/terminosCondiciones" element={<><PageSEO title="Terms & Conditions | HangarOK" description="Terms and Conditions for HangarOK." /><LegalHub /></>} />
-          <Route path="/ReviewNight" element={
-            <>
-              <PageSEO title="Review Night | HangarOK" description="Join the quarterly Review Night - one night of real riders sharing their hangar experiences live on the map." />
-              <ReviewNightPage />
-            </>
-          } />
-          <Route
-            path="/add-review"
-            element={
-              <FormMessagesProvider>
-                <PageSEO title="Add Review | HangarOK" description="Share an anonymous review about your cycle hangar." noindex />
-                <AddReviewForm />
-              </FormMessagesProvider>
-            }
-          />
-              <Route
-            path="/"
-            element={
+        <main className="flex-grow pt-12">
+          <Routes>
+            <Route path="/auth/callback" element={
               <>
-                <PageSEO title="HangarOK | UK's peer-to-peer cycle hangar reviews" description="Share and discover anonymous reviews of cycle hangars across the UK. Help improve cycling infrastructure with real rider feedback." />
-                <HeroSection />
-                <InputSection />
-                <HowItWorksSection />
-                {/* <StatsSection /> */}
-                <BenefitsSection />
-                {/* <TrustRewardsSection /> */}
-                  <PictureSection />
-                <ChromeStoreSection />
-                  {/* <LatestReviewsSection /> */}
-                  <FAQSection />
-                  <AboutSection />
-                </>
+                <PageSEO title="Authentication | HangarOK" description="Processing secure authentication." noindex />
+                <AuthCallback />
+              </>
+            } />
+            <Route path="/review/:id" element={
+              <>
+                <PageSEO title="Review | HangarOK" description="Read anonymous reviews from riders about cycle hangars." />
+                <ReviewPage />
+              </>
+            } />
+            <Route path="/map" element={
+              <>
+                <PageSEO title="Hangar Map | HangarOK" description="Explore anonymous reviews of cycle hangars across the UK on our interactive map." />
+                <MapView />
+              </>
+            } />
+            <Route path="/opiniones" element={<CityReviewsIndexPage />} />
+            <Route path="/opiniones/:citySlug" element={<CityReviewsPage />} />
+            {/* <Route path="/blog" element={<BlogListPage />} /> */}
+            {/* <Route path="/blog/:slug" element={<BlogPostPage />} /> */}
+            <Route path="/profile" element={
+              <>
+                <PageSEO title="Profile | HangarOK" description="Manage your HangarOK profile." noindex />
+                <PageSEO title="Profile | HangarOK" description="Manage your HangarOK profile." noindex />
+                <ProfilePage />
+              </>
+            } />
+            <Route path="/admin/moderate" element={<ModerationPage />} />
+            {/* Legal routes */}
+            <Route path="/aviso-legal" element={<><PageSEO title="Legal Notice | HangarOK" description="Legal information for HangarOK." /><AvisoLegal /></>} />
+            <Route path="/politica-privacidad" element={<><PageSEO title="Privacy Policy | HangarOK" description="How we handle your personal data." /><PoliticaPrivacidad /></>} />
+            <Route path="/cookies" element={<><PageSEO title="Cookie Policy | HangarOK" description="Information about cookie usage." /><PoliticaCookies /></>} />
+            <Route path="/condiciones-uso" element={<><PageSEO title="Terms of Use | HangarOK" description="Terms and conditions for using HangarOK." /><CondicionesUso /></>} />
+            <Route path="/buenas-practicas" element={<><PageSEO title="Best Practices | HangarOK" description="Guidelines for posting responsible reviews." /><BuenasPracticas /></>} />
+            <Route path="/terminosycondiciones" element={<><PageSEO title="Terms & Conditions | HangarOK" description="Terms and Conditions for HangarOK." /><LegalHub /></>} />
+            <Route path="/terminosCondiciones" element={<><PageSEO title="Terms & Conditions | HangarOK" description="Terms and Conditions for HangarOK." /><LegalHub /></>} />
+            <Route path="/ReviewNight" element={
+              <>
+                <PageSEO title="Review Night | HangarOK" description="Join the quarterly Review Night - one night of real riders sharing their hangar experiences live on the map." />
+                <ReviewNightPage />
+              </>
+            } />
+            <Route
+              path="/add-review"
+              element={
+                <FormMessagesProvider>
+                  <PageSEO title="Add Review | HangarOK" description="Share an anonymous review about your cycle hangar." noindex />
+                  <AddReviewForm />
+                </FormMessagesProvider>
               }
             />
-        </Routes>
+                <Route
+              path="/"
+              element={
+                <>
+                  <PageSEO title="HangarOK | UK's peer-to-peer cycle hangar reviews" description="Share and discover anonymous reviews of cycle hangars across the UK. Help improve cycling infrastructure with real rider feedback." />
+                  <HeroSection />
+                  <InputSection />
+                  <HowItWorksSection />
+                  {/* <StatsSection /> */}
+                  <BenefitsSection />
+                  {/* <TrustRewardsSection /> */}
+                  <PictureSection />
+                  <ChromeStoreSection />
+                    {/* <LatestReviewsSection /> */}
+                    <FAQSection />
+                    <AboutSection />
+                  </>
+                }
+              />
+          </Routes>
+        </main>
 
 
-        <footer className="mx-auto mt-8 max-w-6xl py-8 text-center text-sm text-gray-600 border-t border-gray-200">
+        <footer className="mx-auto mt-8 w-full max-w-6xl py-8 text-center text-sm text-gray-600 border-t border-gray-200">
           <nav className="mb-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             {/* <Link className="hover:text-gray-700" to="/blog" {...umamiEventProps('footer:blog')}>Blog</Link>
             <span className="text-gray-400">•</span> */}
