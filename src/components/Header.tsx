@@ -94,7 +94,10 @@ const Header: React.FC = () => {
 
   const showHeaderSearch = !isAddReviewPage && !isReviewNightPage && (!isHomePage || (!homeInputVisible && !heroVisible));
 
-  const showBanner = (location.pathname === '/' || location.pathname === '/map' || location.pathname.includes('/review')) && !isReviewNightPage;
+  const showBanner = (location.pathname === '/' || 
+                      location.pathname === '/map' || 
+                      location.pathname.includes('/review') || 
+                      location.pathname.includes('/opiniones')) && !isReviewNightPage;
 
   return (
     <>
