@@ -1,10 +1,15 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { reviewNightTheme } from './ReviewNightTheme';
+import { umamiEventProps } from '../../utils/analytics';
 
 const ReviewNightBanner = () => {
   return (
-    <Link to="/reviewnight" className="block fixed top-0 left-0 right-0 z-[1001] overflow-hidden select-none group h-10">
+    <Link 
+      to="/reviewnight" 
+      className="block fixed top-0 left-0 right-0 z-[1001] overflow-hidden select-none group h-10"
+      {...umamiEventProps('review-night:banner-click')}
+    >
       <div 
         className="h-full flex items-center whitespace-nowrap"
         style={{ background: reviewNightTheme.gradientGreen }}

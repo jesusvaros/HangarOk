@@ -14,8 +14,10 @@ const ReviewNightFinalCTA = () => {
   const handleCTAClick = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
-      trackUmamiEvent('review-night:final-cta-login-modal-open');
+      trackUmamiEvent('review-night:final-cta-subscribe-click');
       setIsModalOpen(true);
+    } else {
+      trackUmamiEvent('review-night:final-cta-countdown-view');
     }
   };
 

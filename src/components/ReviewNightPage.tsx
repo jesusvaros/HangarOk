@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { trackUmamiEvent } from '../utils/analytics';
 import ReviewNightHero from './review-night/ReviewNightHero';
 import ReviewNightWhyItMatters from './review-night/ReviewNightWhyItMatters';
 import ReviewNightVisualProof from './review-night/ReviewNightVisualProof';
@@ -7,6 +9,10 @@ import ReviewNight2026Experiences from './review-night/ReviewNight2026Experience
 import ReviewNightFinalCTA from './review-night/ReviewNightFinalCTA';
 
 const ReviewNightPage = () => {
+  useEffect(() => {
+    trackUmamiEvent('review-night:page-view');
+  }, []);
+
   return (
     <>
       <ReviewNightHero />

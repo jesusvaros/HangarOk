@@ -15,8 +15,10 @@ const ReviewNightHero = () => {
   const handleCTAClick = (e: React.MouseEvent) => {
     if (!user) {
       e.preventDefault();
-      trackUmamiEvent('review-night:login-modal-open');
+      trackUmamiEvent('review-night:hero-subscribe-click');
       setIsModalOpen(true);
+    } else {
+      trackUmamiEvent('review-night:hero-countdown-view');
     }
   };
 
@@ -162,7 +164,7 @@ const ReviewNightHero = () => {
             onClose={() => setIsModalOpen(false)}
             onLoginComplete={() => {
               setIsModalOpen(false);
-              trackUmamiEvent('review-night:login-success');
+              trackUmamiEvent('review-night:hero-login-success');
             }}
             mode="subscription"
           />
