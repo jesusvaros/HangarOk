@@ -155,6 +155,7 @@ const MapView = ({
             id: candidate.id,
             full_address: candidate.full_address ?? null,
             uses_hangar: candidate.uses_hangar ?? null,
+            hangar_access_status: candidate.hangar_access_status ?? null,
             overall_safety_rating: candidate.overall_safety_rating ?? null,
             overall_usability_rating: candidate.overall_usability_rating ?? null,
             hangarok_score: candidate.hangarok_score ?? null,

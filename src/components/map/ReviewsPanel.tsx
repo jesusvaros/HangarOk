@@ -86,11 +86,12 @@ const RatingBar = ({ tone }: { tone: RatingTone }) => {
 };
 
 
-type UsageKey = 'users' | 'waiting';
+type UsageKey = 'users' | 'waiting' | 'blocked';
 
-const usageKeyFromValue = (value?: boolean | null): UsageKey => {
-  if (value === true) return 'users';
-  if (value === false) return 'waiting';
+const usageKeyFromValue = (usesHangar?: boolean | null, hangarAccessStatus?: string | null): UsageKey => {
+  if (usesHangar === true) return 'users';
+  if (usesHangar === false && hangarAccessStatus === 'no_hangar_nearby') return 'blocked';
+  if (usesHangar === false) return 'waiting';
   return 'waiting';
 };
 
@@ -112,9 +113,16 @@ const USAGE_STYLES: Record<
     categoryTextClass: 'text-slate-600',
   },
   waiting: {
-    categoryTitle: 'Waiting & nearby riders',
-    label: 'Waiting / nearby',
+    categoryTitle: 'Waiting riders',
+    label: 'Waiting rider',
     icon: ClockIcon,
+    iconWrapperClass: 'bg-slate-200 text-slate-600',
+    categoryTextClass: 'text-slate-600',
+  },
+  blocked: {
+    categoryTitle: 'Blocked riders',
+    label: 'Blocked rider',
+    icon: NoSymbolIcon,
     iconWrapperClass: 'bg-slate-200 text-slate-600',
     categoryTextClass: 'text-slate-600',
   },
@@ -329,7 +337,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                         <div className="space-y-4">
                           {(Object.keys(USAGE_STYLES) as UsageKey[]).map((usageKey) => {
                             const members = (r.groupedReviews ?? []).filter(
-                              (member) => usageKeyFromValue(member.uses_hangar ?? null) === usageKey,
+                              (member) => usageKeyFromValue(member.uses_hangar ?? null, member.hangar_access_status ?? null) === usageKey,
                             );
                             if (members.length === 0) return null;
                             const meta = USAGE_STYLES[usageKey];
@@ -348,8 +356,8 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                       typeof member.overall_usability_rating === 'number'
                                         ? member.overall_usability_rating
                                         : null;
-                                    const memberIsWaiting = member.uses_hangar === false && member.hangar_access_status === 'waiting_list';
                                     const memberIsBlocked = member.uses_hangar === false && member.hangar_access_status === 'no_hangar_nearby';
+                                    const memberIsWaiting = member.uses_hangar === false && (member.hangar_access_status === 'waiting_list' || member.hangar_access_status === null);
                                     const memberTheftScore =
                                       typeof member.theft_worry_rating === 'number'
                                         ? member.theft_worry_rating
@@ -372,7 +380,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                         : null;
 
                                     // Determine member's rating for color bar
-                                    const memberDisplayScore = memberIsWaiting ? memberWaitlistScore : member.hangarok_score;
+                                    const memberDisplayScore = (memberIsWaiting || memberIsBlocked) ? memberWaitlistScore : member.hangarok_score;
                                     const hasMemberRating = typeof memberDisplayScore === 'number' && memberDisplayScore > 0;
                                     const memberRatingTone = hasMemberRating ? getRatingTone(memberDisplayScore) : 'none';
                                     let memberColorBarClass = '';
