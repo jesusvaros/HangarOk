@@ -317,7 +317,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
 
                         return (
                           <div className="flex flex-col items-end gap-0.5">
-                            <span className="text-[10px] font-medium text-slate-500">Hangar rider</span>
+                            <span className="text-[10px] font-medium text-slate-500">HangarOK Score</span>
                             <div className="pt-1 flex items-center justify-between gap-3 w-full">
                               {toggleButton}
                               <div className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${badgeColor}`}>
@@ -445,7 +445,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                               </>
                                             ) : (
                                               <>
-                                                <span className="text-xs font-medium text-slate-600">Hangar rider</span>
+                                                <span className="text-xs font-medium text-slate-600">HangarOK Score</span>
                                                 <SegmentedBar value={member.hangarok_score ?? 0} color="rgb(74,94,50)" />
                                               </>
                                             )}
@@ -512,7 +512,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                       ) : hasRating ? (
                         <div className="space-y-2">
                           <div className="space-y-1">
-                            <span className="text-xs font-medium text-slate-600">Hangar rider</span>
+                            <span className="text-xs font-medium text-slate-600">HangarOK Score</span>
                             <SegmentedBar value={r.hangarok_score ?? 0} color="rgb(74,94,50)" />
                           </div>
                         </div>
