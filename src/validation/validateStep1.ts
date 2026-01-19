@@ -70,8 +70,8 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
     };
   }
 
-  // Validate connection type
-  if (!connectionType) {
+  // Validate connection type for riders with a space
+  if (usesHangar === true && !connectionType) {
     return {
       isValid: false,
       message: 'Please select how you use this hangar',

@@ -5,7 +5,7 @@ import { umamiEventProps } from '../utils/analytics';
 
 const HeroSection = () => {
   return (
-    <section className="bg-gray-50 py-28 md:py-40">
+    <section className="bg-gray-50 py-14 md:py-40">
       <div className="container mx-auto flex flex-col-reverse items-center px-4 text-center md:flex-row md:text-left">
         <div className="mt-10 md:mt-0 md:w-1/2">
           {/* Desktop: show logo on the left; hidden on mobile */}

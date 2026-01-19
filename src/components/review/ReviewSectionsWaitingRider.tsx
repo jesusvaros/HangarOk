@@ -83,8 +83,11 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
           <TagList title="Community perception" tags={step2Data?.perception_tags} />
         </SectionCard>
 
-      <SectionCard title="Access & Waitlist" subtitle="Experience trying to get a space" icon={<QueueListIcon className="h-6 w-6 text-gray-500" />}>
-          <RatingRow icon={<QueueListIcon className="h-5 w-5 text-black" />} label="Waitlist fairness" value={step5Data?.waitlist_fairness_rating ?? null} />
+      <SectionCard title="Access" subtitle="Experience trying to get a space" icon={<QueueListIcon className="h-6 w-6 text-gray-500" />}>
+          <RatingRow icon={<QueueListIcon className="h-5 w-5 text-black" />} label="Access fairness" value={step5Data?.waitlist_fairness_rating ?? null} />
+          <p className="text-sm text-gray-600">
+            How fair and transparent access to bike storage feels for riders on this street.
+          </p>
           <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5 text-black" />} label="Communication" value={step5Data?.communication_rating ?? null} />
           <RatingRow icon={<BoltIcon className="h-5 w-5 text-black" />} label="Fix speed" value={step5Data?.fix_speed_rating ?? null} />
           <TagList title="Waitlist notes" tags={step5Data?.waitlist_tags} />

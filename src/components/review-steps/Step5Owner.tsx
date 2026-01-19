@@ -106,14 +106,17 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({
       ) : (
         /* User does NOT have a hangar (waitlist) */
         <>
-          {/* Waitlist fairness rating */}
+          {/* Access fairness rating */}
           <div>
             <StarRating
-              label="Does the waiting list feel fair?"
+              label="Access fairness"
               value={formData.waitlistFairnessRating}
               onChange={(value) => updateFormData({ waitlistFairnessRating: value })}
               error={fieldErrors?.waitlistFairnessRating}
             />
+            <p className="mt-2 text-sm text-gray-600">
+              How fair and transparent access to bike storage feels for riders on this street.
+            </p>
           </div>
 
           {/* Waitlist tags */}

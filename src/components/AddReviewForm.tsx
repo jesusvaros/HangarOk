@@ -448,7 +448,7 @@ const AddReviewForm: React.FC = () => {
   };
 
   return (
-    <div className="w-full pt-[80px] md:pt-[96px] lg:pt-[120px] pb-0 min-h-[calc(100vh-80px)] md:min-h-[calc(100vh-96px)] lg:min-h-[calc(100vh-120px)]">
+    <div className="w-full pt-[40px]  pb-0 min-h-[calc(100vh-80px)] md:min-h-[calc(100vh-96px)] lg:min-h-[calc(100vh-120px)]">
       {/* Render only one layout based on viewport to avoid duplicate animations */}
       {!isDesktop ? (
         // Mobile / Tablet layout
