@@ -124,13 +124,13 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
         <SelectableTagGroup
           label="Do you use this hangar right now?"
           options={[
-            "✅ Yes, I have a space",
+            "✅ Yes, I have/had a space",
             "❌ No, I'm on the waiting list",
             "❌ No, I can't get a hangar near me"
           ]}
           selectedOptions={
             formData.usesHangar === true
-              ? ["✅ Yes, I have a space"]
+              ? ["✅ Yes, I have/had a space"]
               : formData.hangarAccessStatus === 'waiting_list'
               ? ["❌ No, I'm on the waiting list"]
               : formData.hangarAccessStatus === 'no_hangar_nearby'
@@ -139,11 +139,11 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
           }
           onChange={(selected) => {
             const choice = selected[0];
-            if (choice === '✅ Yes, I have a space') {
+            if (choice === '✅ Yes, I have/had a space') {
               updateFormData({
                 usesHangar: true,
                 hangarAccessStatus: undefined,
-                connectionType: 'rent_space',
+                connectionType: undefined,
               });
               return;
             }
@@ -152,10 +152,8 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
               const payload: Partial<FormDataType> = {
                 usesHangar: false,
                 hangarAccessStatus: 'waiting_list',
+                connectionType: undefined,
               };
-              if (formData.connectionType === 'rent_space') {
-                payload.connectionType = undefined;
-              }
               updateFormData(payload);
               return;
             }
@@ -164,10 +162,8 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
               const payload: Partial<FormDataType> = {
                 usesHangar: false,
                 hangarAccessStatus: 'no_hangar_nearby',
+                connectionType: undefined,
               };
-              if (formData.connectionType === 'rent_space') {
-                payload.connectionType = undefined;
-              }
               updateFormData(payload);
               return;
             }
@@ -236,11 +232,11 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
       </div>
 
       {/* Section 4: Your connection to this hangar */}
-      {formData.usesHangar === false && (
+      {formData.usesHangar === true && (
         <div>
           <SelectableTagGroup
             label="How do you use this hangar?"
-            options={['I used to', 'I live near it', 'I park here sometimes']}
+            options={['I used to', 'I live near it', 'I park here sometimes', 'Use it on a daily basis']}
             selectedOptions={
               formData.connectionType === 'used_to'
                 ? ['I used to']
@@ -248,12 +244,15 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
                 ? ['I live near it']
                 : formData.connectionType === 'park_sometimes'
                 ? ['I park here sometimes']
+                : formData.connectionType === 'rent_space'
+                ? ['Use it on a daily basis']
                 : []
             }
             onChange={(selected) => {
               const value = 
                 selected[0] === 'I used to' ? 'used_to' :
-                selected[0] === 'I live near it' ? 'live_near' : 'park_sometimes';
+                selected[0] === 'I live near it' ? 'live_near' :
+                selected[0] === 'I park here sometimes' ? 'park_sometimes' : 'rent_space';
               updateFormData({ connectionType: value as FormDataType['connectionType'] });
             }}
             multiSelect={false}

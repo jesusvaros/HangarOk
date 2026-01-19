@@ -15,7 +15,7 @@ interface HangarStep1Data {
   hangar_access_status?: 'waiting_list' | 'no_hangar_nearby' | null;
   open_to_swap?: boolean;
   home_type: 'flat' | 'house' | 'shared' | 'other';
-  connection_type: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes';
+  connection_type: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes' | null;
   hangar_number?: string | null;
 }
 
@@ -40,7 +40,7 @@ export interface HangarStep1Payload {
   hangarAccessStatus?: 'waiting_list' | 'no_hangar_nearby';
   openToSwap?: boolean | null;
   homeType: 'flat' | 'house' | 'shared' | 'other';
-  connectionType: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes';
+  connectionType: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes' | null;
 }
 
 // Note: AddressStep1Payload is exported from types.ts for backward compatibility
@@ -98,7 +98,7 @@ export async function submitAddressStep1(payload: HangarStep1Payload): Promise<b
       p_hangar_access_status: payload.hangarAccessStatus || null,
       p_open_to_swap: payload.openToSwap !== undefined ? payload.openToSwap : null,
       p_home_type: payload.homeType,
-      p_connection_type: payload.connectionType,
+      p_connection_type: payload.connectionType ?? null,
     });
 
     if (error) throw error;

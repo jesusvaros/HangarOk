@@ -71,8 +71,8 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
     };
   }
 
-  // Validate connection type
-  if (!connectionType) {
+  // Validate connection type (only required for hangar users)
+  if (usesHangar === true && !connectionType) {
     return {
       isValid: false,
       message: 'Please select how you use this hangar',
@@ -94,7 +94,7 @@ export const submitStep1 = async (
     const { hangarLocation, hangarNumber, usesHangar, hangarAccessStatus, openToSwap, homeType, connectionType } = context;
 
     // Basic check - validation should have already happened
-    if (!hangarLocation?.coordinates || usesHangar === undefined || !homeType || !connectionType) {
+    if (!hangarLocation?.coordinates || usesHangar === undefined || !homeType || (usesHangar === true && !connectionType)) {
       return { success: false, message: 'Incomplete hangar data' };
     }
 
@@ -115,7 +115,7 @@ export const submitStep1 = async (
       hangarAccessStatus,
       openToSwap,
       homeType,
-      connectionType,
+      connectionType: connectionType ?? null,
     });
 
     return {
