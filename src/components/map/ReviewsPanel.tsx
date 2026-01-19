@@ -109,8 +109,8 @@ const USAGE_STYLES: Record<
     categoryTextClass: 'text-slate-600',
   },
   waiting: {
-    categoryTitle: 'Blocked riders',
-    label: 'Blocked',
+    categoryTitle: 'Waiting & nearby riders',
+    label: 'Waiting / nearby',
     icon: ClockIcon,
     iconWrapperClass: 'bg-slate-200 text-slate-600',
     categoryTextClass: 'text-slate-600',
@@ -184,7 +184,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
               : isCurrentUser
                 ? 'Hangar rider'
                 : isWaitingRider
-                  ? 'Blocked rider'
+                  ? 'Waiting rider'
                   : 'Rider';
             const ratingTone = displayScore !== null ? getRatingTone(displayScore) : 'none';
             const UserIcon = isGroup ? HangarIcon : isCurrentUser ? BikeIcon : ClockIcon;
@@ -309,7 +309,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
 
                         return (
                           <div className="flex flex-col items-end gap-0.5">
-                            <span className="text-[10px] font-medium text-slate-500">HangarOK Score</span>
+                            <span className="text-[10px] font-medium text-slate-500">Hangar rider</span>
                             <div className="pt-1 flex items-center justify-between gap-3 w-full">
                               {toggleButton}
                               <div className={`flex items-center gap-1 px-2.5 py-1 rounded-md border ${badgeColor}`}>
@@ -426,12 +426,12 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                           <div className="flex-1 space-y-1">
                                             {memberIsWaiting ? (
                                               <>
-                                                <span className="text-xs font-medium text-slate-600">Access fairness</span>
+                                                <span className="text-xs font-medium text-slate-600">Waiting rider</span>
                                                 <SegmentedBar value={memberWaitlistScore ?? 0} color="rgb(74,94,50)" />
                                               </>
                                             ) : (
                                               <>
-                                                <span className="text-xs font-medium text-slate-600">HangarOK Score</span>
+                                                <span className="text-xs font-medium text-slate-600">Hangar rider</span>
                                                 <SegmentedBar value={member.hangarok_score ?? 0} color="rgb(74,94,50)" />
                                               </>
                                             )}
@@ -465,11 +465,11 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                           {statusLabel}
                         </p>
                         <p className="text-sm font-semibold text-slate-800">
-                          {isWaitingRider
-                            ? 'Desired hangar location'
-                            : r.hangar_number
-                            ? `Hangar ${r.hangar_number}`
-                            : 'Hangar'}
+                          {isCurrentUser
+                            ? r.hangar_number
+                              ? `Hangar ${r.hangar_number}`
+                              : 'Hangar'
+                            : address}
                         </p>
                       </div>
                     </div>
@@ -483,7 +483,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                         <>
                           {typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 ? (
                             <div className="space-y-1 mb-2">
-                              <span className="text-xs font-medium text-slate-600">Access fairness</span>
+                              <span className="text-xs font-medium text-slate-600">Waiting rider</span>
                               <SegmentedBar value={r.waitlist_fairness_rating} color="rgb(74,94,50)" />
                             </div>
                           ) : null}
@@ -491,7 +491,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                       ) : hasRating ? (
                         <div className="space-y-2">
                           <div className="space-y-1">
-                            <span className="text-xs font-medium text-slate-600">HangarOK Score</span>
+                            <span className="text-xs font-medium text-slate-600">Hangar rider</span>
                             <SegmentedBar value={r.hangarok_score ?? 0} color="rgb(74,94,50)" />
                           </div>
                         </div>

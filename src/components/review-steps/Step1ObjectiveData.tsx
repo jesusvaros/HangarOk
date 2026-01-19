@@ -68,35 +68,15 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
     updateFormData({ hangarNumber: e.target.value });
   };
 
-  const hangarAccessOptions = [
-    '✅ Yes, I have a space',
-    "❌ No, I'm on the waiting list",
-    "❌ No, I can't get a hangar near me",
-  ];
-
-  const selectedHangarAccessOption =
-    formData.hangarAccessStatus === 'has_space'
-      ? '✅ Yes, I have a space'
-      : formData.hangarAccessStatus === 'waiting_list'
-      ? "❌ No, I'm on the waiting list"
-      : formData.hangarAccessStatus === 'no_hangar_nearby'
-      ? "❌ No, I can't get a hangar near me"
-      : formData.usesHangar === true
-      ? '✅ Yes, I have a space'
-      : formData.usesHangar === false
-      ? "❌ No, I'm on the waiting list"
-      : undefined;
-
 
   return (
     <div className="w-full space-y-8">
       {/* Section 1: Hangar Location */}
       <div>
         <h2 className="mb-4 text-2xl font-semibold text-[rgb(74,94,50)] flex items-center">
-          Where's the hangar
-          <p className="mt-1 text-sm text-gray-600 ml-2">
-            (or where do you wish you could park)?
-          </p>
+          Where's the hangar   <p className="mt-1 text-sm text-gray-600 ml-2">
+         (or where do you wish you could park)?
+        </p>
         </h2>
        
         
@@ -143,24 +123,26 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
       <div>
         <SelectableTagGroup
           label="Do you use this hangar right now?"
-          options={hangarAccessOptions}
-          selectedOptions={selectedHangarAccessOption ? [selectedHangarAccessOption] : []}
+          options={["✅ Yes, I have a space", '❌ No, not yet / Waiting / Nearby rider']}
+          selectedOptions={
+            formData.usesHangar === true
+              ? ["✅ Yes, I have a space"]
+              : formData.usesHangar === false
+              ? ['❌ No, not yet / Waiting / Nearby rider']
+              : []
+          }
           onChange={(selected) => {
             const choice = selected[0];
             if (choice === '✅ Yes, I have a space') {
               updateFormData({
                 usesHangar: true,
-                hangarAccessStatus: 'has_space',
                 connectionType: 'rent_space',
               });
               return;
             }
 
-            if (choice === "❌ No, I'm on the waiting list") {
-              const payload: Partial<FormDataType> = {
-                usesHangar: false,
-                hangarAccessStatus: 'waiting_list',
-              };
+            if (choice === '❌ No, not yet / Waiting / Nearby rider') {
+              const payload: Partial<FormDataType> = { usesHangar: false };
               if (formData.connectionType === 'rent_space') {
                 payload.connectionType = undefined;
               }
@@ -168,19 +150,7 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
               return;
             }
 
-            if (choice === "❌ No, I can't get a hangar near me") {
-              const payload: Partial<FormDataType> = {
-                usesHangar: false,
-                hangarAccessStatus: 'no_hangar_nearby',
-              };
-              if (formData.connectionType === 'rent_space') {
-                payload.connectionType = undefined;
-              }
-              updateFormData(payload);
-              return;
-            }
-
-            updateFormData({ usesHangar: undefined, hangarAccessStatus: undefined });
+            updateFormData({ usesHangar: undefined });
           }}
           multiSelect={false}
           error={fieldErrors?.usesHangar}
@@ -244,7 +214,7 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
       </div>
 
       {/* Section 4: Your connection to this hangar */}
-      {formData.usesHangar === true && (
+      {formData.usesHangar === false && (
         <div>
           <SelectableTagGroup
             label="How do you use this hangar?"

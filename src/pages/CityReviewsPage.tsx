@@ -264,7 +264,7 @@ export default function CityReviewsPage() {
                               {review.full_address ?? fallbackCityName}
                             </p>
                             <p className="text-sm text-gray-700">
-                              {review.waitlist_fairness_rating ? `Access fairness: ${review.waitlist_fairness_rating.toFixed(1)}/5` : 'Review pending completion.'}
+                              {review.waitlist_fairness_rating ? `Waitlist fairness: ${review.waitlist_fairness_rating.toFixed(1)}/5` : 'Review pending completion.'}
                             </p>
                           </div>
                         </Link>

@@ -89,8 +89,8 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
 
   const openToSwapLabel = formatOpenToSwap(step1Data?.open_to_swap);
   const connectionLabel = formatOptionLabel(step1Data?.connection_type) ?? CONNECTION_TYPE_LABELS[step1Data?.connection_type ?? ''] ?? null;
-  const usageLabel = usesHangar ? 'Uses the hangar regularly' : 'Does not currently rent a space';
-  const headerCaption = usesHangar ? 'Current hangar rider review' : 'Blocked rider perspective';
+  const usageLabel = usesHangar ? 'Uses the hangar regularly' : 'Not able to enter the waiting list';
+  const headerCaption = usesHangar ? 'Current hangar rider review' : 'Local rider / waiting list perspective';
   const hangarNumber = step1Data?.hangar_number ?? null;
 
   return (
@@ -101,16 +101,10 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
             <MapPinIcon className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <p className="text-xs font-semibold uppercase tracking-wide text-gray-700">{headerCaption}</p>
-            <div className="mt-1 flex flex-col gap-1">
-              {usesHangar ? (
-                <span className="text-lg font-semibold text-gray-900 leading-tight">{formatAddress(step1Data)}</span>
-              ) : (
-                <>
-                  <span className="text-sm font-semibold text-gray-700">Desired hangar location</span>
-                  <span className="text-lg font-semibold text-gray-900 leading-tight">{formatAddress(step1Data)}</span>
-                </>
-              )}
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-700">{headerCaption}</p>
+              <div className="mt-1 flex flex-col gap-1">
+              <span className="text-lg font-semibold text-gray-900 leading-tight">{formatAddress(step1Data)}</span>
+             
             </div>
           </div>
         </div>

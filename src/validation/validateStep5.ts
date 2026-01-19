@@ -51,7 +51,7 @@ export const validateStep5 = (context: FormDataType): ValidationResult => {
     if (!waitlistFairnessRating) {
       return {
         isValid: false,
-        message: 'Please rate how fair access to bike storage feels',
+        message: 'Please rate if the waiting list feels fair',
         fieldErrors: { ...fieldErrors, waitlistFairnessRating: true },
       };
     }

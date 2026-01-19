@@ -45,7 +45,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
     : isCurrentUser
       ? 'Hangar rider'
       : isWaitingRider
-        ? 'Blocked rider'
+        ? 'Waiting rider'
         : 'Rider';
   const waitlistRating = typeof review?.waitlist_fairness_rating === 'number' ? review.waitlist_fairness_rating : null;
   const showNavigation = Boolean(groupContext && groupContext.total > 1);
@@ -89,16 +89,7 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
             </span>
             <div className="flex flex-col gap-1">
               <h3 className="text-xs font-semibold uppercase tracking-wide text-slate-500">{statusLabel}</h3>
-              {isWaitingRider ? (
-                <>
-                  <p className="text-sm font-semibold text-slate-800">
-                    Desired hangar location
-                  </p>
-                  <p className="text-sm text-slate-600 line-clamp-1">
-                    {review?.full_address}
-                  </p>
-                </>
-              ) : displayHangarNumber ? (
+              {isCurrentUser && displayHangarNumber ? (
                 <p className="text-sm font-semibold text-slate-800 ">
                   Hangar {displayHangarNumber}
                 </p>
@@ -178,11 +169,11 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
                     <div className="bg-white rounded-lg p-2.5 border shadow-sm">
                       <div className="flex items-center gap-2 mb-2">
                         <QueueListIcon className="h-4 w-4 text-slate-600" />
-                        <h4 className="text-xs font-bold uppercase text-slate-700">Access fairness</h4>
+                        <h4 className="text-xs font-bold uppercase text-slate-700">Waiting rider</h4>
                       </div>
                       <SegmentedBar value={waitlistRating} color="rgb(74,94,50)" />
                       <p className="mt-1.5 text-[10px] text-gray-500">
-                        How fair and transparent access to bike storage feels for riders on this street.
+                        How fair and transparent the waiting list process feels to riders trying to get a space.
                       </p>
                     </div>
                   )}

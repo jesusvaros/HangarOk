@@ -34,7 +34,6 @@ export type FormDataType = {
   };
   hangarNumber?: string; // NEW: Hangar number (independent from address)
   usesHangar?: boolean; // true = "Yes - I have a space", false = "No - Not yet / Waiting / Nearby rider"
-  hangarAccessStatus?: 'has_space' | 'waiting_list' | 'no_hangar_nearby';
   openToSwap?: boolean | null; // NEW: User is open to swapping to a closer hangar
   homeType?: 'flat' | 'house' | 'shared' | 'other'; // Flat / House / Shared housing / Something else
   connectionType?: 'rent_space' | 'used_to' | 'live_near' | 'park_sometimes'; // How you use this hangar
@@ -97,7 +96,6 @@ export const initialFormData: FormDataType = {
     postalCode: '',
   },
   usesHangar: undefined,
-  hangarAccessStatus: undefined,
   openToSwap: null,
   homeType: undefined,
   connectionType: undefined,
