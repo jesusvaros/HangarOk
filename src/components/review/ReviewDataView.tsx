@@ -74,6 +74,7 @@ const ReviewDataView: React.FC<Props> = ({ step1Data, step2Data, step3Data, step
             connectionLabel={connectionLabel}
             currentStorageLabel={currentStorageLabel}
             impactLabel={impactLabel}
+            hangarAccessStatus={step1Data?.hangar_access_status}
           />
         )}
 
