@@ -29,6 +29,7 @@ type Props = {
 export default function DetailsPanel({ review, onClose, groupContext }: Props) {
   const isCurrentUser = review?.uses_hangar === true;
   const isWaitingRider = review?.uses_hangar === false;
+  const isBlockedRider = review?.uses_hangar === false && review?.hangar_access_status === 'no_hangar_nearby';
   const isGroupedView = Boolean(groupContext && groupContext.total > 1);
   const StatusIcon = isCurrentUser
       ? BikeIcon
@@ -169,11 +170,13 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
                     <div className="bg-white rounded-lg p-2.5 border shadow-sm">
                       <div className="flex items-center gap-2 mb-2">
                         <QueueListIcon className="h-4 w-4 text-slate-600" />
-                        <h4 className="text-xs font-bold uppercase text-slate-700">Waiting rider</h4>
+                        <h4 className="text-xs font-bold uppercase text-slate-700">
+                          {isBlockedRider ? 'Access fairness' : 'Waiting fairness'}
+                        </h4>
                       </div>
                       <SegmentedBar value={waitlistRating} color="rgb(74,94,50)" />
                       <p className="mt-1.5 text-[10px] text-gray-500">
-                        How fair and transparent the waiting list process feels to riders trying to get a space.
+                        How fair and transparent access to bike storage feels for riders on this street.
                       </p>
                     </div>
                   )}

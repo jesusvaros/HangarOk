@@ -104,12 +104,12 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({
           </div>
         </>
       ) : (
-        /* User does NOT have a hangar (waitlist) */
+        /* User does NOT have a hangar (waitlist or blocked) */
         <>
-          {/* Blocked rider rating */}
+          {/* Waiting fairness or Access fairness rating based on status */}
           <div>
             <StarRating
-              label="Blocked rider"
+              label={formData.hangarAccessStatus === 'waiting_list' ? 'Waiting fairness' : 'Access fairness'}
               value={formData.waitlistFairnessRating}
               onChange={(value) => updateFormData({ waitlistFairnessRating: value })}
               error={fieldErrors?.waitlistFairnessRating}

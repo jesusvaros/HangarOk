@@ -89,8 +89,17 @@ const ReviewInfoSidebar: React.FC<ReviewInfoSidebarProps> = ({
 
   const openToSwapLabel = formatOpenToSwap(step1Data?.open_to_swap);
   const connectionLabel = formatOptionLabel(step1Data?.connection_type) ?? CONNECTION_TYPE_LABELS[step1Data?.connection_type ?? ''] ?? null;
-  const usageLabel = usesHangar ? 'Uses the hangar regularly' : 'Not able to enter the waiting list';
-  const headerCaption = usesHangar ? 'Current hangar rider review' : 'Local rider / waiting list perspective';
+  const isBlocked = !usesHangar && step1Data?.hangar_access_status === 'no_hangar_nearby';
+  const usageLabel = usesHangar 
+    ? 'Uses the hangar regularly' 
+    : isBlocked 
+      ? 'Not able to enter the waiting list'
+      : 'On the waiting list';
+  const headerCaption = usesHangar 
+    ? 'Current hangar rider review' 
+    : isBlocked
+      ? 'Blocked rider perspective'
+      : 'Waiting rider perspective';
   const hangarNumber = step1Data?.hangar_number ?? null;
 
   return (

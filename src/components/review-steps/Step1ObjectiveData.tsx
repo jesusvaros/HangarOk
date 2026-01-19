@@ -123,12 +123,18 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
       <div>
         <SelectableTagGroup
           label="Do you use this hangar right now?"
-          options={["✅ Yes, I have a space", '❌ No, not yet / Waiting / Nearby rider']}
+          options={[
+            "✅ Yes, I have a space",
+            "❌ No, I'm on the waiting list",
+            "❌ No, I can't get a hangar near me"
+          ]}
           selectedOptions={
             formData.usesHangar === true
               ? ["✅ Yes, I have a space"]
-              : formData.usesHangar === false
-              ? ['❌ No, not yet / Waiting / Nearby rider']
+              : formData.hangarAccessStatus === 'waiting_list'
+              ? ["❌ No, I'm on the waiting list"]
+              : formData.hangarAccessStatus === 'no_hangar_nearby'
+              ? ["❌ No, I can't get a hangar near me"]
               : []
           }
           onChange={(selected) => {
@@ -136,13 +142,17 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
             if (choice === '✅ Yes, I have a space') {
               updateFormData({
                 usesHangar: true,
+                hangarAccessStatus: undefined,
                 connectionType: 'rent_space',
               });
               return;
             }
 
-            if (choice === '❌ No, not yet / Waiting / Nearby rider') {
-              const payload: Partial<FormDataType> = { usesHangar: false };
+            if (choice === "❌ No, I'm on the waiting list") {
+              const payload: Partial<FormDataType> = {
+                usesHangar: false,
+                hangarAccessStatus: 'waiting_list',
+              };
               if (formData.connectionType === 'rent_space') {
                 payload.connectionType = undefined;
               }
@@ -150,7 +160,19 @@ const Step1ObjectiveData = ({ onNext, fieldErrors, isSubmitting = false }: Step1
               return;
             }
 
-            updateFormData({ usesHangar: undefined });
+            if (choice === "❌ No, I can't get a hangar near me") {
+              const payload: Partial<FormDataType> = {
+                usesHangar: false,
+                hangarAccessStatus: 'no_hangar_nearby',
+              };
+              if (formData.connectionType === 'rent_space') {
+                payload.connectionType = undefined;
+              }
+              updateFormData(payload);
+              return;
+            }
+
+            updateFormData({ usesHangar: undefined, hangarAccessStatus: undefined });
           }}
           multiSelect={false}
           error={fieldErrors?.usesHangar}

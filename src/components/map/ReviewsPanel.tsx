@@ -40,6 +40,7 @@ export type ReviewListItem = {
   texto?: string;
   comment?: string;
   uses_hangar?: boolean | null;
+  hangar_access_status?: string | null;
   hangar_number?: string | null;
   groupCount?: number;
   groupedIds?: (string | number)[];
@@ -59,6 +60,7 @@ export type ReviewListItem = {
     id: string | number;
     full_address?: string | null;
     uses_hangar?: boolean | null;
+    hangar_access_status?: string | null;
     overall_safety_rating?: number | null;
     overall_usability_rating?: number | null;
     hangarok_score?: number | null;
@@ -160,6 +162,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
             const isGroup = (r.groupCount ?? 0) > 1 && (r.groupedReviews?.length ?? 0) > 0;
             const isCurrentUser = !isGroup && r.uses_hangar === true;
             const isWaitingRider = !isGroup && r.uses_hangar === false;
+            const isBlockedRider = !isGroup && r.uses_hangar === false && r.hangar_access_status === 'no_hangar_nearby';
             
             // Use HangarOK Score for hangar users, waitlist fairness for waiting riders
             const hangarScore = typeof r.hangarok_score === 'number' ? r.hangarok_score : null;
@@ -172,13 +175,7 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
             const hasWaitlistRating = waitlistRating !== null;
             const reviewCount = r.groupCount ?? r.groupedReviews?.length ?? 0;
             const isSelected = String(selectedId ?? '') === String(id);
-            const statusIconWrapper = isGroup
-              ? 'bg-slate-200 text-slate-600'
-              : isCurrentUser
-                ? 'bg-slate-200 text-slate-600'
-                : isWaitingRider
-                  ? 'bg-slate-200 text-slate-600'
-                  : 'bg-slate-200 text-slate-600';
+            const statusIconWrapper = 'bg-slate-200 text-slate-600';
             const statusLabel = isGroup
               ? 'Hangar reviews'
               : isCurrentUser
@@ -348,7 +345,8 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                       typeof member.overall_usability_rating === 'number'
                                         ? member.overall_usability_rating
                                         : null;
-                                    const memberIsWaiting = member.uses_hangar === false;
+                                    const memberIsWaiting = member.uses_hangar === false && member.hangar_access_status === 'waiting_list';
+                                    const memberIsBlocked = member.uses_hangar === false && member.hangar_access_status === 'no_hangar_nearby';
                                     const memberTheftScore =
                                       typeof member.theft_worry_rating === 'number'
                                         ? member.theft_worry_rating
@@ -426,7 +424,12 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                                           <div className="flex-1 space-y-1">
                                             {memberIsWaiting ? (
                                               <>
-                                                <span className="text-xs font-medium text-slate-600">Waiting rider</span>
+                                                <span className="text-xs font-medium text-slate-600">Waiting fairness</span>
+                                                <SegmentedBar value={memberWaitlistScore ?? 0} color="rgb(74,94,50)" />
+                                              </>
+                                            ) : memberIsBlocked ? (
+                                              <>
+                                                <span className="text-xs font-medium text-slate-600">Access fairness</span>
                                                 <SegmentedBar value={memberWaitlistScore ?? 0} color="rgb(74,94,50)" />
                                               </>
                                             ) : (
@@ -464,13 +467,11 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                         <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
                           {statusLabel}
                         </p>
-                        <p className="text-sm font-semibold text-slate-800">
-                          {isCurrentUser
-                            ? r.hangar_number
-                              ? `Hangar ${r.hangar_number}`
-                              : 'Hangar'
-                            : address}
-                        </p>
+                        {(isCurrentUser && r.hangar_number) && (
+                          <p className="text-sm font-semibold text-slate-800">
+                            Hangar {r.hangar_number}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <button
@@ -483,7 +484,16 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
                         <>
                           {typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 ? (
                             <div className="space-y-1 mb-2">
-                              <span className="text-xs font-medium text-slate-600">Waiting rider</span>
+                              <span className="text-xs font-medium text-slate-600">Waiting fairness</span>
+                              <SegmentedBar value={r.waitlist_fairness_rating} color="rgb(74,94,50)" />
+                            </div>
+                          ) : null}
+                        </>
+                      ) : isBlockedRider ? (
+                        <>
+                          {typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 ? (
+                            <div className="space-y-1 mb-2">
+                              <span className="text-xs font-medium text-slate-600">Access fairness</span>
                               <SegmentedBar value={r.waitlist_fairness_rating} color="rgb(74,94,50)" />
                             </div>
                           ) : null}

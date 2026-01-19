@@ -12,6 +12,7 @@ export type PublicReview = {
   overall_usability_rating: number | null;  // Average of usability ratings
   hangarok_score: number | null;  // Overall HangarOK Score (average of 4 categories)
   uses_hangar: boolean | null;  // true = current user, false = waiting list / nearby rider
+  hangar_access_status: string | null;  // 'waiting_list' or 'no_hangar_nearby' (only when uses_hangar is false)
   hangar_number: string | null;  // Hangar identifier (e.g., Cyclehangar_2271)
   // Individual ratings
   daytime_safety_rating: number | null;
@@ -58,7 +59,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
 
   const { data, error } = await client
     .from('public_reviews')
-    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, uses_hangar, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number, belongs_rating, fair_use_rating, appearance_rating, theft_worry_rating, bike_messed_with, impact_tags, waitlist_fairness_rating, waitlist_tags, improvement_suggestion, report_ease_rating, fix_speed_rating, communication_rating, home_type, validated_at')
+    .select('id, address_details, daytime_safety_rating, nighttime_safety_rating, lock_ease_rating, space_rating, uses_hangar, hangar_access_status, perception_tags, safety_tags, usability_tags, maintenance_tags, hangar_number, belongs_rating, fair_use_rating, appearance_rating, theft_worry_rating, bike_messed_with, impact_tags, waitlist_fairness_rating, waitlist_tags, improvement_suggestion, report_ease_rating, fix_speed_rating, communication_rating, home_type, validated_at')
     .eq('is_public', true)
     .order('validated_at', { ascending: false, nullsFirst: false });
 
@@ -118,6 +119,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
     communication_rating?: number | null;
     home_type?: string | null;
     uses_hangar?: boolean | null;
+    hangar_access_status?: string | null;
     perception_tags?: string[] | null;
     safety_tags?: string[] | null;
     usability_tags?: string[] | null;
@@ -201,6 +203,7 @@ export async function getPublicReviews(): Promise<PublicReview[]> {
       overall_usability_rating: overallUsabilityRating,
       hangarok_score: hangarokScore,
       uses_hangar: review.uses_hangar ?? null,
+      hangar_access_status: review.hangar_access_status ?? null,
       hangar_number: review.hangar_number ?? null,
       daytime_safety_rating: review.daytime_safety_rating ?? null,
       nighttime_safety_rating: review.nighttime_safety_rating ?? null,

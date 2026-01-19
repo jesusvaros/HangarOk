@@ -84,7 +84,7 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
         </SectionCard>
 
       <SectionCard title="Access & Waitlist" subtitle="Experience trying to get a space" icon={<QueueListIcon className="h-6 w-6 text-gray-500" />}>
-          <RatingRow icon={<QueueListIcon className="h-5 w-5 text-black" />} label="Waitlist fairness" value={step5Data?.waitlist_fairness_rating ?? null} />
+          <RatingRow icon={<QueueListIcon className="h-5 w-5 text-black" />} label="Waiting rider" value={step5Data?.waitlist_fairness_rating ?? null} />
           <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5 text-black" />} label="Communication" value={step5Data?.communication_rating ?? null} />
           <RatingRow icon={<BoltIcon className="h-5 w-5 text-black" />} label="Fix speed" value={step5Data?.fix_speed_rating ?? null} />
           <TagList title="Waitlist notes" tags={step5Data?.waitlist_tags} />
