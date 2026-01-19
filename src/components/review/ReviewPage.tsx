@@ -83,6 +83,7 @@ const ReviewPage = () => {
                 hangar_location: publicReview.address_details,
                 hangar_number: publicReview.hangar_number ?? null,
                 uses_hangar: publicReview.uses_hangar,
+                hangar_access_status: publicReview.hangar_access_status ?? null,
                 home_type: publicReview.home_type,
                 connection_type: publicReview.connection_type,
               });

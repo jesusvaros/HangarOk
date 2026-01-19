@@ -3,6 +3,7 @@ import {
   ClockIcon,
   ChevronDownIcon,
   LockOpenIcon,
+  NoSymbolIcon,
 } from '@heroicons/react/24/outline';
 import { SegmentedBar } from '../ui/SegmentedBar';
 import HangarLogo from '../../assets/logohangarOK.svg';
@@ -161,16 +162,16 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
             const address = r.texto ?? '-';
             const isGroup = (r.groupCount ?? 0) > 1 && (r.groupedReviews?.length ?? 0) > 0;
             const isCurrentUser = !isGroup && r.uses_hangar === true;
-            const isWaitingRider = !isGroup && r.uses_hangar === false;
             const isBlockedRider = !isGroup && r.uses_hangar === false && r.hangar_access_status === 'no_hangar_nearby';
+            const isWaitingRider = !isGroup && r.uses_hangar === false && (r.hangar_access_status === 'waiting_list' || r.hangar_access_status === null);
             
             // Use HangarOK Score for hangar users, waitlist fairness for waiting riders
             const hangarScore = typeof r.hangarok_score === 'number' ? r.hangarok_score : null;
-            const waitlistRating = isWaitingRider && typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 
+            const waitlistRating = typeof r.waitlist_fairness_rating === 'number' && r.waitlist_fairness_rating > 0 
               ? r.waitlist_fairness_rating 
               : null;
             
-            const displayScore = isWaitingRider ? waitlistRating : hangarScore;
+            const displayScore = (isWaitingRider || isBlockedRider) ? waitlistRating : hangarScore;
             const hasRating = displayScore !== null && displayScore > 0;
             const hasWaitlistRating = waitlistRating !== null;
             const reviewCount = r.groupCount ?? r.groupedReviews?.length ?? 0;
@@ -180,11 +181,13 @@ const ReviewsPanel: React.FC<ReviewsPanelProps> = ({
               ? 'Hangar reviews'
               : isCurrentUser
                 ? 'Hangar rider'
-                : isWaitingRider
-                  ? 'Waiting rider'
-                  : 'Rider';
+                : isBlockedRider
+                  ? 'Blocked rider'
+                  : isWaitingRider
+                    ? 'Waiting rider'
+                    : 'Rider';
             const ratingTone = displayScore !== null ? getRatingTone(displayScore) : 'none';
-            const UserIcon = isGroup ? HangarIcon : isCurrentUser ? BikeIcon : ClockIcon;
+            const UserIcon = isGroup ? HangarIcon : isCurrentUser ? BikeIcon : isBlockedRider ? NoSymbolIcon : ClockIcon;
             const expanded = expandedGroups[String(id)] ?? true;
             const toggleLabel = expanded ? 'Hide riders' : 'See riders';
             const toggleButton = (

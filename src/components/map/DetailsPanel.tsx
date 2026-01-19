@@ -45,9 +45,11 @@ export default function DetailsPanel({ review, onClose, groupContext }: Props) {
     ? 'Hangar reviews'
     : isCurrentUser
       ? 'Hangar rider'
-      : isWaitingRider
-        ? 'Waiting rider'
-        : 'Rider';
+      : isBlockedRider
+        ? 'Blocked rider'
+        : isWaitingRider
+          ? 'Waiting rider'
+          : 'Rider';
   const waitlistRating = typeof review?.waitlist_fairness_rating === 'number' ? review.waitlist_fairness_rating : null;
   const showNavigation = Boolean(groupContext && groupContext.total > 1);
   const navIndex = groupContext?.index ?? 0;

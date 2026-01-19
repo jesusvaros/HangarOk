@@ -180,6 +180,7 @@ const MapView = ({
           hangarok_score: review.hangarok_score ?? null,
           usability_rating: review.overall_usability_rating ?? undefined,
           uses_hangar: review.uses_hangar ?? null,
+          hangar_access_status: review.hangar_access_status ?? null,
           hangar_number: review.hangar_number ?? null,
           theft_worry_rating: review.theft_worry_rating ?? null,
           waitlist_fairness_rating: review.waitlist_fairness_rating ?? null,
