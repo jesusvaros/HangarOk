@@ -119,7 +119,7 @@ const AddReviewForm: React.FC = () => {
         hangarLocation: hangarData.hangar_location,
         usesHangar: hangarData.uses_hangar,
         homeType: hangarData.home_type,
-        connectionType: hangarData.connection_type,
+        connectionType: hangarData.connection_type ?? undefined,
       });
     }
   }, [updateFormData]);
