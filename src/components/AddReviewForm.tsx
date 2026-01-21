@@ -118,6 +118,7 @@ const AddReviewForm: React.FC = () => {
       updateFormData({
         hangarLocation: hangarData.hangar_location,
         usesHangar: hangarData.uses_hangar,
+        hangarAccessStatus: hangarData.hangar_access_status ?? undefined,
         homeType: hangarData.home_type,
         connectionType: hangarData.connection_type ?? undefined,
       });
