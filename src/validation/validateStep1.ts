@@ -20,7 +20,7 @@ export interface FormContext {
 }
 
 export const validateStep1 = (context: FormContext): ValidationResult => {
-  const { hangarLocation, usesHangar, homeType, connectionType } = context;
+  const { hangarLocation, usesHangar, hangarAccessStatus, homeType, connectionType } = context;
   const fieldErrors = { 
     hangarLocation: false, 
     usesHangar: false, 
@@ -71,8 +71,11 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
     };
   }
 
-  // Validate connection type (only required for hangar users)
-  if (usesHangar === true && !connectionType) {
+  const requiresConnectionType =
+    usesHangar === true && !['waiting_list', 'no_hangar_nearby'].includes(hangarAccessStatus ?? '');
+
+  // Validate connection type (only required for hangar users who actually have a space)
+  if (requiresConnectionType && !connectionType) {
     return {
       isValid: false,
       message: 'Please select how you use this hangar',
@@ -92,9 +95,16 @@ export const submitStep1 = async (
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
     const { hangarLocation, hangarNumber, usesHangar, hangarAccessStatus, openToSwap, homeType, connectionType } = context;
+    const requiresConnectionType =
+      usesHangar === true && !['waiting_list', 'no_hangar_nearby'].includes(hangarAccessStatus ?? '');
 
     // Basic check - validation should have already happened
-    if (!hangarLocation?.coordinates || usesHangar === undefined || !homeType || (usesHangar === true && !connectionType)) {
+    if (
+      !hangarLocation?.coordinates ||
+      usesHangar === undefined ||
+      !homeType ||
+      (requiresConnectionType && !connectionType)
+    ) {
       return { success: false, message: 'Incomplete hangar data' };
     }
 
