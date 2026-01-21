@@ -32,11 +32,22 @@ const Step5Owner: React.FC<Step5OwnerProps> = ({
     { value: 'no_one_responsible', label: '🤷 No one seems responsible for fixing things' },
   ];
 
-  const waitlistTagOptions = [
-    { value: 'waiting_too_long', label: '⌛ Waiting way too long' },
-    { value: 'no_idea_position', label: '❓ No idea where I am on the list' },
-    { value: 'more_hangars_needed', label: '🚲 More hangars needed' },
-  ];
+  const getWaitlistTagOptions = () => {
+    if (formData.hangarAccessStatus === 'no_hangar_nearby') {
+      return [
+        { value: 'no_waiting_list', label: '❌ No waiting list available' },
+        { value: 'cant_apply', label: '🚫 Can’t apply for a space' },
+        { value: 'more_hangars_needed', label: '🚲 More hangars needed' },
+      ];
+    }
+    return [
+      { value: 'waiting_too_long', label: '⌛ Waiting way too long' },
+      { value: 'no_idea_position', label: '❓ No idea where I am on the list' },
+      { value: 'more_hangars_needed', label: '🚲 More hangars needed' },
+    ];
+  };
+
+  const waitlistTagOptions = getWaitlistTagOptions();
 
   // Determine if user has a hangar based on Step 1
   const hasHangar = formData.usesHangar === true;
