@@ -84,12 +84,13 @@ export const validateStep = (step: number, context: FormContext): ValidationResu
 
 export const submitStep = (
   step: number,
-  context: FormContext
+  context: FormContext,
+  userId?: string
 ): Promise<{ success: boolean; message: string | null }> => {
   console.log('submitStep', step, context);
   switch (step) {
     case 1:
-      return submitStep1(context);
+      return submitStep1(context, userId);
     case 2:
       return submitStep2(context);
     case 3:
@@ -109,6 +110,7 @@ export const validateAndSubmitStep = async (
   options: {
     showToast?: boolean;
     isSubmitting?: (submitting: boolean) => void;
+    userId?: string;
   } = {}
 ): Promise<{
   isValid: boolean;
@@ -116,7 +118,7 @@ export const validateAndSubmitStep = async (
   message: string | null;
   fieldErrors?: { [key: string]: boolean };
 }> => {
-  const { showToast = true, isSubmitting } = options;
+  const { showToast = true, isSubmitting, userId } = options;
   if (isSubmitting) isSubmitting(true);
 
   try {
@@ -128,7 +130,7 @@ export const validateAndSubmitStep = async (
       return { ...validationResult, isSubmitted: false };
     }
 
-    const submissionResult = await submitStep(step, context);
+    const submissionResult = await submitStep(step, context, userId);
 
     // 3. Handle submission result
     if (!submissionResult.success) {

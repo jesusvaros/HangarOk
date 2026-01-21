@@ -71,7 +71,7 @@ export async function getAddressStep1Data(sessionIdExternal?: string): Promise<H
   }
 }
 
-export async function submitAddressStep1(payload: HangarStep1Payload): Promise<boolean> {
+export async function submitAddressStep1(payload: HangarStep1Payload, userId?: string): Promise<boolean> {
   try {
     const client = supabaseWrapper.getClient();
     if (!client) throw new Error('Supabase client not available');
@@ -82,7 +82,22 @@ export async function submitAddressStep1(payload: HangarStep1Payload): Promise<b
       throw new Error('No session ID found');
     }
 
-    // Transform payload to match database schema
+    // 1. Link user_id to the session if provided
+    if (userId) {
+      try {
+        const sessionToken = localStorage.getItem('reviewSessionId');
+        if (sessionToken) {
+          await client.rpc('update_review_session_user_by_token', {
+            p_session_token: sessionToken,
+            p_user_id: userId,
+          });
+        }
+      } catch (linkError) {
+        console.warn('Non-critical error linking user to session in step 1:', linkError);
+      }
+    }
+
+    // 2. Upsert hangar data
     const { error } = await client.rpc('upsert_hangar_step1_and_mark_session', {
       p_review_session_id: sessionId,
       p_hangar_location: {

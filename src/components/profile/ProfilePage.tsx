@@ -27,6 +27,7 @@ interface UserReview {
   step_3_completed?: boolean;
   step_4_completed?: boolean;
   step_5_completed?: boolean;
+  formattedDate?: string;
 }
 
 const ProfilePage: React.FC = () => {
@@ -103,13 +104,28 @@ const ProfilePage: React.FC = () => {
           if (session.step_2_completed) nextIncompleteStep = 3;
           if (session.step_3_completed) nextIncompleteStep = 4;
           if (session.step_4_completed) nextIncompleteStep = 5;
+
+          // Use validated_at if completed, otherwise created_at
+          const displayDate = allStepsCompleted && session.validated_at 
+            ? session.validated_at 
+            : session.created_at;
+
+          // Treat as UTC to avoid timezone shifts
+          const date = new Date(displayDate);
+          const formattedDate = date.toLocaleDateString('en-GB', {
+            timeZone: 'UTC',
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
           
           return {
             ...session,
             displayAddress: addressResult?.hangar_location?.street || 'Address not available',
             validated: session.validated_at !== null && session.validated_at !== undefined,
             completed: allStepsCompleted,
-            nextIncompleteStep
+            nextIncompleteStep,
+            formattedDate
           };
         });
         
@@ -208,8 +224,8 @@ const ProfilePage: React.FC = () => {
                               </span>
                             )}
                           </header>
-                          <time className="block text-sm text-black" dateTime={new Date(review.created_at).toISOString()}>
-                            {new Date(review.created_at).toLocaleDateString('en-GB')}
+                          <time className="block text-sm text-black" dateTime={new Date(review.validated_at || review.created_at).toISOString()}>
+                            {review.formattedDate}
                           </time>
                         </div>
                         <aside className="shrink-0 rounded-full bg-[rgb(225,245,110)] p-2">

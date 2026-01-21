@@ -91,7 +91,8 @@ export const validateStep1 = (context: FormContext): ValidationResult => {
 };
 
 export const submitStep1 = async (
-  context: FormContext
+  context: FormContext,
+  userId?: string
 ): Promise<{ success: boolean; message: string | null }> => {
   try {
     const { hangarLocation, hangarNumber, usesHangar, hangarAccessStatus, openToSwap, homeType, connectionType } = context;
@@ -126,7 +127,7 @@ export const submitStep1 = async (
       openToSwap,
       homeType,
       connectionType: connectionType ?? null,
-    });
+    }, userId);
 
     return {
       success,

@@ -269,6 +269,7 @@ const AddReviewForm: React.FC = () => {
       const result = await validateAndSubmitStep(currentStep, formData, {
         showToast: true,
         isSubmitting: setIsSubmitting,
+        userId: user?.id,
       });
       
       // Update error state if needed
@@ -305,7 +306,16 @@ const AddReviewForm: React.FC = () => {
             setIsModalOpen(true);
           }else{
             const sessionId = await getSessionIdBack();
-            if (sessionId) {
+            if (sessionId && user?.id) {
+              // Ensure session is linked to user on final step
+              const { supabaseWrapper } = await import('../services/supabase/client');
+              const client = supabaseWrapper.getClient();
+              if (client) {
+                await client.rpc('update_review_session_user_by_token', {
+                  p_session_token: localStorage.getItem('reviewSessionId'),
+                  p_user_id: user.id,
+                });
+              }
               onloginComplete(sessionId, user.id);
             }
           }
@@ -335,6 +345,7 @@ const AddReviewForm: React.FC = () => {
         const result = await validateAndSubmitStep(currentStep, formData, {
           showToast: true,
           isSubmitting: setIsSubmitting,
+          userId: user?.id,
         });
 
         // Update error state for the current step
