@@ -21,7 +21,7 @@ type Props = {
   connectionLabel: string | null;
   currentStorageLabel: string | null;
   impactLabel: string | null;
-  hangarAccessStatus?: 'waiting_list' | 'no_hangar_nearby' | null;
+  hangarAccessStatus?: 'waiting_list' | 'no_hangar_nearby' | 'cant_apply' | null;
 };
 
 const ReviewSectionsWaitingRider: React.FC<Props> = ({
@@ -34,7 +34,7 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
   impactLabel,
   hangarAccessStatus,
 }) => {
-  const isBlocked = hangarAccessStatus === 'no_hangar_nearby';
+  const isBlocked = hangarAccessStatus === 'no_hangar_nearby' || hangarAccessStatus === 'cant_apply';
   const hasReportingData =
     typeof step5Data?.report_ease_rating === 'number' ||
     (step5Data?.maintenance_tags?.length ?? 0) > 0;
@@ -90,7 +90,7 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
           <RatingRow icon={<QueueListIcon className="h-5 w-5 text-black" />} label={isBlocked ? "Access fairness" : "Waiting fairness"} value={step5Data?.waitlist_fairness_rating ?? null} />
           <RatingRow icon={<ChatBubbleLeftRightIcon className="h-5 w-5 text-black" />} label="Communication" value={step5Data?.communication_rating ?? null} />
           <RatingRow icon={<BoltIcon className="h-5 w-5 text-black" />} label="Fix speed" value={step5Data?.fix_speed_rating ?? null} />
-          <TagList title="Waitlist notes" tags={step5Data?.waitlist_tags} />
+          <TagList title={isBlocked ? "Access notes" : "Waitlist notes"} tags={step5Data?.waitlist_tags} />
         </SectionCard>
 
       {hasReportingData ? (
