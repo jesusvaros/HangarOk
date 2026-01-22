@@ -45,7 +45,11 @@ const ReviewSectionsWaitingRider: React.FC<Props> = ({
 
   return (
     <div className="space-y-4">
-      <SectionCard title="Local Perspective" subtitle="How this rider connects with the hangar" icon={<UserGroupIcon className="h-6 w-6 text-gray-500" />}>
+      <SectionCard 
+        title="Local Perspective" 
+        subtitle={isBlocked ? "Trying to park a bike on this street" : "Trying to get a space here"} 
+        icon={<UserGroupIcon className="h-6 w-6 text-gray-500" />}
+      >
           {connectionLabel && (
             <div className="rounded-xl bg-gray-50 p-3 text-sm text-gray-700">
               Connection: <span className="font-semibold">{connectionLabel}</span>
